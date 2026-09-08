@@ -79,3 +79,49 @@ export interface InvitationData {
   storyTimeline: Array<{ year: string; title: string; desc: string; photo?: string }>;
   gallery: string[];
 }
+
+export interface DedicatedTemplateProps {
+  invitationId: string;
+  theme: TemplateThemePreset;
+  guestName: string;
+  activeSessionCode: "s1" | "s2" | "s3";
+  bride: {
+    name: string;
+    fullName: string;
+    father: string;
+    mother: string;
+    photo: string;
+    instagram?: string;
+  };
+  groom: {
+    name: string;
+    fullName: string;
+    father: string;
+    mother: string;
+    photo: string;
+    instagram?: string;
+  };
+  eventDate: string;
+  sessions: {
+    s1: GuestSessionInfo;
+    s2: GuestSessionInfo;
+    s3?: GuestSessionInfo;
+  };
+  googleMapsUrl: string;
+  cartoonMapUrl?: string;
+  musicUrl: string;
+  storyTimeline: Array<{ year: string; title: string; desc: string }>;
+  galleryPhotos: string[];
+  giftInfo: {
+    banks: Array<{ bank: string; number: string; holder: string }>;
+    physicalGiftAddress: string;
+  };
+  initialWishes: Array<{
+    id: string;
+    guestName: string;
+    attendance: string;
+    paxCount: number;
+    message: string;
+    createdAt: string;
+  }>;
+}
