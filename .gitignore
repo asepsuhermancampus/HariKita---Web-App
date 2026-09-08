@@ -35,3 +35,6 @@ next-env.d.ts
 
 # prisma sqlite temporary
 dev.db-journal
+
+# superpowers sdd scratch
+.superpowers/
