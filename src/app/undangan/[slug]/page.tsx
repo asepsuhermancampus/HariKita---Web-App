@@ -2,7 +2,8 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getThemeById } from "@/lib/templates/registry";
-import { InvitationTemplateRenderer } from "@/components/invitation/InvitationTemplateRenderer";
+import { TemplateEngineResolver } from "@/components/templates/TemplateEngineResolver";
+import { LiveThemeSwitcherToolbar } from "@/components/invitation/LiveThemeSwitcherToolbar";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -74,7 +75,7 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
         { bank: "Mandiri", number: "136001239847", holder: "Citra Ayu Lestari" },
       ];
 
-  const wishes = invitation?.rsvps || [
+  const rawWishes = invitation?.rsvps || [
     {
       id: "w1",
       guestName: "Keluarga Besar H. Subagyo",
@@ -93,67 +94,79 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
     },
   ];
 
+  const formattedWishes = rawWishes.map((w) => ({
+    id: w.id,
+    guestName: w.guestName,
+    attendance: w.attendance,
+    paxCount: w.paxCount,
+    message: w.message,
+    createdAt: typeof w.createdAt === "string" ? w.createdAt : (w.createdAt as Date).toISOString(),
+  }));
+
   return (
-    <InvitationTemplateRenderer
-      invitationId={invitation?.id || "demo-invitation"}
-      theme={themePreset}
-      guestName={guestName}
-      activeSessionCode={sesi as "s1" | "s2" | "s3"}
-      bride={{
-        name: "Citra",
-        fullName: brideName,
-        father: invitation?.brideFather || "Bapak H. Bambang Sudiro",
-        mother: invitation?.brideMother || "Ibu Hj. Endang Rahayu",
-        photo: invitation?.bridePhoto || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600",
-        instagram: "@citraayuu",
-      }}
-      groom={{
-        name: "Bima",
-        fullName: groomName,
-        father: invitation?.groomFather || "Bapak Dr. Suryono",
-        mother: invitation?.groomMother || "Ibu Siti Nurhaliza",
-        photo: invitation?.groomPhoto || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600",
-        instagram: "@bima.arya",
-      }}
-      eventDate={eventDate}
-      sessions={{
-        s1: {
-          sessionCode: "s1",
-          title: "Akad Nikah",
-          timeSlot: "08:00 - 10:00 WIB",
-          venueName: invitation?.venueName || "Gedung Pertemuan Setda Kebumen",
-          venueAddress: invitation?.venueAddress || "Jl. Veteran No. 2, Kebumen, Jawa Tengah",
-        },
-        s2: {
-          sessionCode: "s2",
-          title: "Resepsi Siang Sesi 1",
-          timeSlot: "11:00 - 14:00 WIB",
-          venueName: invitation?.venueName || "Gedung Pertemuan Setda Kebumen",
-          venueAddress: invitation?.venueAddress || "Jl. Veteran No. 2, Kebumen, Jawa Tengah",
-        },
-        s3: {
-          sessionCode: "s3",
-          title: "Resepsi Malam Sesi 2 (Intimate)",
-          timeSlot: "19:00 - 21:30 WIB",
-          venueName: invitation?.venueName || "Gedung Pertemuan Setda Kebumen",
-          venueAddress: invitation?.venueAddress || "Jl. Veteran No. 2, Kebumen, Jawa Tengah",
-        },
-      }}
-      googleMapsUrl={invitation?.googleMapsUrl || "https://maps.google.com/?q=Setda+Kebumen"}
-      musicUrl={
-        invitation?.musicUrl ||
-        themePreset.defaultAudioTrack ||
-        "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3"
-      }
-      storyTimeline={storyTimeline}
-      galleryPhotos={galleryPhotos}
-      giftInfo={{
-        banks: bankAccounts,
-        physicalGiftAddress:
-          invitation?.giftAddress ||
-          "Perumahan Kebumen Indah Blok B-12, Kebumen, Jawa Tengah (081987654321)",
-      }}
-      initialWishes={wishes}
-    />
+    <>
+      <TemplateEngineResolver
+        invitationId={invitation?.id || "demo-invitation"}
+        theme={themePreset}
+        guestName={guestName}
+        activeSessionCode={sesi as "s1" | "s2" | "s3"}
+        bride={{
+          name: "Citra",
+          fullName: brideName,
+          father: invitation?.brideFather || "Bapak H. Bambang Sudiro",
+          mother: invitation?.brideMother || "Ibu Hj. Endang Rahayu",
+          photo: invitation?.bridePhoto || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600",
+          instagram: "citraayuu",
+        }}
+        groom={{
+          name: "Bima",
+          fullName: groomName,
+          father: invitation?.groomFather || "Bapak Dr. Suryono",
+          mother: invitation?.groomMother || "Ibu Siti Nurhaliza",
+          photo: invitation?.groomPhoto || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600",
+          instagram: "bima.arya",
+        }}
+        eventDate={eventDate}
+        sessions={{
+          s1: {
+            sessionCode: "s1",
+            title: "Akad Nikah",
+            timeSlot: "08:00 - 10:00 WIB",
+            venueName: invitation?.venueName || "Gedung Pertemuan Setda Kebumen",
+            venueAddress: invitation?.venueAddress || "Jl. Veteran No. 2, Kebumen, Jawa Tengah",
+          },
+          s2: {
+            sessionCode: "s2",
+            title: "Resepsi Siang Sesi 1",
+            timeSlot: "11:00 - 14:00 WIB",
+            venueName: invitation?.venueName || "Gedung Pertemuan Setda Kebumen",
+            venueAddress: invitation?.venueAddress || "Jl. Veteran No. 2, Kebumen, Jawa Tengah",
+          },
+          s3: {
+            sessionCode: "s3",
+            title: "Resepsi Malam Sesi 2 (Intimate)",
+            timeSlot: "19:00 - 21:30 WIB",
+            venueName: invitation?.venueName || "Gedung Pertemuan Setda Kebumen",
+            venueAddress: invitation?.venueAddress || "Jl. Veteran No. 2, Kebumen, Jawa Tengah",
+          },
+        }}
+        googleMapsUrl={invitation?.googleMapsUrl || "https://maps.google.com/?q=Setda+Kebumen"}
+        musicUrl={
+          invitation?.musicUrl ||
+          themePreset.defaultAudioTrack ||
+          "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3"
+        }
+        storyTimeline={storyTimeline}
+        galleryPhotos={galleryPhotos}
+        giftInfo={{
+          banks: bankAccounts,
+          physicalGiftAddress:
+            invitation?.giftAddress ||
+            "Perumahan Kebumen Indah Blok B-12, Kebumen, Jawa Tengah (081987654321)",
+        }}
+        initialWishes={formattedWishes}
+      />
+      <LiveThemeSwitcherToolbar currentThemeId={activeThemeId} />
+    </>
   );
 }
