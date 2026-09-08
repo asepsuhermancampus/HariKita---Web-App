@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String
+  phone         String          @unique
+  email         String?         @unique
+  role          String          @default("CLIENT") // "CLIENT", "VENDOR", "ADMIN"
+  vendorProfile VendorProfile?
+  orders        Order[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model VendorProfile {
+  id             String           @id @default(cuid())
+  userId         String           @unique
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName   String
+  category       String           // 11 Kategori Layanan
+  city           String           @default("Kebumen")
+  address        String
+  rating         Float            @default(5.0)
+  reviewCount    Int              @default(0)
+  igHandle       String?
+  tiktokHandle   String?
+  bankName       String?
+  bankAccount    String?
+  bankHolder     String?
+  walletBalance  Float            @default(0)
+  isVerified     Boolean          @default(true)
+  packages       ServicePackage[]
+  blackoutDates  BlackoutDate[]
+  orderItems     OrderItem[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model BlackoutDate {
+  id          String        @id @default(cuid())
+  vendorId    String
+  vendor      VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  date        DateTime
+  reason      String?
+  createdAt   DateTime      @default(now())
+
+  @@unique([vendorId, date])
+}
+
+model ServicePackage {
+  id          String        @id @default(cuid())
+  vendorId    String
+  vendor      VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  category    String
+  name        String
+  description String
+  basePrice   Float
+  unitType    String?       // "pax", "baki", "pcs", "all_in"
+  unitPrice   Float?        // harga per tambahan satuan
+  minUnit     Int?          @default(1)
+  maxUnit     Int?
+  slaDays     Int           @default(7)
+  imageUrl    String?
+  includes    String?       // JSON stringified array fitur
+  orderItems  OrderItem[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Order {
+  id              String             @id @default(cuid())
+  orderNumber     String             @unique
+  userId          String?
+  user            User?              @relation(fields: [userId], references: [id])
+  clientName      String
+  clientPhone     String
+  eventDate       DateTime
+  city            String             @default("Kebumen")
+  totalAmount     Float
+  status          String             @default("PENDING_DP") // "PENDING_DP", "CONFIRMED", "IN_PROGRESS", "COMPLETED", "CANCELLED"
+  notes           String?
+  items           OrderItem[]
+  escrow          EscrowTransaction?
+  contract        DigitalContract?
+  sessions        PhysicalSession[]
+  rundowns        EventRundown[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model OrderItem {
+  id          String         @id @default(cuid())
+  orderId     String
+  order       Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  packageId   String
+  package     ServicePackage @relation(fields: [packageId], references: [id])
+  vendorId    String
+  vendor      VendorProfile  @relation(fields: [vendorId], references: [id])
+  quantity    Int            @default(1)
+  unitPrice   Float
+  subtotal    Float
+}
+
+model EscrowTransaction {
+  id                  String    @id @default(cuid())
+  orderId             String    @unique
+  order               Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  dpAmount            Float     // 30%
+  dpStatus            String    @default("UNPAID") // "UNPAID", "HOLD", "RELEASED"
+  dpPaidAt            DateTime?
+  dpReleasedAt        DateTime?
+  settlementAmount    Float     // 70%
+  settlementStatus    String    @default("UNPAID") // "UNPAID", "HOLD", "RELEASED"
+  settlementPaidAt    DateTime?
+  settlementReleasedAt DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model DigitalContract {
+  id              String    @id @default(cuid())
+  orderId         String    @unique
+  order           Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  contractNumber  String    @unique
+  terms           String
+  clientSigned    Boolean   @default(false)
+  clientSignedAt  DateTime?
+  vendorSigned    Boolean   @default(true)
+  vendorSignedAt  DateTime? @default(now())
+  createdAt       DateTime  @default(now())
+}
+
+model PhysicalSession {
+  id              String    @id @default(cuid())
+  orderId         String
+  order           Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type            String    // "FIRST_FITTING", "FINAL_FITTING", "TEST_FOOD"
+  scheduledDate   DateTime
+  status          String    @default("SCHEDULED") // "SCHEDULED", "COMPLETED", "RESCHEDULED"
+  notes           String?
+  location        String
+  createdAt       DateTime  @default(now())
+}
+
+model EventRundown {
+  id          String    @id @default(cuid())
+  orderId     String
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  timeSlot    String    // e.g. "08:00 - 09:30"
+  activity    String    // e.g. "Akad Nikah & Ijab Qabul"
+  picName     String?
+  picPhone    String?
+  location    String?
+  sortOrder   Int       @default(0)
+}
+
+model DigitalInvitation {
+  id              String     @id @default(cuid())
+  slug            String     @unique // e.g. "annika-sebastian"
+  themeId         String     // e.g. "autumnelle-animasi", "seraphicus-lux"
+  title           String
+  brideName       String
+  brideFather     String?
+  brideMother     String?
+  bridePhoto      String?
+  groomName       String
+  groomFather     String?
+  groomMother     String?
+  groomPhoto      String?
+  eventDate       DateTime
+  venueName       String
+  venueAddress    String
+  googleMapsUrl   String?
+  liveStreamUrl   String?
+  igFilterUrl     String?
+  musicUrl        String?
+  storyTimeline   String?    // JSON string array
+  bankAccounts    String?    // JSON string array
+  giftAddress     String?
+  qrisImageUrl    String?
+  galleryPhotos   String?    // JSON string array
+  rsvps           RsvpWish[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model RsvpWish {
+  id            String            @id @default(cuid())
+  invitationId  String
+  invitation    DigitalInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  guestName     String
+  attendance    String            // "hadir", "tidak_hadir", "ragu"
+  paxCount      Int               @default(1)
+  sessionCode   String?           // "s1", "s2", "s3"
+  message       String
+  createdAt     DateTime          @default(now())
+}
+
+model AnalyticsTelemetry {
+  id          String    @id @default(cuid())
+  eventType   String    // "PAGE_VIEW", "CART_ADD", "PRICELIST_CLICK", "CHECKOUT_INIT", "DEAL_CLOSED"
+  path        String
+  metadata    String?   // JSON string
+  timestamp   DateTime  @default(now())
+}
