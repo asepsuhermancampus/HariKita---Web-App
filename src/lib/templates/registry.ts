@@ -1,4 +1,7 @@
 import { ArchetypeId, TemplateThemePreset } from "./types";
+import { TEMPLATES_CATALOG } from "./templatesCatalog";
+
+export { TEMPLATES_CATALOG };
 
 export const MASTER_ARCHETYPES: Array<{
   id: ArchetypeId;
@@ -580,9 +583,10 @@ export const INVITATION_THEMES: TemplateThemePreset[] = [
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=warm-acoustic-109407.mp3",
   },
 ];
-
-import { TEMPLATES_CATALOG } from "./templatesCatalog";
-export { TEMPLATES_CATALOG };
+export const ALL_INVITATION_TEMPLATES: TemplateThemePreset[] = [
+  ...TEMPLATES_CATALOG,
+  ...INVITATION_THEMES.filter((t) => !TEMPLATES_CATALOG.some((c) => c.id === t.id)),
+];
 
 export function getThemeById(id: string): TemplateThemePreset {
   // First search in the 64 master catalog

@@ -1,3 +1,5 @@
+"use client";
+
 export { InvitationDesktopLayout } from "./InvitationDesktopLayout";
 export { EnvelopeCoverGate } from "./EnvelopeCoverGate";
 export { InvitationBottomDock } from "./InvitationBottomDock";

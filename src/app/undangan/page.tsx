@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { INVITATION_THEMES, MASTER_ARCHETYPES } from "@/lib/templates/registry";
+import { ALL_INVITATION_TEMPLATES, MASTER_ARCHETYPES } from "@/lib/templates/registry";
 import { Sparkles, Eye, CheckCircle2, Filter, Search } from "lucide-react";
 
 export default function UndanganCatalogPage() {
@@ -12,22 +12,25 @@ export default function UndanganCatalogPage() {
 
   const categories = [
     "All",
-    "Animasi",
-    "Minimalis",
-    "Background Prewed",
-    "Floral & Classic",
-    "Islami",
-    "Tradisional Adat",
-    "Luxury",
-    "Khitanan & Aqiqah",
+    "Botanical",
+    "Javanese",
+    "Islamic",
+    "Minimalist",
+    "Rose Gold",
+    "Rustic",
+    "Celestial",
+    "Cute",
   ];
 
-  const filteredThemes = INVITATION_THEMES.filter((theme) => {
+  const filteredThemes = ALL_INVITATION_TEMPLATES.filter((theme) => {
     const matchesCategory =
-      selectedCategory === "All" || theme.category.toLowerCase().includes(selectedCategory.toLowerCase());
+      selectedCategory === "All" ||
+      theme.category.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+      theme.archetypeId.toLowerCase().includes(selectedCategory.toLowerCase());
     const matchesSearch =
       theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      theme.sourceOrigin.toLowerCase().includes(searchQuery.toLowerCase());
+      theme.sourceOrigin.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      theme.category.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 

@@ -1,3 +1,5 @@
+"use client";
+
 export { BotanicalEngine } from "./BotanicalEngine";
 export { JavaneseEngine } from "./JavaneseEngine";
 export { IslamicEngine } from "./IslamicEngine";
