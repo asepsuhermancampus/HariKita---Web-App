@@ -80,7 +80,13 @@ Seluruh 64 template undangan memiliki metadata mandiri, palet warna tematik, orn
 * **Gift Registry & QRIS:** Nomor rekening bank dengan fitur 1-klik salin, alamat kirim kado, dan modal QRIS dinamis.
 * **Live RSVP & Wishes:** Form kehadiran langsung terhubung ke database SQLite via Prisma API.
 * **Smooth Auto-Closing Effect:** Efek penutup anggun saat tamu mencapai bagian paling bawah halaman undangan.
-* **Automated Unit Tests:** 16/16 test passing (`tests/invitation-templates.test.ts`).
+
+### E. Progressive Web App (PWA) & Mobile Polish (BARU SELESAI)
+* **Web App Manifest (`src/app/manifest.ts` & `public/manifest.json`):** Konfigurasi App Router standalone mode, palet Cashmere Alabaster (`#FAF8F5`) & Gilded Champagne (`#C5A880`), serta 3 shortcut langsung (Builder, Undangan, Klien).
+* **Aset Ikon PWA Komprehensif:** Ikon 192x192, 512x512, maskable squircle (Android 13+), Apple touch icon iOS, dan favicon.ico.
+* **Vanilla Service Worker (`public/sw.js`):** Caching aset statis (stale-while-revalidate), navigasi network-first aman tanpa konflik Next.js 15 / React 19.
+* **Add to Home Screen (A2HS) Component (`InstallPrompt.tsx`):** Banner floating elegan di layar sentuh mobile, deteksi instalasi Android Chrome via `beforeinstallprompt`, modal panduan visual khusus Safari iOS, dan batas cooldown dismiss 7 hari.
+* **Automated Unit Tests:** 18/18 test passing (`tests/*.test.ts`).
 
 ---
 
@@ -96,8 +102,6 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
    * Menggantikan simulator escrow DP 30% dan Pelunasan 70% dengan webhook Midtrans / Xendit Sandbox.
 4. **WhatsApp Automation Gateway:**
    * Integrasi notifikasi booking otomatis ke nomor WhatsApp vendor dan pasangan pengantin saat status pesanan terkonfirmasi.
-5. **PWA (Progressive Web App):**
-   * Service worker dan Web App Manifest agar undangan digital dapat disimpan ke home screen HP tamu seperti aplikasi mandiri.
 
 ---
 
@@ -123,6 +127,7 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
 | **Portal Vendor** | `http://localhost:3000/vendor` | Dashboard mitra, kalender blackout date, kelola harga paket |
 | **Super Admin** | `http://localhost:3000/admin` | Master multi-vendor calendar, 10-step conversion funnel, resolution |
 | **Demo Undangan Digital** | `http://localhost:3000/undangan/demo?theme=ivory-silk` | Pengujian 64 template (ganti query `theme` sesuai ID template) |
+| **Manifest Web App** | `http://localhost:3000/manifest.webmanifest` | Verifikasi metadata PWA JSON |
 
 ---
 
@@ -132,7 +137,7 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
   ```powershell
   npm run dev
   ```
-* **Menjalankan Automated Tests (16 Tests):**
+* **Menjalankan Automated Tests (18 Tests):**
   ```powershell
   npx tsx --test tests/*.test.ts
   ```
@@ -144,3 +149,4 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
   ```powershell
   npx prisma db push
   ```
+
