@@ -17,6 +17,49 @@ export type ArchetypeId =
   | "royal-luxury"
   | "special-family-event";
 
+export type CoverLayoutId =
+  | "FloatingCard"
+  | "FullBleedText"
+  | "SplitPanelHorizontal"
+  | "GateDoors"
+  | "ScrollUnroll"
+  | "PostageStamp"
+  | "CircleMonogram"
+  | "PolaroidPhoto"
+  | "FloralWreath"
+  | "IslamicArch"
+  | "BookCover"
+  | "KawaiiCard";
+
+export type CoverExitAnimId =
+  | "slide-up"
+  | "slide-down"
+  | "gate-open"
+  | "scroll-roll"
+  | "flip-3d"
+  | "zoom-away"
+  | "dissolve-particles"
+  | "curtain-reveal"
+  | "page-turn"
+  | "fade-drop";
+
+export type CoverEntryAnimId =
+  | "rise-up"
+  | "fall-in"
+  | "scale-in"
+  | "doors-close"
+  | "fade-in"
+  | "rotate-in"
+  | "slide-left"
+  | "unfurl";
+
+export interface CoverConfig {
+  layoutId: CoverLayoutId;
+  exitAnimId: CoverExitAnimId;
+  entryAnimId: CoverEntryAnimId;
+  bgVariant: string; // descriptive label; actual colors come from theme.colors
+}
+
 export interface TemplateThemePreset {
   id: string; // e.g. "autumnelle", "seraphicus-lux", "lunar-melody", "serenade-maroon"
   title: string;
@@ -39,7 +82,9 @@ export interface TemplateThemePreset {
   };
   ornamentStyle: "leaves" | "gold-foil" | "floral-watercolor" | "arabic-arch" | "batik-wayang" | "minimal-line" | "cute-stars";
   defaultAudioTrack: string;
+  coverConfig?: CoverConfig; // optional — legacy presets without coverConfig get FloatingCard + slide-up fallback
 }
+
 
 export interface GuestSessionInfo {
   sessionCode: "s1" | "s2" | "s3";

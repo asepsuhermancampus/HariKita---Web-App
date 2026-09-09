@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
+import { CoverCardEngine } from "@/components/invitation/cover/CoverCardEngine";
 import {
   InvitationDesktopLayout,
-  EnvelopeCoverGate,
   InvitationBottomDock,
   RotatingVinylPlayer,
   AutoScrollButton,
@@ -80,15 +80,15 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
 
   return (
     <>
-      {/* 1. Universal Envelope Cover Gate (Locks scroll until opened) */}
-      <EnvelopeCoverGate
+      {/* 1. Unique Cover Gate — per-template unique layout via CoverCardEngine */}
+      <CoverCardEngine
+        theme={props.theme}
         brideName={props.bride.name}
         groomName={props.groom.name}
         guestName={props.guestName}
         eventDate={props.eventDate}
-        onOpen={handleOpenCover}
         isOpened={isCoverOpened}
-        archetypeId={archetypeId}
+        onOpen={handleOpenCover}
       />
 
       {/* 2. Desktop Dual-Pane & Mobile Showcase Layout */}
