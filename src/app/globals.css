@@ -104,3 +104,32 @@ body {
 .animate-spin-slow {
   animation: spinSlow 12s linear infinite;
 }
+
+/* Bespoke Archetype Animations */
+@keyframes botanicalSway {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(6deg) scale(1.05);
+  }
+}
+
+.animate-botanical-sway {
+  animation: botanicalSway 6s ease-in-out infinite;
+}
+
+@keyframes shimmerFoil {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer-foil {
+  background: linear-gradient(90deg, rgba(204,168,115,0.2) 0%, rgba(255,235,190,0.8) 50%, rgba(204,168,115,0.2) 100%);
+  background-size: 200% 100%;
+  animation: shimmerFoil 4s linear infinite;
+}

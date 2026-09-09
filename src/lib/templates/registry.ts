@@ -581,9 +581,18 @@ export const INVITATION_THEMES: TemplateThemePreset[] = [
   },
 ];
 
+import { TEMPLATES_CATALOG } from "./templatesCatalog";
+export { TEMPLATES_CATALOG };
+
 export function getThemeById(id: string): TemplateThemePreset {
-  return (
-    INVITATION_THEMES.find((t) => t.id === id) ||
-    INVITATION_THEMES[0] // Fallback to Autumnelle
-  );
+  // First search in the 64 master catalog
+  const fromCatalog = TEMPLATES_CATALOG.find((t) => t.id === id);
+  if (fromCatalog) return fromCatalog;
+
+  // Fallback to legacy themes
+  const fromLegacy = INVITATION_THEMES.find((t) => t.id === id);
+  if (fromLegacy) return fromLegacy;
+
+  // Ultimate fallback
+  return TEMPLATES_CATALOG[0] || INVITATION_THEMES[0];
 }

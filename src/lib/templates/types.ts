@@ -1,4 +1,13 @@
 export type ArchetypeId =
+  | "botanical"
+  | "javanese"
+  | "islamic"
+  | "minimalist"
+  | "rose-gold"
+  | "rustic"
+  | "celestial"
+  | "cute-illustrated"
+  // Legacy aliases for backward compatibility
   | "animated-motion"
   | "minimalist-typographic"
   | "fullscreen-prewed"
