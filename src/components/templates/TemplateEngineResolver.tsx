@@ -9,6 +9,7 @@ import {
   RotatingVinylPlayer,
   AutoScrollButton,
   ETicketBoardingPass,
+  SmoothOutroClosingGate,
 } from "@/components/invitation/shell";
 
 // 8 Bespoke Layout Engines
@@ -100,6 +101,13 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
       >
         {/* Render the Bespoke Archetype Layout Engine */}
         {renderEngine()}
+
+        {/* Grand Outro Smooth Closing Gate */}
+        <SmoothOutroClosingGate
+          theme={props.theme}
+          brideName={props.bride.name}
+          groomName={props.groom.name}
+        />
 
         {/* 3. Floating Peripherals (Rendered when cover is open) */}
         {isCoverOpened && (

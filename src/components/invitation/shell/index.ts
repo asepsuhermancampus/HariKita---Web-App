@@ -6,3 +6,4 @@ export { InvitationBottomDock } from "./InvitationBottomDock";
 export { RotatingVinylPlayer } from "./RotatingVinylPlayer";
 export { AutoScrollButton } from "./AutoScrollButton";
 export { ETicketBoardingPass } from "./ETicketBoardingPass";
+export { SmoothOutroClosingGate } from "./SmoothOutroClosingGate";
