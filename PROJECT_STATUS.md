@@ -132,9 +132,9 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
   ```powershell
   npm run dev
   ```
-* **Menjalankan Automated Tests:**
+* **Menjalankan Automated Tests (16 Tests):**
   ```powershell
-  npx tsx --test tests/invitation-templates.test.ts
+  npx tsx --test tests/*.test.ts
   ```
 * **Mengecek Schema Database:**
   ```powershell
