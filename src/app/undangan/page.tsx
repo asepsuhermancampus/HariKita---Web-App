@@ -169,7 +169,7 @@ export default function UndanganCatalogPage() {
             {/* Action Buttons */}
             <div className="p-5 pt-0 grid grid-cols-2 gap-2">
               <Link
-                href={`/undangan/bima-citra?theme=${theme.id}&to=Bapak+Joko+dan+Keluarga&sesi=s1`}
+                href={`/undangan/demo?theme=${theme.id}&to=Bapak+Joko+dan+Keluarga&sesi=s1`}
                 target="_blank"
                 className="btn btn-xs btn-outline border-gold/40 text-plum font-bold rounded-full hover:bg-gold/15 flex items-center justify-center gap-1"
               >

@@ -1,9 +1,11 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getThemeById, TEMPLATES_CATALOG } from "@/lib/templates/registry";
+import { getThemeById, ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
 import { TemplateEngineResolver } from "@/components/templates/TemplateEngineResolver";
 import { LiveThemeSwitcherToolbar } from "@/components/invitation/LiveThemeSwitcherToolbar";
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -29,8 +31,8 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
     console.error("Database fetch error, using fallback demo data:", error);
   }
 
-  // Fallback demo data if slug is a known template ID or database record is not yet seeded
-  const isTemplateId = TEMPLATES_CATALOG.some((t) => t.id === slug);
+  // Fallback demo data if slug is a known template ID, "demo", or database record is not yet seeded
+  const isTemplateId = ALL_INVITATION_TEMPLATES.some((t) => t.id === slug);
   const activeThemeId = themeOverride || invitation?.themeId || (isTemplateId ? slug : "autumnelle");
   const themePreset = getThemeById(activeThemeId);
 

@@ -135,7 +135,7 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
               timeSlot={activeSession.timeSlot}
               venueName={activeSession.venueName}
               venueAddress={activeSession.venueAddress}
-              qrValue={`HK-${props.invitationId.substring(0, 6).toUpperCase()}-${props.activeSessionCode.toUpperCase()}`}
+              qrValue={`HK-${(props.invitationId || "demo00").substring(0, 6).toUpperCase()}-${(props.activeSessionCode || "s1").toUpperCase()}`}
               brideGroomInitials={`${props.bride.name.charAt(0)} & ${props.groom.name.charAt(0)}`}
               isOpen={isTicketOpen}
               onClose={() => setIsTicketOpen(false)}

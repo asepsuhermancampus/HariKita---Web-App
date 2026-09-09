@@ -319,7 +319,7 @@ export default function HomePage() {
                 Buka Katalog 65+ Desain
               </Link>
               <Link
-                href="/undangan/demo?theme=autumnelle-animasi&to=Bapak+Joko&sesi=s1"
+                href="/undangan/demo?theme=autumnelle&to=Bapak+Joko&sesi=s1"
                 target="_blank"
                 className="btn btn-outline border-gold/40 text-plum font-bold text-xs px-6 rounded-full hover:bg-gold/15"
               >

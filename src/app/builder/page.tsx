@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatRupiah } from "@/lib/utils";
-import { INVITATION_THEMES } from "@/lib/templates/registry";
+import { ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
 import {
   Sparkles,
   Check,
@@ -170,7 +170,17 @@ export default function MixMatchBuilderPage() {
   });
 
   // State: selected theme for digital invitation
-  const [selectedThemeId, setSelectedThemeId] = useState("autumnelle-animasi");
+  const [selectedThemeId, setSelectedThemeId] = useState("autumnelle");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const themeFromUrl = params.get("selectedTheme");
+      if (themeFromUrl && ALL_INVITATION_TEMPLATES.some((t) => t.id === themeFromUrl)) {
+        setSelectedThemeId(themeFromUrl);
+      }
+    }
+  }, []);
 
   // State: checkout modal (Lazy registration)
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -365,9 +375,9 @@ export default function MixMatchBuilderPage() {
                         <select
                           value={selectedThemeId}
                           onChange={(e) => setSelectedThemeId(e.target.value)}
-                          className="select select-xs bg-[#FAF8F5] border-gold/30 text-plum font-semibold rounded-lg"
+                          className="select select-xs bg-[#FAF8F5] border-gold/30 text-plum font-semibold rounded-lg max-w-[200px]"
                         >
-                          {INVITATION_THEMES.map((t) => (
+                          {ALL_INVITATION_TEMPLATES.map((t) => (
                             <option key={t.id} value={t.id}>
                               {t.title} ({t.category})
                             </option>
