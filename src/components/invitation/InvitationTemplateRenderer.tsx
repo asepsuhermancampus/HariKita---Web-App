@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { TemplateThemePreset } from "@/lib/templates/types";
-import { EnvelopeCover } from "./EnvelopeCover";
+import { CoverCardEngine } from "./cover/CoverCardEngine";
 import { MusicPlayer } from "./MusicPlayer";
 import { CoupleSection } from "./CoupleSection";
 import { EventSchedule } from "./EventSchedule";
@@ -12,6 +12,7 @@ import { DigitalGiftModal } from "./DigitalGiftModal";
 import { RsvpGuestbookForm } from "./RsvpGuestbookForm";
 import { ReceptionQrCheckin } from "./ReceptionQrCheckin";
 import { Heart, Sparkles } from "lucide-react";
+
 
 interface InvitationTemplateRendererProps {
   invitationId: string;
@@ -95,17 +96,16 @@ export const InvitationTemplateRenderer: React.FC<InvitationTemplateRendererProp
         color: theme.colors.text,
       }}
     >
-      {/* 1. Interactive Wax Seal Envelope Cover */}
-      {!isOpened && (
-        <EnvelopeCover
-          brideName={bride.name}
-          groomName={groom.name}
-          guestName={guestName}
-          eventDate={eventDate}
-          themePrimaryColor={theme.colors.primary}
-          onOpen={() => setIsOpened(true)}
-        />
-      )}
+      {/* 1. Interactive Cover Gate — unique per template via CoverCardEngine */}
+      <CoverCardEngine
+        theme={theme}
+        brideName={bride.name}
+        groomName={groom.name}
+        guestName={guestName}
+        eventDate={eventDate}
+        isOpened={isOpened}
+        onOpen={() => setIsOpened(true)}
+      />
 
       {/* 2. Floating Audio Controller */}
       <MusicPlayer audioUrl={musicUrl} autoPlayTriggered={isOpened} />
