@@ -9,13 +9,13 @@ import {
   MapPin,
   Heart,
   Instagram,
-  Copy,
-  Check,
   Send,
   Sparkles,
   ExternalLink,
   Stamp,
 } from "lucide-react";
+import { LuxuryBankCard, AddToCalendarButton, GalleryLightboxModal } from "@/components/invitation/cards";
+import { RusticPampasTwineSvg } from "@/components/invitation/svg";
 
 export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
   theme,
@@ -35,17 +35,9 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
   const [newWishName, setNewWishName] = useState(guestName || "");
   const [newWishMessage, setNewWishMessage] = useState("");
   const [attendance, setAttendance] = useState("hadir");
-  const [copiedBank, setCopiedBank] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
-
-  const siennaColor = "#8C533E";
-  const terracottaColor = "#B85D3B";
-
-  const handleCopy = (text: string, bankName: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedBank(bankName);
-    setTimeout(() => setCopiedBank(null), 2500);
-  };
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const handleSendWish = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,6 +123,7 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
       {/* ===================== SECTION 2: COUPLE (#couple) ===================== */}
       <section id="couple" className="py-16 px-6 space-y-12 bg-amber-100/30">
         <div className="text-center space-y-1">
+          <RusticPampasTwineSvg className="w-16 h-16 mx-auto mb-2 text-amber-800/80" />
           <span className="text-xs uppercase tracking-widest text-amber-800 font-sans font-semibold">
             The Couple
           </span>
@@ -247,16 +240,28 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
             </div>
           </div>
 
-          <a
-            href={googleMapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-full bg-amber-900 text-amber-50 text-xs font-sans font-bold uppercase tracking-wider shadow-lg hover:bg-amber-950 transition-colors min-h-[44px]"
-          >
-            <MapPin className="w-4 h-4" />
-            <span>Petunjuk Lokasi Google Maps</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-amber-900 text-amber-50 text-xs font-sans font-bold uppercase tracking-wider shadow-lg hover:bg-amber-950 transition-colors min-h-[44px]"
+            >
+              <MapPin className="w-4 h-4" />
+              <span>Google Maps</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            <AddToCalendarButton
+              title={`${activeSession.title} ${bride.name} & ${groom.name}`}
+              description={`Undangan Pernikahan Rustic di ${activeSession.venueName}. Sesi: ${activeSession.timeSlot}`}
+              location={`${activeSession.venueName}, ${activeSession.venueAddress}`}
+              startDate={eventDate}
+              endDate={eventDate}
+              primaryColor="#78350F"
+              accentColor="#D97706"
+            />
+          </div>
         </div>
       </section>
 
@@ -296,14 +301,31 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
           {galleryPhotos.map((photo, idx) => (
             <div
               key={idx}
-              className={`rounded-2xl overflow-hidden shadow-md border-2 border-amber-800/20 ${
+              onClick={() => {
+                setLightboxIndex(idx);
+                setIsLightboxOpen(true);
+              }}
+              className={`rounded-2xl overflow-hidden shadow-md border-2 border-amber-800/20 cursor-pointer group ${
                 idx % 3 === 0 ? "col-span-2 h-56" : "h-40"
               }`}
             >
-              <img src={photo} alt={`Galeri ${idx + 1}`} className="w-full h-full object-cover filter sepia-[0.15] hover:scale-105 transition-transform duration-500" />
+              <img
+                src={photo}
+                alt={`Galeri ${idx + 1}`}
+                className="w-full h-full object-cover filter sepia-[0.15] group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
           ))}
         </div>
+
+        {/* Fullscreen Interactive Lightbox */}
+        <GalleryLightboxModal
+          photos={galleryPhotos}
+          currentIndex={lightboxIndex}
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          onIndexChange={setLightboxIndex}
+        />
       </section>
 
       {/* ===================== SECTION 6: DIGITAL GIFT (#gift) ===================== */}
@@ -320,35 +342,15 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
 
         <div className="space-y-4">
           {giftInfo.banks.map((b, idx) => (
-            <div
+            <LuxuryBankCard
               key={idx}
-              className="bg-amber-50 rounded-2xl p-5 shadow-lg border border-amber-800/20 flex items-center justify-between"
-            >
-              <div className="space-y-1 font-sans">
-                <span className="text-xs font-bold text-amber-900 bg-amber-200 px-2.5 py-0.5 rounded-full">
-                  {b.bank}
-                </span>
-                <p className="text-lg font-mono font-bold text-amber-950">{b.number}</p>
-                <p className="text-xs text-amber-800/70">a.n. {b.holder}</p>
-              </div>
-
-              <button
-                onClick={() => handleCopy(b.number, b.bank)}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-200 text-amber-900 border border-amber-300 hover:bg-amber-300 transition-all text-xs font-sans font-semibold min-h-[44px]"
-              >
-                {copiedBank === b.bank ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-700" />
-                    <span>Tersalin!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    <span>Salin</span>
-                  </>
-                )}
-              </button>
-            </div>
+              bank={b.bank}
+              number={b.number}
+              holder={b.holder}
+              coupleNames={`${bride.name} & ${groom.name}`}
+              rsvpGuestName={guestName}
+              qrisImageUrl="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=HARIKITA-KEBUMEN-RUSTIC"
+            />
           ))}
 
           <div className="bg-amber-200/40 rounded-2xl p-4 border border-amber-300 text-xs font-sans space-y-1.5">

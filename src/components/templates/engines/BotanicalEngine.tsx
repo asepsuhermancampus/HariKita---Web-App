@@ -10,12 +10,11 @@ import {
   MapPin,
   Heart,
   Instagram,
-  Copy,
-  Check,
   Send,
   Sparkles,
   ExternalLink,
 } from "lucide-react";
+import { LuxuryBankCard, AddToCalendarButton, GalleryLightboxModal } from "@/components/invitation/cards";
 
 export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
   theme,
@@ -35,17 +34,12 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
   const [newWishName, setNewWishName] = useState(guestName || "");
   const [newWishMessage, setNewWishMessage] = useState("");
   const [attendance, setAttendance] = useState("hadir");
-  const [copiedBank, setCopiedBank] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const primaryColor = theme?.colors?.primary || "#5C6F57";
   const accentColor = theme?.colors?.accent || "#B85D3B";
-
-  const handleCopy = (text: string, bankName: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedBank(bankName);
-    setTimeout(() => setCopiedBank(null), 2500);
-  };
 
   const handleSendWish = (e: React.FormEvent) => {
     e.preventDefault();
@@ -262,17 +256,27 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <a
               href={googleMapsUrl}
               target="_blank"
               rel="noreferrer"
-              className="flex-1 inline-flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-emerald-800 text-white text-xs font-semibold shadow-md hover:bg-emerald-900 transition-colors min-h-[44px]"
+              className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-emerald-800 text-white text-xs font-semibold shadow-md hover:bg-emerald-900 transition-colors min-h-[44px]"
             >
               <MapPin className="w-4 h-4" />
-              <span>Buka Google Maps</span>
+              <span>Google Maps</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
+
+            <AddToCalendarButton
+              title={`${activeSession.title} ${bride.name} & ${groom.name}`}
+              description={`Undangan Pernikahan di ${activeSession.venueName}. Sesi: ${activeSession.timeSlot}`}
+              location={`${activeSession.venueName}, ${activeSession.venueAddress}`}
+              startDate={eventDate}
+              endDate={eventDate}
+              primaryColor={primaryColor}
+              accentColor={accentColor}
+            />
           </div>
         </div>
       </section>
@@ -313,14 +317,31 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
           {galleryPhotos.map((photo, idx) => (
             <div
               key={idx}
-              className={`rounded-2xl overflow-hidden shadow-md border border-white/60 ${
+              onClick={() => {
+                setLightboxIndex(idx);
+                setIsLightboxOpen(true);
+              }}
+              className={`rounded-2xl overflow-hidden shadow-md border border-white/60 cursor-pointer group ${
                 idx % 3 === 0 ? "col-span-2 h-56" : "h-40"
               }`}
             >
-              <img src={photo} alt={`Galeri ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              <img
+                src={photo}
+                alt={`Galeri ${idx + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
           ))}
         </div>
+
+        {/* Fullscreen Interactive Lightbox */}
+        <GalleryLightboxModal
+          photos={galleryPhotos}
+          currentIndex={lightboxIndex}
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          onIndexChange={setLightboxIndex}
+        />
       </section>
 
       {/* ===================== SECTION 6: DIGITAL GIFT (#gift) ===================== */}
@@ -337,35 +358,15 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
 
         <div className="space-y-4">
           {giftInfo.banks.map((b, idx) => (
-            <div
+            <LuxuryBankCard
               key={idx}
-              className="bg-white rounded-2xl p-5 shadow-lg border border-emerald-200 flex items-center justify-between"
-            >
-              <div className="space-y-1">
-                <span className="text-xs font-bold text-emerald-900 bg-emerald-100/70 px-2.5 py-0.5 rounded-full">
-                  {b.bank}
-                </span>
-                <p className="text-lg font-mono font-bold text-slate-900">{b.number}</p>
-                <p className="text-xs text-slate-500">a.n. {b.holder}</p>
-              </div>
-
-              <button
-                onClick={() => handleCopy(b.number, b.bank)}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition-all text-xs font-semibold min-h-[44px]"
-              >
-                {copiedBank === b.bank ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-600" />
-                    <span>Tersalin!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    <span>Salin</span>
-                  </>
-                )}
-              </button>
-            </div>
+              bank={b.bank}
+              number={b.number}
+              holder={b.holder}
+              coupleNames={`${bride.name} & ${groom.name}`}
+              rsvpGuestName={guestName}
+              qrisImageUrl="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=HARIKITA-KEBUMEN-BOTANICAL"
+            />
           ))}
 
           {/* Physical Gift Address */}

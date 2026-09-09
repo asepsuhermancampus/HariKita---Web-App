@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getThemeById } from "@/lib/templates/registry";
+import { getThemeById, TEMPLATES_CATALOG } from "@/lib/templates/registry";
 import { TemplateEngineResolver } from "@/components/templates/TemplateEngineResolver";
 import { LiveThemeSwitcherToolbar } from "@/components/invitation/LiveThemeSwitcherToolbar";
 
@@ -29,8 +29,9 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
     console.error("Database fetch error, using fallback demo data:", error);
   }
 
-  // Fallback demo data if slug is "demo" or database record is not yet seeded
-  const activeThemeId = themeOverride || invitation?.themeId || "autumnelle-animasi";
+  // Fallback demo data if slug is a known template ID or database record is not yet seeded
+  const isTemplateId = TEMPLATES_CATALOG.some((t) => t.id === slug);
+  const activeThemeId = themeOverride || invitation?.themeId || (isTemplateId ? slug : "autumnelle");
   const themePreset = getThemeById(activeThemeId);
 
   const brideName = invitation?.brideName || "Citra Ayu Lestari";

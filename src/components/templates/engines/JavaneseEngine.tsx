@@ -10,12 +10,12 @@ import {
   MapPin,
   Heart,
   Instagram,
-  Copy,
-  Check,
   Send,
   Sparkles,
   ExternalLink,
 } from "lucide-react";
+import { LuxuryBankCard, AddToCalendarButton, GalleryLightboxModal } from "@/components/invitation/cards";
+import { KebumenWaletSvg } from "@/components/invitation/svg";
 
 export const JavaneseEngine: React.FC<DedicatedTemplateProps> = ({
   theme,
@@ -35,17 +35,12 @@ export const JavaneseEngine: React.FC<DedicatedTemplateProps> = ({
   const [newWishName, setNewWishName] = useState(guestName || "");
   const [newWishMessage, setNewWishMessage] = useState("");
   const [attendance, setAttendance] = useState("hadir");
-  const [copiedBank, setCopiedBank] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const goldColor = "#CCA873";
   const teakColor = "#261712";
-
-  const handleCopy = (text: string, bankName: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedBank(bankName);
-    setTimeout(() => setCopiedBank(null), 2500);
-  };
 
   const handleSendWish = (e: React.FormEvent) => {
     e.preventDefault();
@@ -248,16 +243,28 @@ export const JavaneseEngine: React.FC<DedicatedTemplateProps> = ({
             </div>
           </div>
 
-          <a
-            href={googleMapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 font-sans font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:scale-[1.02] transition-transform min-h-[44px]"
-          >
-            <MapPin className="w-4 h-4" />
-            <span>Peta Lokasi Google Maps</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 font-sans font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:scale-[1.01] transition-transform min-h-[44px]"
+            >
+              <MapPin className="w-4 h-4" />
+              <span>Google Maps</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            <AddToCalendarButton
+              title={`${activeSession.title} ${bride.name} & ${groom.name}`}
+              description={`Undangan Pernikahan di ${activeSession.venueName}. Sesi: ${activeSession.timeSlot}`}
+              location={`${activeSession.venueName}, ${activeSession.venueAddress}`}
+              startDate={eventDate}
+              endDate={eventDate}
+              primaryColor="#78350F"
+              accentColor="#F59E0B"
+            />
+          </div>
         </div>
       </section>
 
@@ -297,14 +304,31 @@ export const JavaneseEngine: React.FC<DedicatedTemplateProps> = ({
           {galleryPhotos.map((photo, idx) => (
             <div
               key={idx}
-              className={`rounded-2xl overflow-hidden shadow-xl border border-amber-400/30 ${
+              onClick={() => {
+                setLightboxIndex(idx);
+                setIsLightboxOpen(true);
+              }}
+              className={`rounded-2xl overflow-hidden shadow-xl border border-amber-400/30 cursor-pointer group ${
                 idx % 3 === 0 ? "col-span-2 h-56" : "h-40"
               }`}
             >
-              <img src={photo} alt={`Galeri ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 filter sepia-[0.1]" />
+              <img
+                src={photo}
+                alt={`Galeri ${idx + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter sepia-[0.1]"
+              />
             </div>
           ))}
         </div>
+
+        {/* Fullscreen Interactive Lightbox */}
+        <GalleryLightboxModal
+          photos={galleryPhotos}
+          currentIndex={lightboxIndex}
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          onIndexChange={setLightboxIndex}
+        />
       </section>
 
       {/* ===================== SECTION 6: DIGITAL GIFT (#gift) ===================== */}
@@ -321,35 +345,15 @@ export const JavaneseEngine: React.FC<DedicatedTemplateProps> = ({
 
         <div className="space-y-4">
           {giftInfo.banks.map((b, idx) => (
-            <div
+            <LuxuryBankCard
               key={idx}
-              className="bg-gradient-to-r from-amber-950/80 to-black/80 rounded-2xl p-5 shadow-xl border border-amber-400/40 flex items-center justify-between"
-            >
-              <div className="space-y-1 font-sans">
-                <span className="text-xs font-bold text-amber-300 bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/30">
-                  {b.bank}
-                </span>
-                <p className="text-lg font-mono font-bold text-white">{b.number}</p>
-                <p className="text-xs text-amber-300/60">a.n. {b.holder}</p>
-              </div>
-
-              <button
-                onClick={() => handleCopy(b.number, b.bank)}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-400/20 text-amber-300 border border-amber-400/40 hover:bg-amber-400/30 transition-all text-xs font-sans font-semibold min-h-[44px]"
-              >
-                {copiedBank === b.bank ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-400" />
-                    <span>Tersalin!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    <span>Salin</span>
-                  </>
-                )}
-              </button>
-            </div>
+              bank={b.bank}
+              number={b.number}
+              holder={b.holder}
+              coupleNames={`${bride.name} & ${groom.name}`}
+              rsvpGuestName={guestName}
+              qrisImageUrl="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=HARIKITA-KEBUMEN-JAVANESE"
+            />
           ))}
 
           <div className="bg-amber-950/50 rounded-2xl p-4 border border-amber-400/30 text-xs font-sans space-y-1.5">

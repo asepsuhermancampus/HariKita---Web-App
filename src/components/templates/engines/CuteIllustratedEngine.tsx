@@ -9,14 +9,14 @@ import {
   MapPin,
   Heart,
   Instagram,
-  Copy,
-  Check,
   Send,
   Sparkles,
   ExternalLink,
   Smile,
   Navigation,
 } from "lucide-react";
+import { LuxuryBankCard, AddToCalendarButton, GalleryLightboxModal } from "@/components/invitation/cards";
+import { CuteStorybookMascotSvg } from "@/components/invitation/svg";
 
 export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
   theme,
@@ -36,14 +36,9 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
   const [newWishName, setNewWishName] = useState(guestName || "");
   const [newWishMessage, setNewWishMessage] = useState("");
   const [attendance, setAttendance] = useState("hadir");
-  const [copiedBank, setCopiedBank] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
-
-  const handleCopy = (text: string, bankName: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedBank(bankName);
-    setTimeout(() => setCopiedBank(null), 2500);
-  };
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const handleSendWish = (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,6 +125,7 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
       {/* ===================== SECTION 2: COUPLE (#couple) ===================== */}
       <section id="couple" className="py-16 px-6 space-y-12">
         <div className="text-center space-y-1">
+          <CuteStorybookMascotSvg className="w-16 h-16 mx-auto mb-2 text-pink-500 hover:rotate-6 transition-transform" />
           <span className="text-xs uppercase tracking-widest text-pink-600 font-bold">
             The Happy Pair
           </span>
@@ -252,16 +248,28 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
             </div>
           </div>
 
-          <a
-            href={googleMapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-full bg-pink-500 text-white text-xs font-bold uppercase tracking-wider shadow-md hover:bg-pink-600 transition-colors min-h-[44px]"
-          >
-            <Navigation className="w-4 h-4" />
-            <span>Buka Peta Google Maps</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-pink-500 text-white text-xs font-bold uppercase tracking-wider shadow-md hover:bg-pink-600 transition-colors min-h-[44px]"
+            >
+              <Navigation className="w-4 h-4" />
+              <span>Google Maps</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            <AddToCalendarButton
+              title={`${activeSession.title} ${bride.name} & ${groom.name}`}
+              description={`Undangan Acara Bahagia di ${activeSession.venueName}. Sesi: ${activeSession.timeSlot}`}
+              location={`${activeSession.venueName}, ${activeSession.venueAddress}`}
+              startDate={eventDate}
+              endDate={eventDate}
+              primaryColor="#DB2777"
+              accentColor="#F472B6"
+            />
+          </div>
         </div>
 
         {/* Integrated Cute Illustrated Map of Kebumen */}
@@ -340,14 +348,31 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
           {galleryPhotos.map((photo, idx) => (
             <div
               key={idx}
-              className={`rounded-3xl overflow-hidden shadow-md border-4 border-white ${
+              onClick={() => {
+                setLightboxIndex(idx);
+                setIsLightboxOpen(true);
+              }}
+              className={`rounded-3xl overflow-hidden shadow-md border-4 border-white cursor-pointer group ${
                 idx % 3 === 0 ? "col-span-2 h-56" : "h-40"
               }`}
             >
-              <img src={photo} alt={`Galeri ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              <img
+                src={photo}
+                alt={`Galeri ${idx + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
           ))}
         </div>
+
+        {/* Fullscreen Interactive Lightbox */}
+        <GalleryLightboxModal
+          photos={galleryPhotos}
+          currentIndex={lightboxIndex}
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          onIndexChange={setLightboxIndex}
+        />
       </section>
 
       {/* ===================== SECTION 6: DIGITAL GIFT (#gift) ===================== */}
@@ -364,35 +389,15 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
 
         <div className="space-y-4">
           {giftInfo.banks.map((b, idx) => (
-            <div
+            <LuxuryBankCard
               key={idx}
-              className="bg-white rounded-3xl p-5 shadow-lg border-2 border-pink-200 flex items-center justify-between"
-            >
-              <div className="space-y-1">
-                <span className="text-xs font-bold text-pink-700 bg-pink-100 px-2.5 py-0.5 rounded-full">
-                  {b.bank}
-                </span>
-                <p className="text-lg font-mono font-bold text-slate-900">{b.number}</p>
-                <p className="text-xs text-slate-500">a.n. {b.holder}</p>
-              </div>
-
-              <button
-                onClick={() => handleCopy(b.number, b.bank)}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-pink-50 text-pink-700 border-2 border-pink-200 hover:bg-pink-100 transition-all text-xs font-bold min-h-[44px]"
-              >
-                {copiedBank === b.bank ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-600" />
-                    <span>Tersalin!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    <span>Salin</span>
-                  </>
-                )}
-              </button>
-            </div>
+              bank={b.bank}
+              number={b.number}
+              holder={b.holder}
+              coupleNames={`${bride.name} & ${groom.name}`}
+              rsvpGuestName={guestName}
+              qrisImageUrl="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=HARIKITA-KEBUMEN-CUTE"
+            />
           ))}
 
           <div className="bg-pink-100/60 rounded-3xl p-4 border-2 border-pink-200 text-xs space-y-1.5">

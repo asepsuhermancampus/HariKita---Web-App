@@ -9,12 +9,11 @@ import {
   MapPin,
   Heart,
   Instagram,
-  Copy,
-  Check,
   Send,
   ExternalLink,
   ArrowUpRight,
 } from "lucide-react";
+import { LuxuryBankCard, AddToCalendarButton, GalleryLightboxModal } from "@/components/invitation/cards";
 
 export const MinimalistEngine: React.FC<DedicatedTemplateProps> = ({
   theme,
@@ -34,14 +33,9 @@ export const MinimalistEngine: React.FC<DedicatedTemplateProps> = ({
   const [newWishName, setNewWishName] = useState(guestName || "");
   const [newWishMessage, setNewWishMessage] = useState("");
   const [attendance, setAttendance] = useState("hadir");
-  const [copiedBank, setCopiedBank] = useState<string | null>(null);
   const [selectedSession, setSelectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
-
-  const handleCopy = (text: string, bankName: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedBank(bankName);
-    setTimeout(() => setCopiedBank(null), 2500);
-  };
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const handleSendWish = (e: React.FormEvent) => {
     e.preventDefault();
@@ -222,15 +216,27 @@ export const MinimalistEngine: React.FC<DedicatedTemplateProps> = ({
             <p className="text-[11px] text-neutral-500 text-right">{activeSession.venueAddress}</p>
           </div>
 
-          <a
-            href={googleMapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full inline-flex items-center justify-center gap-2 py-4 px-6 bg-neutral-950 text-white text-xs font-mono uppercase tracking-widest hover:bg-neutral-800 transition-colors min-h-[44px]"
-          >
-            <span>VIEW ON GOOGLE MAPS</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </a>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 py-3 px-4 bg-neutral-950 text-white text-xs font-mono uppercase tracking-widest hover:bg-neutral-800 transition-colors min-h-[44px]"
+            >
+              <span>GOOGLE MAPS</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </a>
+
+            <AddToCalendarButton
+              title={`${activeSession.title} ${bride.name} & ${groom.name}`}
+              description={`Celebration at ${activeSession.venueName}. Slot: ${activeSession.timeSlot}`}
+              location={`${activeSession.venueName}, ${activeSession.venueAddress}`}
+              startDate={eventDate}
+              endDate={eventDate}
+              primaryColor="#171717"
+              accentColor="#525252"
+            />
+          </div>
         </div>
       </section>
 
@@ -261,11 +267,31 @@ export const MinimalistEngine: React.FC<DedicatedTemplateProps> = ({
 
         <div className="space-y-4">
           {galleryPhotos.map((photo, idx) => (
-            <div key={idx} className="aspect-[4/3] overflow-hidden bg-neutral-200 border border-neutral-300 grayscale contrast-110">
-              <img src={photo} alt={`Editorial ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+            <div
+              key={idx}
+              onClick={() => {
+                setLightboxIndex(idx);
+                setIsLightboxOpen(true);
+              }}
+              className="aspect-[4/3] overflow-hidden bg-neutral-200 border border-neutral-300 grayscale contrast-110 cursor-pointer group"
+            >
+              <img
+                src={photo}
+                alt={`Editorial ${idx + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
             </div>
           ))}
         </div>
+
+        {/* Fullscreen Interactive Lightbox */}
+        <GalleryLightboxModal
+          photos={galleryPhotos}
+          currentIndex={lightboxIndex}
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          onIndexChange={setLightboxIndex}
+        />
       </section>
 
       {/* ===================== SECTION 6: DIGITAL GIFT (#gift) ===================== */}
@@ -281,23 +307,15 @@ export const MinimalistEngine: React.FC<DedicatedTemplateProps> = ({
 
         <div className="space-y-4">
           {giftInfo.banks.map((b, idx) => (
-            <div
+            <LuxuryBankCard
               key={idx}
-              className="border border-neutral-200 p-6 flex items-center justify-between bg-neutral-50"
-            >
-              <div className="space-y-1 font-mono text-xs">
-                <span className="text-neutral-400 uppercase tracking-wider">{b.bank}</span>
-                <p className="text-base font-bold text-neutral-950 tracking-wider">{b.number}</p>
-                <p className="text-neutral-500">A/N {b.holder}</p>
-              </div>
-
-              <button
-                onClick={() => handleCopy(b.number, b.bank)}
-                className="px-4 py-2 border border-neutral-950 text-xs font-mono uppercase tracking-wider hover:bg-neutral-950 hover:text-white transition-colors min-h-[44px]"
-              >
-                {copiedBank === b.bank ? "COPIED" : "COPY"}
-              </button>
-            </div>
+              bank={b.bank}
+              number={b.number}
+              holder={b.holder}
+              coupleNames={`${bride.name} & ${groom.name}`}
+              rsvpGuestName={guestName}
+              qrisImageUrl="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=HARIKITA-KEBUMEN-MINIMALIST"
+            />
           ))}
 
           <div className="border border-neutral-200 p-6 text-xs font-mono space-y-1">
