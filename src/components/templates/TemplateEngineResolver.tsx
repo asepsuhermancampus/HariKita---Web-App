@@ -79,6 +79,14 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
     }
   };
 
+  const handleCloseCover = () => {
+    setIsCoverOpened(false);
+    setIsMusicPlaying(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+  };
+
   const renderEngine = () => {
     // 1. Dedicated Decoupled Atomic Templates
     switch (themeId) {
@@ -160,6 +168,7 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
           theme={props.theme}
           brideName={props.bride.name}
           groomName={props.groom.name}
+          onCloseInvitation={handleCloseCover}
         />
 
         {/* 3. Floating Peripherals (Rendered when cover is open) */}

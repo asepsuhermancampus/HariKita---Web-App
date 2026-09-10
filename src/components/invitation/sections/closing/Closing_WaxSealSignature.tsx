@@ -38,7 +38,7 @@ export const Closing_WaxSealSignature: React.FC<{
         </div>
 
         <div className="flex items-center justify-center gap-1.5 text-[11px] text-stone-500 pt-4">
-          <span>Rangkai Hari Bahagiamu di Kebumen bersama HariKita</span>
+          <span>Doa Restu Anda Adalah Kehormatan Terindah Bagi Kami</span>
           <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
         </div>
       </div>

@@ -33,7 +33,7 @@ export const Closing_CuteWavingOutro: React.FC<{
         </div>
 
         <div className="flex items-center justify-center gap-1 text-[11px] text-slate-500">
-          <span>Dirangkai penuh kehangatan via HariKita</span>
+          <span>Salam hangat dan terima kasih dari kami sekeluarga</span>
           <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
         </div>
       </div>

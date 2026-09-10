@@ -44,9 +44,9 @@ export const Closing_PoeticPhotoOutro: React.FC<{
           </h3>
         </div>
 
-        <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-6">
-          <span>Dibuat dengan cinta di Kebumen melalui HariKita</span>
-          <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+        <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-300 pt-6">
+          <span>Terima Kasih atas Doa &amp; Restu yang Tulus</span>
+          <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
         </div>
       </div>
     </footer>
