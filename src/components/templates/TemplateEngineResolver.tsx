@@ -8,7 +8,6 @@ import {
   InvitationDesktopLayout,
   InvitationBottomDock,
   RotatingVinylPlayer,
-  AutoScrollButton,
   ETicketBoardingPass,
   SmoothOutroClosingGate,
 } from "@/components/invitation/shell";
@@ -32,20 +31,12 @@ import { TulivelleTemplate } from "./themes/tulivelle";
 export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) => {
   const [isCoverOpened, setIsCoverOpened] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [isTicketOpen, setIsTicketOpen] = useState(false);
-  const [sfxMuted, setSfxMuted] = useState(() => soundscape.isMuted());
 
-  // Sync sfxMuted state with the singleton
+  // Ensure SFX audio is always enabled by default per user specification
   useEffect(() => {
-    const unsub = soundscape.subscribe((muted) => setSfxMuted(muted));
-    return unsub;
+    soundscape.setMuted(false);
   }, []);
-
-  const handleToggleSfx = () => {
-    const nowMuted = soundscape.toggleMute();
-    if (!nowMuted) soundscape.playTick(); // confirm sound when unmuting
-  };
 
   // Scroll-lock: prevent background content scrolling while cover is visible.
   // IMPORTANT: We only lock overflow — we do NOT set touchAction:none because
@@ -183,13 +174,6 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
               songTitle={`${props.bride.name} & ${props.groom.name} Nuptial`}
             />
 
-            {/* Hands-Free Auto Scroll Button */}
-            <AutoScrollButton
-              isAutoScrolling={isAutoScrolling}
-              onToggleAutoScroll={() => setIsAutoScrolling(!isAutoScrolling)}
-              isVisible={true}
-            />
-
             {/* E-Ticket Boarding Pass Trigger & Modal */}
             <ETicketBoardingPass
               guestName={props.guestName}
@@ -202,37 +186,6 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
               isOpen={isTicketOpen}
               onClose={() => setIsTicketOpen(false)}
             />
-
-            {/* SFX Mute Toggle — floating pill above bottom dock */}
-            <button
-              id="sfx-toggle-btn"
-              aria-label={sfxMuted ? "Aktifkan suara efek" : "Matikan suara efek"}
-              onClick={handleToggleSfx}
-              style={{
-                position: "fixed",
-                bottom: "84px",
-                right: "16px",
-                zIndex: 9997,
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "8px 14px",
-                borderRadius: "999px",
-                border: "1px solid rgba(255,255,255,0.18)",
-                background: "rgba(15,23,42,0.72)",
-                backdropFilter: "blur(12px)",
-                color: "#fff",
-                fontSize: "12px",
-                fontWeight: 600,
-                letterSpacing: "0.05em",
-                cursor: "pointer",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-                transition: "opacity 0.2s",
-              }}
-            >
-              <span style={{ fontSize: "16px" }}>{sfxMuted ? "🔇" : "🔊"}</span>
-              <span>{sfxMuted ? "SFX Off" : "SFX On"}</span>
-            </button>
 
             {/* Floating Glass Bottom Dock with Scroll-Spy */}
             <InvitationBottomDock isVisible={true} />
