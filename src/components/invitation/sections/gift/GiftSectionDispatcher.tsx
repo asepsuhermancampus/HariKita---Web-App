@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { DedicatedTemplateProps, GiftStyleId } from "@/lib/templates/types";
+import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { soundscape } from "@/lib/sound/soundscapeEngine";
-import { Gift_EmbossedCards } from "./Gift_EmbossedCards";
-import { Gift_AngpaoEnvelope } from "./Gift_AngpaoEnvelope";
-import { Gift_CleanPills } from "./Gift_CleanPills";
-import { Gift, Heart, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { Gift, Heart, ChevronDown, ChevronUp, Copy, Check, MapPin, Sparkles } from "lucide-react";
 
 export const GiftSectionDispatcher: React.FC<{
   giftInfo: DedicatedTemplateProps["giftInfo"];
@@ -14,6 +11,8 @@ export const GiftSectionDispatcher: React.FC<{
 }> = ({ giftInfo, theme }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [isAutoTriggered, setIsAutoTriggered] = useState(false);
+  const [copiedBank, setCopiedBank] = useState<string | null>(null);
+  const [copiedAddress, setCopiedAddress] = useState(false);
 
   // Listen to RSVP attendance selection changes across the page
   useEffect(() => {
@@ -24,7 +23,6 @@ export const GiftSectionDispatcher: React.FC<{
         setIsRevealed(true);
         setIsAutoTriggered(true);
       } else if (att === "hadir") {
-        // If guest changes mind back to hadir, reset auto-triggered flag
         setIsAutoTriggered(false);
       }
     };
@@ -35,94 +33,264 @@ export const GiftSectionDispatcher: React.FC<{
     };
   }, []);
 
-  let style: GiftStyleId = theme?.sectionConfig?.giftStyle || "embossed-cards";
-
-  if (!theme?.sectionConfig?.giftStyle) {
-    const arch = theme?.archetypeId || "botanical";
-    if (arch.includes("cute") || arch.includes("family")) {
-      style = "angpao-envelope";
-    } else if (arch.includes("minimalist")) {
-      style = "clean-pills";
-    } else {
-      style = "embossed-cards";
-    }
-  }
-
-  const renderActiveGiftComponent = () => {
-    switch (style) {
-      case "angpao-envelope":
-        return <Gift_AngpaoEnvelope giftInfo={giftInfo} themePrimary={theme?.colors?.primary} />;
-      case "clean-pills":
-        return <Gift_CleanPills giftInfo={giftInfo} themePrimary={theme?.colors?.primary} />;
-      case "embossed-cards":
-      default:
-        return <Gift_EmbossedCards giftInfo={giftInfo} themePrimary={theme?.colors?.primary} />;
-    }
-  };
-
   const handleToggleReveal = () => {
     soundscape.playTick();
     setIsRevealed((prev) => !prev);
   };
 
-  return (
-    <div id="gift" className="relative transition-all duration-700 ease-out">
-      {/* 1. COURTEOUS INTRODUCTORY CARD (Always shown first to emphasize presence over gifts) */}
-      <div className="py-12 px-4 sm:px-6 relative overflow-hidden bg-gradient-to-b from-transparent via-amber-50/20 to-transparent">
-        <div className="max-w-xl mx-auto text-center space-y-5 p-6 sm:p-8 rounded-3xl border border-amber-300/40 bg-white/80 shadow-md backdrop-blur-xs">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/70 text-amber-900 text-xs font-serif font-bold uppercase tracking-wider">
-            <Heart className="w-3.5 h-3.5 text-amber-700 fill-amber-700" />
-            <span>Tanda Kasih &amp; Kehormatan Adat</span>
-          </div>
+  const handleCopyAccount = (number: string, bank: string) => {
+    navigator.clipboard.writeText(number);
+    soundscape.playCoin();
+    setCopiedBank(bank);
+    setTimeout(() => setCopiedBank(null), 2500);
+  };
 
+  const handleCopyAddress = () => {
+    if (!giftInfo.physicalGiftAddress) return;
+    navigator.clipboard.writeText(giftInfo.physicalGiftAddress);
+    soundscape.playCoin();
+    setCopiedAddress(true);
+    setTimeout(() => setCopiedAddress(false), 2500);
+  };
+
+  const isCelestial = theme?.archetypeId === "celestial";
+
+  return (
+    <section id="gift" className="py-16 px-4 sm:px-6 relative overflow-hidden bg-transparent">
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Unified Card Container */}
+        <div
+          className="p-6 sm:p-9 rounded-3xl border shadow-lg backdrop-blur-xs text-center space-y-6 transition-colors"
+          style={{
+            backgroundColor: isCelestial ? "rgba(15, 23, 42, 0.85)" : "rgba(255, 255, 255, 0.9)",
+            borderColor: isCelestial ? "rgba(197, 168, 128, 0.35)" : "rgba(197, 168, 128, 0.35)",
+            color: isCelestial ? "#F8FAFC" : "#4A2E35",
+          }}
+        >
+          {/* Header Badge & Title */}
           <div className="space-y-2">
-            <h3 className="font-serif-luxury text-xl sm:text-2xl font-bold text-amber-950">
+            <div
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-serif font-bold uppercase tracking-wider"
+              style={{
+                backgroundColor: isCelestial ? "rgba(197, 168, 128, 0.2)" : "rgba(197, 168, 128, 0.15)",
+                color: isCelestial ? "#E2E8F0" : "#7D424D",
+              }}
+            >
+              <Heart className="w-3.5 h-3.5" style={{ color: theme?.colors?.accent || "#C5A880", fill: theme?.colors?.accent || "#C5A880" }} />
+              <span>Tanda Kasih &amp; Kehormatan Adat</span>
+            </div>
+            <h3
+              className="font-serif-luxury text-2xl sm:text-3xl font-bold"
+              style={{ color: isCelestial ? "#F8FAFC" : "#4A2E35" }}
+            >
               Doa Restu Anda Adalah Hadiah Terindah
             </h3>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-serif">
+            <p
+              className="text-xs sm:text-sm leading-relaxed font-serif max-w-lg mx-auto"
+              style={{ color: isCelestial ? "#94A3B8" : "#6B5E62" }}
+            >
               Kehadiran dan doa restu yang tulus dari Bapak/Ibu/Saudara/i adalah kehormatan paling bermakna bagi kami.
-              Tanpa mengurangi rasa hormat, bagi keluarga atau kerabat yang berhalangan hadir secara fisik dan berkenan menyampaikan tanda kasih digital, dapat membuka akses amplop di bawah ini.
+              Tanpa mengurangi rasa hormat, bagi keluarga atau kerabat yang berhalangan hadir secara fisik dan berkenan menyampaikan tanda kasih digital atau kado fisik, dapat membuka akses di bawah ini.
             </p>
           </div>
 
           {/* Voluntary Open / Collapse Trigger */}
-          <div className="pt-2">
+          <div className="pt-1">
             <button
               id="btn-toggle-gift-section"
               onClick={handleToggleReveal}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider text-amber-950 bg-gradient-to-r from-amber-300 via-amber-200 to-amber-400 hover:brightness-105 transition-all shadow-md cursor-pointer active:scale-98"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-serif font-bold uppercase tracking-wider transition-all shadow-xs cursor-pointer active:scale-98"
+              style={{
+                backgroundColor: isCelestial ? "rgba(197, 168, 128, 0.25)" : "rgba(197, 168, 128, 0.18)",
+                borderColor: isCelestial ? "rgba(197, 168, 128, 0.5)" : "rgba(197, 168, 128, 0.5)",
+                borderWidth: "1px",
+                color: isCelestial ? "#F8FAFC" : "#4A2E35",
+              }}
             >
-              <Gift className="w-4 h-4 text-amber-900" />
-              <span>{isRevealed ? "Tutup Tanda Kasih" : "Kirim Tanda Kasih Digital"}</span>
-              {isRevealed ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              <Gift className="w-4 h-4" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+              <span>{isRevealed ? "Tutup Tanda Kasih" : "Kirim Tanda Kasih Digital & Kado"}</span>
+              {isRevealed ? (
+                <ChevronUp className="w-4 h-4" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+              ) : (
+                <ChevronDown className="w-4 h-4" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+              )}
             </button>
           </div>
 
           {isAutoTriggered && isRevealed && (
-            <div className="text-[11px] font-serif text-amber-800 bg-amber-50/90 border border-amber-300/50 rounded-xl p-2.5 mt-3">
-              ✦ Karena Anda memilih berhalangan hadir, saluran tanda kasih digital terbuka sebagai penyambung silaturahmi.
+            <div
+              className="text-[11px] font-serif rounded-xl p-3 max-w-md mx-auto border animate-gift-fade-in"
+              style={{
+                backgroundColor: isCelestial ? "rgba(30, 41, 59, 0.7)" : "rgba(254, 252, 248, 0.9)",
+                borderColor: "rgba(197, 168, 128, 0.4)",
+                color: isCelestial ? "#CBD5E1" : "#7D424D",
+              }}
+            >
+              ✦ Karena Anda memilih berhalangan hadir, saluran tanda kasih digital &amp; kirim kado terbuka sebagai wujud silaturahmi.
+            </div>
+          )}
+
+          {/* REVEALED CONTENT: Soft Bank Cards & Physical Gift in the SAME Card */}
+          {isRevealed && (
+            <div
+              className="space-y-5 pt-4 border-t animate-gift-expand text-left"
+              style={{ borderColor: isCelestial ? "rgba(255, 255, 255, 0.1)" : "rgba(197, 168, 128, 0.25)" }}
+            >
+              {/* Bank Accounts Grid (Soft Tone) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {giftInfo.banks.map((b, idx) => {
+                  const isCopied = copiedBank === b.bank;
+                  return (
+                    <div
+                      key={idx}
+                      className="p-4 sm:p-5 rounded-2xl border shadow-xs flex flex-col justify-between space-y-3 transition-colors"
+                      style={{
+                        backgroundColor: isCelestial ? "rgba(30, 41, 59, 0.65)" : "rgba(250, 248, 245, 0.9)",
+                        borderColor: isCelestial ? "rgba(197, 168, 128, 0.25)" : "rgba(197, 168, 128, 0.35)",
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className="font-mono font-bold text-xs px-2.5 py-1 rounded-md border shadow-2xs"
+                          style={{
+                            backgroundColor: isCelestial ? "rgba(15, 23, 42, 0.9)" : "#FFFFFF",
+                            borderColor: isCelestial ? "rgba(197, 168, 128, 0.3)" : "rgba(197, 168, 128, 0.3)",
+                            color: isCelestial ? "#F8FAFC" : "#4A2E35",
+                          }}
+                        >
+                          {b.bank}
+                        </span>
+                        <span
+                          className="text-[11px] font-serif font-medium truncate max-w-[130px]"
+                          style={{ color: isCelestial ? "#94A3B8" : "#6B5E62" }}
+                        >
+                          a.n {b.holder}
+                        </span>
+                      </div>
+
+                      <div className="space-y-0.5">
+                        <span
+                          className="text-[10px] font-mono uppercase tracking-widest block"
+                          style={{ color: isCelestial ? "#64748B" : "#8C7E82" }}
+                        >
+                          Nomor Rekening
+                        </span>
+                        <p
+                          className="font-mono text-lg sm:text-xl font-bold tracking-wider"
+                          style={{ color: isCelestial ? "#F8FAFC" : "#4A2E35" }}
+                        >
+                          {b.number}
+                        </p>
+                      </div>
+
+                      <div className="pt-1 flex justify-end">
+                        <button
+                          onClick={() => handleCopyAccount(b.number, b.bank)}
+                          className="py-1.5 px-3.5 rounded-xl text-xs font-serif font-bold border shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                          style={{
+                            backgroundColor: isCelestial ? "rgba(255, 255, 255, 0.1)" : "#FFFFFF",
+                            borderColor: "rgba(197, 168, 128, 0.4)",
+                            color: isCelestial ? "#F8FAFC" : "#4A2E35",
+                          }}
+                        >
+                          {isCopied ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-600" />
+                              <span className="text-emerald-700 dark:text-emerald-400">Tersalin!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+                              <span>Salin Nomor</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Physical Gift Address Box (Soft Matching Style) */}
+              {giftInfo.physicalGiftAddress && (
+                <div
+                  className="p-4 sm:p-5 rounded-2xl border shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4"
+                  style={{
+                    backgroundColor: isCelestial ? "rgba(30, 41, 59, 0.65)" : "rgba(250, 248, 245, 0.9)",
+                    borderColor: isCelestial ? "rgba(197, 168, 128, 0.25)" : "rgba(197, 168, 128, 0.35)",
+                  }}
+                >
+                  <div className="flex items-start gap-3 w-full">
+                    <div
+                      className="w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 shadow-2xs"
+                      style={{
+                        backgroundColor: isCelestial ? "rgba(15, 23, 42, 0.9)" : "#FFFFFF",
+                        borderColor: isCelestial ? "rgba(197, 168, 128, 0.3)" : "rgba(197, 168, 128, 0.3)",
+                      }}
+                    >
+                      <MapPin className="w-4 h-4" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+                    </div>
+                    <div className="space-y-0.5 min-w-0">
+                      <span
+                        className="text-[10px] font-serif font-bold uppercase tracking-wider block"
+                        style={{ color: isCelestial ? "#E2E8F0" : "#7D424D" }}
+                      >
+                        Kirim Kado Fisik / Parsel
+                      </span>
+                      <p
+                        className="text-xs leading-relaxed font-serif"
+                        style={{ color: isCelestial ? "#94A3B8" : "#6B5E62" }}
+                      >
+                        {giftInfo.physicalGiftAddress}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleCopyAddress}
+                    className="shrink-0 w-full sm:w-auto py-2 px-4 rounded-xl text-xs font-serif font-bold border shadow-2xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    style={{
+                      backgroundColor: isCelestial ? "rgba(255, 255, 255, 0.1)" : "#FFFFFF",
+                      borderColor: "rgba(197, 168, 128, 0.4)",
+                      color: isCelestial ? "#F8FAFC" : "#4A2E35",
+                    }}
+                  >
+                    {copiedAddress ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700 dark:text-emerald-400">Alamat Tersalin!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+                        <span>Salin Alamat</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
 
-      {/* 2. CONDITIONAL GIFT ACCOUNTS & ADDRESS (Displayed when revealed) */}
-      {isRevealed && (
-        <div className="animate-gift-expand">
-          {renderActiveGiftComponent()}
-        </div>
-      )}
-
       <style>{`
         @keyframes giftExpand {
-          0% { opacity: 0; transform: translateY(-16px); }
+          0% { opacity: 0; transform: translateY(-10px); }
           100% { opacity: 1; transform: translateY(0); }
         }
+        @keyframes giftFadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
         .animate-gift-expand {
-          animation: giftExpand 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation: giftExpand 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-gift-fade-in {
+          animation: giftFadeIn 0.3s ease-out forwards;
         }
       `}</style>
-    </div>
+    </section>
   );
 };
 
