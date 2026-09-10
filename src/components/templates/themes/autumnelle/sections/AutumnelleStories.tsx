@@ -23,15 +23,24 @@ export const AutumnelleStories: React.FC<{
         </h2>
       </div>
 
-      <div className="space-y-6 text-left relative pl-6 border-l-2 border-emerald-300/40 ml-4">
+      <div className="space-y-8 text-left relative pl-6 sm:pl-8 border-l-2 border-emerald-300/50 ml-3 sm:ml-4">
         {storyTimeline.map((story, idx) => (
-          <div key={idx} className="relative space-y-1.5">
-            <div className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-emerald-700 border-2 border-white shadow-xs" />
-            <span className="text-xs font-mono font-bold text-amber-800 px-2.5 py-0.5 rounded-full bg-amber-100/60">
-              {story.year}
-            </span>
-            <h3 className="font-serif font-bold text-base text-emerald-950">{story.title}</h3>
-            <p className="text-xs font-serif text-slate-600 leading-relaxed">{story.desc}</p>
+          <div key={idx} className="relative space-y-2 pb-2">
+            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-800 border-2 border-white shadow-xs" />
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-bold text-amber-900 px-2.5 py-0.5 rounded-full bg-amber-100/80 border border-amber-300/50">
+                TAHUN {story.year}
+              </span>
+              <span className="text-[11px] font-serif text-emerald-800 font-semibold">
+                Bab 0{idx + 1}
+              </span>
+            </div>
+            <h3 className="font-serif font-bold text-base sm:text-lg text-emerald-950 leading-snug">
+              {story.title}
+            </h3>
+            <p className="text-xs sm:text-[13px] font-serif text-slate-700 leading-relaxed text-justify sm:text-left">
+              {story.desc}
+            </p>
           </div>
         ))}
       </div>

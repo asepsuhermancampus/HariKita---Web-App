@@ -54,18 +54,23 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
   const defaultStory = [
     {
       year: "2021",
-      title: "Pertemuan Pertama di Alun-Alun Kebumen",
-      desc: "Berjumpa saat sama-sama menikmati kuliner sate ambal di sore hari.",
+      title: "Takdir di Sudut Alun-Alun Kebumen",
+      desc: "Pertemuan pertama yang tak pernah direncanakan di bawah hangatnya lembayung sore Alun-Alun Kebumen. Berawal dari percakapan santai seputar kuliner lokal dan tawa kecil yang tak sengaja beradu, semesta diam-diam mulai menenun rasa nyaman di antara dua insan yang sebelumnya saling asing.",
     },
     {
-      year: "2023",
-      title: "Komitmen Bersama",
-      desc: "Sepakat menjalin hubungan serius untuk menyatukan dua keluarga besar.",
+      year: "2022",
+      title: "Mengikat Kepercayaan di Pantai Menganti",
+      desc: "Perjalanan demi perjalanan kami lewati bersama, hingga suatu senja di atas tebing kapur Pantai Menganti. Di sanalah lembaran demi lembaran cerita hidup kami buka tanpa ragu; saling mendengarkan mimpi sederhana, memahami cerita masa lalu, dan menyadari bahwa kehadiran masing-masing adalah rumah terbaik untuk berpulang.",
+    },
+    {
+      year: "2024",
+      title: "Menyelaraskan Hati & Restu Dua Keluarga",
+      desc: "Cinta bukan lagi sekadar tentang 'aku dan kamu', melainkan menyelaraskan niat tulus dengan restu keluarga besar. Melewati diskusi panjang, silaturahmi yang hangat, dan doa-doa di sepertiga malam, kedua orang tua akhirnya saling menyatukan tangan dan merestui jalan suci ini menuju ikatan pernikahan.",
     },
     {
       year: "2026",
-      title: "Hari Bahagia Menuju Pelaminan",
-      desc: "Dengan restu kedua orang tua, mengikat janji suci pernikahan abadi.",
+      title: "Mengucap Janji di Depan Penghulu",
+      desc: "Setelah menempuh perjalanan waktu yang mendewasakan, hari yang paling kami nantikan kini menjelma nyata. Dengan bismillah dan kerendahan hati, kami bersiap mengikrarkan janji suci di hadapan Sang Khalik, mengarungi bahtera rumah tangga yang sakinah, mawaddah, dan warahmah hingga akhir usia.",
     },
   ];
 

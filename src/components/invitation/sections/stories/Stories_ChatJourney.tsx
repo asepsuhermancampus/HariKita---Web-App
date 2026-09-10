@@ -52,17 +52,17 @@ export const Stories_ChatJourney: React.FC<{
                     Tahun {item.year}
                   </span>
                   <div
-                    className={`max-w-[85%] p-4 rounded-2xl shadow-sm text-xs space-y-1.5 ${
+                    className={`max-w-[92%] sm:max-w-[88%] p-4 sm:p-5 rounded-2xl shadow-sm text-xs sm:text-[13px] space-y-2 ${
                       isEven
                         ? "bg-slate-100 text-slate-800 rounded-tl-xs"
                         : "bg-rose-500 text-white rounded-tr-xs"
                     }`}
                   >
-                    <strong className="block font-bold text-sm">{item.title}</strong>
-                    <p className={`leading-relaxed ${isEven ? "text-slate-600" : "text-rose-100"}`}>
+                    <strong className="block font-bold text-sm sm:text-base leading-snug">{item.title}</strong>
+                    <p className={`leading-relaxed font-sans ${isEven ? "text-slate-600" : "text-rose-100"}`}>
                       {item.desc}
                     </p>
-                    <div className="text-[9px] text-right opacity-70">Read ✓✓</div>
+                    <div className="text-[10px] text-right opacity-70 font-mono">Dibaca ✓✓</div>
                   </div>
                 </div>
               );

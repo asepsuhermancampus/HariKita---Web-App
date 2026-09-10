@@ -57,29 +57,53 @@ export const Stories_FilmstripScroll: React.FC<{
         {/* Filmstrip Reel Container */}
         <div
           ref={scrollRef}
-          className="flex gap-6 overflow-x-auto pb-6 scrollbar-none snap-x snap-mandatory pt-2"
+          className="flex gap-4 sm:gap-6 overflow-x-auto pb-6 scrollbar-none snap-x snap-mandatory pt-2 px-1"
         >
           {stories.map((item, idx) => (
             <div
               key={idx}
-              className="snap-center shrink-0 w-72 sm:w-80 bg-slate-800/90 rounded-3xl p-6 border-2 border-slate-700 shadow-2xl space-y-4 flex flex-col justify-between"
+              className="snap-center shrink-0 w-[84vw] max-w-[340px] sm:w-[380px] bg-slate-800/95 rounded-3xl p-6 sm:p-7 border border-slate-700/80 shadow-2xl space-y-4 flex flex-col justify-between min-h-[350px] sm:min-h-[360px] relative overflow-hidden group hover:border-amber-400/40 transition-colors"
             >
-              {/* Film Sprocket Holes Decorative Header */}
-              <div className="flex justify-between items-center py-1 border-b border-white/10 text-[10px] font-mono text-slate-400">
-                <span className="bg-amber-400/20 text-amber-300 px-2.5 py-0.5 rounded-full font-bold">
-                  CHAPTER {idx + 1}
+              {/* Top Film Sprocket Perforation Line */}
+              <div className="flex justify-between items-center pb-3 border-b border-white/10">
+                <div className="flex items-center gap-1.5 opacity-40">
+                  <div className="w-2.5 h-3 rounded-xs border border-white/60 bg-white/20" />
+                  <div className="w-2.5 h-3 rounded-xs border border-white/60 bg-white/20" />
+                  <div className="w-2.5 h-3 rounded-xs border border-white/60 bg-white/20" />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider">
+                    BAB 0{idx + 1}
+                  </span>
+                  <span className="text-[11px] font-mono font-semibold text-slate-300">
+                    {item.year}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 opacity-40">
+                  <div className="w-2.5 h-3 rounded-xs border border-white/60 bg-white/20" />
+                  <div className="w-2.5 h-3 rounded-xs border border-white/60 bg-white/20" />
+                  <div className="w-2.5 h-3 rounded-xs border border-white/60 bg-white/20" />
+                </div>
+              </div>
+
+              {/* Story Title & Long Narrative Description */}
+              <div className="space-y-3 py-1 flex-1">
+                <h3 className="text-lg sm:text-xl font-serif font-bold text-white leading-snug tracking-wide">
+                  {item.title}
+                </h3>
+                <p className="text-xs sm:text-[13px] text-slate-300 leading-relaxed font-sans text-justify sm:text-left">
+                  {item.desc}
+                </p>
+              </div>
+
+              {/* Bottom Film Sprocket Line & Footer Accent */}
+              <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+                <span className="font-serif italic text-[11px] text-slate-400">
+                  &ldquo;Rangkai Cerita Menuju Pelaminan&rdquo;
                 </span>
-                <span>TAHUN {item.year}</span>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-xl font-serif font-bold text-white leading-snug">{item.title}</h3>
-                <p className="text-xs text-slate-300 leading-relaxed font-sans">{item.desc}</p>
-              </div>
-
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-                <span className="font-serif italic">&ldquo;Hari Bahagia Menanti&rdquo;</span>
-                <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
+                <Heart className="w-4 h-4 text-rose-400 fill-rose-400/80" />
               </div>
             </div>
           ))}
