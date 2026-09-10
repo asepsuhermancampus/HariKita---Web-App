@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { TemplateThemePreset } from "@/lib/templates/types";
+import { soundscape } from "@/lib/sound/soundscapeEngine";
 import {
   JavaneseGununganSvg,
   KebumenWaletSvg,
@@ -12,7 +13,7 @@ import {
   CelestialConstellationSvg,
   CuteStorybookMascotSvg,
 } from "../svg";
-import { ArrowUp, Heart, Sparkles, RefreshCw } from "lucide-react";
+import { ArrowUp, Heart, Sparkles, RefreshCw, Lock } from "lucide-react";
 
 interface SmoothOutroClosingGateProps {
   theme: TemplateThemePreset;
@@ -27,7 +28,7 @@ export const SmoothOutroClosingGate: React.FC<SmoothOutroClosingGateProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isTriggered, setIsTriggered] = useState(false);
-  const [isManuallyClosed, setIsManuallyClosed] = useState(false);
+  const [isOverlayClosed, setIsOverlayClosed] = useState(false);
 
   const archetypeId = theme.archetypeId || "botanical";
   const initials = `${groomName.charAt(0)} & ${brideName.charAt(0)}`;
@@ -56,15 +57,39 @@ export const SmoothOutroClosingGate: React.FC<SmoothOutroClosingGateProps> = ({
     };
   }, []);
 
+  // Lock scroll when outro cover overlay is active
+  useEffect(() => {
+    if (isOverlayClosed) {
+      const orig = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = orig;
+      };
+    }
+  }, [isOverlayClosed]);
+
   const handleScrollToTop = () => {
+    soundscape.playTick();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleToggleClose = () => {
-    setIsManuallyClosed(!isManuallyClosed);
+  const handleCloseOverlay = () => {
+    soundscape.playTick();
+    setIsOverlayClosed(true);
   };
 
-  const isClosed = isTriggered || isManuallyClosed;
+  const handleReopenOverlay = () => {
+    soundscape.playCoverOpen();
+    setIsOverlayClosed(false);
+  };
+
+  const handleReturnToTopAndReopen = () => {
+    soundscape.playTick();
+    setIsOverlayClosed(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const isClosed = isTriggered || isOverlayClosed;
 
   // Render archetype-specific visual icon & narrative closure
   const renderArchetypeOutro = () => {
@@ -311,11 +336,11 @@ export const SmoothOutroClosingGate: React.FC<SmoothOutroClosingGateProps> = ({
           </span>
         </div>
 
-        {/* Action Controls: Scroll to Top & Re-open */}
+        {/* Action Controls: Scroll to Top & Close Outro */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-gold/20">
           <button
             onClick={handleScrollToTop}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold transition-all shadow-md hover:scale-105 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-bold transition-all shadow-md hover:scale-105 flex items-center justify-center gap-2 cursor-pointer"
             style={{
               backgroundColor: theme.colors.primary || "#7D424D",
               color: "#FFFFFF",
@@ -326,26 +351,132 @@ export const SmoothOutroClosingGate: React.FC<SmoothOutroClosingGateProps> = ({
           </button>
 
           <button
-            onClick={handleToggleClose}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-full text-xs font-semibold border transition-all hover:bg-gold/10 flex items-center justify-center gap-2"
+            id="btn-close-invitation-outro"
+            onClick={handleCloseOverlay}
+            className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-semibold border transition-all hover:bg-gold/15 flex items-center justify-center gap-2 cursor-pointer shadow-xs"
             style={{
               borderColor: theme.colors.accent || "#CCA873",
-              color: archetypeId === "celestial" ? "#D1D5DB" : theme.colors.text,
+              color: archetypeId === "celestial" ? "#F2F4F8" : theme.colors.text,
+              backgroundColor: `${theme.colors.primary}0F`,
             }}
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>{isManuallyClosed ? "Buka Kembali Undangan" : "Tutup Undangan Secara Mulus"}</span>
+            <span>Tutup Undangan Secara Mulus</span>
           </button>
         </div>
-
-        {/* Localized Footer Credits */}
-        <div className="text-center pt-4">
-          <p className="text-[10px] text-plum-light/70 tracking-wider">
-            Dirangkai dengan penuh cinta melalui Platform Event Hyperlocal{" "}
-            <strong className="text-plum">HariKita Kebumen</strong>
-          </p>
-        </div>
       </div>
+
+      {/* THE REGAL CARD FOLD & CLOSING OVERLAY */}
+      {isOverlayClosed && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Undangan Ditutup Kembali"
+          className="fixed inset-0 z-[9990] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-outro-fade-in"
+        >
+          <div
+            className="relative w-full max-w-sm sm:max-w-md rounded-3xl p-6 sm:p-8 text-center space-y-6 shadow-2xl border-2 overflow-hidden animate-outro-scale-in"
+            style={{
+              backgroundColor: archetypeId === "celestial" ? "#0F172A" : theme.colors.background || "#FAF8F5",
+              borderColor: theme.colors.accent || "#C5A880",
+              color: archetypeId === "celestial" ? "#F8FAFC" : theme.colors.text || "#4A2E35",
+            }}
+          >
+            {/* Ambient Background Glow */}
+            <div
+              className="absolute -top-24 -left-24 w-48 h-48 rounded-full blur-3xl opacity-30 pointer-events-none"
+              style={{ backgroundColor: theme.colors.primary }}
+            />
+            <div
+              className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full blur-3xl opacity-20 pointer-events-none"
+              style={{ backgroundColor: theme.colors.accent }}
+            />
+
+            {/* Regal Seal Monogram */}
+            <div className="relative z-10 flex justify-center pt-2">
+              <div
+                className="w-20 h-20 rounded-full border-2 flex items-center justify-center shadow-lg"
+                style={{
+                  borderColor: theme.colors.accent || "#C5A880",
+                  backgroundColor: `${theme.colors.primary}18`,
+                }}
+              >
+                <span
+                  className="font-serif font-bold text-xl tracking-wider"
+                  style={{ color: archetypeId === "celestial" ? "#F8FAFC" : theme.colors.primary }}
+                >
+                  {initials}
+                </span>
+              </div>
+            </div>
+
+            {/* Narrative & Closure */}
+            <div className="relative z-10 space-y-2">
+              <span
+                className="text-[11px] uppercase tracking-[0.25em] font-bold block"
+                style={{ color: theme.colors.accent }}
+              >
+                Sampai Jumpa di Hari Bahagia
+              </span>
+              <h3
+                className="font-serif-luxury text-2xl sm:text-3xl font-bold leading-snug"
+                style={{ color: archetypeId === "celestial" ? "#FFFFFF" : theme.colors.text }}
+              >
+                {brideName} &amp; {groomName}
+              </h3>
+              <p
+                className="text-xs leading-relaxed max-w-xs mx-auto opacity-80 pt-1"
+                style={{ color: archetypeId === "celestial" ? "#CBD5E1" : theme.colors.text }}
+              >
+                Terima kasih atas segala ketulusan doa, waktu, dan restu yang Anda curahkan bagi lembaran baru pernikahan kami.
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="relative z-10 flex flex-col gap-2.5 pt-2">
+              <button
+                id="btn-reopen-invitation"
+                onClick={handleReopenOverlay}
+                className="w-full py-3 px-5 rounded-full text-xs font-bold uppercase tracking-wider shadow-md hover:brightness-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                style={{
+                  backgroundColor: theme.colors.primary || "#7D424D",
+                  color: "#FFFFFF",
+                }}
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span>Buka Kembali Undangan</span>
+              </button>
+
+              <button
+                onClick={handleReturnToTopAndReopen}
+                className="w-full py-2.5 px-5 rounded-full text-xs font-semibold border transition-all hover:bg-black/5 flex items-center justify-center gap-2 cursor-pointer"
+                style={{
+                  borderColor: `${theme.colors.accent}60`,
+                  color: archetypeId === "celestial" ? "#E2E8F0" : theme.colors.text,
+                }}
+              >
+                <ArrowUp className="w-4 h-4" />
+                <span>Kembali ke Awal</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{OUTRO_KEYFRAMES}</style>
     </div>
   );
 };
+
+const OUTRO_KEYFRAMES = `
+  @keyframes outroFadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes outroScaleIn {
+    0%   { opacity: 0; transform: scale(0.92) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .animate-outro-fade-in { animation: outroFadeIn 0.35s ease-out forwards; }
+  .animate-outro-scale-in { animation: outroScaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+`;

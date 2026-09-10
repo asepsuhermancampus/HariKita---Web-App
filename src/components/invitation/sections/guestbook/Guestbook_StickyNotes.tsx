@@ -111,8 +111,11 @@ export const Guestbook_StickyNotes: React.FC<{
                   onClick={() => {
                     soundscape.playTick();
                     setAttendance("hadir");
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new CustomEvent("guest_attendance_change", { detail: { attendance: "hadir" } }));
+                    }
                   }}
-                  className={`flex-1 py-2 rounded-xl text-xs font-bold border transition-colors ${
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
                     attendance === "hadir"
                       ? "bg-emerald-500 text-white border-emerald-500 shadow-xs"
                       : "bg-slate-50 text-slate-700 border-slate-200"
@@ -125,8 +128,11 @@ export const Guestbook_StickyNotes: React.FC<{
                   onClick={() => {
                     soundscape.playTick();
                     setAttendance("tidak-hadir");
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new CustomEvent("guest_attendance_change", { detail: { attendance: "tidak-hadir" } }));
+                    }
                   }}
-                  className={`flex-1 py-2 rounded-xl text-xs font-bold border transition-colors ${
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
                     attendance === "tidak-hadir"
                       ? "bg-rose-500 text-white border-rose-500 shadow-xs"
                       : "bg-slate-50 text-slate-700 border-slate-200"

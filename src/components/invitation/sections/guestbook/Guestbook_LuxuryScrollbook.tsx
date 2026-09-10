@@ -110,8 +110,11 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
                   onClick={() => {
                     soundscape.playTick();
                     setAttendance("hadir");
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new CustomEvent("guest_attendance_change", { detail: { attendance: "hadir" } }));
+                    }
                   }}
-                  className={`py-2 px-3 rounded-xl text-xs font-serif font-bold border transition-colors ${
+                  className={`py-2 px-3 rounded-xl text-xs font-serif font-bold border transition-colors cursor-pointer ${
                     attendance === "hadir"
                       ? "bg-amber-800 text-amber-100 border-amber-800 shadow-xs"
                       : "bg-white/60 text-slate-700 border-amber-200"
@@ -124,8 +127,11 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
                   onClick={() => {
                     soundscape.playTick();
                     setAttendance("tidak-hadir");
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new CustomEvent("guest_attendance_change", { detail: { attendance: "tidak-hadir" } }));
+                    }
                   }}
-                  className={`py-2 px-3 rounded-xl text-xs font-serif font-bold border transition-colors ${
+                  className={`py-2 px-3 rounded-xl text-xs font-serif font-bold border transition-colors cursor-pointer ${
                     attendance === "tidak-hadir"
                       ? "bg-amber-800 text-amber-100 border-amber-800 shadow-xs"
                       : "bg-white/60 text-slate-700 border-amber-200"
