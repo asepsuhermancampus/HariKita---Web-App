@@ -54,7 +54,7 @@ export const JavaneseEngine: React.FC<DedicatedTemplateProps> = ({
       <GoldenDustCanvas className="pointer-events-none opacity-50 z-10" />
 
       {/* 2. Traditional Gebyok Wood Frame Borders */}
-      <div className="pointer-events-none fixed inset-0 border-[8px] sm:border-[12px] border-amber-800/30 z-20" />
+      <div className="pointer-events-none absolute inset-0 border-[8px] sm:border-[12px] border-amber-800/30 z-20" />
 
       {/* ===================== SECTION 1: BESPOKE JAVANESE HERO (#hero) ===================== */}
       <section

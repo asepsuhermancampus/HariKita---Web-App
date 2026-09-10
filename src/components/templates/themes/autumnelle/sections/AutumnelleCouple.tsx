@@ -28,7 +28,7 @@ export const AutumnelleCouple: React.FC<{
         {/* Bride */}
         <div className="space-y-4">
           <GardenArchFrame size={200} color={primaryColor}>
-            <img src={bride.photo} alt={bride.fullName} className="w-48 h-64 object-cover" />
+            <img src={bride.photo} alt={bride.fullName} className="w-full h-full object-cover" />
           </GardenArchFrame>
           <div className="space-y-1">
             <h3 className="font-serif font-bold text-lg text-emerald-950">{bride.fullName}</h3>
@@ -40,7 +40,7 @@ export const AutumnelleCouple: React.FC<{
         {/* Groom */}
         <div className="space-y-4">
           <GardenArchFrame size={200} color={primaryColor}>
-            <img src={groom.photo} alt={groom.fullName} className="w-48 h-64 object-cover" />
+            <img src={groom.photo} alt={groom.fullName} className="w-full h-full object-cover" />
           </GardenArchFrame>
           <div className="space-y-1">
             <h3 className="font-serif font-bold text-lg text-emerald-950">{groom.fullName}</h3>

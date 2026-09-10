@@ -17,7 +17,7 @@ export const AutumnelleHero: React.FC<{
   return (
     <section id="hero" className="relative min-h-[88vh] flex flex-col items-center justify-center p-6 text-center space-y-6 pt-12">
       {/* Signature Autumn Leaf Wreath with Initial Monogram */}
-      <div className="relative">
+      <div className="relative inline-flex items-center justify-center w-[140px] h-[140px] mx-auto">
         <AutumnLeafWreath size={140} color={primaryColor} secondaryColor={accentColor} />
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <span className="text-3xl font-serif font-bold text-amber-900 tracking-wider">

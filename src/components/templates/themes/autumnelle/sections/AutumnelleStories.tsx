@@ -26,7 +26,7 @@ export const AutumnelleStories: React.FC<{
       <div className="space-y-8 text-left relative pl-6 sm:pl-8 border-l-2 border-emerald-300/50 ml-3 sm:ml-4">
         {storyTimeline.map((story, idx) => (
           <div key={idx} className="relative space-y-2 pb-2">
-            <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-emerald-800 border-2 border-white shadow-xs" />
+            <div className="absolute left-[-25px] sm:left-[-33px] -translate-x-1/2 top-1.5 w-4 h-4 rounded-full bg-emerald-800 border-2 border-white shadow-xs" />
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-mono font-bold text-amber-900 px-2.5 py-0.5 rounded-full bg-amber-100/80 border border-amber-300/50">
                 TAHUN {story.year}

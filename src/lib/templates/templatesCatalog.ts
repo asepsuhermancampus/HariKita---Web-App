@@ -234,7 +234,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     sourceOrigin: "UndanganDigital",
     archetypeId: "javanese",
     category: "Cultural Adat",
-    previewImageUrl: "https://images.unsplash.com/photo-1544078741-7fe023cb4458?q=80&w=600",
+    previewImageUrl: "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=600",
     colors: {
       primary: "#D4AF37",
       secondary: "#8B5A2B",

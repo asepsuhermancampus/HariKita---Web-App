@@ -81,7 +81,7 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
     "https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=800", // Wedding dress & rings details
     "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=800", // Coastal / beach nature prewed
     "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800", // Close-up holding hands & floral bouquet
-    "https://images.unsplash.com/photo-1519225429980-715cb0215aed?q=80&w=800", // Rustic wedding ceremony floral arch
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800", // Rustic wedding ceremony floral arch & venue
     "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800", // Cinematic black & white couple kiss
     "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800", // Intimate prewed casual laugh
     "https://images.unsplash.com/photo-1529636798458-92182e662485?q=80&w=800", // Sunset romantic silhouettes

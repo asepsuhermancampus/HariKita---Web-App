@@ -29,7 +29,7 @@ export const TulivelleCouple: React.FC<{
         {/* Bride */}
         <div className="space-y-4">
           <CurvedStemFrame size={200} color={primaryColor} secondaryColor={accentColor}>
-            <img src={bride.photo} alt={bride.fullName} className="w-48 h-64 object-cover" />
+            <img src={bride.photo} alt={bride.fullName} className="w-full h-full object-cover" />
           </CurvedStemFrame>
           <div className="space-y-1">
             <h3 className="font-serif font-bold text-lg text-rose-950">{bride.fullName}</h3>
@@ -41,7 +41,7 @@ export const TulivelleCouple: React.FC<{
         {/* Groom */}
         <div className="space-y-4">
           <CurvedStemFrame size={200} color={primaryColor} secondaryColor={accentColor}>
-            <img src={groom.photo} alt={groom.fullName} className="w-48 h-64 object-cover" />
+            <img src={groom.photo} alt={groom.fullName} className="w-full h-full object-cover" />
           </CurvedStemFrame>
           <div className="space-y-1">
             <h3 className="font-serif font-bold text-lg text-rose-950">{groom.fullName}</h3>

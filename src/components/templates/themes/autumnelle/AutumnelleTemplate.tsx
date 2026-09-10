@@ -30,8 +30,8 @@ export const AutumnelleTemplate: React.FC<DedicatedTemplateProps> = (props) => {
       <FloatingPetalsCanvas className="opacity-55 z-10" />
 
       {/* Decorative Autumnelle Eucalyptus Corner Flourishes */}
-      <EucalyptusCorner size={85} color={primaryColor} className="fixed top-0 left-0 pointer-events-none z-20 opacity-40" />
-      <EucalyptusCorner size={85} color={primaryColor} className="fixed top-0 right-0 pointer-events-none z-20 opacity-40 -scale-x-100" />
+      <EucalyptusCorner size={85} color={primaryColor} className="absolute top-0 left-0 pointer-events-none z-20 opacity-40" />
+      <EucalyptusCorner size={85} color={primaryColor} className="absolute top-0 right-0 pointer-events-none z-20 opacity-40 -scale-x-100" />
 
       {/* Atomic Sections */}
       <AutumnelleHero bride={bride} groom={groom} activeSession={activeSession} theme={theme} />

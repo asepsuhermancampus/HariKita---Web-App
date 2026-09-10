@@ -29,7 +29,15 @@ export const AutumnelleGallery: React.FC<{
             key={idx}
             className="overflow-hidden rounded-2xl border border-emerald-200/50 shadow-sm aspect-square transform hover:scale-[1.02] transition-transform duration-300"
           >
-            <img src={photoUrl} alt={`Foto Galeri ${idx + 1}`} className="w-full h-full object-cover" />
+            <img
+              src={photoUrl}
+              alt={`Foto Galeri ${idx + 1}`}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                e.currentTarget.src = "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800";
+              }}
+            />
           </div>
         ))}
       </div>

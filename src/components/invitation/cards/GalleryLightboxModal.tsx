@@ -99,6 +99,9 @@ export const GalleryLightboxModal: React.FC<GalleryLightboxModalProps> = ({
           src={currentPhoto}
           alt={`Galeri Pernikahan ${currentIndex + 1}`}
           className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-white/20"
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800";
+          }}
         />
       </div>
     </div>

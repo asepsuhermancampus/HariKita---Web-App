@@ -54,13 +54,13 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
       <FloatingPetalsCanvas className="pointer-events-none opacity-60 z-10" />
 
       {/* 2. Four-Corner Botanical Sway Accents */}
-      <div className="pointer-events-none fixed top-0 left-0 w-24 h-24 z-20 opacity-40 animate-pulse">
+      <div className="pointer-events-none absolute top-0 left-0 w-24 h-24 z-20 opacity-40 animate-pulse">
         <svg viewBox="0 0 100 100" fill={primaryColor}>
           <path d="M0,0 Q50,10 70,70 Q20,50 0,0 Z" />
           <path d="M10,0 Q60,30 40,80 Q20,30 10,0 Z" opacity="0.6" />
         </svg>
       </div>
-      <div className="pointer-events-none fixed top-0 right-0 w-24 h-24 z-20 opacity-40 -scale-x-100 animate-pulse">
+      <div className="pointer-events-none absolute top-0 right-0 w-24 h-24 z-20 opacity-40 -scale-x-100 animate-pulse">
         <svg viewBox="0 0 100 100" fill={primaryColor}>
           <path d="M0,0 Q50,10 70,70 Q20,50 0,0 Z" />
         </svg>
@@ -71,9 +71,9 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
         id="hero"
         className="relative min-h-[90vh] flex flex-col items-center justify-center p-6 text-center space-y-6 pt-12"
       >
-        <div className="relative">
+        <div className="relative inline-flex items-center justify-center w-[130px] h-[130px] mx-auto">
           <OrnamentFloralWreath color={primaryColor} size={130} className="animate-spin-slow opacity-80" />
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span className="text-3xl font-serif font-bold text-amber-800">
               {bride.name.charAt(0)} &amp; {groom.name.charAt(0)}
             </span>

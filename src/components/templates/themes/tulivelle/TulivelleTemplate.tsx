@@ -31,8 +31,8 @@ export const TulivelleTemplate: React.FC<DedicatedTemplateProps> = (props) => {
       <FloatingPetalsCanvas className="opacity-60 z-10" />
 
       {/* Decorative Tulivelle Cluster Corner Flourishes */}
-      <TulipCluster size={80} color={primaryColor} secondaryColor={accentColor} className="fixed top-0 left-0 pointer-events-none z-20 opacity-40" />
-      <TulipCluster size={80} color={primaryColor} secondaryColor={accentColor} className="fixed top-0 right-0 pointer-events-none z-20 opacity-40 -scale-x-100" />
+      <TulipCluster size={80} color={primaryColor} secondaryColor={accentColor} className="absolute top-0 left-0 pointer-events-none z-20 opacity-40" />
+      <TulipCluster size={80} color={primaryColor} secondaryColor={accentColor} className="absolute top-0 right-0 pointer-events-none z-20 opacity-40 -scale-x-100" />
 
       {/* Atomic Sections */}
       <TulivelleHero bride={bride} groom={groom} activeSession={activeSession} theme={theme} />
