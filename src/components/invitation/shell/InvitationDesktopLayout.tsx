@@ -10,6 +10,7 @@ interface InvitationDesktopLayoutProps {
   coverPhoto?: string;
   venueName?: string;
   isCoverOpened?: boolean;
+  entryAnimId?: string;
   children: React.ReactNode;
 }
 
@@ -20,6 +21,7 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
   coverPhoto = "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
   venueName = "Kebumen, Jawa Tengah",
   isCoverOpened = true,
+  entryAnimId = "rise-up",
   children,
 }) => {
   const [timeLeft, setTimeLeft] = useState({
@@ -159,7 +161,9 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
       >
         <div
           className={`w-full max-w-[480px] min-h-screen relative shadow-2xl bg-white dark:bg-slate-900 flex flex-col transition-all ${
-            !isCoverOpened ? "h-screen max-h-screen overflow-hidden" : ""
+            !isCoverOpened
+              ? "h-screen max-h-screen overflow-hidden"
+              : (ENTRY_ANIM_MAP[entryAnimId] ?? "animate-entry-rise-up")
           }`}
         >
           {children}
@@ -184,6 +188,62 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
           )}
         </div>
       </main>
+      <style>{ENTRY_KEYFRAMES}</style>
     </div>
   );
 };
+
+const ENTRY_ANIM_MAP: Record<string, string> = {
+  "rise-up": "animate-entry-rise-up",
+  "fade-in": "animate-entry-fade-in",
+  "fall-in": "animate-entry-fall-in",
+  "scale-in": "animate-entry-scale-in",
+  "rotate-in": "animate-entry-rotate-in",
+  "unfurl": "animate-entry-unfurl",
+  "doors-close": "animate-entry-doors-close",
+  "slide-left": "animate-entry-slide-left",
+};
+
+const ENTRY_KEYFRAMES = `
+  @keyframes entryRiseUp {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes entryFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes entryFallIn {
+    0% { opacity: 0; transform: translateY(-40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes entryScaleIn {
+    0% { opacity: 0; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes entryRotateIn {
+    0% { opacity: 0; transform: perspective(800px) rotateX(10deg) translateY(24px); }
+    100% { opacity: 1; transform: perspective(800px) rotateX(0deg) translateY(0); }
+  }
+  @keyframes entryUnfurl {
+    0% { opacity: 0; transform: scaleY(0.85); transform-origin: top center; }
+    100% { opacity: 1; transform: scaleY(1); transform-origin: top center; }
+  }
+  @keyframes entryDoorsClose {
+    0% { opacity: 0; filter: blur(6px); transform: scale(0.96); }
+    100% { opacity: 1; filter: blur(0px); transform: scale(1); }
+  }
+  @keyframes entrySlideLeft {
+    0% { opacity: 0; transform: translateX(40px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  .animate-entry-rise-up { animation: entryRiseUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-fade-in { animation: entryFadeIn 0.8s ease-out both; }
+  .animate-entry-fall-in { animation: entryFallIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-scale-in { animation: entryScaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-rotate-in { animation: entryRotateIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-unfurl { animation: entryUnfurl 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-doors-close { animation: entryDoorsClose 0.85s ease-out both; }
+  .animate-entry-slide-left { animation: entrySlideLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+`;

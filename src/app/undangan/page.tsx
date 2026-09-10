@@ -52,21 +52,39 @@ export default function UndanganCatalogPage() {
         </p>
       </div>
 
-      {/* 8 Master Archetype Cards (Educational Bar) */}
+      {/* 8 Master Archetype Cards (Educational Bar & Quick Filters) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
-        {MASTER_ARCHETYPES.map((arch) => (
-          <div
-            key={arch.id}
-            className="p-3 rounded-2xl bg-white/70 border border-gold/25 shadow-xs text-center space-y-1 hover:border-gold transition-colors"
-          >
-            <span className="text-[10px] font-bold text-gold-dark uppercase tracking-wider block">
-              {arch.name.split(" ")[0]}
-            </span>
-            <p className="text-[9px] text-plum-light line-clamp-2 leading-snug">
-              {arch.description}
-            </p>
-          </div>
-        ))}
+        {MASTER_ARCHETYPES.map((arch) => {
+          const categoryName =
+            arch.id.includes("botanical") || arch.id.includes("floral") ? "Botanical" :
+            arch.id.includes("traditional") || arch.id.includes("javanese") ? "Javanese" :
+            arch.id.includes("islamic") || arch.id.includes("syari") ? "Islamic" :
+            arch.id.includes("minimalist") ? "Minimalist" :
+            arch.id.includes("fullscreen") || arch.id.includes("rose") ? "Rose Gold" :
+            arch.id.includes("animated") || arch.id.includes("motion") ? "Rustic" :
+            arch.id.includes("royal") || arch.id.includes("celestial") ? "Celestial" : "Cute";
+
+          const isSelected = selectedCategory.toLowerCase() === categoryName.toLowerCase();
+
+          return (
+            <button
+              key={arch.id}
+              onClick={() => setSelectedCategory(isSelected ? "All" : categoryName)}
+              className={`p-3 rounded-2xl border text-center space-y-1 transition-all cursor-pointer ${
+                isSelected
+                  ? "bg-amber-100/90 border-amber-600 shadow-sm scale-102"
+                  : "bg-white/70 border-gold/25 hover:border-gold shadow-xs hover:bg-white"
+              }`}
+            >
+              <span className={`text-[10px] font-bold uppercase tracking-wider block ${isSelected ? "text-amber-900 font-extrabold" : "text-gold-dark"}`}>
+                {arch.name.split(" ")[0]} {categoryName}
+              </span>
+              <p className="text-[9px] text-plum-light line-clamp-2 leading-snug">
+                {arch.description}
+              </p>
+            </button>
+          );
+        })}
       </div>
 
       {/* Search & Filter Bar */}
@@ -99,6 +117,22 @@ export default function UndanganCatalogPage() {
             className="input input-sm w-full pl-9 bg-[#FAF8F5] border border-gold/30 rounded-full text-xs text-plum focus:border-gold"
           />
         </div>
+      </div>
+
+      {/* Results Header */}
+      <div className="flex items-center justify-between px-1">
+        <span className="text-xs font-semibold text-plum-light">
+          Menampilkan <strong className="text-plum">{filteredThemes.length}</strong> dari {ALL_INVITATION_TEMPLATES.length} desain template
+          {selectedCategory !== "All" && <span className="text-gold-dark font-medium"> • Kategori: {selectedCategory}</span>}
+        </span>
+        {(selectedCategory !== "All" || searchQuery) && (
+          <button
+            onClick={() => { setSelectedCategory("All"); setSearchQuery(""); }}
+            className="text-xs text-amber-800 hover:underline font-semibold cursor-pointer"
+          >
+            Reset Filter
+          </button>
+        )}
       </div>
 
       {/* Theme Cards Grid */}

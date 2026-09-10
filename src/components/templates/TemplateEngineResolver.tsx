@@ -133,6 +133,7 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
         coverPhoto={props.bride.photo}
         venueName={activeSession.venueName}
         isCoverOpened={isCoverOpened}
+        entryAnimId={props.theme?.coverConfig?.entryAnimId || "rise-up"}
       >
         {/* Render the Bespoke Archetype Layout Engine */}
         {renderEngine()}

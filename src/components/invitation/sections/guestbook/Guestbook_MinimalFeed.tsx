@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { soundscape } from "@/lib/sound/soundscapeEngine";
-import { Send, Heart, MessageSquare } from "lucide-react";
+import { submitRsvpAction } from "@/server/actions/rsvp";
+import { Send, Heart, MessageSquare, Loader2, CheckCircle2 } from "lucide-react";
 
 export const Guestbook_MinimalFeed: React.FC<{
   invitationId?: string;
@@ -11,29 +12,58 @@ export const Guestbook_MinimalFeed: React.FC<{
   activeSessionCode?: string;
   initialWishes: DedicatedTemplateProps["initialWishes"];
   themePrimary?: string;
-}> = ({ defaultGuestName = "", initialWishes }) => {
+}> = ({
+  invitationId = "demo-invitation",
+  defaultGuestName = "",
+  activeSessionCode = "s1",
+  initialWishes,
+}) => {
   const [wishes, setWishes] = useState(initialWishes);
   const [name, setName] = useState(defaultGuestName !== "Bapak/Ibu/Saudara/i" ? defaultGuestName : "");
   const [message, setMessage] = useState("");
   const [attendance, setAttendance] = useState("hadir");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !message.trim()) return;
+    if (!name.trim() || !message.trim() || isSubmitting) return;
 
+    setIsSubmitting(true);
     soundscape.playConfettiPop();
 
-    const newWish = {
+    const tempWish = {
       id: "w-" + Date.now(),
-      guestName: name,
+      guestName: name.trim(),
       attendance,
       paxCount: attendance === "hadir" ? 2 : 0,
-      message,
+      message: message.trim(),
       createdAt: new Date().toISOString(),
     };
 
-    setWishes([newWish, ...wishes]);
+    setWishes((prev) => [tempWish, ...prev]);
+    const currentMessage = message.trim();
     setMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("invitationId", invitationId);
+      formData.append("guestName", name.trim());
+      formData.append("attendance", attendance);
+      formData.append("paxCount", attendance === "hadir" ? "2" : "0");
+      formData.append("sessionCode", activeSessionCode);
+      formData.append("message", currentMessage);
+
+      const res = await submitRsvpAction(formData);
+      if (res.success && res.data) {
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 5000);
+      }
+    } catch (err) {
+      console.error("Gagal menyimpan RSVP:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -107,10 +137,24 @@ export const Guestbook_MinimalFeed: React.FC<{
 
           <button
             type="submit"
-            className="w-full py-2.5 rounded-lg bg-slate-900 text-white font-mono text-xs font-bold hover:bg-slate-800 transition-colors"
+            disabled={isSubmitting}
+            className="w-full py-2.5 rounded-lg bg-slate-900 text-white font-mono text-xs font-bold hover:bg-slate-800 transition-colors disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
           >
-            Kirim Ucapan
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Menyimpan Ucapan...</span>
+              </>
+            ) : (
+              <span>Kirim Ucapan</span>
+            )}
           </button>
+          {submitted && (
+            <div className="flex items-center gap-2 justify-center text-xs font-mono text-emerald-800 bg-emerald-50 border border-emerald-300 rounded-lg py-2 px-3">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Ucapan & konfirmasi kehadiran Anda tersimpan!</span>
+            </div>
+          )}
         </form>
 
         {/* Minimal Feed Cards */}

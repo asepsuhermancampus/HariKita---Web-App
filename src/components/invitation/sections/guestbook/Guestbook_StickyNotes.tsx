@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { soundscape } from "@/lib/sound/soundscapeEngine";
-import { MessageSquareHeart, Send, Sparkles, CheckCircle2 } from "lucide-react";
+import { submitRsvpAction } from "@/server/actions/rsvp";
+import { MessageSquareHeart, Send, Sparkles, CheckCircle2, Loader2 } from "lucide-react";
 
 export const Guestbook_StickyNotes: React.FC<{
   invitationId?: string;
@@ -11,11 +12,19 @@ export const Guestbook_StickyNotes: React.FC<{
   activeSessionCode?: string;
   initialWishes: DedicatedTemplateProps["initialWishes"];
   themePrimary?: string;
-}> = ({ defaultGuestName = "", initialWishes, themePrimary = "#C5A880" }) => {
+}> = ({
+  invitationId = "demo-invitation",
+  defaultGuestName = "",
+  activeSessionCode = "s1",
+  initialWishes,
+  themePrimary = "#C5A880",
+}) => {
   const [wishes, setWishes] = useState(initialWishes);
   const [name, setName] = useState(defaultGuestName !== "Bapak/Ibu/Saudara/i" ? defaultGuestName : "");
   const [message, setMessage] = useState("");
   const [attendance, setAttendance] = useState("hadir");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const colors = [
     "bg-amber-100 border-amber-200 text-amber-950",
@@ -24,23 +33,45 @@ export const Guestbook_StickyNotes: React.FC<{
     "bg-emerald-100 border-emerald-200 text-emerald-950",
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !message.trim()) return;
+    if (!name.trim() || !message.trim() || isSubmitting) return;
 
+    setIsSubmitting(true);
     soundscape.playConfettiPop();
 
-    const newWish = {
+    const tempWish = {
       id: "w-" + Date.now(),
-      guestName: name,
+      guestName: name.trim(),
       attendance,
       paxCount: attendance === "hadir" ? 2 : 0,
-      message,
+      message: message.trim(),
       createdAt: new Date().toISOString(),
     };
 
-    setWishes([newWish, ...wishes]);
+    setWishes((prev) => [tempWish, ...prev]);
+    const currentMessage = message.trim();
     setMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("invitationId", invitationId);
+      formData.append("guestName", name.trim());
+      formData.append("attendance", attendance);
+      formData.append("paxCount", attendance === "hadir" ? "2" : "0");
+      formData.append("sessionCode", activeSessionCode);
+      formData.append("message", currentMessage);
+
+      const res = await submitRsvpAction(formData);
+      if (res.success && res.data) {
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 5000);
+      }
+    } catch (err) {
+      console.error("Gagal mengirim RSVP:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -120,11 +151,27 @@ export const Guestbook_StickyNotes: React.FC<{
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-colors active:scale-98"
+              disabled={isSubmitting}
+              className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-colors active:scale-98 disabled:opacity-50 cursor-pointer"
             >
-              <Send className="w-3.5 h-3.5" />
-              <span>Tempel Ucapan di Papan</span>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Menempelkan Ucapan...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Tempel Ucapan di Papan</span>
+                </>
+              )}
             </button>
+            {submitted && (
+              <div className="flex items-center gap-2 justify-center text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 rounded-xl py-2 px-3">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Ucapan doa restu Anda tertempel indah di papan!</span>
+              </div>
+            )}
           </form>
         </div>
 
