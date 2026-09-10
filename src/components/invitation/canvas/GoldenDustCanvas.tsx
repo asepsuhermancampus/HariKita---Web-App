@@ -104,5 +104,11 @@ export const GoldenDustCanvas: React.FC<GoldenDustCanvasProps> = ({
     };
   }, [particleCount]);
 
-  return <canvas ref={canvasRef} className={className} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`fixed inset-0 pointer-events-none ${className}`}
+      style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+    />
+  );
 };

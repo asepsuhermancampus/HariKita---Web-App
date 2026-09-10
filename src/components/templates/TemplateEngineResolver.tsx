@@ -69,6 +69,9 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
   const handleOpenCover = () => {
     setIsCoverOpened(true);
     setIsMusicPlaying(true);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
   };
 
   const renderEngine = () => {
