@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from "react";
 import { CoverLayoutProps } from "../CoverCardEngine";
 import { MailOpen, Heart } from "lucide-react";
@@ -25,7 +25,7 @@ export const CoverLayout_PostageStamp: React.FC<CoverLayoutProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${exitClass}`}
+      className={`fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 ${exitClass}`}
       style={{ background: c.background }}
     >
       {/* Linen texture pattern */}
@@ -37,7 +37,7 @@ export const CoverLayout_PostageStamp: React.FC<CoverLayoutProps> = ({
       />
 
       {/* Postage Stamp Card */}
-      <div className="relative w-full max-w-sm">
+      <div className="relative w-full max-w-sm my-auto">
         {/* Stamp body with serrated CSS border trick */}
         <div
           className="relative mx-auto"

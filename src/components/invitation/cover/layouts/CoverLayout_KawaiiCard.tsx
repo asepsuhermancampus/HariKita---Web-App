@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from "react";
 import { CoverLayoutProps } from "../CoverCardEngine";
 import { MailOpen, Heart } from "lucide-react";
@@ -14,7 +14,7 @@ export const CoverLayout_KawaiiCard: React.FC<CoverLayoutProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden ${exitClass}`}
+      className={`fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 ${exitClass}`}
       style={{ background: `linear-gradient(135deg, ${c.background} 0%, ${c.border}40 50%, ${c.background} 100%)` }}
     >
       {/* Floating confetti characters */}
@@ -51,7 +51,7 @@ export const CoverLayout_KawaiiCard: React.FC<CoverLayoutProps> = ({
 
       {/* Main card */}
       <div
-        className="relative w-full max-w-sm rounded-3xl overflow-hidden text-center"
+        className="relative w-full max-w-sm rounded-3xl overflow-hidden text-center my-auto"
         style={{
           background: `${c.cardBg}F8`,
           backdropFilter: "blur(16px)",

@@ -13,8 +13,13 @@ export const Navbar = () => {
   const navLinks = [
     { label: "11 Layanan Kebumen", href: "/#layanan", icon: Compass },
     { label: "Tema Undangan (65+)", href: "/undangan", icon: Mail },
-    { label: "Simulator Racik Paket", href: "/builder", icon: SlidersHorizontal },
   ];
+
+  const isInvitationDetailPage = pathname && pathname.startsWith("/undangan/") && pathname !== "/undangan";
+
+  if (isInvitationDetailPage) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-gold/20 backdrop-blur-md">

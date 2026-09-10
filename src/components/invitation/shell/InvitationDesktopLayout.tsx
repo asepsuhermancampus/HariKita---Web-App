@@ -9,6 +9,7 @@ interface InvitationDesktopLayoutProps {
   eventDate: string; // ISO string e.g. "2026-11-20T09:00:00Z"
   coverPhoto?: string;
   venueName?: string;
+  isCoverOpened?: boolean;
   children: React.ReactNode;
 }
 
@@ -18,6 +19,7 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
   eventDate,
   coverPhoto = "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
   venueName = "Kebumen, Jawa Tengah",
+  isCoverOpened = true,
   children,
 }) => {
   const [timeLeft, setTimeLeft] = useState({
@@ -150,9 +152,36 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
       </aside>
 
       {/* RIGHT PANE: Centered Mobile Viewport Showcase */}
-      <main className="w-full lg:w-1/2 min-h-screen flex justify-center bg-slate-900/60 relative">
-        <div className="w-full max-w-[480px] min-h-screen relative shadow-2xl bg-white dark:bg-slate-900 flex flex-col transition-all">
+      <main
+        className={`w-full lg:w-1/2 min-h-screen flex justify-center bg-slate-900/60 relative ${
+          !isCoverOpened ? "h-screen max-h-screen overflow-hidden" : ""
+        }`}
+      >
+        <div
+          className={`w-full max-w-[480px] min-h-screen relative shadow-2xl bg-white dark:bg-slate-900 flex flex-col transition-all ${
+            !isCoverOpened ? "h-screen max-h-screen overflow-hidden" : ""
+          }`}
+        >
           {children}
+          {/* Opaque shield: covers content completely until cover is opened.
+              Rendered via inline style to guarantee it is applied before
+              any CSS class resolution or paint, eliminating the brief flash. */}
+          {!isCoverOpened && (
+            <div
+              aria-hidden="true"
+              suppressHydrationWarning
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                zIndex: 40,
+                background: "#0f172a",
+                pointerEvents: "none",
+              }}
+            />
+          )}
         </div>
       </main>
     </div>

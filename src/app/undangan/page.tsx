@@ -4,11 +4,13 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ALL_INVITATION_TEMPLATES, MASTER_ARCHETYPES } from "@/lib/templates/registry";
-import { Sparkles, Eye, CheckCircle2, Filter, Search } from "lucide-react";
+import { Sparkles, Eye, CheckCircle2, Search } from "lucide-react";
+import { InvitationPreviewModal } from "@/components/invitation/InvitationPreviewModal";
 
 export default function UndanganCatalogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [previewModal, setPreviewModal] = useState<{ themeId: string; themeTitle: string } | null>(null);
 
   const categories = [
     "All",
@@ -168,14 +170,14 @@ export default function UndanganCatalogPage() {
 
             {/* Action Buttons */}
             <div className="p-5 pt-0 grid grid-cols-2 gap-2">
-              <Link
-                href={`/undangan/demo?theme=${theme.id}&to=Bapak+Joko+dan+Keluarga&sesi=s1`}
-                target="_blank"
-                className="btn btn-xs btn-outline border-gold/40 text-plum font-bold rounded-full hover:bg-gold/15 flex items-center justify-center gap-1"
+              <button
+                id={`btn-preview-${theme.id}`}
+                onClick={() => setPreviewModal({ themeId: theme.id, themeTitle: theme.title })}
+                className="btn btn-xs btn-outline border-gold/40 text-plum font-bold rounded-full hover:bg-gold/15 flex items-center justify-center gap-1 min-h-[36px]"
               >
                 <Eye className="w-3.5 h-3.5 text-gold-dark" />
                 <span>Lihat Demo</span>
-              </Link>
+              </button>
               <Link
                 href={`/builder?selectedTheme=${theme.id}`}
                 className="btn btn-xs gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-xs hover:brightness-105 flex items-center justify-center gap-1"
@@ -187,6 +189,14 @@ export default function UndanganCatalogPage() {
           </div>
         ))}
       </div>
+
+      {/* Invitation Preview Modal */}
+      <InvitationPreviewModal
+        isOpen={previewModal !== null}
+        themeId={previewModal?.themeId ?? ""}
+        themeTitle={previewModal?.themeTitle ?? ""}
+        onClose={() => setPreviewModal(null)}
+      />
     </div>
   );
 }

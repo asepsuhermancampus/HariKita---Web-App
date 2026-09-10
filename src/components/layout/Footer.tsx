@@ -1,9 +1,18 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LogoBadge } from "./LogoBadge";
 import { ShieldCheck, MapPin, Heart, Phone, Sparkles } from "lucide-react";
 
 export const Footer = () => {
+  const pathname = usePathname();
+  const isInvitationDetailPage = pathname && pathname.startsWith("/undangan/") && pathname !== "/undangan";
+
+  if (isInvitationDetailPage) {
+    return null;
+  }
   return (
     <footer className="bg-plum-dark text-canvas-subtle border-t border-gold/30 mt-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { soundscape } from "@/lib/sound/soundscapeEngine";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { CoverCardEngine } from "@/components/invitation/cover/CoverCardEngine";
 import {
@@ -29,6 +30,39 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [isTicketOpen, setIsTicketOpen] = useState(false);
+  const [sfxMuted, setSfxMuted] = useState(() => soundscape.isMuted());
+
+  // Sync sfxMuted state with the singleton
+  useEffect(() => {
+    const unsub = soundscape.subscribe((muted) => setSfxMuted(muted));
+    return unsub;
+  }, []);
+
+  const handleToggleSfx = () => {
+    const nowMuted = soundscape.toggleMute();
+    if (!nowMuted) soundscape.playTick(); // confirm sound when unmuting
+  };
+
+  // Scroll-lock: prevent background content scrolling while cover is visible.
+  // IMPORTANT: We only lock overflow — we do NOT set touchAction:none because
+  // that would prevent touch events from reaching the fixed-position cover card.
+  React.useEffect(() => {
+    if (!isCoverOpened) {
+      const originalDocOverflow = document.documentElement.style.overflow;
+      const originalBodyOverflow = document.body.style.overflow;
+
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+
+      return () => {
+        document.documentElement.style.overflow = originalDocOverflow;
+        document.body.style.overflow = originalBodyOverflow;
+      };
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+  }, [isCoverOpened]);
 
   const archetypeId = props.theme?.archetypeId || "botanical";
 
@@ -98,6 +132,7 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
         eventDate={props.eventDate}
         coverPhoto={props.bride.photo}
         venueName={activeSession.venueName}
+        isCoverOpened={isCoverOpened}
       >
         {/* Render the Bespoke Archetype Layout Engine */}
         {renderEngine()}
@@ -140,6 +175,37 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
               isOpen={isTicketOpen}
               onClose={() => setIsTicketOpen(false)}
             />
+
+            {/* SFX Mute Toggle — floating pill above bottom dock */}
+            <button
+              id="sfx-toggle-btn"
+              aria-label={sfxMuted ? "Aktifkan suara efek" : "Matikan suara efek"}
+              onClick={handleToggleSfx}
+              style={{
+                position: "fixed",
+                bottom: "84px",
+                right: "16px",
+                zIndex: 9997,
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "8px 14px",
+                borderRadius: "999px",
+                border: "1px solid rgba(255,255,255,0.18)",
+                background: "rgba(15,23,42,0.72)",
+                backdropFilter: "blur(12px)",
+                color: "#fff",
+                fontSize: "12px",
+                fontWeight: 600,
+                letterSpacing: "0.05em",
+                cursor: "pointer",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                transition: "opacity 0.2s",
+              }}
+            >
+              <span style={{ fontSize: "16px" }}>{sfxMuted ? "🔇" : "🔊"}</span>
+              <span>{sfxMuted ? "SFX Off" : "SFX On"}</span>
+            </button>
 
             {/* Floating Glass Bottom Dock with Scroll-Spy */}
             <InvitationBottomDock isVisible={true} />

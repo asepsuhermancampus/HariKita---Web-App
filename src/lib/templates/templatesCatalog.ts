@@ -24,6 +24,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloralWreath", exitAnimId: "page-turn", entryAnimId: "fall-in", bgVariant: "light-cream-watercolor" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "boarding-pass", mapStyle: "interactive-clean", storiesStyle: "filmstrip-scroll", galleryStyle: "masonry-staggered", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "tulivelle",
@@ -45,6 +46,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "floral-watercolor",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloralWreath", exitAnimId: "curtain-reveal", entryAnimId: "rise-up", bgVariant: "soft-pink-blush" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "vertical-timeline", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "polaroid-scatter", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "poetic-photo-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "fiorella",
@@ -66,6 +68,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "floral-watercolor",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloatingCard", exitAnimId: "scroll-roll", entryAnimId: "scale-in", bgVariant: "fresh-green-mist" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "calendar-grid", mapStyle: "minimalist-guide", storiesStyle: "milestone-cards", galleryStyle: "film-roll-carousel", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "cute-waving-outro", sfxTheme: "gentle-nature" },
   },
   {
     id: "serenade-green",
@@ -87,6 +90,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloatingCard", exitAnimId: "fade-drop", entryAnimId: "fade-in", bgVariant: "sage-wash" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "twin-arch-gate", mapStyle: "interactive-clean", storiesStyle: "magazine-article", galleryStyle: "mosaic-hero", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "serenade-rose",
@@ -108,6 +112,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "floral-watercolor",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloralWreath", exitAnimId: "flip-3d", entryAnimId: "rotate-in", bgVariant: "dusty-rose" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "boarding-pass", mapStyle: "illustrated-cute", storiesStyle: "filmstrip-scroll", galleryStyle: "polaroid-scatter", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "poetic-photo-outro", sfxTheme: "gentle-nature" },
   },
   {
     id: "serenade-moss",
@@ -129,6 +134,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloatingCard", exitAnimId: "zoom-away", entryAnimId: "rise-up", bgVariant: "deep-moss" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "vertical-timeline", mapStyle: "minimalist-guide", storiesStyle: "chat-journey", galleryStyle: "masonry-staggered", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "cute-waving-outro", sfxTheme: "gentle-nature" },
   },
   {
     id: "celestine",
@@ -150,6 +156,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloralWreath", exitAnimId: "slide-down", entryAnimId: "unfurl", bgVariant: "sage-terracotta" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "calendar-grid", mapStyle: "interactive-clean", storiesStyle: "milestone-cards", galleryStyle: "film-roll-carousel", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "botanica-terracotta",
@@ -171,6 +178,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloatingCard", exitAnimId: "gate-open", entryAnimId: "doors-close", bgVariant: "warm-earth" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "twin-arch-gate", mapStyle: "illustrated-cute", storiesStyle: "magazine-article", galleryStyle: "mosaic-hero", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "poetic-photo-outro", sfxTheme: "gentle-nature" },
   },
 
   // ==========================================
@@ -196,6 +204,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "batik-wayang",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "GateDoors", exitAnimId: "gate-open", entryAnimId: "doors-close", bgVariant: "dark-mahogany-gold" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "twin-arch-gate", mapStyle: "minimalist-guide", storiesStyle: "magazine-article", galleryStyle: "masonry-staggered", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "royal-gamelan" },
   },
   {
     id: "javanese-azurite",
@@ -217,6 +226,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "batik-wayang",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "ScrollUnroll", exitAnimId: "scroll-roll", entryAnimId: "unfurl", bgVariant: "deep-indigo-blue" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "boarding-pass", mapStyle: "interactive-clean", storiesStyle: "filmstrip-scroll", galleryStyle: "film-roll-carousel", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "royal-gamelan" },
   },
   {
     id: "javanese-umber",
@@ -238,6 +248,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "batik-wayang",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "GateDoors", exitAnimId: "curtain-reveal", entryAnimId: "fall-in", bgVariant: "dark-teak-brown" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "vertical-timeline", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "mosaic-hero", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "royal-gamelan" },
   },
   {
     id: "javanese-ivory",
@@ -259,6 +270,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "batik-wayang",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "ScrollUnroll", exitAnimId: "page-turn", entryAnimId: "scale-in", bgVariant: "ivory-cream-light" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "calendar-grid", mapStyle: "minimalist-guide", storiesStyle: "milestone-cards", galleryStyle: "polaroid-scatter", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "royal-gamelan" },
   },
   {
     id: "javanese-crimson",
@@ -280,6 +292,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "batik-wayang",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "GateDoors", exitAnimId: "flip-3d", entryAnimId: "rotate-in", bgVariant: "deep-crimson-dark" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "twin-arch-gate", mapStyle: "interactive-clean", storiesStyle: "magazine-article", galleryStyle: "masonry-staggered", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "royal-gamelan" },
   },
   {
     id: "javanese-golden",
@@ -301,6 +314,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "batik-wayang",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "ScrollUnroll", exitAnimId: "zoom-away", entryAnimId: "rise-up", bgVariant: "deep-gold-galaxy" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "boarding-pass", mapStyle: "illustrated-cute", storiesStyle: "filmstrip-scroll", galleryStyle: "film-roll-carousel", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "royal-gamelan" },
   },
   {
     id: "javanese-kebumen",
@@ -322,6 +336,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "batik-wayang",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "GateDoors", exitAnimId: "fade-drop", entryAnimId: "fade-in", bgVariant: "warm-kebumen-earth" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "vertical-timeline", mapStyle: "minimalist-guide", storiesStyle: "chat-journey", galleryStyle: "mosaic-hero", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "royal-gamelan" },
   },
   {
     id: "javanese-pearl",
@@ -343,6 +358,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "batik-wayang",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "ScrollUnroll", exitAnimId: "slide-up", entryAnimId: "slide-left", bgVariant: "pearl-ivory-light" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "calendar-grid", mapStyle: "interactive-clean", storiesStyle: "milestone-cards", galleryStyle: "polaroid-scatter", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "royal-gamelan" },
   },
 
   // ==========================================
@@ -368,6 +384,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "arabic-arch",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "IslamicArch", exitAnimId: "scroll-roll", entryAnimId: "rise-up", bgVariant: "clean-white-emerald" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "twin-arch-gate", mapStyle: "interactive-clean", storiesStyle: "magazine-article", galleryStyle: "masonry-staggered", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "emerald-syari",
@@ -389,6 +406,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "arabic-arch",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "IslamicArch", exitAnimId: "curtain-reveal", entryAnimId: "fall-in", bgVariant: "deep-emerald" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "minimalist-guide", storiesStyle: "filmstrip-scroll", galleryStyle: "film-roll-carousel", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "walimatul-ursy",
@@ -410,6 +428,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "arabic-arch",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "IslamicArch", exitAnimId: "fade-drop", entryAnimId: "fade-in", bgVariant: "classic-green-ivory" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "vertical-timeline", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "mosaic-hero", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "al-fatih",
@@ -431,6 +450,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "arabic-arch",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "IslamicArch", exitAnimId: "flip-3d", entryAnimId: "scale-in", bgVariant: "heritage-green" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "calendar-grid", mapStyle: "interactive-clean", storiesStyle: "milestone-cards", galleryStyle: "polaroid-scatter", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "salsabila",
@@ -452,6 +472,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "arabic-arch",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "IslamicArch", exitAnimId: "page-turn", entryAnimId: "unfurl", bgVariant: "spring-emerald" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "twin-arch-gate", mapStyle: "minimalist-guide", storiesStyle: "magazine-article", galleryStyle: "masonry-staggered", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "ar-rahman",
@@ -473,6 +494,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "arabic-arch",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "IslamicArch", exitAnimId: "slide-down", entryAnimId: "rotate-in", bgVariant: "sacred-green" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "interactive-clean", storiesStyle: "filmstrip-scroll", galleryStyle: "film-roll-carousel", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "nur-jannah",
@@ -494,6 +516,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "arabic-arch",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "IslamicArch", exitAnimId: "gate-open", entryAnimId: "doors-close", bgVariant: "light-paradise" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "vertical-timeline", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "mosaic-hero", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "barakah-rose",
@@ -515,6 +538,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "arabic-arch",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "IslamicArch", exitAnimId: "zoom-away", entryAnimId: "slide-left", bgVariant: "rose-green-blend" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "calendar-grid", mapStyle: "minimalist-guide", storiesStyle: "milestone-cards", galleryStyle: "polaroid-scatter", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "romantic-harp" },
   },
 
   // ==========================================
@@ -540,6 +564,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "minimal-line",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FullBleedText", exitAnimId: "slide-up", entryAnimId: "rise-up", bgVariant: "pure-white" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "minimalist-guide", storiesStyle: "magazine-article", galleryStyle: "masonry-staggered", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "wax-seal-signature", sfxTheme: "modern-pop" },
   },
   {
     id: "minimal-noir",
@@ -561,6 +586,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "minimal-line",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "SplitPanelHorizontal", exitAnimId: "flip-3d", entryAnimId: "scale-in", bgVariant: "stark-white-black" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "vertical-timeline", mapStyle: "interactive-clean", storiesStyle: "filmstrip-scroll", galleryStyle: "film-roll-carousel", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "celestial-odyssey",
@@ -582,6 +608,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "minimal-line",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FullBleedText", exitAnimId: "fade-drop", entryAnimId: "fade-in", bgVariant: "off-white" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "calendar-grid", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "polaroid-scatter", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "cute-waving-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "blanc-studio",
@@ -603,6 +630,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "minimal-line",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "BookCover", exitAnimId: "page-turn", entryAnimId: "unfurl", bgVariant: "studio-white" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "minimalist-guide", storiesStyle: "milestone-cards", galleryStyle: "masonry-staggered", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "wax-seal-signature", sfxTheme: "modern-pop" },
   },
   {
     id: "harmony-gray",
@@ -624,6 +652,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "minimal-line",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "SplitPanelHorizontal", exitAnimId: "curtain-reveal", entryAnimId: "fall-in", bgVariant: "warm-gray" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "vertical-timeline", mapStyle: "interactive-clean", storiesStyle: "magazine-article", galleryStyle: "film-roll-carousel", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "clay-peak",
@@ -645,6 +674,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "minimal-line",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FullBleedText", exitAnimId: "zoom-away", entryAnimId: "rotate-in", bgVariant: "clay-cream" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "calendar-grid", mapStyle: "illustrated-cute", storiesStyle: "filmstrip-scroll", galleryStyle: "mosaic-hero", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "cute-waving-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "marble-mist",
@@ -666,6 +696,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "minimal-line",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "SplitPanelHorizontal", exitAnimId: "scroll-roll", entryAnimId: "slide-left", bgVariant: "marble-off-white" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "twin-arch-gate", mapStyle: "minimalist-guide", storiesStyle: "chat-journey", galleryStyle: "polaroid-scatter", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "wax-seal-signature", sfxTheme: "modern-pop" },
   },
   {
     id: "serenity-sky",
@@ -687,6 +718,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "minimal-line",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "BookCover", exitAnimId: "slide-down", entryAnimId: "doors-close", bgVariant: "sky-blue-tint" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "boarding-pass", mapStyle: "interactive-clean", storiesStyle: "milestone-cards", galleryStyle: "masonry-staggered", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
 
   // ==========================================
@@ -712,6 +744,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "gold-foil",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "dissolve-particles", entryAnimId: "scale-in", bgVariant: "deep-maroon" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "twin-arch-gate", mapStyle: "minimalist-guide", storiesStyle: "magazine-article", galleryStyle: "mosaic-hero", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "glamour-grey",
@@ -733,6 +766,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "gold-foil",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "zoom-away", entryAnimId: "rise-up", bgVariant: "dark-charcoal" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "boarding-pass", mapStyle: "interactive-clean", storiesStyle: "filmstrip-scroll", galleryStyle: "film-roll-carousel", giftStyle: "angpao-envelope", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "black-diamond",
@@ -754,6 +788,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "gold-foil",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "SplitPanelHorizontal", exitAnimId: "flip-3d", entryAnimId: "rotate-in", bgVariant: "pure-black" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "vertical-timeline", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "polaroid-scatter", giftStyle: "clean-pills", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "burgundy-bliss",
@@ -775,6 +810,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "gold-foil",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "curtain-reveal", entryAnimId: "fall-in", bgVariant: "burgundy-velvet" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "calendar-grid", mapStyle: "minimalist-guide", storiesStyle: "milestone-cards", galleryStyle: "masonry-staggered", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "golden-seafoam",
@@ -796,6 +832,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "gold-foil",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "gate-open", entryAnimId: "doors-close", bgVariant: "dark-teal" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "twin-arch-gate", mapStyle: "interactive-clean", storiesStyle: "magazine-article", galleryStyle: "mosaic-hero", giftStyle: "angpao-envelope", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "amber-grace",
@@ -817,6 +854,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "gold-foil",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "SplitPanelHorizontal", exitAnimId: "page-turn", entryAnimId: "unfurl", bgVariant: "amber-dark" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "illustrated-cute", storiesStyle: "filmstrip-scroll", galleryStyle: "film-roll-carousel", giftStyle: "clean-pills", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "romantic-harp" },
   },
   {
     id: "blue-sapphire",
@@ -838,6 +876,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "gold-foil",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "fade-drop", entryAnimId: "fade-in", bgVariant: "deep-navy" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "vertical-timeline", mapStyle: "minimalist-guide", storiesStyle: "chat-journey", galleryStyle: "polaroid-scatter", giftStyle: "embossed-cards", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "romantic-harp" },
   },
   {
     id: "gilded-cameo",
@@ -859,6 +898,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "gold-foil",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "SplitPanelHorizontal", exitAnimId: "scroll-roll", entryAnimId: "slide-left", bgVariant: "dark-maroon-rose" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "calendar-grid", mapStyle: "interactive-clean", storiesStyle: "milestone-cards", galleryStyle: "masonry-staggered", giftStyle: "angpao-envelope", guestbookStyle: "luxury-scrollbook", closingStyle: "poetic-photo-outro", sfxTheme: "romantic-harp" },
   },
 
   // ==========================================
@@ -884,6 +924,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "PostageStamp", exitAnimId: "page-turn", entryAnimId: "unfurl", bgVariant: "warm-linen" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "vertical-timeline", mapStyle: "illustrated-cute", storiesStyle: "filmstrip-scroll", galleryStyle: "polaroid-scatter", giftStyle: "embossed-cards", guestbookStyle: "sticky-notes", closingStyle: "poetic-photo-outro", sfxTheme: "gentle-nature" },
   },
   {
     id: "terracotta-sienna",
@@ -905,6 +946,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloatingCard", exitAnimId: "slide-down", entryAnimId: "fall-in", bgVariant: "terracotta-cream" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "minimalist-guide", storiesStyle: "chat-journey", galleryStyle: "masonry-staggered", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "wax-seal-signature", sfxTheme: "gentle-nature" },
   },
   {
     id: "bohemian-bliss",
@@ -926,6 +968,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "PostageStamp", exitAnimId: "curtain-reveal", entryAnimId: "slide-left", bgVariant: "pampas-beige" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "calendar-grid", mapStyle: "interactive-clean", storiesStyle: "milestone-cards", galleryStyle: "film-roll-carousel", giftStyle: "angpao-envelope", guestbookStyle: "luxury-scrollbook", closingStyle: "cute-waving-outro", sfxTheme: "gentle-nature" },
   },
   {
     id: "sienna-earth",
@@ -947,6 +990,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloatingCard", exitAnimId: "scroll-roll", entryAnimId: "rise-up", bgVariant: "earth-beige" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "twin-arch-gate", mapStyle: "illustrated-cute", storiesStyle: "magazine-article", galleryStyle: "mosaic-hero", giftStyle: "embossed-cards", guestbookStyle: "sticky-notes", closingStyle: "wax-seal-signature", sfxTheme: "gentle-nature" },
   },
   {
     id: "golden-amber",
@@ -968,6 +1012,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "PostageStamp", exitAnimId: "fade-drop", entryAnimId: "scale-in", bgVariant: "amber-kraft" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "vertical-timeline", mapStyle: "minimalist-guide", storiesStyle: "filmstrip-scroll", galleryStyle: "polaroid-scatter", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "gentle-nature" },
   },
   {
     id: "celadon-charm",
@@ -989,6 +1034,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloatingCard", exitAnimId: "flip-3d", entryAnimId: "rotate-in", bgVariant: "sage-celadon" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "interactive-clean", storiesStyle: "chat-journey", galleryStyle: "masonry-staggered", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "cute-waving-outro", sfxTheme: "gentle-nature" },
   },
   {
     id: "dusty-blush",
@@ -1010,6 +1056,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "PostageStamp", exitAnimId: "zoom-away", entryAnimId: "doors-close", bgVariant: "dusty-blush" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "calendar-grid", mapStyle: "illustrated-cute", storiesStyle: "milestone-cards", galleryStyle: "film-roll-carousel", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "wax-seal-signature", sfxTheme: "gentle-nature" },
   },
   {
     id: "rustic-pine",
@@ -1031,6 +1078,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "leaves",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FloatingCard", exitAnimId: "gate-open", entryAnimId: "fade-in", bgVariant: "pine-green" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "twin-arch-gate", mapStyle: "minimalist-guide", storiesStyle: "magazine-article", galleryStyle: "mosaic-hero", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "gentle-nature" },
   },
 
   // ==========================================
@@ -1056,6 +1104,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FullBleedText", exitAnimId: "dissolve-particles", entryAnimId: "scale-in", bgVariant: "deep-space-indigo" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "minimalist-guide", storiesStyle: "magazine-article", galleryStyle: "film-roll-carousel", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "primus-noctis",
@@ -1077,6 +1126,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "zoom-away", entryAnimId: "rise-up", bgVariant: "deep-cosmic-violet" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "vertical-timeline", mapStyle: "interactive-clean", storiesStyle: "filmstrip-scroll", galleryStyle: "mosaic-hero", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "modern-pop" },
   },
   {
     id: "lunar-melody",
@@ -1098,6 +1148,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FullBleedText", exitAnimId: "flip-3d", entryAnimId: "rotate-in", bgVariant: "lunar-slate" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "calendar-grid", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "polaroid-scatter", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "stellar-nova",
@@ -1119,6 +1170,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "curtain-reveal", entryAnimId: "fall-in", bgVariant: "hot-nebula-pink" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "twin-arch-gate", mapStyle: "minimalist-guide", storiesStyle: "milestone-cards", galleryStyle: "masonry-staggered", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "midnight-blue",
@@ -1140,6 +1192,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FullBleedText", exitAnimId: "gate-open", entryAnimId: "doors-close", bgVariant: "midnight-deep-blue" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "boarding-pass", mapStyle: "interactive-clean", storiesStyle: "magazine-article", galleryStyle: "film-roll-carousel", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "modern-pop" },
   },
   {
     id: "velvet-noir",
@@ -1161,6 +1214,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "page-turn", entryAnimId: "unfurl", bgVariant: "purple-void" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "vertical-timeline", mapStyle: "illustrated-cute", storiesStyle: "filmstrip-scroll", galleryStyle: "mosaic-hero", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "aurora-glow",
@@ -1182,6 +1236,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "FullBleedText", exitAnimId: "scroll-roll", entryAnimId: "slide-left", bgVariant: "aurora-emerald" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "calendar-grid", mapStyle: "minimalist-guide", storiesStyle: "chat-journey", galleryStyle: "polaroid-scatter", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "eclipse-gold",
@@ -1203,6 +1258,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "CircleMonogram", exitAnimId: "fade-drop", entryAnimId: "fade-in", bgVariant: "solar-corona-black" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "twin-arch-gate", mapStyle: "interactive-clean", storiesStyle: "milestone-cards", galleryStyle: "masonry-staggered", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "modern-pop" },
   },
 
   // ==========================================
@@ -1228,6 +1284,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "KawaiiCard", exitAnimId: "zoom-away", entryAnimId: "scale-in", bgVariant: "soft-pink-pastel" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "boarding-pass", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "polaroid-scatter", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "alleya-sweet",
@@ -1249,6 +1306,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "PolaroidPhoto", exitAnimId: "page-turn", entryAnimId: "fall-in", bgVariant: "candy-red" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "vertical-timeline", mapStyle: "minimalist-guide", storiesStyle: "filmstrip-scroll", galleryStyle: "masonry-staggered", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "manga-sweet",
@@ -1270,6 +1328,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "KawaiiCard", exitAnimId: "curtain-reveal", entryAnimId: "slide-left", bgVariant: "manga-pastel" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "calendar-grid", mapStyle: "interactive-clean", storiesStyle: "milestone-cards", galleryStyle: "film-roll-carousel", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "modern-pop" },
   },
   {
     id: "cartoon-maps-kebumen",
@@ -1291,6 +1350,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "PolaroidPhoto", exitAnimId: "fade-drop", entryAnimId: "rise-up", bgVariant: "map-colorful" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "twin-arch-gate", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "mosaic-hero", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "pastel-joy",
@@ -1312,6 +1372,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "KawaiiCard", exitAnimId: "flip-3d", entryAnimId: "rotate-in", bgVariant: "violet-joy" },
+    sectionConfig: { coupleStyle: "royal-medallion", scheduleStyle: "boarding-pass", mapStyle: "minimalist-guide", storiesStyle: "magazine-article", galleryStyle: "polaroid-scatter", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "sweet-bubble",
@@ -1333,6 +1394,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "PolaroidPhoto", exitAnimId: "dissolve-particles", entryAnimId: "doors-close", bgVariant: "bubblegum-pink" },
+    sectionConfig: { coupleStyle: "split-diagonal", scheduleStyle: "vertical-timeline", mapStyle: "interactive-clean", storiesStyle: "filmstrip-scroll", galleryStyle: "masonry-staggered", giftStyle: "embossed-cards", guestbookStyle: "luxury-scrollbook", closingStyle: "wax-seal-signature", sfxTheme: "modern-pop" },
   },
   {
     id: "cotton-candy",
@@ -1354,6 +1416,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "KawaiiCard", exitAnimId: "slide-down", entryAnimId: "unfurl", bgVariant: "sky-cotton" },
+    sectionConfig: { coupleStyle: "arch-classic", scheduleStyle: "calendar-grid", mapStyle: "illustrated-cute", storiesStyle: "chat-journey", galleryStyle: "film-roll-carousel", giftStyle: "angpao-envelope", guestbookStyle: "sticky-notes", closingStyle: "cute-waving-outro", sfxTheme: "modern-pop" },
   },
   {
     id: "doodle-love",
@@ -1375,5 +1438,6 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
     ornamentStyle: "cute-stars",
     defaultAudioTrack: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3",
     coverConfig: { layoutId: "PolaroidPhoto", exitAnimId: "scroll-roll", entryAnimId: "fade-in", bgVariant: "orange-doodle" },
+    sectionConfig: { coupleStyle: "polaroid-sticker", scheduleStyle: "twin-arch-gate", mapStyle: "minimalist-guide", storiesStyle: "milestone-cards", galleryStyle: "mosaic-hero", giftStyle: "clean-pills", guestbookStyle: "minimal-feed", closingStyle: "poetic-photo-outro", sfxTheme: "modern-pop" },
   },
 ];

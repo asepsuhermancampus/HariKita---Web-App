@@ -60,6 +60,28 @@ export interface CoverConfig {
   bgVariant: string; // descriptive label; actual colors come from theme.colors
 }
 
+// 8 Section Matrix Style IDs for layout diversity
+export type CoupleStyleId = "split-diagonal" | "arch-classic" | "polaroid-sticker" | "royal-medallion";
+export type ScheduleStyleId = "boarding-pass" | "vertical-timeline" | "calendar-grid" | "twin-arch-gate";
+export type MapStyleId = "interactive-clean" | "illustrated-cute" | "minimalist-guide";
+export type StoriesStyleId = "filmstrip-scroll" | "chat-journey" | "milestone-cards" | "magazine-article";
+export type GalleryStyleId = "masonry-staggered" | "film-roll-carousel" | "mosaic-hero" | "polaroid-scatter";
+export type GiftStyleId = "embossed-cards" | "angpao-envelope" | "clean-pills";
+export type GuestbookStyleId = "sticky-notes" | "luxury-scrollbook" | "minimal-feed";
+export type ClosingStyleId = "wax-seal-signature" | "poetic-photo-outro" | "cute-waving-outro";
+
+export interface SectionMatrixConfig {
+  coupleStyle?: CoupleStyleId;
+  scheduleStyle?: ScheduleStyleId;
+  mapStyle?: MapStyleId;
+  storiesStyle?: StoriesStyleId;
+  galleryStyle?: GalleryStyleId;
+  giftStyle?: GiftStyleId;
+  guestbookStyle?: GuestbookStyleId;
+  closingStyle?: ClosingStyleId;
+  sfxTheme?: "romantic-harp" | "royal-gamelan" | "modern-pop" | "gentle-nature";
+}
+
 export interface TemplateThemePreset {
   id: string; // e.g. "autumnelle", "seraphicus-lux", "lunar-melody", "serenade-maroon"
   title: string;
@@ -83,6 +105,7 @@ export interface TemplateThemePreset {
   ornamentStyle: "leaves" | "gold-foil" | "floral-watercolor" | "arabic-arch" | "batik-wayang" | "minimal-line" | "cute-stars";
   defaultAudioTrack: string;
   coverConfig?: CoverConfig; // optional — legacy presets without coverConfig get FloatingCard + slide-up fallback
+  sectionConfig?: SectionMatrixConfig; // optional — defines modular layout for all 8 body sections
 }
 
 
