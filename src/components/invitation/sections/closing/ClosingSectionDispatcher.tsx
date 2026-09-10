@@ -10,7 +10,8 @@ export const ClosingSectionDispatcher: React.FC<{
   brideName: string;
   groomName: string;
   theme: DedicatedTemplateProps["theme"];
-}> = ({ brideName, groomName, theme }) => {
+  onCloseInvitation?: () => void;
+}> = ({ brideName, groomName, theme, onCloseInvitation }) => {
   let style: ClosingStyleId = theme?.sectionConfig?.closingStyle || "wax-seal-signature";
 
   if (!theme?.sectionConfig?.closingStyle) {
@@ -26,11 +27,11 @@ export const ClosingSectionDispatcher: React.FC<{
 
   switch (style) {
     case "cute-waving-outro":
-      return <Closing_CuteWavingOutro brideName={brideName} groomName={groomName} theme={theme} />;
+      return <Closing_CuteWavingOutro brideName={brideName} groomName={groomName} theme={theme} onCloseInvitation={onCloseInvitation} />;
     case "poetic-photo-outro":
-      return <Closing_PoeticPhotoOutro brideName={brideName} groomName={groomName} theme={theme} />;
+      return <Closing_PoeticPhotoOutro brideName={brideName} groomName={groomName} theme={theme} onCloseInvitation={onCloseInvitation} />;
     case "wax-seal-signature":
     default:
-      return <Closing_WaxSealSignature brideName={brideName} groomName={groomName} theme={theme} />;
+      return <Closing_WaxSealSignature brideName={brideName} groomName={groomName} theme={theme} onCloseInvitation={onCloseInvitation} />;
   }
 };

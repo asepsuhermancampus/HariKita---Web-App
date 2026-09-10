@@ -3,13 +3,20 @@
 import React from "react";
 import Image from "next/image";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
-import { Heart, Sparkles } from "lucide-react";
+import { Heart, Sparkles, Lock, ArrowUp } from "lucide-react";
 
 export const Closing_PoeticPhotoOutro: React.FC<{
   brideName: string;
   groomName: string;
   theme: DedicatedTemplateProps["theme"];
-}> = ({ brideName, groomName }) => {
+  onCloseInvitation?: () => void;
+}> = ({ brideName, groomName, onCloseInvitation }) => {
+  const handleScrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <footer id="closing" className="relative min-h-[70vh] flex items-center justify-center text-center p-6 text-white overflow-hidden">
       {/* Background Image with Dark Gradient Overlay */}
@@ -44,9 +51,32 @@ export const Closing_PoeticPhotoOutro: React.FC<{
           </h3>
         </div>
 
-        <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-300 pt-6">
+        <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-300 pt-2">
           <span>Terima Kasih atas Doa &amp; Restu yang Tulus</span>
           <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
+        </div>
+
+        {/* Action Buttons: Tutup Undangan & Kembali ke Awal */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
+          {onCloseInvitation && (
+            <button
+              id="btn-close-invitation-outro"
+              onClick={onCloseInvitation}
+              className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-serif font-bold tracking-wider shadow-md hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer bg-white/20 hover:bg-white/30 border border-white/40 text-white"
+            >
+              <Lock className="w-3.5 h-3.5 text-amber-300" />
+              <span>Tutup Undangan</span>
+            </button>
+          )}
+
+          <button
+            id="btn-scroll-top-outro"
+            onClick={handleScrollToTop}
+            className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-serif font-semibold border border-white/30 text-slate-200 hover:bg-white/10 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <ArrowUp className="w-3.5 h-3.5" />
+            <span>Kembali ke Awal</span>
+          </button>
         </div>
       </div>
     </footer>

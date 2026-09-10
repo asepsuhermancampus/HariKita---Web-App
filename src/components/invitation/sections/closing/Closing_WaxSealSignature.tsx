@@ -2,14 +2,21 @@
 
 import React from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
-import { Heart, Sparkles } from "lucide-react";
+import { Heart, Lock, ArrowUp } from "lucide-react";
 
 export const Closing_WaxSealSignature: React.FC<{
   brideName: string;
   groomName: string;
   theme: DedicatedTemplateProps["theme"];
-}> = ({ brideName, groomName, theme }) => {
+  onCloseInvitation?: () => void;
+}> = ({ brideName, groomName, theme, onCloseInvitation }) => {
   const primaryColor = theme?.colors?.primary || "#C5A880";
+
+  const handleScrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <footer id="closing" className="py-24 px-4 sm:px-6 relative overflow-hidden text-center bg-stone-900 text-stone-200">
@@ -37,9 +44,32 @@ export const Closing_WaxSealSignature: React.FC<{
           <p className="text-[11px] text-stone-500">Beserta segenap keluarga besar</p>
         </div>
 
-        <div className="flex items-center justify-center gap-1.5 text-[11px] text-stone-500 pt-4">
+        <div className="flex items-center justify-center gap-1.5 text-[11px] text-stone-500 pt-2">
           <span>Doa Restu Anda Adalah Kehormatan Terindah Bagi Kami</span>
           <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+        </div>
+
+        {/* Combined Action Buttons: Tutup Undangan & Kembali ke Awal */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
+          {onCloseInvitation && (
+            <button
+              id="btn-close-invitation-outro"
+              onClick={onCloseInvitation}
+              className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-serif font-bold tracking-wider shadow-md hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200"
+            >
+              <Lock className="w-3.5 h-3.5 text-amber-400" />
+              <span>Tutup Undangan</span>
+            </button>
+          )}
+
+          <button
+            id="btn-scroll-top-outro"
+            onClick={handleScrollToTop}
+            className="w-full sm:w-auto px-6 py-2.5 rounded-full text-xs font-serif font-semibold border border-stone-700 text-stone-300 hover:bg-stone-800 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <ArrowUp className="w-3.5 h-3.5" />
+            <span>Kembali ke Awal</span>
+          </button>
         </div>
       </div>
     </footer>

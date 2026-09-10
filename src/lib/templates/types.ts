@@ -163,6 +163,7 @@ export interface DedicatedTemplateProps {
   guestName: string;
   activeSessionCode: "s1" | "s2" | "s3";
   couplePhoto?: string;
+  onCloseInvitation?: () => void;
   bride: {
     name: string;
     fullName: string;

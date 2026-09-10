@@ -9,7 +9,6 @@ import {
   InvitationBottomDock,
   RotatingVinylPlayer,
   ETicketBoardingPass,
-  SmoothOutroClosingGate,
 } from "@/components/invitation/shell";
 
 // 8 Bespoke Layout Engines
@@ -33,9 +32,9 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isTicketOpen, setIsTicketOpen] = useState(false);
 
-  // Ensure SFX audio is always enabled by default per user specification
+  // Ensure SFX audio is completely silenced and disabled per user specification
   useEffect(() => {
-    soundscape.setMuted(false);
+    soundscape.setMuted(true);
   }, []);
 
   // Scroll-lock: prevent background content scrolling while cover is visible.
@@ -82,9 +81,9 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
     // 1. Dedicated Decoupled Atomic Templates
     switch (themeId) {
       case "autumnelle":
-        return <AutumnelleTemplate {...props} />;
+        return <AutumnelleTemplate {...props} onCloseInvitation={handleCloseCover} />;
       case "tulivelle":
-        return <TulivelleTemplate {...props} />;
+        return <TulivelleTemplate {...props} onCloseInvitation={handleCloseCover} />;
     }
 
     // 2. Archetype Engine Fallback for remaining templates
@@ -92,37 +91,37 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
       case "botanical":
       case "romantic-floral":
       case "animated-motion":
-        return <BotanicalEngine {...props} />;
+        return <BotanicalEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "javanese":
       case "cultural-traditional":
-        return <JavaneseEngine {...props} />;
+        return <JavaneseEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "islamic":
       case "syari-islamic":
-        return <IslamicEngine {...props} />;
+        return <IslamicEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "minimalist":
       case "minimalist-typographic":
-        return <MinimalistEngine {...props} />;
+        return <MinimalistEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "rose-gold":
       case "royal-luxury":
-        return <RoseGoldEngine {...props} />;
+        return <RoseGoldEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "rustic":
-        return <RusticEngine {...props} />;
+        return <RusticEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "celestial":
       case "fullscreen-prewed":
-        return <CelestialEngine {...props} />;
+        return <CelestialEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "cute-illustrated":
       case "special-family-event":
-        return <CuteIllustratedEngine {...props} />;
+        return <CuteIllustratedEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       default:
-        return <BotanicalEngine {...props} />;
+        return <BotanicalEngine {...props} onCloseInvitation={handleCloseCover} />;
     }
   };
 
@@ -153,14 +152,6 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
       >
         {/* Render the Bespoke Archetype Layout Engine */}
         {renderEngine()}
-
-        {/* Grand Outro Smooth Closing Gate */}
-        <SmoothOutroClosingGate
-          theme={props.theme}
-          brideName={props.bride.name}
-          groomName={props.groom.name}
-          onCloseInvitation={handleCloseCover}
-        />
 
         {/* 3. Floating Peripherals (Rendered when cover is open) */}
         {isCoverOpened && (

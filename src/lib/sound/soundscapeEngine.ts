@@ -5,17 +5,12 @@
 
 class SoundscapeEngine {
   private ctx: AudioContext | null = null;
-  private muted: boolean = false;
+  private muted: boolean = true;
   private volume: number = 0.4;
   private listeners: Set<(muted: boolean) => void> = new Set();
 
   constructor() {
-    if (typeof window !== "undefined") {
-      const savedMute = localStorage.getItem("hk_sfx_muted");
-      if (savedMute !== null) {
-        this.muted = savedMute === "true";
-      }
-    }
+    this.muted = true;
   }
 
   // Initialize or resume AudioContext on first user interaction

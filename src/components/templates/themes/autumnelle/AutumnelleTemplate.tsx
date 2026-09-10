@@ -55,7 +55,12 @@ export const AutumnelleTemplate: React.FC<DedicatedTemplateProps> = (props) => {
         initialWishes={initialWishes}
         theme={theme}
       />
-      <ClosingSectionDispatcher brideName={bride.name} groomName={groom.name} theme={theme} />
+      <ClosingSectionDispatcher
+        brideName={bride.name}
+        groomName={groom.name}
+        theme={theme}
+        onCloseInvitation={props.onCloseInvitation}
+      />
     </div>
   );
 };

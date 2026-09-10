@@ -28,6 +28,7 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
   storyTimeline,
   galleryPhotos,
   couplePhoto,
+  onCloseInvitation,
   giftInfo,
   initialWishes,
 }) => {
@@ -156,7 +157,12 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
       />
 
       {/* 9. Ucapan Penutup */}
-      <ClosingSectionDispatcher brideName={bride.name} groomName={groom.name} theme={theme} />
+      <ClosingSectionDispatcher
+        brideName={bride.name}
+        groomName={groom.name}
+        theme={theme}
+        onCloseInvitation={onCloseInvitation}
+      />
     </div>
   );
 };
