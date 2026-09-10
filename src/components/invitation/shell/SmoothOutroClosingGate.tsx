@@ -78,6 +78,9 @@ export const SmoothOutroClosingGate: React.FC<SmoothOutroClosingGateProps> = ({
     setIsOverlayClosed(true);
   };
 
+  // Backwards-compatible alias for any cached HMR chunks
+  const handleToggleClose = handleCloseOverlay;
+
   const handleReopenOverlay = () => {
     soundscape.playCoverOpen();
     setIsOverlayClosed(false);
