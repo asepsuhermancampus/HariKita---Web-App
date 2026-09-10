@@ -25,6 +25,10 @@ import {
   CuteIllustratedEngine,
 } from "./engines";
 
+// Dedicated Atomic Templates
+import { AutumnelleTemplate } from "./themes/autumnelle";
+import { TulivelleTemplate } from "./themes/tulivelle";
+
 export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) => {
   const [isCoverOpened, setIsCoverOpened] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
@@ -65,6 +69,7 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
   }, [isCoverOpened]);
 
   const archetypeId = props.theme?.archetypeId || "botanical";
+  const themeId = props.theme?.id;
 
   const handleOpenCover = () => {
     setIsCoverOpened(true);
@@ -75,6 +80,15 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
   };
 
   const renderEngine = () => {
+    // 1. Dedicated Decoupled Atomic Templates
+    switch (themeId) {
+      case "autumnelle":
+        return <AutumnelleTemplate {...props} />;
+      case "tulivelle":
+        return <TulivelleTemplate {...props} />;
+    }
+
+    // 2. Archetype Engine Fallback for remaining templates
     switch (archetypeId) {
       case "botanical":
       case "romantic-floral":
