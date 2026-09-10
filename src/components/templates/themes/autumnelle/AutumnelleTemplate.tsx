@@ -34,7 +34,13 @@ export const AutumnelleTemplate: React.FC<DedicatedTemplateProps> = (props) => {
       <EucalyptusCorner size={85} color={primaryColor} className="absolute top-0 right-0 pointer-events-none z-20 opacity-40 -scale-x-100" />
 
       {/* Atomic Sections */}
-      <AutumnelleHero bride={bride} groom={groom} activeSession={activeSession} theme={theme} />
+      <AutumnelleHero
+        bride={bride}
+        groom={groom}
+        activeSession={activeSession}
+        theme={theme}
+        couplePhoto={props.couplePhoto}
+      />
       <AutumnelleCouple bride={bride} groom={groom} theme={theme} />
       <AutumnelleSchedule sessions={sessions} googleMapsUrl={googleMapsUrl} theme={theme} />
       <AutumnelleStories storyTimeline={storyTimeline} theme={theme} />

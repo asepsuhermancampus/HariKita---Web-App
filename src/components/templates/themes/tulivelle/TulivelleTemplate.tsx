@@ -35,7 +35,13 @@ export const TulivelleTemplate: React.FC<DedicatedTemplateProps> = (props) => {
       <TulipCluster size={80} color={primaryColor} secondaryColor={accentColor} className="absolute top-0 right-0 pointer-events-none z-20 opacity-40 -scale-x-100" />
 
       {/* Atomic Sections */}
-      <TulivelleHero bride={bride} groom={groom} activeSession={activeSession} theme={theme} />
+      <TulivelleHero
+        bride={bride}
+        groom={groom}
+        activeSession={activeSession}
+        theme={theme}
+        couplePhoto={props.couplePhoto}
+      />
       <TulivelleCouple bride={bride} groom={groom} theme={theme} />
       <TulivelleSchedule sessions={sessions} googleMapsUrl={googleMapsUrl} theme={theme} />
       <TulivelleStories storyTimeline={storyTimeline} theme={theme} />

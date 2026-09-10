@@ -12,7 +12,7 @@ export const AutumnelleStories: React.FC<{
 
   return (
     <section id="stories" className="py-16 px-4 max-w-xl mx-auto space-y-10 text-center">
-      <PressedFlowerDivider size="80%" color={primaryColor} />
+      <PressedFlowerDivider color={primaryColor} />
 
       <div className="space-y-2">
         <span className="text-xs font-serif font-bold uppercase tracking-widest text-emerald-800">

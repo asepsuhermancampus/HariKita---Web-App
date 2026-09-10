@@ -16,7 +16,7 @@ export const TulivelleSchedule: React.FC<{
 
   return (
     <section id="event" className="py-16 px-4 max-w-2xl mx-auto space-y-10 text-center">
-      <TulipDivider size="80%" color={primaryColor} secondaryColor={accentColor} />
+      <TulipDivider color={primaryColor} secondaryColor={accentColor} />
 
       <div className="space-y-2">
         <span className="text-xs font-serif font-bold uppercase tracking-widest text-rose-800">

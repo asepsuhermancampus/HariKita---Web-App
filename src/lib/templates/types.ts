@@ -162,6 +162,7 @@ export interface DedicatedTemplateProps {
   theme: TemplateThemePreset;
   guestName: string;
   activeSessionCode: "s1" | "s2" | "s3";
+  couplePhoto?: string;
   bride: {
     name: string;
     fullName: string;

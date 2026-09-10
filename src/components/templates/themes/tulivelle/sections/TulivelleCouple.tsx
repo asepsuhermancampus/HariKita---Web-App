@@ -14,7 +14,7 @@ export const TulivelleCouple: React.FC<{
 
   return (
     <section id="couple" className="py-16 px-4 max-w-2xl mx-auto space-y-12 text-center">
-      <TulipDivider size="80%" color={primaryColor} secondaryColor={accentColor} />
+      <TulipDivider color={primaryColor} secondaryColor={accentColor} />
 
       <div className="space-y-3">
         <span className="text-xs font-serif font-bold uppercase tracking-widest text-rose-800">

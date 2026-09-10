@@ -13,7 +13,7 @@ export const AutumnelleCouple: React.FC<{
 
   return (
     <section id="couple" className="py-16 px-4 max-w-2xl mx-auto space-y-12 text-center">
-      <PressedFlowerDivider size="80%" color={primaryColor} />
+      <PressedFlowerDivider color={primaryColor} />
 
       <div className="space-y-3">
         <span className="text-xs font-serif font-bold uppercase tracking-widest text-emerald-800">

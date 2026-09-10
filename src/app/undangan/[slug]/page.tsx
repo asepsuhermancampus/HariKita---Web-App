@@ -131,6 +131,10 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
         theme={themePreset}
         guestName={guestName}
         activeSessionCode={sesi as "s1" | "s2" | "s3"}
+        couplePhoto={
+          galleryPhotos[0] ||
+          "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800"
+        }
         bride={{
           name: "Citra",
           fullName: brideName,

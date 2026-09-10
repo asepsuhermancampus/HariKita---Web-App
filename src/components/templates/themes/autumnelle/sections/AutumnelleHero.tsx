@@ -10,7 +10,8 @@ export const AutumnelleHero: React.FC<{
   groom: DedicatedTemplateProps["groom"];
   activeSession: DedicatedTemplateProps["sessions"]["s1"];
   theme: DedicatedTemplateProps["theme"];
-}> = ({ bride, groom, activeSession, theme }) => {
+  couplePhoto?: string;
+}> = ({ bride, groom, activeSession, theme, couplePhoto }) => {
   const primaryColor = theme.colors.primary || "#5C6F57";
   const accentColor = theme.colors.accent || "#B85D3B";
 
@@ -41,12 +42,15 @@ export const AutumnelleHero: React.FC<{
         </p>
       </div>
 
-      {/* Polaroid Autumn Couple Photo */}
+      {/* Polaroid Autumn Couple Photo (2 Orang Mempelai Pre-Wedding) */}
       <div className="relative p-3 bg-white shadow-xl rounded-2xl rotate-[-1deg] border border-amber-900/10 max-w-[270px] w-full transform hover:rotate-0 transition-transform duration-500">
         <img
-          src={bride.photo || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600"}
-          alt="Couple"
+          src={couplePhoto || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800"}
+          alt={`Potret Pre-Wedding ${bride.name} & ${groom.name}`}
           className="w-full h-64 object-cover rounded-xl"
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800";
+          }}
         />
       </div>
 

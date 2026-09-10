@@ -10,7 +10,8 @@ export const TulivelleHero: React.FC<{
   groom: DedicatedTemplateProps["groom"];
   activeSession: DedicatedTemplateProps["sessions"]["s1"];
   theme: DedicatedTemplateProps["theme"];
-}> = ({ bride, groom, activeSession, theme }) => {
+  couplePhoto?: string;
+}> = ({ bride, groom, activeSession, theme, couplePhoto }) => {
   const primaryColor = theme.colors.primary || "#7A8C74";
   const accentColor = theme.colors.accent || "#D48B72";
 
@@ -41,12 +42,15 @@ export const TulivelleHero: React.FC<{
         </p>
       </div>
 
-      {/* Curved Couple Hero Card */}
+      {/* Curved Couple Hero Card (2 Orang Mempelai Pre-Wedding) */}
       <div className="relative p-3 bg-white shadow-xl rounded-[32px] rotate-[1deg] border border-rose-200 max-w-[270px] w-full transform hover:rotate-0 transition-transform duration-500">
         <img
-          src={bride.photo || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=600"}
-          alt="Couple"
+          src={couplePhoto || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800"}
+          alt={`Potret Pre-Wedding ${bride.name} & ${groom.name}`}
           className="w-full h-64 object-cover rounded-[24px]"
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800";
+          }}
         />
       </div>
 

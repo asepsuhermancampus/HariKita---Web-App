@@ -27,6 +27,7 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
   googleMapsUrl,
   storyTimeline,
   galleryPhotos,
+  couplePhoto,
   giftInfo,
   initialWishes,
 }) => {
@@ -97,9 +98,12 @@ export const BotanicalEngine: React.FC<DedicatedTemplateProps> = ({
         {/* Polaroid Style Couple Hero Card */}
         <div className="relative p-3 bg-white shadow-xl rounded-2xl rotate-[-1deg] border border-amber-900/10 max-w-[280px] w-full transform hover:rotate-0 transition-transform duration-500">
           <img
-            src={bride.photo || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600"}
-            alt="Couple"
+            src={couplePhoto || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800"}
+            alt={`Potret Pre-Wedding ${bride.name} & ${groom.name}`}
             className="w-full h-64 object-cover rounded-xl"
+            onError={(e) => {
+              e.currentTarget.src = "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800";
+            }}
           />
           <div className="pt-3 pb-1 text-center font-serif text-sm font-semibold text-emerald-950">
             {formattedDate}
