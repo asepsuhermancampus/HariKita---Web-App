@@ -20,28 +20,30 @@ This project delivers:
 
 ---
 
-## 2. Directory Architecture & Taxonomy
+## 2. Directory Architecture & Visual Anatomy Taxonomy
 
 ```
 public/harikita-assets/
 ├── floral/
-│   ├── corners/        # Corner floral decorations (roses, sprigs, floral brackets)
-│   ├── bouquets/       # Centerpieces, full floral arrangements, floral headers
-│   └── leaves/         # Botanical branches, eucalyptus, foliage sprigs
+│   ├── corners/           # 19 assets (L-shape corner floral brackets, e.g. English Rose corner)
+│   ├── headers-garlands/  # 15 assets (Horizontal wreaths & garlands, width/height ratio >= 2.0)
+│   ├── side-cascades/     # 44 assets (Vertical side creepers & pillars, height/width ratio >= 1.8)
+│   ├── centerpieces/      # 103 assets (Compact, symmetrical centerpiece bouquets)
+│   └── single-stems/      # 9 assets (Minimalist single stem & solitary blossoms)
 ├── frames/
-│   ├── borders/        # Full card borders, invitation card frames
-│   ├── filigree/       # Delicate lace corners, gold/silver negative-space ornaments
-│   └── dividers/       # Flourish line dividers, ornamental separators
+│   ├── full-cards/        # 8 assets (Full 1-page invitation card borders)
+│   ├── filigree-corners/  # 14 assets (Hollow lace negative-space corner filigree)
+│   ├── dividers-horizontal/ # 20 assets (Section dividers, flourish lines, wave separators)
+│   └── photo-frames/      # 7 assets (Couple photo frames, arch & countdown cards)
 ├── backgrounds/
-│   ├── gradients/      # Soft champagne & alabaster SVG gradients
-│   └── textures/       # Card textures, paper overlays
+│   ├── gradients/         # 25 assets (Soft champagne, alabaster & rose card gradients)
+│   └── textures/          # 6 assets (Fine paper textures, watercolor washes)
 ├── decorative/
-│   ├── stars/          # Sparkles, star vectors, subtle ambient glow
-│   └── ribbons/        # Banners, badges, seal ribbons
+│   └── stars-sparkles/    # 1 asset (Gold starlight sparkles & ambient glow)
 ├── icons/
-│   └── events/         # Wedding event icons (ceremony, reception, map, gift, rsvp)
+│   └── events/            # 2 assets (Wedding event markers: map, gift, etc.)
 ├── harikita_manifest.json # Complete metadata & backward-compatibility registry
-└── catalog.html        # Interactive public visual catalog
+└── catalog.html           # Interactive public visual catalog with anatomy filters
 ```
 
 ---

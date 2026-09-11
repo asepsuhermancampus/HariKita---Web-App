@@ -12,17 +12,33 @@ function generateCatalog() {
   }
 
   const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, 'utf8'));
-  console.log(`Building HariKita Public Catalog for ${manifest.length} assets...`);
+  console.log(`Building HariKita Granular Public Catalog for ${manifest.length} assets...`);
 
-  const floralCount = manifest.filter(m => m.category === 'floral').length;
-  const framesCount = manifest.filter(m => m.category === 'frames').length;
-  const bgCount = manifest.filter(m => m.category === 'backgrounds').length;
-  const decoCount = manifest.filter(m => m.category === 'decorative').length;
-  const iconsCount = manifest.filter(m => m.category === 'icons').length;
-  const whitelistCount = manifest.filter(m => m.isWhitelisted).length;
+  // Subcategory Counts
+  const counts = {};
+  manifest.forEach(m => {
+    const key = `${m.category}/${m.subCategory}`;
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  const floralCorners = counts['floral/corners'] || 0;
+  const floralHeaders = counts['floral/headers-garlands'] || 0;
+  const floralCascades = counts['floral/side-cascades'] || 0;
+  const floralCenterpieces = counts['floral/centerpieces'] || 0;
+  const floralStems = counts['floral/single-stems'] || 0;
+
+  const framesCards = counts['frames/full-cards'] || 0;
+  const framesFiligree = counts['frames/filigree-corners'] || 0;
+  const framesDividers = counts['frames/dividers-horizontal'] || 0;
+  const framesPhoto = counts['frames/photo-frames'] || 0;
+
+  const bgGradients = counts['backgrounds/gradients'] || 0;
+  const bgTextures = counts['backgrounds/textures'] || 0;
+  const starsCount = counts['decorative/stars-sparkles'] || 0;
+  const iconsCount = counts['icons/events'] || 0;
 
   let cardsHtml = '';
-  manifest.forEach((item, idx) => {
+  manifest.forEach((item) => {
     const badgeClass =
       item.category === 'floral'
         ? 'badge-floral'
@@ -39,7 +55,11 @@ function generateCatalog() {
       : '';
 
     cardsHtml += `
-      <div class="asset-card" data-category="${item.category}" data-subcategory="${item.subCategory}" data-search="${item.id.toLowerCase()} ${item.originalFile.toLowerCase()} ${item.category.toLowerCase()} ${item.subCategory.toLowerCase()}">
+      <div class="asset-card" 
+        data-category="${item.category}" 
+        data-subcategory="${item.subCategory}" 
+        data-cat-sub="${item.category}/${item.subCategory}"
+        data-search="${item.id.toLowerCase()} ${item.originalFile.toLowerCase()} ${item.category.toLowerCase()} ${item.subCategory.toLowerCase()}">
         <div class="card-preview checker-bg">
           <img src="${item.relativePath}" alt="${item.id}" loading="lazy" class="preview-img">
         </div>
@@ -67,7 +87,7 @@ function generateCatalog() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HariKita Asset Library — Katalog Ilustrasi & Ornamen Resmi</title>
+  <title>HariKita Asset Library — Katalog Anatomi Visual & Tata Letak Undangan</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -103,24 +123,24 @@ function generateCatalog() {
       color: #94a3b8;
       font-size: 0.95rem;
       margin-top: 0.5rem;
-      max-width: 900px;
+      max-width: 950px;
     }
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
       margin-bottom: 2rem;
     }
     .stat-card {
       background: #161b26;
       border: 1px solid #283245;
       border-radius: 10px;
-      padding: 1rem 1.25rem;
+      padding: 0.85rem 1rem;
     }
     .stat-num {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.15rem;
     }
     .stat-lbl {
       color: #64748b;
@@ -132,11 +152,11 @@ function generateCatalog() {
       background: #161b26;
       border: 1px solid #283245;
       border-radius: 10px;
-      padding: 1rem 1.25rem;
+      padding: 1.25rem;
       margin-bottom: 2rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.25rem;
     }
     .search-row {
       display: flex;
@@ -149,7 +169,7 @@ function generateCatalog() {
       background: #0d0f17;
       border: 1px solid #334155;
       border-radius: 8px;
-      padding: 0.6rem 1.1rem;
+      padding: 0.65rem 1.1rem;
       color: #fff;
       font-size: 0.95rem;
     }
@@ -157,9 +177,17 @@ function generateCatalog() {
       outline: none;
       border-color: #c5a880;
     }
+    .filter-group-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
     .filter-tabs {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
       flex-wrap: wrap;
     }
     .tab-btn {
@@ -167,8 +195,8 @@ function generateCatalog() {
       border: 1px solid #334155;
       border-radius: 6px;
       color: #94a3b8;
-      padding: 0.45rem 0.85rem;
-      font-size: 0.85rem;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.15s ease;
     }
@@ -184,7 +212,7 @@ function generateCatalog() {
     }
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 1.5rem;
     }
     .asset-card {
@@ -201,7 +229,7 @@ function generateCatalog() {
       border-color: #c5a880;
     }
     .card-preview {
-      height: 180px;
+      height: 190px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -248,7 +276,7 @@ function generateCatalog() {
     .badge-icon { background: #1e3a3a; color: #6ee7b7; }
     .badge-gold { background: #78350f; color: #fde68a; border: 1px solid #b45309; }
     .card-name {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       color: #f8fafc;
       word-break: break-word;
@@ -338,45 +366,65 @@ function generateCatalog() {
   <div class="header">
     <div class="brand-title">
       HariKita Asset Library
-      <span class="brand-pill">PRODUCTION READY</span>
+      <span class="brand-pill">VISUAL ANATOMY EDITION</span>
     </div>
-    <p class="brand-desc">Katalog resmi aset vektor SVG HariKita untuk tema pre-wedding, lamaran, dan pernikahan intim Kebumen. Terorganisir rapi per kategori, siap pakai langsung via URL publik Next.js.</p>
+    <p class="brand-desc">Katalog resmi aset vektor HariKita yang dikelompokkan secara mendalam berdasarkan <strong>anatomi bentuk &amp; posisi tata letak undangan</strong> (Sudut Bunga L-Shape, Mahkota Garlands Horizontal, Rangkaian Menjuntai Sisi Kiri/Kanan, Buket Tengah, Pemisah Section, dan Bingkai Kartu).</p>
   </div>
 
   <div class="stats-row">
     <div class="stat-card">
       <div class="stat-num" style="color: #38bdf8;">${manifest.length}</div>
-      <div class="stat-lbl">Total Aset Vektor</div>
+      <div class="stat-lbl">Total Aset</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" style="color: #fed7aa;">${floralCount}</div>
-      <div class="stat-lbl">Floral &amp; Botanikal</div>
+      <div class="stat-num" style="color: #fed7aa;">${floralCorners}</div>
+      <div class="stat-lbl">🌸 Sudut L-Shape</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" style="color: #93c5fd;">${framesCount}</div>
-      <div class="stat-lbl">Frames &amp; Filigree</div>
+      <div class="stat-num" style="color: #fbcfe8;">${floralHeaders}</div>
+      <div class="stat-lbl">👑 Garlands Atas</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" style="color: #e9d5ff;">${bgCount}</div>
-      <div class="stat-lbl">Backgrounds</div>
+      <div class="stat-num" style="color: #a7f3d0;">${floralCascades}</div>
+      <div class="stat-lbl">🌿 Samping Ponsel</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" style="color: #fbbf24;">${whitelistCount}</div>
-      <div class="stat-lbl">🔒 Grade A Whitelist</div>
+      <div class="stat-num" style="color: #fca5a5;">${floralCenterpieces}</div>
+      <div class="stat-lbl">💐 Buket Tengah</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: #93c5fd;">${framesFiligree}</div>
+      <div class="stat-lbl">✨ Renda Sudut</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: #fde047;">${framesDividers}</div>
+      <div class="stat-lbl">📏 Garis Pemisah</div>
     </div>
   </div>
 
   <div class="controls">
     <div class="search-row">
-      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cari nama aset semantik atau referensi asli (contoh: rose, filigree, gold, 1754648453)..." oninput="filterAssets()">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cari nama aset, posisi (contoh: corner, cascade, garland, centerpiece, divider)..." oninput="filterAssets()">
     </div>
-    <div class="filter-tabs">
-      <button class="tab-btn active" id="tabAll" onclick="setCategory('all')">Semua (${manifest.length})</button>
-      <button class="tab-btn" id="tabFloral" onclick="setCategory('floral')">🌸 Floral (${floralCount})</button>
-      <button class="tab-btn" id="tabFrames" onclick="setCategory('frames')">🖼️ Frames &amp; Filigree (${framesCount})</button>
-      <button class="tab-btn" id="tabBg" onclick="setCategory('backgrounds')">🎨 Backgrounds (${bgCount})</button>
-      <button class="tab-btn" id="tabDeco" onclick="setCategory('decorative')">✨ Decorative (${decoCount})</button>
-      <button class="tab-btn" id="tabIcons" onclick="setCategory('icons')">📍 Icons (${iconsCount})</button>
+
+    <div>
+      <div class="filter-group-title">🎯 Filter Posisi &amp; Anatomi Tata Letak:</div>
+      <div class="filter-tabs">
+        <button class="tab-btn active" onclick="setFilter('all', this)">Semua (${manifest.length})</button>
+        <button class="tab-btn" onclick="setFilter('floral/corners', this)">🌸 Sudut L-Shape (${floralCorners})</button>
+        <button class="tab-btn" onclick="setFilter('floral/headers-garlands', this)">👑 Garlands Atas/Bawah (${floralHeaders})</button>
+        <button class="tab-btn" onclick="setFilter('floral/side-cascades', this)">🌿 Samping Ponsel (${floralCascades})</button>
+        <button class="tab-btn" onclick="setFilter('floral/centerpieces', this)">💐 Buket Tengah (${floralCenterpieces})</button>
+        <button class="tab-btn" onclick="setFilter('floral/single-stems', this)">🌱 Tangkai Tunggal (${floralStems})</button>
+        <button class="tab-btn" onclick="setFilter('frames/filigree-corners', this)">✨ Renda Sudut Filigree (${framesFiligree})</button>
+        <button class="tab-btn" onclick="setFilter('frames/dividers-horizontal', this)">📏 Garis Pemisah (${framesDividers})</button>
+        <button class="tab-btn" onclick="setFilter('frames/full-cards', this)">🖼️ Bingkai 1 Halaman (${framesCards})</button>
+        <button class="tab-btn" onclick="setFilter('frames/photo-frames', this)">📷 Bingkai Foto (${framesPhoto})</button>
+        <button class="tab-btn" onclick="setFilter('backgrounds/gradients', this)">🎨 Gradasi Latar (${bgGradients})</button>
+        <button class="tab-btn" onclick="setFilter('backgrounds/textures', this)">📜 Tekstur Kertas (${bgTextures})</button>
+        <button class="tab-btn" onclick="setFilter('decorative/stars-sparkles', this)">⭐ Bintang/Kilau (${starsCount})</button>
+        <button class="tab-btn" onclick="setFilter('icons/events', this)">📍 Ikon Agenda (${iconsCount})</button>
+      </div>
     </div>
   </div>
 
@@ -387,20 +435,12 @@ function generateCatalog() {
   <div id="toast" class="toast">Path berhasil disalin ke clipboard!</div>
 
   <script>
-    let activeCat = 'all';
+    let activeFilter = 'all';
 
-    function setCategory(cat) {
-      activeCat = cat;
+    function setFilter(filterVal, btn) {
+      activeFilter = filterVal;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      const idMap = {
-        'all': 'tabAll',
-        'floral': 'tabFloral',
-        'frames': 'tabFrames',
-        'backgrounds': 'tabBg',
-        'decorative': 'tabDeco',
-        'icons': 'tabIcons'
-      };
-      if (idMap[cat]) document.getElementById(idMap[cat]).classList.add('active');
+      btn.classList.add('active');
       filterAssets();
     }
 
@@ -409,13 +449,17 @@ function generateCatalog() {
       const cards = document.querySelectorAll('.asset-card');
 
       cards.forEach(card => {
-        const cat = card.getAttribute('data-category');
+        const catSub = card.getAttribute('data-cat-sub');
+        const category = card.getAttribute('data-category');
         const search = card.getAttribute('data-search');
 
-        const matchCat = (activeCat === 'all' || cat === activeCat);
+        let matchFilter = false;
+        if (activeFilter === 'all') matchFilter = true;
+        else matchFilter = (catSub === activeFilter || category === activeFilter);
+
         const matchSearch = (!q || search.includes(q));
 
-        card.style.display = (matchCat && matchSearch) ? '' : 'none';
+        card.style.display = (matchFilter && matchSearch) ? '' : 'none';
       });
     }
 
@@ -446,7 +490,7 @@ function generateCatalog() {
 
   const catalogPath = path.join(TARGET_ASSETS_DIR, 'catalog.html');
   fs.writeFileSync(catalogPath, fullHtml, 'utf8');
-  console.log(`Saved HariKita Public Catalog at: ${catalogPath} (${(fullHtml.length / 1024).toFixed(1)} KB)`);
+  console.log(`Saved Enhanced Visual Anatomy Catalog at: ${catalogPath} (${(fullHtml.length / 1024).toFixed(1)} KB)`);
 }
 
 if (require.main === module) {

@@ -1,37 +1,42 @@
 const fs = require('fs');
 const path = require('path');
 
-// 1. Classification Engine
+// 1. Granular Visual Anatomy Classifier
 function classifyAsset(filename, svgContent = '') {
   const f = filename.toLowerCase();
 
-  // Color heuristic
-  let color = '';
-  if (svgContent.includes('#cfb66e') || svgContent.includes('#c5a880') || svgContent.includes('#d4bb70') || svgContent.includes('#a65d00')) {
-    color = 'gold';
-  } else if (svgContent.includes('#eef3fb') || svgContent.includes('#ffffff') || svgContent.includes('#c6dcfc')) {
-    color = 'iceblue';
-  } else if (svgContent.includes('#2d5a43') || svgContent.includes('#3a4428') || svgContent.includes('#6b705c') || svgContent.includes('#a3c3c1')) {
-    color = 'sage';
-  } else if (svgContent.includes('#e9d8fd') || svgContent.includes('#d7cefe') || svgContent.includes('#50468b') || svgContent.includes('#dfd7fe')) {
-    color = 'lilac';
-  } else if (svgContent.includes('#c86d7a') || svgContent.includes('#e0a4ad') || svgContent.includes('#f6bdcd')) {
-    color = 'blush';
-  } else if (svgContent.includes('#faf5ea') || svgContent.includes('#f7f2ea')) {
-    color = 'ivory';
+  // Extract ViewBox & Dimensions
+  let w = 500, h = 500, ratio = 1.0;
+  const vbMatch = svgContent.match(/viewBox="([^"]+)"/);
+  if (vbMatch) {
+    const parts = vbMatch[1].trim().split(/\s+/).map(Number);
+    if (parts.length >= 4 && parts[2] > 0 && parts[3] > 0) {
+      w = parts[2];
+      h = parts[3];
+      ratio = w / h;
+    }
   }
 
-  // Icons check (small dimensions or event keywords)
+  // Dominant Color Heuristic
+  let color = '';
+  if (svgContent.includes('#cfb66e') || svgContent.includes('#c5a880') || svgContent.includes('#d4bb70') || svgContent.includes('#a65d00')) color = 'gold';
+  else if (svgContent.includes('#eef3fb') || svgContent.includes('#ffffff') || svgContent.includes('#c6dcfc')) color = 'iceblue';
+  else if (svgContent.includes('#2d5a43') || svgContent.includes('#3a4428') || svgContent.includes('#6b705c') || svgContent.includes('#a3c3c1')) color = 'sage';
+  else if (svgContent.includes('#e9d8fd') || svgContent.includes('#d7cefe') || svgContent.includes('#50468b') || svgContent.includes('#dfd7fe')) color = 'lilac';
+  else if (svgContent.includes('#c86d7a') || svgContent.includes('#e0a4ad') || svgContent.includes('#f6bdcd')) color = 'blush';
+  else if (svgContent.includes('#faf5ea') || svgContent.includes('#f7f2ea')) color = 'ivory';
+
+  // 1. ICONS
   const isIcon = (f.includes('icon') || f.includes('gift') || f.includes('map') || f.includes('calendar') || f.includes('ring')) && !f.includes('frame');
   if (isIcon) {
-    let desc = 'event-icon';
+    let desc = 'wedding-icon';
     if (f.includes('gift')) desc = 'gift';
     else if (f.includes('map')) desc = 'map';
     else if (f.includes('message')) desc = 'message';
     return { category: 'icons', subCategory: 'events', descriptor: desc, color };
   }
 
-  // Backgrounds check
+  // 2. BACKGROUNDS
   const isGradient = (svgContent.includes('<linearGradient') || svgContent.includes('<radialGradient')) && svgContent.includes('<rect');
   const isBackgroundName = f.includes('bg-') || f.includes('_bg') || f.includes('-bg') || f.includes('paper-') || f.includes('wallpaper');
   if (isGradient && isBackgroundName && !f.includes('flower')) {
@@ -44,97 +49,63 @@ function classifyAsset(filename, svgContent = '') {
     };
   }
 
-  // Decorative stars / sparkles
+  // 3. DECORATIVE (Stars, Sparkles, Ribbons)
   if (f.includes('vector') || f.includes('star') || f.includes('sparkle') || f.includes('glow')) {
-    return {
-      category: 'decorative',
-      subCategory: 'stars',
-      descriptor: 'star-sparkle',
-      color: color || 'gold'
-    };
+    return { category: 'decorative', subCategory: 'stars-sparkles', descriptor: 'star-sparkle', color: color || 'gold' };
   }
-
-  // Decorative ribbons / banners
   if (f.includes('ribbon') || f.includes('banner') || f.includes('badge')) {
-    return {
-      category: 'decorative',
-      subCategory: 'ribbons',
-      descriptor: 'ornament-ribbon',
-      color: color || 'gold'
-    };
+    return { category: 'decorative', subCategory: 'ribbons-badges', descriptor: 'ribbon-badge', color: color || 'gold' };
   }
 
-  // Dividers / Flourishes
+  // 4. FRAMES & DIVIDERS
   const isDivider = f.includes('divider') || f.includes('border-1') || f.includes('border-2') || f.includes('stamp') || f.includes('wave') || f.includes('line');
   if (isDivider) {
-    return {
-      category: 'frames',
-      subCategory: 'dividers',
-      descriptor: 'divider-flourish',
-      color: color || 'gold'
-    };
+    return { category: 'frames', subCategory: 'dividers-horizontal', descriptor: 'divider-flourish', color: color || 'gold' };
   }
 
-  // Filigree Lace Corners (negative space corner ornaments)
   const isFiligreeCorner = (f.includes('top-left') || f.includes('top-right') || f.includes('bottom-left') || f.includes('bottom-right')) && !f.includes('flower');
   if (isFiligreeCorner) {
-    return {
-      category: 'frames',
-      subCategory: 'filigree',
-      descriptor: 'filigree-corner',
-      color: color || 'iceblue'
-    };
+    return { category: 'frames', subCategory: 'filigree-corners', descriptor: 'filigree-corner', color: color || 'iceblue' };
   }
 
-  // Card Borders & Frames
-  const isFrame = f.includes('frame') || f.includes('border');
-  if (isFrame) {
-    return {
-      category: 'frames',
-      subCategory: 'borders',
-      descriptor: 'card-border',
-      color: color || 'gold'
-    };
+  const isFullCardFrame = f.includes('frame-1') || f.includes('frame-2') || f.includes('frame-3') || f.includes('frame-cover') || f.includes('cover-frame') || f.includes('bride-frame');
+  if (isFullCardFrame) {
+    return { category: 'frames', subCategory: 'full-cards', descriptor: 'full-card-border', color: color || 'gold' };
   }
 
-  // Floral Corners
-  const isFloralCorner = (f.includes('corner') || f.includes('bg-3') || f.includes('flower-3') || f.includes('top-left') || f.includes('bottom-right')) && (f.includes('flower') || f.includes('rose') || f.includes('kdo54-bg-3') || f.includes('bg-3'));
+  const isPhotoFrame = f.includes('frame-card') || f.includes('frame-countdown') || f.includes('story-frame') || f.includes('frame-small') || f.includes('frame-index');
+  if (isPhotoFrame) {
+    return { category: 'frames', subCategory: 'photo-frames', descriptor: 'photo-card-frame', color: color || 'gold' };
+  }
+
+  // 5. FLORAL TAXONOMY (Granular visual anatomy & aspect ratio)
+  const isFloralCorner = f.includes('corner') || f.includes('bg-3') || f.includes('flower-3') || 
+    (f.includes('flower') && (f.includes('top-left') || f.includes('bottom-right') || f.includes('bottom-left') || f.includes('top-right')));
   if (isFloralCorner) {
     let desc = 'rose-corner';
     if (f.includes('1754648453_kdo54-bg-3') || f.includes('rose')) desc = 'rose-ivory-english';
     else if (f.includes('bride')) desc = 'bride-floral-corner';
-    return {
-      category: 'floral',
-      subCategory: 'corners',
-      descriptor: desc,
-      color: color || 'ivory'
-    };
+    return { category: 'floral', subCategory: 'corners', descriptor: desc, color: color || 'ivory' };
   }
 
-  // Floral Leaves & Foliage
-  const isLeaf = f.includes('leaf') || f.includes('leaves') || f.includes('foliage') || f.includes('sprig');
-  if (isLeaf) {
-    return {
-      category: 'floral',
-      subCategory: 'leaves',
-      descriptor: 'botanical-foliage',
-      color: color || 'sage'
-    };
+  // Horizontal Header / Garland (Wide: ratio >= 2.0)
+  if (ratio >= 2.0 || f.includes('top-flower') || f.includes('top-bg') || f.includes('header')) {
+    return { category: 'floral', subCategory: 'headers-garlands', descriptor: 'floral-header-garland', color: color || 'blush' };
   }
 
-  // Default: Floral Bouquets / Centerpieces
-  let desc = 'watercolor-bouquet';
-  if (f.includes('blossom')) desc = 'blossom-bouquet';
-  else if (f.includes('spring')) desc = 'spring-bouquet';
-  else if (f.includes('rustic')) desc = 'rustic-bouquet';
-  else if (f.includes('top-flower')) desc = 'header-bouquet';
+  // Vertical Side Cascade / Creepers (Tall: ratio <= 0.55)
+  if (ratio <= 0.55 || f.includes('left') || f.includes('right') || f.includes('center-bg')) {
+    return { category: 'floral', subCategory: 'side-cascades', descriptor: 'floral-side-cascade', color: color || 'sage' };
+  }
 
-  return {
-    category: 'floral',
-    subCategory: 'bouquets',
-    descriptor: desc,
-    color: color || 'terracotta'
-  };
+  // Single Stems (small path count and slender)
+  const pathMatches = svgContent.match(/<path/g) || [];
+  if (pathMatches.length <= 2 && (w < 200 || h < 200)) {
+    return { category: 'floral', subCategory: 'single-stems', descriptor: 'floral-single-stem', color: color || 'terracotta' };
+  }
+
+  // Default: Compact Centerpiece Bouquets
+  return { category: 'floral', subCategory: 'centerpieces', descriptor: 'floral-centerpiece', color: color || 'terracotta' };
 }
 
 // 2. Semantic Name Generator
@@ -143,16 +114,28 @@ function generateSemanticName(classification, index = 1) {
   const idxStr = String(index).padStart(2, '0');
   
   let name = '';
-  if (subCategory === 'corners' && category === 'floral') {
-    name = `${descriptor}-corner-${idxStr}.svg`;
-  } else if (subCategory === 'bouquets') {
-    name = color ? `${descriptor}-${color}-${idxStr}.svg` : `${descriptor}-${idxStr}.svg`;
-  } else if (subCategory === 'filigree') {
-    name = color ? `filigree-corner-${color}-${idxStr}.svg` : `filigree-corner-${idxStr}.svg`;
-  } else if (subCategory === 'borders') {
-    name = color ? `frame-border-${color}-${idxStr}.svg` : `frame-border-${idxStr}.svg`;
-  } else if (subCategory === 'dividers') {
-    name = color ? `divider-flourish-${color}-${idxStr}.svg` : `divider-flourish-${idxStr}.svg`;
+  if (category === 'floral') {
+    if (subCategory === 'corners') {
+      name = `${descriptor}-corner-${idxStr}.svg`;
+    } else if (subCategory === 'headers-garlands') {
+      name = color ? `garland-header-${color}-${idxStr}.svg` : `garland-header-${idxStr}.svg`;
+    } else if (subCategory === 'side-cascades') {
+      name = color ? `cascade-side-${color}-${idxStr}.svg` : `cascade-side-${idxStr}.svg`;
+    } else if (subCategory === 'single-stems') {
+      name = color ? `stem-botanical-${color}-${idxStr}.svg` : `stem-botanical-${idxStr}.svg`;
+    } else {
+      name = color ? `centerpiece-bouquet-${color}-${idxStr}.svg` : `centerpiece-bouquet-${idxStr}.svg`;
+    }
+  } else if (category === 'frames') {
+    if (subCategory === 'full-cards') {
+      name = color ? `frame-full-card-${color}-${idxStr}.svg` : `frame-full-card-${idxStr}.svg`;
+    } else if (subCategory === 'photo-frames') {
+      name = color ? `frame-photo-card-${color}-${idxStr}.svg` : `frame-photo-card-${idxStr}.svg`;
+    } else if (subCategory === 'filigree-corners') {
+      name = color ? `filigree-corner-${color}-${idxStr}.svg` : `filigree-corner-${idxStr}.svg`;
+    } else {
+      name = color ? `divider-flourish-${color}-${idxStr}.svg` : `divider-flourish-${idxStr}.svg`;
+    }
   } else if (category === 'backgrounds') {
     name = color ? `bg-${descriptor}-${color}-${idxStr}.svg` : `bg-${descriptor}-${idxStr}.svg`;
   } else if (category === 'decorative') {
@@ -168,7 +151,7 @@ function generateSemanticName(classification, index = 1) {
 
 // 3. Batch Migration Routine
 async function runMigration() {
-  console.log('=== STARTING HARIKITA ASSET MIGRATION & REORGANIZATION ===\n');
+  console.log('=== STARTING HARIKITA GRANULAR ASSET MIGRATION ===\n');
 
   const ROOT_DIR = path.resolve(__dirname, '..');
   const SOURCE_SVG_DIR = path.join(ROOT_DIR, 'references', 'kadio-assets', 'harvested', 'svg');
@@ -179,18 +162,31 @@ async function runMigration() {
     fs.existsSync(WHITELIST_PATH) ? JSON.parse(fs.readFileSync(WHITELIST_PATH, 'utf8')) : []
   );
 
-  // Define Category Hierarchy
+  // Clean old destination directories
+  if (fs.existsSync(TARGET_ASSETS_DIR)) {
+    const existingDirs = ['floral', 'frames', 'backgrounds', 'decorative', 'icons'];
+    for (const d of existingDirs) {
+      const p = path.join(TARGET_ASSETS_DIR, d);
+      if (fs.existsSync(p)) {
+        fs.rmSync(p, { recursive: true, force: true });
+      }
+    }
+  }
+
+  // Define Granular Visual Anatomy Hierarchy
   const subDirs = [
     'floral/corners',
-    'floral/bouquets',
-    'floral/leaves',
-    'frames/borders',
-    'frames/filigree',
-    'frames/dividers',
+    'floral/headers-garlands',
+    'floral/side-cascades',
+    'floral/centerpieces',
+    'floral/single-stems',
+    'frames/full-cards',
+    'frames/filigree-corners',
+    'frames/dividers-horizontal',
+    'frames/photo-frames',
     'backgrounds/gradients',
     'backgrounds/textures',
-    'decorative/stars',
-    'decorative/ribbons',
+    'decorative/stars-sparkles',
     'icons/events',
   ];
 
@@ -199,14 +195,14 @@ async function runMigration() {
     const fullPath = path.join(TARGET_ASSETS_DIR, sd);
     fs.mkdirSync(fullPath, { recursive: true });
   }
-  console.log(`✅ Created clean folder hierarchy under public/harikita-assets/\n`);
+  console.log(`✅ Created clean granular folder hierarchy (${subDirs.length} sub-directories)\n`);
 
   const files = fs.readdirSync(SOURCE_SVG_DIR)
     .filter(f => f.endsWith('.svg') && !f.startsWith('proto_') && !f.startsWith('elevated_') && !f.startsWith('test-'));
 
   console.log(`Found ${files.length} production SVG files to migrate.`);
 
-  // Tracking indexes to ensure sequential collision-free names
+  // Tracking indexes per subcategory to ensure sequential collision-free names
   const indexCounters = {};
   const manifest = [];
 
@@ -221,35 +217,35 @@ async function runMigration() {
     },
     'vector-2.svg': {
       category: 'decorative',
-      subCategory: 'stars',
+      subCategory: 'stars-sparkles',
       descriptor: 'star-sparkle',
       color: 'gold',
       customName: 'star-sparkle-gold-01.svg'
     },
     'event-bottom-right.svg': {
       category: 'frames',
-      subCategory: 'filigree',
+      subCategory: 'filigree-corners',
       descriptor: 'filigree-corner',
       color: 'iceblue',
       customName: 'filigree-corner-iceblue-bottom-right.svg'
     },
     'event-top-left.svg': {
       category: 'frames',
-      subCategory: 'filigree',
+      subCategory: 'filigree-corners',
       descriptor: 'filigree-corner',
       color: 'iceblue',
       customName: 'filigree-corner-iceblue-top-left.svg'
     },
     'event-top-right.svg': {
       category: 'frames',
-      subCategory: 'filigree',
+      subCategory: 'filigree-corners',
       descriptor: 'filigree-corner',
       color: 'iceblue',
       customName: 'filigree-corner-iceblue-top-right.svg'
     },
     'event-bottom-left.svg': {
       category: 'frames',
-      subCategory: 'filigree',
+      subCategory: 'filigree-corners',
       descriptor: 'filigree-corner',
       color: 'iceblue',
       customName: 'filigree-corner-iceblue-bottom-left.svg'
@@ -263,17 +259,17 @@ async function runMigration() {
     },
     'bg-flower-3.svg': {
       category: 'floral',
-      subCategory: 'bouquets',
-      descriptor: 'watercolor-bouquet',
+      subCategory: 'side-cascades',
+      descriptor: 'cascade-side-sage',
       color: 'sage',
-      customName: 'watercolor-bouquet-sage-01.svg'
+      customName: 'cascade-side-sage-01.svg'
     },
     '1754403915_kdo56-flower-1.svg': {
       category: 'floral',
-      subCategory: 'bouquets',
-      descriptor: 'bouquet-terracotta-blossom',
+      subCategory: 'side-cascades',
+      descriptor: 'cascade-side-terracotta',
       color: 'terracotta',
-      customName: 'bouquet-terracotta-blossom-01.svg'
+      customName: 'cascade-side-terracotta-01.svg'
     }
   };
 
@@ -326,20 +322,21 @@ async function runMigration() {
     });
   }
 
-  // Sort manifest: Whitelisted first, then by category, then by name
+  // Sort manifest: Whitelisted first, then by category, then subCategory, then relativePath
   manifest.sort((a, b) => {
     if (a.isWhitelisted && !b.isWhitelisted) return -1;
     if (!a.isWhitelisted && b.isWhitelisted) return 1;
     if (a.category !== b.category) return a.category.localeCompare(b.category);
+    if (a.subCategory !== b.subCategory) return a.subCategory.localeCompare(b.subCategory);
     return a.relativePath.localeCompare(b.relativePath);
   });
 
   const manifestPath = path.join(TARGET_ASSETS_DIR, 'harikita_manifest.json');
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), 'utf8');
 
-  console.log(`\n=== MIGRATION COMPLETE ===`);
+  console.log(`\n=== GRANULAR MIGRATION COMPLETE ===`);
   console.log(`Total Assets Migrated: ${migratedCount}`);
-  console.log(`Categories Created: ${subDirs.length} subdirectories`);
+  console.log(`Hierarchy: ${subDirs.length} specialized subdirectories`);
   console.log(`Manifest Registry Saved at: ${manifestPath} (${(fs.statSync(manifestPath).size / 1024).toFixed(1)} KB)`);
 }
 
