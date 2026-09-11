@@ -29,6 +29,7 @@ export const RoseGoldEngine: React.FC<DedicatedTemplateProps> = ({
   galleryPhotos,
   giftInfo,
   initialWishes,
+  onCloseInvitation,
 }) => {
   const [selectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
   const gildedGold = theme?.colors?.primary || "#C5A880";
@@ -138,7 +139,12 @@ export const RoseGoldEngine: React.FC<DedicatedTemplateProps> = ({
       />
 
       {/* 9. Ucapan Penutup */}
-      <ClosingSectionDispatcher brideName={bride.name} groomName={groom.name} theme={theme} />
+      <ClosingSectionDispatcher
+        brideName={bride.name}
+        groomName={groom.name}
+        theme={theme}
+        onCloseInvitation={onCloseInvitation}
+      />
     </div>
   );
 };

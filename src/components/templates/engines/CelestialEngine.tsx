@@ -29,6 +29,7 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
   galleryPhotos,
   giftInfo,
   initialWishes,
+  onCloseInvitation,
 }) => {
   const [selectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
   const activeSession = sessions[selectedSession] || sessions.s1;
@@ -62,27 +63,27 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
           </div>
         </div>
 
-        <div className="space-y-2 max-w-xs">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-mono tracking-[0.25em] uppercase bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
+        <div className="space-y-2.5 max-w-md mx-auto">
+          <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full text-xs font-serif uppercase tracking-[0.2em] font-bold bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Written In The Stars</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-amber-100 to-purple-200">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-amber-100 to-purple-200 leading-tight">
             {bride.name} <span className="text-amber-300 font-light">&amp;</span> {groom.name}
           </h1>
-          <p className="text-xs text-slate-400 font-serif italic">
+          <p className="text-xs sm:text-sm text-slate-300 font-serif italic max-w-sm mx-auto leading-relaxed">
             &ldquo;When the stars align, two souls find their eternal orbit.&rdquo;
           </p>
         </div>
 
         {/* Floating Glass Prewed Card */}
-        <div className="relative p-2.5 bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-[0_0_30px_rgba(0,0,0,0.8)] border border-slate-700/60 max-w-[280px] w-full transform hover:scale-105 transition-transform duration-500">
+        <div className="relative p-2.5 bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-[0_0_30px_rgba(0,0,0,0.8)] border border-slate-700/60 max-w-[280px] w-full mx-auto transition-transform duration-500 hover:scale-[1.01]">
           <img
             src={bride.photo || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600"}
             alt="Couple"
-            className="w-full h-64 object-cover rounded-2xl filter brightness-95"
+            className="w-full aspect-[4/5] object-cover object-top rounded-2xl filter brightness-95"
           />
-          <div className="pt-3 pb-1 text-center font-mono text-xs tracking-widest text-indigo-300 uppercase">
+          <div className="pt-3 pb-1 text-center font-serif text-xs tracking-widest text-indigo-300 uppercase">
             {formattedDate}
           </div>
         </div>
@@ -133,7 +134,12 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
       />
 
       {/* 9. Ucapan Penutup */}
-      <ClosingSectionDispatcher brideName={bride.name} groomName={groom.name} theme={theme} />
+      <ClosingSectionDispatcher
+        brideName={bride.name}
+        groomName={groom.name}
+        theme={theme}
+        onCloseInvitation={onCloseInvitation}
+      />
     </div>
   );
 };

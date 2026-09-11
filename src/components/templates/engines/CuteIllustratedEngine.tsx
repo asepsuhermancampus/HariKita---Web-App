@@ -29,6 +29,7 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
   galleryPhotos,
   giftInfo,
   initialWishes,
+  onCloseInvitation,
 }) => {
   const [selectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
   const activeSession = sessions[selectedSession] || sessions.s1;
@@ -80,11 +81,11 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
         </div>
 
         {/* Chubby Pill Prewed Photo Card */}
-        <div className="relative p-3 bg-white rounded-[2.5rem] shadow-xl border-4 border-pink-100 max-w-[280px] w-full transform hover:rotate-1 transition-transform">
+        <div className="relative p-2.5 bg-white rounded-[2.5rem] shadow-xl border-4 border-pink-100 max-w-[280px] w-full mx-auto transition-transform hover:scale-[1.01]">
           <img
             src={bride.photo || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600"}
             alt="Couple"
-            className="w-full h-64 object-cover rounded-[2rem]"
+            className="w-full aspect-[4/5] object-cover object-top rounded-[2rem]"
           />
           <div className="pt-3 pb-1 text-center font-bold text-xs text-pink-600 uppercase tracking-wider">
             {formattedDate}
@@ -93,7 +94,7 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
 
         <div className="flex items-center gap-2 text-xs text-pink-700 bg-white px-4 py-2 rounded-full border-2 border-pink-200 shadow-sm">
           <MapPin className="w-3.5 h-3.5 text-pink-500" />
-          <span className="font-bold">{activeSession.venueName}</span>
+          <span>{activeSession.venueName}</span>
         </div>
       </section>
 
@@ -137,7 +138,12 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
       />
 
       {/* 9. Ucapan Penutup */}
-      <ClosingSectionDispatcher brideName={bride.name} groomName={groom.name} theme={theme} />
+      <ClosingSectionDispatcher
+        brideName={bride.name}
+        groomName={groom.name}
+        theme={theme}
+        onCloseInvitation={onCloseInvitation}
+      />
     </div>
   );
 };

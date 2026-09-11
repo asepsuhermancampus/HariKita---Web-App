@@ -17,10 +17,16 @@ export const TulivelleCouple: React.FC<{
       <TulipDivider color={primaryColor} secondaryColor={accentColor} />
 
       <div className="space-y-3">
-        <span className="text-xs font-serif font-bold uppercase tracking-widest text-rose-800">
+        <span
+          className="text-xs font-serif font-bold uppercase tracking-widest"
+          style={{ color: accentColor }}
+        >
           Pasangan Mempelai
         </span>
-        <h2 className="text-2xl sm:text-3xl font-serif font-bold text-rose-950">
+        <h2
+          className="text-2xl sm:text-3xl font-serif font-bold"
+          style={{ color: theme.colors.text || "#2B2428" }}
+        >
           Mekar Bersama dalam Ikatan Suci
         </h2>
       </div>
@@ -29,24 +35,42 @@ export const TulivelleCouple: React.FC<{
         {/* Bride */}
         <div className="space-y-4">
           <CurvedStemFrame size={200} color={primaryColor} secondaryColor={accentColor}>
-            <img src={bride.photo} alt={bride.fullName} className="w-full h-full object-cover" />
+            <img
+              src={bride.photo}
+              alt={bride.fullName}
+              className="w-full h-full object-cover object-top"
+            />
           </CurvedStemFrame>
           <div className="space-y-1">
-            <h3 className="font-serif font-bold text-lg text-rose-950">{bride.fullName}</h3>
-            <p className="text-xs text-slate-500 font-serif">Putri tercinta dari</p>
-            <p className="text-xs font-serif font-medium text-slate-700">{bride.father} &amp; {bride.mother}</p>
+            <h3
+              className="font-serif font-bold text-lg"
+              style={{ color: theme.colors.text || "#2B2428" }}
+            >
+              {bride.fullName}
+            </h3>
+            <p className="text-xs text-stone-500 font-serif">Putri tercinta dari</p>
+            <p className="text-xs font-serif font-medium text-stone-700">{bride.father} &amp; {bride.mother}</p>
           </div>
         </div>
 
         {/* Groom */}
         <div className="space-y-4">
           <CurvedStemFrame size={200} color={primaryColor} secondaryColor={accentColor}>
-            <img src={groom.photo} alt={groom.fullName} className="w-full h-full object-cover" />
+            <img
+              src={groom.photo}
+              alt={groom.fullName}
+              className="w-full h-full object-cover object-top"
+            />
           </CurvedStemFrame>
           <div className="space-y-1">
-            <h3 className="font-serif font-bold text-lg text-rose-950">{groom.fullName}</h3>
-            <p className="text-xs text-slate-500 font-serif">Putra tercinta dari</p>
-            <p className="text-xs font-serif font-medium text-slate-700">{groom.father} &amp; {groom.mother}</p>
+            <h3
+              className="font-serif font-bold text-lg"
+              style={{ color: theme.colors.text || "#2B2428" }}
+            >
+              {groom.fullName}
+            </h3>
+            <p className="text-xs text-stone-500 font-serif">Putra tercinta dari</p>
+            <p className="text-xs font-serif font-medium text-stone-700">{groom.father} &amp; {groom.mother}</p>
           </div>
         </div>
       </div>

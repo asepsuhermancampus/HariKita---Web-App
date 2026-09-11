@@ -26,7 +26,7 @@ export const Stories_FilmstripScroll: React.FC<{
         {/* Film Header */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="space-y-1 text-center sm:text-left">
-            <span className="text-xs uppercase font-mono tracking-widest text-amber-400 flex items-center justify-center sm:justify-start gap-1.5">
+            <span className="text-xs uppercase font-serif tracking-[0.2em] text-amber-400 flex items-center justify-center sm:justify-start gap-1.5 font-semibold">
               <Film className="w-3.5 h-3.5" />
               <span>Cinematic Love Memories</span>
             </span>
@@ -39,14 +39,14 @@ export const Stories_FilmstripScroll: React.FC<{
           <div className="flex items-center gap-2">
             <button
               onClick={() => handleScroll("left")}
-              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors"
+              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors cursor-pointer"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={() => handleScroll("right")}
-              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors"
+              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors cursor-pointer"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-5 h-5" />
@@ -73,10 +73,10 @@ export const Stories_FilmstripScroll: React.FC<{
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider">
+                  <span className="bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full text-[10px] font-serif uppercase tracking-[0.2em] font-bold">
                     BAB 0{idx + 1}
                   </span>
-                  <span className="text-[11px] font-mono font-semibold text-slate-300">
+                  <span className="text-[11px] font-serif tracking-wider font-semibold text-slate-300">
                     {item.year}
                   </span>
                 </div>

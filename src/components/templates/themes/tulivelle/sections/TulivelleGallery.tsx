@@ -16,10 +16,16 @@ export const TulivelleGallery: React.FC<{
       <TulipDivider color={primaryColor} secondaryColor={accentColor} />
 
       <div className="space-y-2">
-        <span className="text-xs font-serif font-bold uppercase tracking-widest text-rose-800">
+        <span
+          className="text-xs font-serif font-bold uppercase tracking-widest"
+          style={{ color: accentColor }}
+        >
           Galeri Kenangan
         </span>
-        <h2 className="text-2xl sm:text-3xl font-serif font-bold text-rose-950">
+        <h2
+          className="text-2xl sm:text-3xl font-serif font-bold"
+          style={{ color: theme.colors.text || "#2B2428" }}
+        >
           Setiap Momen Penuh Cerita
         </h2>
       </div>
@@ -28,7 +34,8 @@ export const TulivelleGallery: React.FC<{
         {galleryPhotos.map((photoUrl, idx) => (
           <div
             key={idx}
-            className="overflow-hidden rounded-[28px] border border-rose-200 shadow-sm aspect-square transform hover:scale-[1.02] transition-transform duration-300"
+            className="overflow-hidden rounded-[28px] border shadow-xs aspect-square transform hover:scale-[1.02] transition-transform duration-300"
+            style={{ borderColor: `${accentColor}30` }}
           >
             <img
               src={photoUrl}

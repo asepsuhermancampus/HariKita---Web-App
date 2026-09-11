@@ -28,6 +28,7 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
   galleryPhotos,
   giftInfo,
   initialWishes,
+  onCloseInvitation,
 }) => {
   const [selectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
 
@@ -57,39 +58,39 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
         className="relative min-h-[92vh] flex flex-col items-center justify-center p-6 text-center space-y-6 pt-12"
       >
         {/* Postal Stamp Cancellation Mark */}
-        <div className="relative inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-amber-800/40 rounded-xl text-amber-900 rotate-[-2deg]">
+        <div className="relative inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-amber-800/40 rounded-xl text-amber-900">
           <Stamp className="w-5 h-5 text-amber-800" />
-          <span className="text-xs font-mono font-bold tracking-widest uppercase">
+          <span className="text-xs font-serif font-bold tracking-[0.2em] uppercase">
             POSTAGE PAID • KEBUMEN 2026
           </span>
         </div>
 
-        <div className="space-y-2 max-w-xs">
-          <p className="text-xs uppercase tracking-[0.25em] text-amber-800 font-sans font-semibold">
+        <div className="space-y-2 max-w-md mx-auto">
+          <p className="text-xs uppercase tracking-[0.25em] text-amber-800 font-serif font-semibold">
             RUSTIC BOTANICAL LOVE
           </p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide leading-tight text-amber-950">
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-wide leading-tight text-amber-950">
             {bride.name} <span className="font-light text-amber-700">&amp;</span> {groom.name}
           </h1>
-          <p className="text-xs text-amber-800/80 italic font-serif">
+          <p className="text-xs sm:text-sm text-amber-800/80 italic font-serif">
             &ldquo;In all the world, there is no heart for me like yours.&rdquo;
           </p>
         </div>
 
         {/* Vintage Postcard Styled Hero Couple Photo */}
-        <div className="relative p-3 bg-amber-100/80 shadow-2xl rounded-2xl rotate-1 border-2 border-amber-800/20 max-w-[280px] w-full transform hover:rotate-0 transition-transform duration-500">
+        <div className="relative p-2.5 bg-amber-100/80 shadow-xl rounded-2xl border-2 border-amber-800/20 max-w-[280px] w-full mx-auto transition-transform duration-500 hover:scale-[1.01]">
           <img
             src={bride.photo || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600"}
             alt="Couple"
-            className="w-full h-64 object-cover rounded-xl filter sepia-[0.2]"
+            className="w-full aspect-[4/5] object-cover object-top rounded-xl filter sepia-[0.15]"
           />
-          <div className="pt-3 pb-1 text-center font-mono text-xs text-amber-900 tracking-wider">
+          <div className="pt-3 pb-1 text-center font-serif text-xs sm:text-sm text-amber-900 tracking-wider">
             {formattedDate}
           </div>
         </div>
 
         <div className="flex items-center gap-2 text-xs text-amber-900 bg-amber-200/50 px-4 py-2 rounded-full border border-amber-300">
-          <MapPin className="w-3.5 h-3.5 text-amber-800" />
+          <MapPin className="w-3.5 h-3.5 text-amber-700" />
           <span>{activeSession.venueName}</span>
         </div>
       </section>
@@ -134,7 +135,12 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
       />
 
       {/* 9. Ucapan Penutup */}
-      <ClosingSectionDispatcher brideName={bride.name} groomName={groom.name} theme={theme} />
+      <ClosingSectionDispatcher
+        brideName={bride.name}
+        groomName={groom.name}
+        theme={theme}
+        onCloseInvitation={onCloseInvitation}
+      />
     </div>
   );
 };

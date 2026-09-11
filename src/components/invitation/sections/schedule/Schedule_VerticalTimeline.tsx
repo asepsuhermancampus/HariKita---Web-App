@@ -31,11 +31,14 @@ export const Schedule_VerticalTimeline: React.FC<{
       <div className="max-w-3xl mx-auto space-y-16">
         {/* Timeline Header */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-300/40 bg-amber-50 text-amber-900 text-xs font-serif font-bold uppercase tracking-widest shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-serif font-bold uppercase tracking-widest shadow-xs"
+            style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}14`, color: primaryColor }}
+          >
+            <Sparkles className="w-3.5 h-3.5" style={{ color: accentColor }} />
             <span>Rangkaian Waktu Sakral</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-serif font-bold text-slate-900">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900">
             Jadwal Prosesi Acara
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 font-serif">
@@ -44,7 +47,7 @@ export const Schedule_VerticalTimeline: React.FC<{
         </div>
 
         {/* Vertical Timeline Track */}
-        <div className="relative border-l-2 sm:border-l-0 sm:before:absolute sm:before:left-1/2 sm:before:top-0 sm:before:bottom-0 sm:before:w-0.5 sm:before:bg-amber-300/40 ml-4 sm:ml-0 space-y-12">
+        <div className="relative border-l-2 sm:border-l-0 sm:before:absolute sm:before:left-1/2 sm:before:top-0 sm:before:bottom-0 sm:before:w-0.5 sm:before:bg-stone-300/60 ml-4 sm:ml-0 space-y-12">
           {sessionList.map(({ key, data }, idx) => {
             const isHighlighted = activeSessionCode === key;
             const isEven = idx % 2 === 0;
@@ -65,7 +68,7 @@ export const Schedule_VerticalTimeline: React.FC<{
                 </div>
 
                 {/* Timeline Card */}
-                <div className="w-full sm:w-[calc(50%-2rem)] bg-white/90 backdrop-blur-md p-6 rounded-3xl border border-slate-200/80 shadow-xl space-y-4 hover:-translate-y-1 transition-transform">
+                <div className="w-full sm:w-[calc(50%-2rem)] bg-white/90 backdrop-blur-md p-6 rounded-3xl border border-stone-200/80 shadow-lg space-y-4 hover:-translate-y-1 transition-transform">
                   <div className="flex items-center justify-between gap-2">
                     <span
                       className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-xs"
@@ -74,7 +77,10 @@ export const Schedule_VerticalTimeline: React.FC<{
                       {data.title}
                     </span>
                     {isHighlighted && (
-                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                      <span
+                        className="text-[10px] font-bold px-2 py-0.5 rounded-md border"
+                        style={{ backgroundColor: `${primaryColor}14`, borderColor: `${primaryColor}30`, color: primaryColor }}
+                      >
                         Sesi Kehadiran Anda
                       </span>
                     )}
@@ -82,11 +88,11 @@ export const Schedule_VerticalTimeline: React.FC<{
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
-                      <Clock className="w-4 h-4 text-amber-600" />
+                      <Clock className="w-4 h-4" style={{ color: accentColor }} />
                       <span>{data.timeSlot}</span>
                     </div>
                     <div className="flex items-start gap-2 text-xs text-slate-600 pt-1">
-                      <MapPin className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                      <MapPin className="w-4 h-4 shrink-0 mt-0.5" style={{ color: primaryColor }} />
                       <div>
                         <p className="font-bold text-slate-900">{data.venueName}</p>
                         <p className="text-[11px] leading-relaxed text-slate-500">{data.venueAddress}</p>
@@ -99,10 +105,10 @@ export const Schedule_VerticalTimeline: React.FC<{
                       href={googleMapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => soundscape.playTick()}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-800 hover:text-amber-950 py-1.5 px-3 rounded-xl bg-amber-50 border border-amber-200/60 transition-colors"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold py-1.5 px-3 rounded-xl border transition-colors hover:opacity-85"
+                      style={{ backgroundColor: `${primaryColor}10`, borderColor: `${primaryColor}30`, color: primaryColor }}
                     >
-                      <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                      <MapPin className="w-3.5 h-3.5" />
                       <span>Petunjuk Arah</span>
                       <ExternalLink className="w-3 h-3 opacity-70" />
                     </a>

@@ -17,7 +17,9 @@ export const Guestbook_MinimalFeed: React.FC<{
   defaultGuestName = "",
   activeSessionCode = "s1",
   initialWishes,
+  themePrimary = "#7D424D",
 }) => {
+
   const [wishes, setWishes] = useState(initialWishes);
   const [name, setName] = useState(defaultGuestName !== "Bapak/Ibu/Saudara/i" ? defaultGuestName : "");
   const [message, setMessage] = useState("");
@@ -70,19 +72,22 @@ export const Guestbook_MinimalFeed: React.FC<{
     <section id="guestbook" className="py-14 sm:py-24 px-4 sm:px-6 relative overflow-hidden bg-white">
       <div className="max-w-2xl mx-auto space-y-10">
         <div className="space-y-3">
-          <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-slate-400 block">
+          <span
+            className="text-[11px] font-serif uppercase tracking-[0.3em] block"
+            style={{ color: themePrimary ? `${themePrimary}99` : "#6B5E62" }}
+          >
             RSVP &amp; GUEST WISHES
           </span>
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 leading-tight">
             Ucapan &amp; Konfirmasi
           </h2>
-          <div className="w-12 h-0.5 bg-slate-900" />
+          <div className="w-12 h-0.5" style={{ backgroundColor: themePrimary || "#4A2E35" }} />
         </div>
 
         {/* Minimalist Input Form */}
         <form onSubmit={handleSubmit} className="space-y-4 p-4 sm:p-6 rounded-2xl bg-slate-50 border border-slate-200">
           <div>
-            <label className="text-[11px] font-mono uppercase text-slate-500 block mb-1">Nama</label>
+            <label className="text-[11px] font-serif uppercase text-slate-500 block mb-1" style={{ color: themePrimary ? `${themePrimary}99` : undefined }}>Nama</label>
             <input
               type="text"
               value={name}
@@ -94,7 +99,7 @@ export const Guestbook_MinimalFeed: React.FC<{
           </div>
 
           <div>
-            <label className="text-[11px] font-mono uppercase text-slate-500 block mb-1">Kehadiran</label>
+            <label className="text-[11px] font-serif uppercase text-slate-500 block mb-1" style={{ color: themePrimary ? `${themePrimary}99` : undefined }}>Kehadiran</label>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -105,9 +110,10 @@ export const Guestbook_MinimalFeed: React.FC<{
                     window.dispatchEvent(new CustomEvent("guest_attendance_change", { detail: { attendance: "hadir" } }));
                   }
                 }}
-                className={`py-1.5 px-3 rounded-lg text-xs font-mono font-bold transition-colors cursor-pointer ${
-                  attendance === "hadir" ? "bg-slate-900 text-white" : "bg-white text-slate-700 border border-slate-200"
+                className={`py-1.5 px-3 rounded-lg text-xs font-serif font-bold transition-colors cursor-pointer ${
+                  attendance === "hadir" ? "text-white" : "bg-white text-slate-700 border border-slate-200"
                 }`}
+                style={attendance === "hadir" ? { backgroundColor: themePrimary || "#4A2E35" } : {}}
               >
                 Hadir
               </button>
@@ -120,9 +126,10 @@ export const Guestbook_MinimalFeed: React.FC<{
                     window.dispatchEvent(new CustomEvent("guest_attendance_change", { detail: { attendance: "tidak-hadir" } }));
                   }
                 }}
-                className={`py-1.5 px-3 rounded-lg text-xs font-mono font-bold transition-colors cursor-pointer ${
-                  attendance === "tidak-hadir" ? "bg-slate-900 text-white" : "bg-white text-slate-700 border border-slate-200"
+                className={`py-1.5 px-3 rounded-lg text-xs font-serif font-bold transition-colors cursor-pointer ${
+                  attendance === "tidak-hadir" ? "text-white" : "bg-white text-slate-700 border border-slate-200"
                 }`}
+                style={attendance === "tidak-hadir" ? { backgroundColor: themePrimary || "#4A2E35" } : {}}
               >
                 Berhalangan
               </button>
@@ -130,7 +137,7 @@ export const Guestbook_MinimalFeed: React.FC<{
           </div>
 
           <div>
-            <label className="text-[11px] font-mono uppercase text-slate-500 block mb-1">Pesan</label>
+            <label className="text-[11px] font-serif uppercase text-slate-500 block mb-1" style={{ color: themePrimary ? `${themePrimary}99` : undefined }}>Pesan</label>
             <textarea
               rows={2}
               value={message}
@@ -144,7 +151,8 @@ export const Guestbook_MinimalFeed: React.FC<{
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 rounded-lg bg-slate-900 text-white font-mono text-xs font-bold hover:bg-slate-800 transition-colors disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+            className="w-full py-2.5 rounded-lg text-white font-serif text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+            style={{ backgroundColor: themePrimary || "#4A2E35" }}
           >
             {isSubmitting ? (
               <>
@@ -169,7 +177,10 @@ export const Guestbook_MinimalFeed: React.FC<{
             <div key={w.id || i} className="py-4 space-y-1">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-slate-900">{w.guestName}</span>
-                <span className="text-[10px] font-mono text-slate-400">
+                <span
+                  className="text-[10px] font-serif"
+                  style={{ color: themePrimary ? `${themePrimary}99` : "#6B5E62" }}
+                >
                   {w.attendance === "hadir" ? "• Hadir" : "• Doa"}
                 </span>
               </div>

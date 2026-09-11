@@ -16,10 +16,16 @@ export const AutumnelleCouple: React.FC<{
       <PressedFlowerDivider color={primaryColor} />
 
       <div className="space-y-3">
-        <span className="text-xs font-serif font-bold uppercase tracking-widest text-emerald-800">
+        <span
+          className="text-xs font-serif font-bold uppercase tracking-widest"
+          style={{ color: primaryColor }}
+        >
           Mempelai Bahagia
         </span>
-        <h2 className="text-2xl sm:text-3xl font-serif font-bold text-emerald-950">
+        <h2
+          className="text-2xl sm:text-3xl font-serif font-bold"
+          style={{ color: theme.colors.text || "#261F23" }}
+        >
           Dua Hati dalam Satu Janji Suci
         </h2>
       </div>
@@ -28,24 +34,46 @@ export const AutumnelleCouple: React.FC<{
         {/* Bride */}
         <div className="space-y-4">
           <GardenArchFrame size={200} color={primaryColor}>
-            <img src={bride.photo} alt={bride.fullName} className="w-full h-full object-cover" />
+            <img
+              src={bride.photo}
+              alt={bride.fullName}
+              className="w-full h-full object-cover object-top"
+            />
           </GardenArchFrame>
           <div className="space-y-1">
-            <h3 className="font-serif font-bold text-lg text-emerald-950">{bride.fullName}</h3>
-            <p className="text-xs text-slate-500 font-serif">Putri tercinta dari</p>
-            <p className="text-xs font-serif font-medium text-slate-700">{bride.father} &amp; {bride.mother}</p>
+            <h3
+              className="font-serif font-bold text-lg"
+              style={{ color: theme.colors.text || "#261F23" }}
+            >
+              {bride.fullName}
+            </h3>
+            <p className="text-xs text-stone-500 font-serif">Putri tercinta dari</p>
+            <p className="text-xs font-serif font-medium text-stone-700">
+              {bride.father} &amp; {bride.mother}
+            </p>
           </div>
         </div>
 
         {/* Groom */}
         <div className="space-y-4">
           <GardenArchFrame size={200} color={primaryColor}>
-            <img src={groom.photo} alt={groom.fullName} className="w-full h-full object-cover" />
+            <img
+              src={groom.photo}
+              alt={groom.fullName}
+              className="w-full h-full object-cover object-top"
+            />
           </GardenArchFrame>
           <div className="space-y-1">
-            <h3 className="font-serif font-bold text-lg text-emerald-950">{groom.fullName}</h3>
-            <p className="text-xs text-slate-500 font-serif">Putra tercinta dari</p>
-            <p className="text-xs font-serif font-medium text-slate-700">{groom.father} &amp; {groom.mother}</p>
+            <h3
+              className="font-serif font-bold text-lg"
+              style={{ color: theme.colors.text || "#261F23" }}
+            >
+              {groom.fullName}
+            </h3>
+            <p className="text-xs text-stone-500 font-serif">Putra tercinta dari</p>
+            <p className="text-xs font-serif font-medium text-stone-700">
+              {groom.father} &amp; {groom.mother}
+            </p>
           </div>
         </div>
       </div>

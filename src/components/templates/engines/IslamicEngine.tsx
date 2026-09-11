@@ -29,6 +29,7 @@ export const IslamicEngine: React.FC<DedicatedTemplateProps> = ({
   galleryPhotos,
   giftInfo,
   initialWishes,
+  onCloseInvitation,
 }) => {
   const [selectedSession] = useState<"s1" | "s2" | "s3">(activeSessionCode || "s1");
   const emeraldColor = theme?.colors?.primary || "#1B4D3E";
@@ -138,7 +139,12 @@ export const IslamicEngine: React.FC<DedicatedTemplateProps> = ({
       />
 
       {/* 9. Ucapan Penutup */}
-      <ClosingSectionDispatcher brideName={bride.name} groomName={groom.name} theme={theme} />
+      <ClosingSectionDispatcher
+        brideName={bride.name}
+        groomName={groom.name}
+        theme={theme}
+        onCloseInvitation={onCloseInvitation}
+      />
     </div>
   );
 };

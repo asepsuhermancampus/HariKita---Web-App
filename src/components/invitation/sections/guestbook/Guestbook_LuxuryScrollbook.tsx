@@ -17,7 +17,7 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
   defaultGuestName = "",
   activeSessionCode = "s1",
   initialWishes,
-  themePrimary = "#C5A880",
+  themePrimary = "#7D424D",
 }) => {
   const [wishes, setWishes] = useState(initialWishes);
   const [name, setName] = useState(defaultGuestName !== "Bapak/Ibu/Saudara/i" ? defaultGuestName : "");
@@ -68,26 +68,40 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
   };
 
   return (
-    <section id="guestbook" className="py-14 sm:py-24 px-4 sm:px-6 relative overflow-hidden bg-stone-100/60">
+    <section id="guestbook" className="py-14 sm:py-24 px-4 sm:px-6 relative overflow-hidden"
+      style={{ backgroundColor: `${themePrimary}08` }}
+    >
       <div className="max-w-3xl mx-auto space-y-10 text-center">
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-300/40 bg-amber-50 text-amber-900 text-xs font-serif font-bold uppercase tracking-widest shadow-xs">
-            <Scroll className="w-3.5 h-3.5 text-amber-700" />
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-serif font-bold uppercase tracking-widest shadow-xs"
+            style={{
+              borderColor: `${themePrimary}40`,
+              backgroundColor: `${themePrimary}12`,
+              color: themePrimary,
+            }}
+          >
+            <Scroll className="w-3.5 h-3.5" style={{ color: themePrimary }} />
             <span>Buku Tamu Agung &amp; Doa Restu</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-amber-950 leading-tight">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold leading-tight"
+            style={{ color: themePrimary }}
+          >
             Prasasti Kehadiran &amp; Doa
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 font-serif">
+          <p className="text-xs sm:text-sm font-serif" style={{ color: `${themePrimary}99` }}>
             Torehkan doa tulus dan konfirmasi kehadiran dalam catatan agung kedua mempelai
           </p>
         </div>
 
         {/* Parchment Scroll Input Form */}
-        <div className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl border-2 border-amber-400/40 bg-gradient-to-b from-amber-50/90 via-white to-amber-50/90 text-left space-y-5 max-w-xl mx-auto">
+        <div
+          className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl border-2 bg-gradient-to-b from-white/90 via-white to-white/90 text-left space-y-5 max-w-xl mx-auto"
+          style={{ borderColor: `${themePrimary}44` }}
+        >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">
-              <label className="text-xs font-serif font-bold uppercase text-amber-950 block">
+              <label className="text-xs font-serif font-bold uppercase block" style={{ color: themePrimary }}>
                 Nama Tamu Kehormatan
               </label>
               <input
@@ -96,12 +110,13 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Nama lengkap Anda / keluarga"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-amber-300/60 bg-white/80 text-sm font-serif focus:border-amber-600 focus:outline-hidden"
+                className="w-full px-4 py-2.5 rounded-xl border bg-white/80 text-sm font-serif focus:outline-hidden"
+                style={{ borderColor: `${themePrimary}44` }}
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-serif font-bold uppercase text-amber-950 block">
+              <label className="text-xs font-serif font-bold uppercase block" style={{ color: themePrimary }}>
                 Konfirmasi Kehadiran
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -116,9 +131,10 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
                   }}
                   className={`py-2 px-3 rounded-xl text-xs font-serif font-bold border transition-colors cursor-pointer ${
                     attendance === "hadir"
-                      ? "bg-amber-800 text-amber-100 border-amber-800 shadow-xs"
-                      : "bg-white/60 text-slate-700 border-amber-200"
+                      ? "text-white shadow-xs"
+                      : "bg-white/60 text-slate-700"
                   }`}
+                  style={attendance === "hadir" ? { backgroundColor: themePrimary, borderColor: themePrimary } : { borderColor: `${themePrimary}44` }}
                 >
                   Insya Allah Hadir
                 </button>
@@ -133,9 +149,10 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
                   }}
                   className={`py-2 px-3 rounded-xl text-xs font-serif font-bold border transition-colors cursor-pointer ${
                     attendance === "tidak-hadir"
-                      ? "bg-amber-800 text-amber-100 border-amber-800 shadow-xs"
-                      : "bg-white/60 text-slate-700 border-amber-200"
+                      ? "text-white shadow-xs"
+                      : "bg-white/60 text-slate-700"
                   }`}
+                  style={attendance === "tidak-hadir" ? { backgroundColor: themePrimary, borderColor: themePrimary } : { borderColor: `${themePrimary}44` }}
                 >
                   Kirim Doa dari Jauh
                 </button>
@@ -143,7 +160,7 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-serif font-bold uppercase text-amber-950 block">
+              <label className="text-xs font-serif font-bold uppercase block" style={{ color: themePrimary }}>
                 Untaian Doa Restu
               </label>
               <textarea
@@ -152,14 +169,16 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tuliskan doa kebaikan bagi kedua mempelai..."
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-amber-300/60 bg-white/80 text-sm font-serif focus:border-amber-600 focus:outline-hidden"
+                className="w-full px-4 py-2.5 rounded-xl border bg-white/80 text-sm font-serif focus:outline-hidden"
+                style={{ borderColor: `${themePrimary}44` }}
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 rounded-xl bg-amber-800 hover:bg-amber-700 text-amber-100 font-serif font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-colors disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 rounded-xl font-serif font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-colors disabled:opacity-50 cursor-pointer text-white"
+              style={{ backgroundColor: themePrimary }}
             >
               {isSubmitting ? (
                 <>
@@ -187,14 +206,22 @@ export const Guestbook_LuxuryScrollbook: React.FC<{
           {wishes.map((w, i) => (
             <div
               key={w.id || i}
-              className="p-5 rounded-2xl bg-white border border-amber-200/80 shadow-md space-y-2"
+              className="p-5 rounded-2xl bg-white border shadow-md space-y-2"
+              style={{ borderColor: `${themePrimary}30` }}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-amber-600" />
+                  <ShieldCheck className="w-4 h-4" style={{ color: themePrimary }} />
                   <strong className="text-sm font-serif font-bold text-slate-900">{w.guestName}</strong>
                 </div>
-                <span className="text-[10px] font-serif font-semibold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                <span
+                  className="text-[10px] font-serif font-semibold px-2.5 py-0.5 rounded-full border"
+                  style={{
+                    color: themePrimary,
+                    backgroundColor: `${themePrimary}12`,
+                    borderColor: `${themePrimary}30`,
+                  }}
+                >
                   {w.attendance === "hadir" ? "Hadir" : "Mendoakan"}
                 </span>
               </div>

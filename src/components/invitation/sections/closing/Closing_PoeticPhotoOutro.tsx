@@ -37,13 +37,13 @@ export const Closing_PoeticPhotoOutro: React.FC<{
           <p className="text-sm sm:text-base font-serif italic text-slate-200 leading-relaxed">
             &ldquo;Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.&rdquo;
           </p>
-          <span className="text-xs font-mono tracking-widest text-amber-300 block">
+          <span className="text-xs font-serif uppercase tracking-[0.25em] text-amber-300 block font-semibold">
             (QS. Ar-Rum: 21)
           </span>
         </div>
 
         <div className="pt-6 border-t border-white/20 space-y-2">
-          <span className="text-xs text-slate-400 uppercase tracking-widest block font-mono">
+          <span className="text-xs text-slate-300 uppercase tracking-[0.25em] block font-serif font-semibold">
             KAMI YANG BERBAHAGIA
           </span>
           <h3 className="text-4xl sm:text-5xl font-serif font-bold text-white tracking-wide">

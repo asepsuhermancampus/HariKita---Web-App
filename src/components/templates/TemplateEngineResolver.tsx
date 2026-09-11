@@ -156,14 +156,16 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
         {/* 3. Floating Peripherals (Rendered when cover is open) */}
         {isCoverOpened && (
           <>
-            {/* Spinning Vinyl Audio Player */}
-            <RotatingVinylPlayer
-              audioUrl={props.musicUrl}
-              isPlaying={isMusicPlaying}
-              onTogglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
-              albumCoverUrl={props.bride.photo}
-              songTitle={`${props.bride.name} & ${props.groom.name} Nuptial`}
-            />
+            {/* Spinning Vinyl Audio Player — hidden until custom activation feature is built */}
+            {false && (
+              <RotatingVinylPlayer
+                audioUrl={props.musicUrl}
+                isPlaying={isMusicPlaying}
+                onTogglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
+                albumCoverUrl={props.bride.photo}
+                songTitle={`${props.bride.name} & ${props.groom.name} Nuptial`}
+              />
+            )}
 
             {/* E-Ticket Boarding Pass Trigger & Modal */}
             <ETicketBoardingPass

@@ -96,24 +96,29 @@ export const Schedule_BoardingPass: React.FC<{
           {/* Main Pass Content */}
           <div className="p-6 sm:p-8 space-y-6">
             <div className="space-y-1">
-              <span className="text-[11px] font-mono uppercase text-slate-400">Nama Acara</span>
+              <span
+                className="text-[11px] font-serif uppercase tracking-widest font-semibold block"
+                style={{ color: primaryColor }}
+              >
+                Nama Acara
+              </span>
               <h3 className="text-2xl font-serif font-bold text-slate-900">{activeSession.title}</h3>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <Calendar className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <Calendar className="w-5 h-5 shrink-0 mt-0.5" style={{ color: primaryColor }} />
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Hari &amp; Tanggal</span>
+                  <span className="text-[10px] font-serif uppercase tracking-wider font-bold text-slate-400 block">Hari &amp; Tanggal</span>
                   <p className="text-sm font-semibold text-slate-800">{formattedDay}</p>
                   <p className="text-xs text-slate-500">{formattedDate}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <Clock className="w-5 h-5 shrink-0 mt-0.5" style={{ color: primaryColor }} />
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Waktu Pelaksanaan</span>
+                  <span className="text-[10px] font-serif uppercase tracking-wider font-bold text-slate-400 block">Waktu Pelaksanaan</span>
                   <p className="text-sm font-semibold text-slate-800">{activeSession.timeSlot}</p>
                   <p className="text-xs text-slate-500">Mohon hadir 15 menit sebelumnya</p>
                 </div>
@@ -122,9 +127,9 @@ export const Schedule_BoardingPass: React.FC<{
 
             {/* Venue Location */}
             <div className="flex items-start gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <MapPin className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
+              <MapPin className="w-5 h-5 shrink-0 mt-0.5" style={{ color: primaryColor }} />
               <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold text-slate-400 block">Lokasi Acara</span>
+                <span className="text-[10px] font-serif uppercase tracking-wider font-bold text-slate-400 block">Lokasi Acara</span>
                 <p className="text-sm font-bold text-slate-900">{activeSession.venueName}</p>
                 <p className="text-xs text-slate-600 leading-relaxed">{activeSession.venueAddress}</p>
               </div>

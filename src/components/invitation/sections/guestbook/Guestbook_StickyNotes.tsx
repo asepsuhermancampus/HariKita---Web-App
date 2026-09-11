@@ -75,11 +75,19 @@ export const Guestbook_StickyNotes: React.FC<{
   };
 
   return (
-    <section id="guestbook" className="py-14 sm:py-24 px-4 sm:px-6 relative overflow-hidden bg-amber-50/40">
+    <section id="guestbook" className="py-14 sm:py-24 px-4 sm:px-6 relative overflow-hidden"
+      style={{ backgroundColor: `${themePrimary}08` }}
+    >
       <div className="max-w-4xl mx-auto space-y-10">
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-200/80 text-amber-900 text-xs font-bold uppercase tracking-wider">
-            <MessageSquareHeart className="w-3.5 h-3.5 text-amber-700" />
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
+            style={{
+              backgroundColor: `${themePrimary}22`,
+              color: themePrimary,
+            }}
+          >
+            <MessageSquareHeart className="w-3.5 h-3.5" style={{ color: themePrimary }} />
             <span>Papan Pesan &amp; Doa Restu</span>
           </div>
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tight leading-tight">
@@ -99,7 +107,8 @@ export const Guestbook_StickyNotes: React.FC<{
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Tuliskan nama Anda / keluarga"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-amber-500 focus:outline-hidden"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden"
+                style={{ outlineColor: themePrimary }}
               />
             </div>
 
@@ -151,14 +160,16 @@ export const Guestbook_StickyNotes: React.FC<{
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tuliskan doa restu untuk kedua mempelai..."
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-amber-500 focus:outline-hidden"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden"
+                style={{ outlineColor: themePrimary }}
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-colors active:scale-98 disabled:opacity-50 cursor-pointer"
+              className="w-full py-3 rounded-xl font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-colors active:scale-98 disabled:opacity-50 cursor-pointer text-white"
+              style={{ backgroundColor: themePrimary || "#C5A880" }}
             >
               {isSubmitting ? (
                 <>
@@ -209,7 +220,7 @@ export const Guestbook_StickyNotes: React.FC<{
                   <p className="text-xs leading-relaxed italic">&ldquo;{w.message}&rdquo;</p>
                 </div>
 
-                <div className="text-[9px] opacity-60 font-mono pt-2 border-t border-black/10">
+                <div className="text-[9px] opacity-60 font-serif pt-2 border-t border-black/10">
                   {new Date(w.createdAt).toLocaleDateString("id-ID", {
                     day: "numeric",
                     month: "short",

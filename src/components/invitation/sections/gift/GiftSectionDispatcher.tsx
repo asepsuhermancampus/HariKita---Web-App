@@ -3,7 +3,25 @@
 import React, { useState, useEffect } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { soundscape } from "@/lib/sound/soundscapeEngine";
-import { Gift, Heart, ChevronDown, ChevronUp, Copy, Check, MapPin, Sparkles } from "lucide-react";
+import { Gift, Heart, ChevronDown, ChevronUp, Copy, Check, MapPin } from "lucide-react";
+
+function isDarkColor(hex?: string): boolean {
+  if (!hex) return false;
+  const clean = hex.replace("#", "");
+  if (clean.length === 3) {
+    const r = parseInt(clean[0] + clean[0], 16);
+    const g = parseInt(clean[1] + clean[1], 16);
+    const b = parseInt(clean[2] + clean[2], 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 128;
+  }
+  if (clean.length === 6) {
+    const r = parseInt(clean.substring(0, 2), 16);
+    const g = parseInt(clean.substring(2, 4), 16);
+    const b = parseInt(clean.substring(4, 6), 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 128;
+  }
+  return false;
+}
 
 export const GiftSectionDispatcher: React.FC<{
   giftInfo: DedicatedTemplateProps["giftInfo"];
@@ -53,7 +71,21 @@ export const GiftSectionDispatcher: React.FC<{
     setTimeout(() => setCopiedAddress(false), 2500);
   };
 
-  const isCelestial = theme?.archetypeId === "celestial";
+  const isDark = isDarkColor(theme?.colors?.background) || theme?.archetypeId === "celestial";
+  const primaryColor = theme?.colors?.primary || "#C5A880";
+  const accentColor = theme?.colors?.accent || "#C5A880";
+  const textColor = theme?.colors?.text || "#4A2E35";
+  const bgColor = theme?.colors?.background || "#FAF8F5";
+  const cardBgColor = theme?.colors?.cardBg || "#FFFFFF";
+  const mutedColor = "#6B5E62"; // consistent muted text across all themes
+
+  // Celestial dark theme uses slate-950, others use theme cardBg
+  const cardBackground = isDark
+    ? "rgba(15, 23, 42, 0.85)"
+    : `${cardBgColor}E6`; // 90% opacity
+  const sectionBackground = isDark
+    ? "rgba(30, 41, 59, 0.65)"
+    : `${bgColor}E6`;
 
   return (
     <section id="gift" className="py-16 px-4 sm:px-6 relative overflow-hidden bg-transparent">
@@ -62,9 +94,9 @@ export const GiftSectionDispatcher: React.FC<{
         <div
           className="p-6 sm:p-9 rounded-3xl border shadow-lg backdrop-blur-xs text-center space-y-6 transition-colors"
           style={{
-            backgroundColor: isCelestial ? "rgba(15, 23, 42, 0.85)" : "rgba(255, 255, 255, 0.9)",
-            borderColor: isCelestial ? "rgba(197, 168, 128, 0.35)" : "rgba(197, 168, 128, 0.35)",
-            color: isCelestial ? "#F8FAFC" : "#4A2E35",
+            backgroundColor: cardBackground,
+            borderColor: `${accentColor}55`,
+            color: isDark ? "#F8FAFC" : textColor,
           }}
         >
           {/* Header Badge & Title */}
@@ -72,22 +104,22 @@ export const GiftSectionDispatcher: React.FC<{
             <div
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-serif font-bold uppercase tracking-wider"
               style={{
-                backgroundColor: isCelestial ? "rgba(197, 168, 128, 0.2)" : "rgba(197, 168, 128, 0.15)",
-                color: isCelestial ? "#E2E8F0" : "#7D424D",
+                backgroundColor: `${accentColor}22`,
+                color: isDark ? "#E2E8F0" : primaryColor,
               }}
             >
-              <Heart className="w-3.5 h-3.5" style={{ color: theme?.colors?.accent || "#C5A880", fill: theme?.colors?.accent || "#C5A880" }} />
+              <Heart className="w-3.5 h-3.5" style={{ color: accentColor, fill: accentColor }} />
               <span>Tanda Kasih &amp; Kehormatan Adat</span>
             </div>
             <h3
-              className="font-serif-luxury text-2xl sm:text-3xl font-bold"
-              style={{ color: isCelestial ? "#F8FAFC" : "#4A2E35" }}
+              className="font-serif text-2xl sm:text-3xl font-bold"
+              style={{ color: isDark ? "#F8FAFC" : textColor }}
             >
               Doa Restu Anda Adalah Hadiah Terindah
             </h3>
             <p
               className="text-xs sm:text-sm leading-relaxed font-serif max-w-lg mx-auto"
-              style={{ color: isCelestial ? "#94A3B8" : "#6B5E62" }}
+              style={{ color: isDark ? "#94A3B8" : mutedColor }}
             >
               Kehadiran dan doa restu yang tulus dari Bapak/Ibu/Saudara/i adalah kehormatan paling bermakna bagi kami.
               Tanpa mengurangi rasa hormat, bagi keluarga atau kerabat yang berhalangan hadir secara fisik dan berkenan menyampaikan tanda kasih digital atau kado fisik, dapat membuka akses di bawah ini.
@@ -101,18 +133,18 @@ export const GiftSectionDispatcher: React.FC<{
               onClick={handleToggleReveal}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-serif font-bold uppercase tracking-wider transition-all shadow-xs cursor-pointer active:scale-98"
               style={{
-                backgroundColor: isCelestial ? "rgba(197, 168, 128, 0.25)" : "rgba(197, 168, 128, 0.18)",
-                borderColor: isCelestial ? "rgba(197, 168, 128, 0.5)" : "rgba(197, 168, 128, 0.5)",
+                backgroundColor: `${accentColor}28`,
+                borderColor: `${accentColor}80`,
                 borderWidth: "1px",
-                color: isCelestial ? "#F8FAFC" : "#4A2E35",
+                color: isDark ? "#F8FAFC" : textColor,
               }}
             >
-              <Gift className="w-4 h-4" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+              <Gift className="w-4 h-4" style={{ color: accentColor }} />
               <span>{isRevealed ? "Tutup Tanda Kasih" : "Kirim Tanda Kasih Digital & Kado"}</span>
               {isRevealed ? (
-                <ChevronUp className="w-4 h-4" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+                <ChevronUp className="w-4 h-4" style={{ color: accentColor }} />
               ) : (
-                <ChevronDown className="w-4 h-4" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+                <ChevronDown className="w-4 h-4" style={{ color: accentColor }} />
               )}
             </button>
           </div>
@@ -121,9 +153,9 @@ export const GiftSectionDispatcher: React.FC<{
             <div
               className="text-[11px] font-serif rounded-xl p-3 max-w-md mx-auto border animate-gift-fade-in"
               style={{
-                backgroundColor: isCelestial ? "rgba(30, 41, 59, 0.7)" : "rgba(254, 252, 248, 0.9)",
-                borderColor: "rgba(197, 168, 128, 0.4)",
-                color: isCelestial ? "#CBD5E1" : "#7D424D",
+                backgroundColor: isDark ? "rgba(30, 41, 59, 0.7)" : "rgba(254, 252, 248, 0.9)",
+                borderColor: `${accentColor}66`,
+                color: isDark ? "#CBD5E1" : primaryColor,
               }}
             >
               ✦ Karena Anda memilih berhalangan hadir, saluran tanda kasih digital &amp; kirim kado terbuka sebagai wujud silaturahmi.
@@ -134,7 +166,7 @@ export const GiftSectionDispatcher: React.FC<{
           {isRevealed && (
             <div
               className="space-y-5 pt-4 border-t animate-gift-expand text-left"
-              style={{ borderColor: isCelestial ? "rgba(255, 255, 255, 0.1)" : "rgba(197, 168, 128, 0.25)" }}
+              style={{ borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : `${accentColor}40` }}
             >
               {/* Bank Accounts Grid (Soft Tone) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -145,24 +177,24 @@ export const GiftSectionDispatcher: React.FC<{
                       key={idx}
                       className="p-4 sm:p-5 rounded-2xl border shadow-xs flex flex-col justify-between space-y-3 transition-colors"
                       style={{
-                        backgroundColor: isCelestial ? "rgba(30, 41, 59, 0.65)" : "rgba(250, 248, 245, 0.9)",
-                        borderColor: isCelestial ? "rgba(197, 168, 128, 0.25)" : "rgba(197, 168, 128, 0.35)",
+                        backgroundColor: sectionBackground,
+                        borderColor: `${accentColor}44`,
                       }}
                     >
                       <div className="flex items-center justify-between">
                         <span
-                          className="font-mono font-bold text-xs px-2.5 py-1 rounded-md border shadow-2xs"
+                          className="font-serif font-bold text-xs px-2.5 py-1 rounded-md border shadow-2xs tracking-wider"
                           style={{
-                            backgroundColor: isCelestial ? "rgba(15, 23, 42, 0.9)" : "#FFFFFF",
-                            borderColor: isCelestial ? "rgba(197, 168, 128, 0.3)" : "rgba(197, 168, 128, 0.3)",
-                            color: isCelestial ? "#F8FAFC" : "#4A2E35",
+                            backgroundColor: isDark ? "rgba(15, 23, 42, 0.9)" : cardBgColor,
+                            borderColor: `${accentColor}50`,
+                            color: isDark ? "#F8FAFC" : primaryColor,
                           }}
                         >
                           {b.bank}
                         </span>
                         <span
                           className="text-[11px] font-serif font-medium truncate max-w-[130px]"
-                          style={{ color: isCelestial ? "#94A3B8" : "#6B5E62" }}
+                          style={{ color: isDark ? "#94A3B8" : mutedColor }}
                         >
                           a.n {b.holder}
                         </span>
@@ -170,14 +202,14 @@ export const GiftSectionDispatcher: React.FC<{
 
                       <div className="space-y-0.5">
                         <span
-                          className="text-[10px] font-mono uppercase tracking-widest block"
-                          style={{ color: isCelestial ? "#64748B" : "#8C7E82" }}
+                          className="text-[10px] font-serif uppercase tracking-widest block"
+                          style={{ color: isDark ? "#64748B" : mutedColor }}
                         >
                           Nomor Rekening
                         </span>
                         <p
                           className="font-mono text-lg sm:text-xl font-bold tracking-wider"
-                          style={{ color: isCelestial ? "#F8FAFC" : "#4A2E35" }}
+                          style={{ color: isDark ? "#F8FAFC" : textColor }}
                         >
                           {b.number}
                         </p>
@@ -188,9 +220,9 @@ export const GiftSectionDispatcher: React.FC<{
                           onClick={() => handleCopyAccount(b.number, b.bank)}
                           className="py-1.5 px-3.5 rounded-xl text-xs font-serif font-bold border shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
                           style={{
-                            backgroundColor: isCelestial ? "rgba(255, 255, 255, 0.1)" : "#FFFFFF",
-                            borderColor: "rgba(197, 168, 128, 0.4)",
-                            color: isCelestial ? "#F8FAFC" : "#4A2E35",
+                            backgroundColor: isDark ? "rgba(255, 255, 255, 0.1)" : cardBgColor,
+                            borderColor: `${accentColor}66`,
+                            color: isDark ? "#F8FAFC" : textColor,
                           }}
                         >
                           {isCopied ? (
@@ -200,7 +232,7 @@ export const GiftSectionDispatcher: React.FC<{
                             </>
                           ) : (
                             <>
-                              <Copy className="w-3.5 h-3.5" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+                              <Copy className="w-3.5 h-3.5" style={{ color: accentColor }} />
                               <span>Salin Nomor</span>
                             </>
                           )}
@@ -216,30 +248,30 @@ export const GiftSectionDispatcher: React.FC<{
                 <div
                   className="p-4 sm:p-5 rounded-2xl border shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4"
                   style={{
-                    backgroundColor: isCelestial ? "rgba(30, 41, 59, 0.65)" : "rgba(250, 248, 245, 0.9)",
-                    borderColor: isCelestial ? "rgba(197, 168, 128, 0.25)" : "rgba(197, 168, 128, 0.35)",
+                    backgroundColor: sectionBackground,
+                    borderColor: `${accentColor}44`,
                   }}
                 >
                   <div className="flex items-start gap-3 w-full">
                     <div
                       className="w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 shadow-2xs"
                       style={{
-                        backgroundColor: isCelestial ? "rgba(15, 23, 42, 0.9)" : "#FFFFFF",
-                        borderColor: isCelestial ? "rgba(197, 168, 128, 0.3)" : "rgba(197, 168, 128, 0.3)",
+                        backgroundColor: isDark ? "rgba(15, 23, 42, 0.9)" : cardBgColor,
+                        borderColor: `${accentColor}50`,
                       }}
                     >
-                      <MapPin className="w-4 h-4" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+                      <MapPin className="w-4 h-4" style={{ color: accentColor }} />
                     </div>
                     <div className="space-y-0.5 min-w-0">
                       <span
                         className="text-[10px] font-serif font-bold uppercase tracking-wider block"
-                        style={{ color: isCelestial ? "#E2E8F0" : "#7D424D" }}
+                        style={{ color: isDark ? "#E2E8F0" : primaryColor }}
                       >
                         Kirim Kado Fisik / Parsel
                       </span>
                       <p
                         className="text-xs leading-relaxed font-serif"
-                        style={{ color: isCelestial ? "#94A3B8" : "#6B5E62" }}
+                        style={{ color: isDark ? "#94A3B8" : mutedColor }}
                       >
                         {giftInfo.physicalGiftAddress}
                       </p>
@@ -250,9 +282,9 @@ export const GiftSectionDispatcher: React.FC<{
                     onClick={handleCopyAddress}
                     className="shrink-0 w-full sm:w-auto py-2 px-4 rounded-xl text-xs font-serif font-bold border shadow-2xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     style={{
-                      backgroundColor: isCelestial ? "rgba(255, 255, 255, 0.1)" : "#FFFFFF",
-                      borderColor: "rgba(197, 168, 128, 0.4)",
-                      color: isCelestial ? "#F8FAFC" : "#4A2E35",
+                      backgroundColor: isDark ? "rgba(255, 255, 255, 0.1)" : cardBgColor,
+                      borderColor: `${accentColor}66`,
+                      color: isDark ? "#F8FAFC" : textColor,
                     }}
                   >
                     {copiedAddress ? (
@@ -262,7 +294,7 @@ export const GiftSectionDispatcher: React.FC<{
                       </>
                     ) : (
                       <>
-                        <Copy className="w-3.5 h-3.5" style={{ color: theme?.colors?.accent || "#C5A880" }} />
+                        <Copy className="w-3.5 h-3.5" style={{ color: accentColor }} />
                         <span>Salin Alamat</span>
                       </>
                     )}

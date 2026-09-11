@@ -29,7 +29,7 @@ export const TulivelleStories: React.FC<{
           <div key={idx} className="relative space-y-2 pb-2">
             <div className="absolute left-[-25px] sm:left-[-33px] -translate-x-1/2 top-1.5 w-4 h-4 rounded-full bg-rose-600 border-2 border-white shadow-xs" />
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold text-rose-900 px-2.5 py-0.5 rounded-full bg-rose-100/80 border border-rose-300/50">
+              <span className="text-[10px] font-serif uppercase tracking-[0.2em] font-bold text-rose-900 px-2.5 py-0.5 rounded-full bg-rose-100/80 border border-rose-300/50">
                 TAHUN {story.year}
               </span>
               <span className="text-[11px] font-serif text-rose-800 font-semibold">

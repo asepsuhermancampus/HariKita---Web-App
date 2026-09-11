@@ -15,10 +15,16 @@ export const AutumnelleGallery: React.FC<{
       <PressedFlowerDivider color={primaryColor} />
 
       <div className="space-y-2">
-        <span className="text-xs font-serif font-bold uppercase tracking-widest text-emerald-800">
+        <span
+          className="text-xs font-serif font-bold uppercase tracking-widest"
+          style={{ color: primaryColor }}
+        >
           Galeri Bahagia
         </span>
-        <h2 className="text-2xl sm:text-3xl font-serif font-bold text-emerald-950">
+        <h2
+          className="text-2xl sm:text-3xl font-serif font-bold"
+          style={{ color: theme.colors.text || "#261F23" }}
+        >
           Potret Kebersamaan Kami
         </h2>
       </div>
@@ -27,7 +33,8 @@ export const AutumnelleGallery: React.FC<{
         {galleryPhotos.map((photoUrl, idx) => (
           <div
             key={idx}
-            className="overflow-hidden rounded-2xl border border-emerald-200/50 shadow-sm aspect-square transform hover:scale-[1.02] transition-transform duration-300"
+            className="overflow-hidden rounded-2xl border shadow-xs aspect-square transform hover:scale-[1.02] transition-transform duration-300"
+            style={{ borderColor: `${primaryColor}25` }}
           >
             <img
               src={photoUrl}

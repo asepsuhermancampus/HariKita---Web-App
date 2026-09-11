@@ -118,7 +118,31 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
 
 ---
 
-## 🗺️ 6. SITEMAP & RUTE PENGUJIAN UTAMA
+## 🎨 6. MASTER SVG ASSET LIBRARY (PROGRESS & HANDOVER)
+> Referensi Master: [`Premium_Digital_Invitation_SVG_Asset_Master_Specification.md`](file:///c:/Users/asep.suherman/SETTUP%20TESTING/Build%20Project%20In%20Here/IDE/HariKita%20-%20Web%20App/Premium_Digital_Invitation_SVG_Asset_Master_Specification.md)
+
+* **Total Target Aset:** 384 SVG Signature (64 Template × 6 Aset Unik Zero-Duplicate)
+* **Status Selesai:** **96 Aset Selesai & 100% Aktif di UI** (Kategori 1 & 2)
+* **Status Menunggu:** **288 Aset Belum Dibuat** (Kategori 3 sampai 8)
+* **Last SVG Dikerjakan & Diaktifkan:**
+  * **Template 16 (`javanese-pearl`)**: `WhitePearlWreath`, `RonceanMelatiDivider`, `IvoryGebyokFrame`, `WhiteGarudaMedallion`, `PearlPin`, `PearlCalendar`
+  * Direktori: `src/components/invitation/svg/javanese-pearl/`
+  * Export: `javanesePearlSvg` di `src/components/invitation/svg/index.ts`
+  * Runtime UI: Aktif dirender pada `JavaneseEngine.tsx`
+
+### Ringkasan Status per Kategori:
+1. ✅ **Kategori 1: Botanical (01-08)**: 48 Aset Selesai & Aktif (`AutumnelleTemplate`, `TulivelleTemplate`, `BotanicalEngine`)
+2. ✅ **Kategori 2: Javanese Royal (09-16)**: 48 Aset Selesai & Aktif (`JavaneseEngine`, termasuk Burung Walet Emas Kebumen di Template 15)
+3. ⏳ **Kategori 3: Syar'i / Islamic (17-24)**: **NEXT TO RESUME** (48 Aset: `arabesque-royal`, `emerald-syari`, `walimatul-ursy`, `al-fatih`, `salsabila`, `ar-rahman`, `nur-jannah`, `barakah-gold`) → Target: `IslamicEngine.tsx`
+4. ⏳ **Kategori 4: Minimalist / Vogue Editorial (25-32)**: (48 Aset) → Target: `MinimalistEngine.tsx`
+5. ⏳ **Kategori 5: Royal Luxury / Rose Gold (33-40)**: (48 Aset) → Target: `RoseGoldEngine.tsx`
+6. ⏳ **Kategori 6: Rustic Vintage (41-48)**: (48 Aset) → Target: `RusticEngine.tsx`
+7. ⏳ **Kategori 7: Celestial (49-56)**: (48 Aset) → Target: `CelestialEngine.tsx`
+8. ⏳ **Kategori 8: Cute / Illustrated (57-64)**: (48 Aset) → Target: `CuteIllustratedEngine.tsx`
+
+---
+
+## 🗺️ 7. SITEMAP & RUTE PENGUJIAN UTAMA
 
 | Halaman | Rute URL | Deskripsi |
 | :--- | :--- | :--- |
@@ -127,12 +151,12 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
 | **Portal Klien** | `http://localhost:3000/client` | Dashboard calon pengantin, riwayat invoice, fitting tracker |
 | **Portal Vendor** | `http://localhost:3000/vendor` | Dashboard mitra, kalender blackout date, kelola harga paket |
 | **Super Admin** | `http://localhost:3000/admin` | Master multi-vendor calendar, 10-step conversion funnel, resolution |
-| **Demo Undangan Digital** | `http://localhost:3000/undangan/demo?theme=ivory-silk` | Pengujian 64 template (ganti query `theme` sesuai ID template) |
+| **Demo Undangan Digital** | `http://localhost:3000/undangan/demo?theme=javanese-kebumen` | Pengujian 64 template (ganti query `theme` sesuai ID template) |
 | **Manifest Web App** | `http://localhost:3000/manifest.webmanifest` | Verifikasi metadata PWA JSON |
 
 ---
 
-## 🧪 7. PERINTAH VERIFIKASI & PERAWATAN
+## 🧪 8. PERINTAH VERIFIKASI & PERAWATAN
 
 * **Menjalankan Dev Server:**
   ```powershell
@@ -142,6 +166,10 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
   ```powershell
   npx tsx --test tests/*.test.ts
   ```
+* **Mengecek Type Check:**
+  ```powershell
+  npx tsc --noEmit
+  ```
 * **Mengecek Schema Database:**
   ```powershell
   npx prisma studio
@@ -150,4 +178,5 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
   ```powershell
   npx prisma db push
   ```
+
 
