@@ -1,10 +1,12 @@
+// src/components/templates/engines/CelestialEngine.tsx
 "use client";
 
 import React, { useState } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { GoldenDustCanvas } from "@/components/invitation/canvas/GoldenDustCanvas";
+import { ThemedAssetOrnament } from "@/components/invitation/ornaments";
+import { getThemeAssets } from "@/lib/templates/themeAssetRegistry";
 import { MapPin, Sparkles, Moon } from "lucide-react";
-import { CelestialConstellationSvg } from "@/components/invitation/svg";
 import {
   CoupleSectionDispatcher,
   ScheduleSectionDispatcher,
@@ -41,10 +43,21 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
     year: "numeric",
   });
 
+  // Curated pure vector SVG assets for this Celestial theme
+  const assetBundle = getThemeAssets(theme?.id, "celestial");
+
   return (
     <div className="relative w-full min-h-screen bg-slate-950 text-slate-100 font-sans overflow-x-hidden selection:bg-indigo-600 selection:text-white">
       {/* 1. Stardust Canvas */}
       <GoldenDustCanvas className="pointer-events-none opacity-60 z-10" />
+
+      {/* Subtle Background Pattern / Gradient Overlay */}
+      {assetBundle.backgroundGradient && (
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20 bg-cover bg-center"
+          style={{ backgroundImage: `url(${assetBundle.backgroundGradient})` }}
+        />
+      )}
 
       {/* Ambient Celestial Nebula Gradients */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none" />
@@ -53,20 +66,43 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
       {/* ===================== SECTION 1: BESPOKE CELESTIAL HERO (#hero) ===================== */}
       <section
         id="hero"
-        className="relative min-h-[95vh] flex flex-col items-center justify-center p-6 text-center space-y-6 pt-12"
+        className="relative min-h-[95vh] flex flex-col items-center justify-center p-6 text-center space-y-6 pt-12 z-10"
       >
-        {/* Constellation SVG & Moon Orb */}
-        <div className="relative">
-          <CelestialConstellationSvg className="w-24 h-24 text-indigo-400 opacity-70 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Moon className="w-8 h-8 text-amber-200 animate-pulse" />
+        {/* Corner Accents */}
+        {assetBundle.cornerFiligree && (
+          <>
+            <ThemedAssetOrnament
+              src={assetBundle.cornerFiligree}
+              className="absolute top-4 left-4 w-14 h-14 opacity-70 pointer-events-none"
+              alt="Celestial Corner Left"
+            />
+            <ThemedAssetOrnament
+              src={assetBundle.cornerFiligree}
+              flipHorizontal
+              className="absolute top-4 right-4 w-14 h-14 opacity-70 pointer-events-none"
+              alt="Celestial Corner Right"
+            />
+          </>
+        )}
+
+        {/* Constellation Centerpiece SVG & Moon Orb */}
+        <div className="relative flex flex-col items-center justify-center">
+          <ThemedAssetOrnament
+            src={assetBundle.heroCenterpiece}
+            priority
+            className="w-24 h-24 filter drop-shadow-[0_0_15px_rgba(253,230,138,0.6)] animate-pulse"
+            alt="Celestial Starlight Centerpiece"
+          />
+          <div className="mt-2 flex items-center justify-center">
+            <Moon className="w-7 h-7 text-amber-200 animate-pulse" />
           </div>
         </div>
 
         <div className="space-y-2.5 max-w-md mx-auto">
           <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full text-xs font-serif uppercase tracking-[0.2em] font-bold bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             <span>Written In The Stars</span>
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-amber-100 to-purple-200 leading-tight">
             {bride.name} <span className="text-amber-300 font-light">&amp;</span> {groom.name}
@@ -74,6 +110,15 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
           <p className="text-xs sm:text-sm text-slate-300 font-serif italic max-w-sm mx-auto leading-relaxed">
             &ldquo;When the stars align, two souls find their eternal orbit.&rdquo;
           </p>
+        </div>
+
+        {/* Thematic Constellation Divider */}
+        <div className="w-full flex justify-center my-1">
+          <ThemedAssetOrnament
+            src={assetBundle.sectionDivider}
+            className="w-40 sm:w-52 h-auto opacity-80"
+            alt="Celestial Divider"
+          />
         </div>
 
         {/* Floating Glass Prewed Card */}
@@ -98,6 +143,15 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
       {/* 2. Mempelai */}
       <CoupleSectionDispatcher bride={bride} groom={groom} theme={theme} />
 
+      {/* Thematic Divider */}
+      <div className="w-full flex justify-center py-4">
+        <ThemedAssetOrnament
+          src={assetBundle.sectionDivider}
+          className="w-36 sm:w-48 h-auto opacity-60"
+          alt="Section Divider"
+        />
+      </div>
+
       {/* 3. Jadwal Acara */}
       <ScheduleSectionDispatcher
         eventDate={eventDate}
@@ -114,6 +168,15 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
         googleMapsUrl={googleMapsUrl}
         theme={theme}
       />
+
+      {/* Thematic Divider */}
+      <div className="w-full flex justify-center py-4">
+        <ThemedAssetOrnament
+          src={assetBundle.sectionDivider}
+          className="w-36 sm:w-48 h-auto opacity-60"
+          alt="Section Divider"
+        />
+      </div>
 
       {/* 5. Sweet Memories / Kisah Cinta */}
       <StoriesSectionDispatcher stories={storyTimeline} theme={theme} />
@@ -132,6 +195,17 @@ export const CelestialEngine: React.FC<DedicatedTemplateProps> = ({
         initialWishes={initialWishes}
         theme={theme}
       />
+
+      {/* Starlight Seal Outro */}
+      {assetBundle.closingSeal && (
+        <div className="w-full flex justify-center py-6">
+          <ThemedAssetOrnament
+            src={assetBundle.closingSeal}
+            className="w-16 h-16 filter drop-shadow-[0_0_12px_rgba(253,230,138,0.5)]"
+            alt="Celestial Closing Seal"
+          />
+        </div>
+      )}
 
       {/* 9. Ucapan Penutup */}
       <ClosingSectionDispatcher
