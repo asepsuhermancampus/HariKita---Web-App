@@ -20,7 +20,7 @@ export const Footer = () => {
           {/* Col 1: Identity */}
           <div className="space-y-4">
             <div className="bg-canvas/10 p-2.5 rounded-xl inline-block border border-gold/30">
-              <LogoBadge showTagline={false} />
+              <LogoBadge showTagline={false} variant="light" />
             </div>
             <p className="text-sm text-canvas/80 leading-relaxed">
               Platform terkurasi lokal Kabupaten Kebumen untuk merangkai hari bahagia Pre-wedding, Lamaran, dan Pernikahan Intim dengan perlindungan Rekening Bersama (Escrow) terpercaya.
