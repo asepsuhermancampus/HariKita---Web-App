@@ -36,6 +36,7 @@ function generateCatalog() {
   const bgGradients = counts['backgrounds/gradients'] || 0;
   const bgTextures = counts['backgrounds/textures'] || 0;
   const starsCount = counts['decorative/stars-sparkles'] || 0;
+  const stampsCount = counts['decorative/stamps-wax'] || 0;
   const iconsCount = counts['icons/events'] || 0;
 
   let cardsHtml = '';
@@ -411,20 +412,19 @@ function generateCatalog() {
     <div>
       <div class="filter-group-title">🎯 Filter Posisi &amp; Anatomi Tata Letak:</div>
       <div class="filter-tabs">
-        <button class="tab-btn active" onclick="setFilter('all', this)">Semua (${manifest.length})</button>
+        <button class="tab-btn" onclick="setFilter('all', this)">Semua (${manifest.length})</button>
         <button class="tab-btn" onclick="setFilter('floral/corners', this)">🌸 Sudut L-Shape (${floralCorners})</button>
         <button class="tab-btn" onclick="setFilter('floral/headers-garlands', this)">👑 Garlands Atas/Bawah (${floralHeaders})</button>
         <button class="tab-btn" onclick="setFilter('floral/side-cascades', this)">🌿 Samping Ponsel (${floralCascades})</button>
         <button class="tab-btn" onclick="setFilter('floral/centerpieces', this)">💐 Buket Tengah (${floralCenterpieces})</button>
-        <button class="tab-btn" onclick="setFilter('floral/single-stems', this)">🌱 Tangkai Tunggal (${floralStems})</button>
         <button class="tab-btn" onclick="setFilter('frames/filigree-corners', this)">✨ Renda Sudut Filigree (${framesFiligree})</button>
         <button class="tab-btn" onclick="setFilter('frames/dividers-horizontal', this)">📏 Garis Pemisah H (${framesDividers})</button>
-        <button class="tab-btn" onclick="setFilter('frames/dividers-vertical', this)">📐 Ornamen Vertikal (${framesDividersVert})</button>
         <button class="tab-btn" onclick="setFilter('frames/full-cards', this)">🖼️ Bingkai 1 Halaman (${framesCards})</button>
         <button class="tab-btn" onclick="setFilter('frames/photo-frames', this)">📷 Bingkai Foto (${framesPhoto})</button>
         <button class="tab-btn" onclick="setFilter('backgrounds/gradients', this)">🎨 Gradasi Latar (${bgGradients})</button>
-        <button class="tab-btn" onclick="setFilter('backgrounds/textures', this)">📜 Tekstur Kertas (${bgTextures})</button>
+        <button class="tab-btn" onclick="setFilter('backgrounds/textures', this)">📜 Tekstur & Overlay (${bgTextures})</button>
         <button class="tab-btn" onclick="setFilter('decorative/stars-sparkles', this)">⭐ Bintang/Kilau (${starsCount})</button>
+        <button class="tab-btn" onclick="setFilter('decorative/stamps-wax', this)">💌 Perangko Surat (${stampsCount})</button>
         <button class="tab-btn" onclick="setFilter('icons/events', this)">📍 Ikon Agenda (${iconsCount})</button>
       </div>
     </div>
