@@ -26,8 +26,24 @@ const items = [
     name: "kdo3 / rsvp-flower",
     pngPath: path.join(KDO_LIB_DIR, "kdo3/rsvp-flower.png"),
     svgPath: path.join(SVG_DIR, "kdo3/rsvp-flower.svg"),
-    title: "3. Hasil Baru: kdo3/rsvp-flower (Vertical Dusty Rose, Sage Leaves & Dark Wood)",
+    title: "3. kdo3/rsvp-flower (Vertical Dusty Rose, Sage Leaves & Dark Wood)",
     dimensions: "300 × 542 px"
+  },
+  {
+    id: "kdo6",
+    name: "kdo6 / event-flower",
+    pngPath: path.join(KDO_LIB_DIR, "kdo6/event-flower.png"),
+    svgPath: path.join(SVG_DIR, "kdo6/event-flower.svg"),
+    title: "4. Hasil Baru: kdo6/event-flower (Dusty Blue Garland, Periwinkle, Sage & White Rose)",
+    dimensions: "999 × 403 px"
+  },
+  {
+    id: "kdo21",
+    name: "kdo21 / bride-flower",
+    pngPath: path.join(KDO_LIB_DIR, "kdo21/bride-flower.png"),
+    svgPath: path.join(SVG_DIR, "kdo21/bride-flower.svg"),
+    title: "5. Hasil Baru: kdo21/bride-flower (White Roses, Taupe Shading & Muted Sage)",
+    dimensions: "428 × 442 px"
   }
 ];
 

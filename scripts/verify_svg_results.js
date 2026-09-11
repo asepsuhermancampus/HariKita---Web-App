@@ -4,7 +4,9 @@ const path = require("path");
 const files = [
   "references/kadio-assets/kdo-library/svg/kdo1/rsvp-flower.svg",
   "references/kadio-assets/kdo-library/svg/kdo3/rsvp-flower.svg",
-  "references/kadio-assets/kdo-library/svg/kdo4/bride-flower.svg"
+  "references/kadio-assets/kdo-library/svg/kdo4/bride-flower.svg",
+  "references/kadio-assets/kdo-library/svg/kdo6/event-flower.svg",
+  "references/kadio-assets/kdo-library/svg/kdo21/bride-flower.svg"
 ];
 
 files.forEach(f => {
