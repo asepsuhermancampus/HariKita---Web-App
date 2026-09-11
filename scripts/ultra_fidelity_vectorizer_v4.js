@@ -237,27 +237,35 @@ async function traceHollowFiligree(origPng) {
   coreMask.data.fill(255);
   highMask.data.fill(255);
 
+  let rCore = 0, gCore = 0, bCore = 0, cCore = 0;
+  let rHigh = 0, gHigh = 0, bHigh = 0, cHigh = 0;
+
   for (let i = 0; i < upPng.data.length; i += 4) {
     const a = upPng.data[i + 3];
     if (a >= 80) {
       coreMask.data[i] = 0; coreMask.data[i + 1] = 0; coreMask.data[i + 2] = 0; coreMask.data[i + 3] = 255;
+      rCore += upPng.data[i]; gCore += upPng.data[i + 1]; bCore += upPng.data[i + 2]; cCore++;
     }
     if (a >= 165) {
       highMask.data[i] = 0; highMask.data[i + 1] = 0; highMask.data[i + 2] = 0; highMask.data[i + 3] = 255;
+      rHigh += upPng.data[i]; gHigh += upPng.data[i + 1]; bHigh += upPng.data[i + 2]; cHigh++;
     }
   }
 
+  const coreHex = cCore > 0 ? rgbToHex(rCore / cCore, gCore / cCore, bCore / cCore) : "#eef3fb";
+  const highHex = cHigh > 0 ? rgbToHex(rHigh / cHigh, gHigh / cHigh, bHigh / cHigh) : "#ffffff";
+
   const [resCore, resHigh] = await Promise.all([
-    traceMaskBuffer(coreMask, "#eef3fb", 0.18, 3),
-    traceMaskBuffer(highMask, "#ffffff", 0.18, 3),
+    traceMaskBuffer(coreMask, coreHex, 0.18, 3),
+    traceMaskBuffer(highMask, highHex, 0.18, 3),
   ]);
 
   let paths = "";
   if (resCore) {
-    paths += `  <path d="${resCore.d}" fill="#eef3fb" stroke="#eef3fb" stroke-width="0.5" stroke-linejoin="round" fill-rule="evenodd"/>\n`;
+    paths += `  <path d="${resCore.d}" fill="${coreHex}" stroke="${coreHex}" stroke-width="0.5" stroke-linejoin="round" fill-rule="evenodd"/>\n`;
   }
   if (resHigh) {
-    paths += `  <path d="${resHigh.d}" fill="#ffffff" stroke="#ffffff" stroke-width="0.4" stroke-linejoin="round" fill-rule="evenodd"/>\n`;
+    paths += `  <path d="${resHigh.d}" fill="${highHex}" stroke="${highHex}" stroke-width="0.4" stroke-linejoin="round" fill-rule="evenodd"/>\n`;
   }
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${upPng.width} ${upPng.height}" width="100%" height="100%">\n${paths}</svg>\n`;
