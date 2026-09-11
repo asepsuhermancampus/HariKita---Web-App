@@ -125,7 +125,12 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
   }));
 
   return (
-    <>
+    <div
+      style={{
+        backgroundColor: themePreset.colors.background,
+        minHeight: "100vh",
+      }}
+    >
       <TemplateEngineResolver
         invitationId={invitation?.id || "demo-invitation"}
         theme={themePreset}
@@ -192,6 +197,6 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
         initialWishes={formattedWishes}
       />
       <LiveThemeSwitcherToolbar currentThemeId={activeThemeId} />
-    </>
+    </div>
   );
 }

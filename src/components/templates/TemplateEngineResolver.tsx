@@ -142,6 +142,7 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
 
       {/* 2. Desktop Dual-Pane & Mobile Showcase Layout */}
       <InvitationDesktopLayout
+        themeColors={props.theme?.colors}
         brideName={props.bride.name}
         groomName={props.groom.name}
         eventDate={props.eventDate}

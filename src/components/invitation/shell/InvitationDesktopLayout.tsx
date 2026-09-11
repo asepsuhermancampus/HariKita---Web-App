@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { Calendar, MapPin, Heart, Clock } from "lucide-react";
+import { TemplateThemePreset } from "@/lib/templates/types";
 
 interface InvitationDesktopLayoutProps {
+  themeColors?: TemplateThemePreset["colors"];
   brideName: string;
   groomName: string;
   eventDate: string; // ISO string e.g. "2026-11-20T09:00:00Z"
@@ -15,6 +17,7 @@ interface InvitationDesktopLayoutProps {
 }
 
 export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = ({
+  themeColors,
   brideName,
   groomName,
   eventDate,
@@ -65,7 +68,13 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
   });
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex flex-col lg:flex-row overflow-x-hidden font-sans">
+    <div
+      className="w-full min-h-screen flex flex-col lg:flex-row overflow-x-hidden font-sans transition-colors duration-300"
+      style={{
+        backgroundColor: themeColors?.background ?? "#020617",
+        color: themeColors?.text ?? "#f8fafc",
+      }}
+    >
       {/* LEFT PANE: Desktop Cinematic Showcase (Visible >= 1024px) */}
       <aside className="hidden lg:flex lg:w-1/2 h-screen sticky top-0 relative overflow-hidden flex-col justify-between p-12 select-none z-10">
         {/* Background Image with Slow Ken Burns Scale */}
@@ -155,21 +164,28 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
 
       {/* RIGHT PANE: Centered Mobile Viewport Showcase */}
       <main
-        className={`w-full lg:w-1/2 min-h-screen flex justify-center bg-slate-900/60 relative ${
+        className={`w-full lg:w-1/2 min-h-screen flex justify-center relative ${
           !isCoverOpened ? "h-screen max-h-screen overflow-hidden" : ""
         }`}
+        style={{
+          backgroundColor: themeColors ? `${themeColors.background}D9` : "rgba(15, 23, 42, 0.6)",
+        }}
       >
         <div
-          className={`w-full max-w-[480px] min-h-screen relative shadow-2xl bg-white dark:bg-slate-900 flex flex-col transition-all ${
+          className={`w-full max-w-[480px] min-h-screen relative shadow-2xl flex flex-col transition-all ${
             !isCoverOpened
               ? "h-screen max-h-screen overflow-hidden"
               : (ENTRY_ANIM_MAP[entryAnimId] ?? "animate-entry-rise-up")
           }`}
+          style={{
+            backgroundColor: themeColors?.background ?? "#ffffff",
+          }}
         >
           {children}
           {/* Opaque shield: covers content completely until cover is opened.
               Rendered via inline style to guarantee it is applied before
-              any CSS class resolution or paint, eliminating the brief flash. */}
+              any CSS class resolution or paint, eliminating the brief flash.
+              Now uses themeColors.background so zero navy blue flash occurs. */}
           {!isCoverOpened && (
             <div
               aria-hidden="true"
@@ -181,7 +197,7 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
                 bottom: 0,
                 left: 0,
                 zIndex: 40,
-                background: "#0f172a",
+                background: themeColors?.background ?? "#0f172a",
                 pointerEvents: "none",
               }}
             />
