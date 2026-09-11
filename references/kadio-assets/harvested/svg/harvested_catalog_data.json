@@ -8,7 +8,9 @@
     "h": 110,
     "origSizeKb": "71.8",
     "newSizeKb": "125.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "1742797881_event-flower.png",
@@ -18,8 +20,10 @@
     "w": 205,
     "h": 205,
     "origSizeKb": "10.3",
-    "newSizeKb": "68.3",
-    "isMono": false
+    "newSizeKb": "234.2",
+    "isMono": false,
+    "pathCount": 4,
+    "isV4Elevated": true
   },
   {
     "file": "1745985390_kdo43.png",
@@ -30,7 +34,9 @@
     "h": 132,
     "origSizeKb": "102.8",
     "newSizeKb": "166.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "1745992861_bg-kdo43.png",
@@ -41,7 +47,9 @@
     "h": 900,
     "origSizeKb": "274.4",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "1748925156_flower-2-44.png",
@@ -52,7 +60,9 @@
     "h": 451,
     "origSizeKb": "255.6",
     "newSizeKb": "311.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1748925440_flower-3-44.png",
@@ -62,8 +72,10 @@
     "w": 600,
     "h": 451,
     "origSizeKb": "243.6",
-    "newSizeKb": "103.8",
-    "isMono": false
+    "newSizeKb": "324.5",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "1749706359_kdo45-bg.png",
@@ -74,7 +86,9 @@
     "h": 526,
     "origSizeKb": "94.8",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "1749788204_kdo45-flower-5.png",
@@ -85,7 +99,9 @@
     "h": 277,
     "origSizeKb": "87.0",
     "newSizeKb": "181.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "1750132663_kdo46-bg-2.png",
@@ -96,7 +112,9 @@
     "h": 633,
     "origSizeKb": "368.8",
     "newSizeKb": "508.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1750151641_kdo46-flower-5.png",
@@ -107,7 +125,9 @@
     "h": 275,
     "origSizeKb": "128.5",
     "newSizeKb": "297.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "1750171860_kdo46-bg-7.png",
@@ -118,7 +138,9 @@
     "h": 529,
     "origSizeKb": "129.0",
     "newSizeKb": "291.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "1750918112_kdo47-bg-1.png",
@@ -129,7 +151,9 @@
     "h": 826,
     "origSizeKb": "118.1",
     "newSizeKb": "300.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751093272_kdo48-bg-1.png",
@@ -140,7 +164,9 @@
     "h": 644,
     "origSizeKb": "80.3",
     "newSizeKb": "95.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751093782_kdo48-bg-2.png",
@@ -151,7 +177,9 @@
     "h": 594,
     "origSizeKb": "44.5",
     "newSizeKb": "73.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751093823_kdo48-flower-1.png",
@@ -162,7 +190,9 @@
     "h": 442,
     "origSizeKb": "155.5",
     "newSizeKb": "317.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751093852_kdo48-flower-2.png",
@@ -173,7 +203,9 @@
     "h": 438,
     "origSizeKb": "138.2",
     "newSizeKb": "283.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751125926_kdo48-bg-3.png",
@@ -184,7 +216,9 @@
     "h": 490,
     "origSizeKb": "68.2",
     "newSizeKb": "92.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751125968_kdo48-bg-4.png",
@@ -195,7 +229,9 @@
     "h": 637,
     "origSizeKb": "103.2",
     "newSizeKb": "128.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751185744_kdo48-flower-6.png",
@@ -206,7 +242,9 @@
     "h": 324,
     "origSizeKb": "94.2",
     "newSizeKb": "151.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751261920_kdo49-bg-1.png",
@@ -217,7 +255,9 @@
     "h": 640,
     "origSizeKb": "163.7",
     "newSizeKb": "227.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751261948_kdo49-flower-1.png",
@@ -228,7 +268,9 @@
     "h": 474,
     "origSizeKb": "124.3",
     "newSizeKb": "225.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751261963_kdo49-flower-2.png",
@@ -239,7 +281,9 @@
     "h": 482,
     "origSizeKb": "178.9",
     "newSizeKb": "336.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751268523_kdo49-bg-3.png",
@@ -250,7 +294,9 @@
     "h": 442,
     "origSizeKb": "120.4",
     "newSizeKb": "203.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1751272649_kdo49-bg-4.png",
@@ -261,7 +307,9 @@
     "h": 424,
     "origSizeKb": "107.8",
     "newSizeKb": "195.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1752826556_bg-cover-50-1.png",
@@ -272,7 +320,9 @@
     "h": 445,
     "origSizeKb": "109.3",
     "newSizeKb": "128.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1752826653_bg-cover-50-2.png",
@@ -283,7 +333,9 @@
     "h": 765,
     "origSizeKb": "363.6",
     "newSizeKb": "193.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1753710203_bg-flower-2.png",
@@ -294,7 +346,9 @@
     "h": 648,
     "origSizeKb": "218.2",
     "newSizeKb": "417.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1753799574_bg-flower-4.png",
@@ -305,7 +359,9 @@
     "h": 858,
     "origSizeKb": "134.0",
     "newSizeKb": "202.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1753928502_bg-cover.png",
@@ -316,7 +372,9 @@
     "h": 796,
     "origSizeKb": "483.3",
     "newSizeKb": "701.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1753942426_bg-flower-1.png",
@@ -327,7 +385,9 @@
     "h": 128,
     "origSizeKb": "110.4",
     "newSizeKb": "155.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "1753942722_bg-flower-2.png",
@@ -338,7 +398,9 @@
     "h": 806,
     "origSizeKb": "159.6",
     "newSizeKb": "225.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1753942874_bg-flower-3.png",
@@ -348,8 +410,10 @@
     "w": 204,
     "h": 806,
     "origSizeKb": "164.3",
-    "newSizeKb": "95.1",
-    "isMono": false
+    "newSizeKb": "323.6",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "1753945960_bg-flower-4.png",
@@ -360,7 +424,9 @@
     "h": 1010,
     "origSizeKb": "108.4",
     "newSizeKb": "307.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1754319774_kdo53-bg1.png",
@@ -371,7 +437,9 @@
     "h": 424,
     "origSizeKb": "39.1",
     "newSizeKb": "3.3",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "1754319965_kdo53-bg2.png",
@@ -382,7 +450,9 @@
     "h": 336,
     "origSizeKb": "35.7",
     "newSizeKb": "221.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1754380489_kdo54-frame-1.png",
@@ -392,8 +462,10 @@
     "w": 456,
     "h": 460,
     "origSizeKb": "57.1",
-    "newSizeKb": "5.8",
-    "isMono": true
+    "newSizeKb": "46.3",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "1754402536_kdo55-flower-1.png",
@@ -404,7 +476,9 @@
     "h": 318,
     "origSizeKb": "232.7",
     "newSizeKb": "280.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1754402793_kdo55-flower-2.png",
@@ -415,7 +489,9 @@
     "h": 305,
     "origSizeKb": "157.4",
     "newSizeKb": "179.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1754403915_kdo56-flower-1.png",
@@ -425,8 +501,11 @@
     "w": 212,
     "h": 674,
     "origSizeKb": "63.2",
-    "newSizeKb": "335.0",
-    "isMono": false
+    "newSizeKb": "391.9",
+    "isMono": false,
+    "pathCount": 4,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "1754404007_kdo56-flower-2.png",
@@ -437,7 +516,9 @@
     "h": 460,
     "origSizeKb": "59.4",
     "newSizeKb": "235.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "1754404018_kdo56-flower-3.png",
@@ -447,8 +528,10 @@
     "w": 265,
     "h": 332,
     "origSizeKb": "60.9",
-    "newSizeKb": "405.3",
-    "isMono": false
+    "newSizeKb": "680.8",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "1754404030_kdo56-flower-4.png",
@@ -459,7 +542,9 @@
     "h": 406,
     "origSizeKb": "75.8",
     "newSizeKb": "496.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "1754405093_kdo56-bg-1.png",
@@ -470,7 +555,9 @@
     "h": 924,
     "origSizeKb": "524.3",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "1754539506_kdo55-bg-3.png",
@@ -481,7 +568,9 @@
     "h": 572,
     "origSizeKb": "84.7",
     "newSizeKb": "9.1",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "1754539843_kdo55-bg-7.png",
@@ -492,7 +581,9 @@
     "h": 590,
     "origSizeKb": "87.9",
     "newSizeKb": "113.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1754548329_kdo54-bg-2.png",
@@ -503,7 +594,9 @@
     "h": 1133,
     "origSizeKb": "831.9",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "1754550745_kdo55-flower-5.png",
@@ -514,7 +607,9 @@
     "h": 188,
     "origSizeKb": "35.4",
     "newSizeKb": "63.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "1754551969_kdo56-bg-2.png",
@@ -525,7 +620,9 @@
     "h": 1044,
     "origSizeKb": "472.5",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "1754557351_kdo55-bg-6.png",
@@ -536,7 +633,9 @@
     "h": 590,
     "origSizeKb": "63.1",
     "newSizeKb": "71.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1754570476_kdo55-flower-6.png",
@@ -547,7 +646,9 @@
     "h": 478,
     "origSizeKb": "98.4",
     "newSizeKb": "255.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "1754575179_kdo55-flower-4.png",
@@ -558,7 +659,9 @@
     "h": 188,
     "origSizeKb": "38.5",
     "newSizeKb": "65.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "1754627884_kdo53-flower-4.png",
@@ -569,7 +672,9 @@
     "h": 631,
     "origSizeKb": "171.5",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "1754637732_kdo56-bg-3.png",
@@ -580,7 +685,9 @@
     "h": 895,
     "origSizeKb": "441.1",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "1754648453_kdo54-bg-3.png",
@@ -590,8 +697,11 @@
     "w": 308,
     "h": 378,
     "origSizeKb": "81.1",
-    "newSizeKb": "112.0",
-    "isMono": false
+    "newSizeKb": "1584.3",
+    "isMono": false,
+    "pathCount": 8,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "1754671596_kdo55-bg-8.png",
@@ -602,7 +712,9 @@
     "h": 353,
     "origSizeKb": "202.3",
     "newSizeKb": "205.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "1754672368_kdo56-bg-4.png",
@@ -613,7 +725,9 @@
     "h": 504,
     "origSizeKb": "160.8",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "1755675618_kdo58-flower-3.png",
@@ -623,8 +737,10 @@
     "w": 334,
     "h": 416,
     "origSizeKb": "88.5",
-    "newSizeKb": "167.8",
-    "isMono": false
+    "newSizeKb": "301.5",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "1755749211_kdo57-flower-7.png",
@@ -635,7 +751,9 @@
     "h": 215,
     "origSizeKb": "140.5",
     "newSizeKb": "267.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "1_3_5_gold_splash.png",
@@ -646,7 +764,9 @@
     "h": 385,
     "origSizeKb": "14.6",
     "newSizeKb": "130.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "1_5_gold_splash2.png",
@@ -657,7 +777,9 @@
     "h": 562,
     "origSizeKb": "19.1",
     "newSizeKb": "131.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "1_watercolor.png",
@@ -668,7 +790,9 @@
     "h": 823,
     "origSizeKb": "52.2",
     "newSizeKb": "370.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "2_splash.png",
@@ -679,7 +803,9 @@
     "h": 499,
     "origSizeKb": "19.6",
     "newSizeKb": "124.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "4_flower_trans.png",
@@ -690,7 +816,9 @@
     "h": 678,
     "origSizeKb": "29.9",
     "newSizeKb": "129.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "4_gold_splash.png",
@@ -701,7 +829,9 @@
     "h": 262,
     "origSizeKb": "14.7",
     "newSizeKb": "121.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "bg-1.png",
@@ -712,7 +842,9 @@
     "h": 525,
     "origSizeKb": "176.0",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-2.png",
@@ -723,7 +855,9 @@
     "h": 1027,
     "origSizeKb": "136.7",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-3.png",
@@ -734,7 +868,9 @@
     "h": 1070,
     "origSizeKb": "175.5",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-4.png",
@@ -744,8 +880,10 @@
     "w": 414,
     "h": 1975,
     "origSizeKb": "230.3",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "46.2",
+    "isMono": false,
+    "pathCount": 30,
+    "isV4Elevated": true
   },
   {
     "file": "bg-4.svg",
@@ -753,7 +891,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "46.2",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "46.2",
+    "pathCount": 30,
+    "isV4Elevated": true
   },
   {
     "file": "bg-5.png",
@@ -764,7 +905,9 @@
     "h": 966,
     "origSizeKb": "202.0",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-blur-1.png",
@@ -775,7 +918,9 @@
     "h": 1596,
     "origSizeKb": "609.1",
     "newSizeKb": "709.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bg-blur-2.png",
@@ -786,7 +931,9 @@
     "h": 1641,
     "origSizeKb": "610.0",
     "newSizeKb": "668.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bg-bottom.png",
@@ -796,8 +943,10 @@
     "w": 412,
     "h": 123,
     "origSizeKb": "57.1",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "10.3",
+    "isMono": false,
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "bg-bottom.svg",
@@ -805,7 +954,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "10.3",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "10.3",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "bg-bride-flower-1.png",
@@ -815,8 +967,10 @@
     "w": 216,
     "h": 408,
     "origSizeKb": "32.8",
-    "newSizeKb": "74.1",
-    "isMono": false
+    "newSizeKb": "477.1",
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "bg-bride-flower-2.png",
@@ -826,8 +980,10 @@
     "w": 272,
     "h": 441,
     "origSizeKb": "41.4",
-    "newSizeKb": "82.9",
-    "isMono": false
+    "newSizeKb": "566.6",
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "bg-bride-flower-3.png",
@@ -837,8 +993,10 @@
     "w": 341,
     "h": 488,
     "origSizeKb": "44.4",
-    "newSizeKb": "88.5",
-    "isMono": false
+    "newSizeKb": "760.4",
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "bg-bride.png",
@@ -849,7 +1007,9 @@
     "h": 276,
     "origSizeKb": "22.6",
     "newSizeKb": "61.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "bg-center.svg",
@@ -857,7 +1017,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "22.6",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "22.6",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "bg-event.png",
@@ -868,7 +1031,9 @@
     "h": 1089,
     "origSizeKb": "75.1",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-flower-1.png",
@@ -879,7 +1044,9 @@
     "h": 736,
     "origSizeKb": "143.4",
     "newSizeKb": "753.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bg-flower-3.png",
@@ -889,8 +1056,11 @@
     "w": 378,
     "h": 463,
     "origSizeKb": "44.6",
-    "newSizeKb": "131.2",
-    "isMono": false
+    "newSizeKb": "521.9",
+    "isMono": false,
+    "pathCount": 9,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "bg-flower.png",
@@ -901,7 +1071,9 @@
     "h": 337,
     "origSizeKb": "287.8",
     "newSizeKb": "253.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bg-index.jpg",
@@ -910,7 +1082,9 @@
     "category": "Background Wallpaper",
     "origSizeKb": "91.7",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-index.png",
@@ -921,7 +1095,9 @@
     "h": 736,
     "origSizeKb": "63.0",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-left.svg",
@@ -929,7 +1105,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "23.1",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "23.1",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "bg-msg-1.png",
@@ -940,7 +1119,9 @@
     "h": 450,
     "origSizeKb": "8.6",
     "newSizeKb": "79.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 4,
+    "isV4Elevated": true
   },
   {
     "file": "bg-msg-2.png",
@@ -951,7 +1132,9 @@
     "h": 450,
     "origSizeKb": "9.4",
     "newSizeKb": "38.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "bg-open-small-2.png",
@@ -962,7 +1145,9 @@
     "h": 81,
     "origSizeKb": "10.7",
     "newSizeKb": "43.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "bg-open-small.png",
@@ -973,7 +1158,9 @@
     "h": 93,
     "origSizeKb": "13.6",
     "newSizeKb": "90.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "bg-paper-1.png",
@@ -984,7 +1171,9 @@
     "h": 736,
     "origSizeKb": "93.7",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-paper-2.png",
@@ -995,7 +1184,9 @@
     "h": 1004,
     "origSizeKb": "155.1",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-paper-small-1.png",
@@ -1006,7 +1197,9 @@
     "h": 523,
     "origSizeKb": "30.0",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-paper-small-2.png",
@@ -1017,7 +1210,9 @@
     "h": 455,
     "origSizeKb": "49.9",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-paper.png",
@@ -1028,7 +1223,9 @@
     "h": 1767,
     "origSizeKb": "79.0",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-right.svg",
@@ -1036,7 +1233,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "22.5",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "22.5",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "bg-small-1.png",
@@ -1047,7 +1247,9 @@
     "h": 736,
     "origSizeKb": "196.8",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-story.png",
@@ -1058,7 +1260,9 @@
     "h": 855,
     "origSizeKb": "106.3",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "bg-top.png",
@@ -1068,8 +1272,10 @@
     "w": 412,
     "h": 126,
     "origSizeKb": "57.5",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "10.5",
+    "isMono": false,
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "bg-top.svg",
@@ -1077,7 +1283,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "10.5",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "10.5",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "bg.svg",
@@ -1085,7 +1294,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "42.5",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "42.5",
+    "pathCount": 26,
+    "isV4Elevated": true
   },
   {
     "file": "bg1.png",
@@ -1096,7 +1308,9 @@
     "h": 507,
     "origSizeKb": "35.3",
     "newSizeKb": "128.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bg2.svg",
@@ -1104,7 +1318,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "20.8",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "20.8",
+    "pathCount": 21,
+    "isV4Elevated": true
   },
   {
     "file": "bride-bg-2.png",
@@ -1115,7 +1332,9 @@
     "h": 932,
     "origSizeKb": "41.6",
     "newSizeKb": "64.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bride-bg.png",
@@ -1126,7 +1345,9 @@
     "h": 932,
     "origSizeKb": "42.3",
     "newSizeKb": "68.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bride-bulat-1.png",
@@ -1137,7 +1358,9 @@
     "h": 107,
     "origSizeKb": "14.5",
     "newSizeKb": "1.7",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "bride-bulat-2.png",
@@ -1148,7 +1371,9 @@
     "h": 39,
     "origSizeKb": "3.0",
     "newSizeKb": "1.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "bride-bulat-3.png",
@@ -1159,7 +1384,9 @@
     "h": 107,
     "origSizeKb": "13.7",
     "newSizeKb": "123.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "bride-divider.png",
@@ -1170,7 +1397,9 @@
     "h": 153,
     "origSizeKb": "39.7",
     "newSizeKb": "15.3",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "bride-flower-1.png",
@@ -1181,7 +1410,9 @@
     "h": 309,
     "origSizeKb": "122.0",
     "newSizeKb": "202.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "bride-flower-2.png",
@@ -1192,7 +1423,9 @@
     "h": 261,
     "origSizeKb": "33.8",
     "newSizeKb": "80.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "bride-flower-3.png",
@@ -1202,8 +1435,11 @@
     "w": 82,
     "h": 187,
     "origSizeKb": "15.4",
-    "newSizeKb": "35.5",
-    "isMono": false
+    "newSizeKb": "133.6",
+    "isMono": false,
+    "pathCount": 6,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "bride-flower-left.png",
@@ -1214,7 +1450,9 @@
     "h": 487,
     "origSizeKb": "174.1",
     "newSizeKb": "662.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bride-flower-right.png",
@@ -1225,7 +1463,9 @@
     "h": 487,
     "origSizeKb": "141.6",
     "newSizeKb": "453.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bride-frame.png",
@@ -1235,8 +1475,10 @@
     "w": 560,
     "h": 598,
     "origSizeKb": "46.4",
-    "newSizeKb": "36.0",
-    "isMono": true
+    "newSizeKb": "154.1",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "bride-left.png",
@@ -1247,7 +1489,9 @@
     "h": 954,
     "origSizeKb": "108.8",
     "newSizeKb": "371.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bride-right.png",
@@ -1258,7 +1502,9 @@
     "h": 645,
     "origSizeKb": "106.2",
     "newSizeKb": "531.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "bride-top-left.png",
@@ -1268,8 +1514,10 @@
     "w": 603,
     "h": 615,
     "origSizeKb": "31.0",
-    "newSizeKb": "279.0",
-    "isMono": false
+    "newSizeKb": "157.0",
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "bride-top-right.png",
@@ -1279,8 +1527,10 @@
     "w": 618,
     "h": 627,
     "origSizeKb": "31.4",
-    "newSizeKb": "361.4",
-    "isMono": false
+    "newSizeKb": "165.4",
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "bride_info_flower1.png",
@@ -1291,7 +1541,9 @@
     "h": 324,
     "origSizeKb": "154.3",
     "newSizeKb": "315.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "bride_info_flower2.png",
@@ -1302,7 +1554,9 @@
     "h": 324,
     "origSizeKb": "154.3",
     "newSizeKb": "274.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "calender.svg",
@@ -1310,7 +1564,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "2.4",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "2.4",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "cd-bg-1.png",
@@ -1321,7 +1578,9 @@
     "h": 162,
     "origSizeKb": "4.2",
     "newSizeKb": "4.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "cd-bg-2.png",
@@ -1332,7 +1591,9 @@
     "h": 146,
     "origSizeKb": "2.2",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "cover-1.png",
@@ -1343,7 +1604,9 @@
     "h": 198,
     "origSizeKb": "33.3",
     "newSizeKb": "1000.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "cover-2.png",
@@ -1354,7 +1617,9 @@
     "h": 80,
     "origSizeKb": "34.6",
     "newSizeKb": "228.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "cover-3.png",
@@ -1365,7 +1630,9 @@
     "h": 946,
     "origSizeKb": "186.1",
     "newSizeKb": "205.8",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "cover-4.png",
@@ -1376,7 +1643,9 @@
     "h": 447,
     "origSizeKb": "41.2",
     "newSizeKb": "147.6",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "cover-bg.jpg",
@@ -1385,7 +1654,9 @@
     "category": "Background Wallpaper",
     "origSizeKb": "262.0",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "cover-bg.png",
@@ -1396,7 +1667,9 @@
     "h": 2191,
     "origSizeKb": "62.3",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "cover-bottom-left-1.png",
@@ -1406,8 +1679,10 @@
     "w": 228,
     "h": 343,
     "origSizeKb": "30.1",
-    "newSizeKb": "428.0",
-    "isMono": false
+    "newSizeKb": "161.8",
+    "isMono": false,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "cover-bottom-left.png",
@@ -1417,8 +1692,10 @@
     "w": 603,
     "h": 603,
     "origSizeKb": "29.1",
-    "newSizeKb": "296.0",
-    "isMono": false
+    "newSizeKb": "166.2",
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "cover-bottom-right-1.png",
@@ -1428,8 +1705,10 @@
     "w": 182,
     "h": 282,
     "origSizeKb": "35.9",
-    "newSizeKb": "297.0",
-    "isMono": false
+    "newSizeKb": "185.9",
+    "isMono": false,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "cover-bottom-right.png",
@@ -1439,8 +1718,10 @@
     "w": 618,
     "h": 615,
     "origSizeKb": "29.9",
-    "newSizeKb": "290.1",
-    "isMono": false
+    "newSizeKb": "175.4",
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "cover-flower-1.png",
@@ -1451,7 +1732,9 @@
     "h": 510,
     "origSizeKb": "8.7",
     "newSizeKb": "13.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "cover-flower-2.png",
@@ -1462,7 +1745,9 @@
     "h": 1081,
     "origSizeKb": "71.6",
     "newSizeKb": "194.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "cover-flower.png",
@@ -1473,7 +1758,9 @@
     "h": 509,
     "origSizeKb": "74.0",
     "newSizeKb": "229.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "cover-frame-2.png",
@@ -1483,8 +1770,10 @@
     "w": 763,
     "h": 1139,
     "origSizeKb": "62.9",
-    "newSizeKb": "1.6",
-    "isMono": true
+    "newSizeKb": "7.0",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "cover-frame.png",
@@ -1494,8 +1783,10 @@
     "w": 400,
     "h": 377,
     "origSizeKb": "53.7",
-    "newSizeKb": "9.6",
-    "isMono": true
+    "newSizeKb": "57.5",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "cover-left.png",
@@ -1506,7 +1797,9 @@
     "h": 432,
     "origSizeKb": "16.5",
     "newSizeKb": "76.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "cover-right.png",
@@ -1517,7 +1810,9 @@
     "h": 432,
     "origSizeKb": "15.5",
     "newSizeKb": "75.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "cover-stamp.png",
@@ -1528,7 +1823,9 @@
     "h": 161,
     "origSizeKb": "10.2",
     "newSizeKb": "26.2",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "cover-top-left.png",
@@ -1538,8 +1835,10 @@
     "w": 603,
     "h": 606,
     "origSizeKb": "29.9",
-    "newSizeKb": "228.3",
-    "isMono": false
+    "newSizeKb": "158.5",
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "cover-top-right.png",
@@ -1549,8 +1848,10 @@
     "w": 618,
     "h": 618,
     "origSizeKb": "31.1",
-    "newSizeKb": "233.4",
-    "isMono": false
+    "newSizeKb": "164.5",
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "divider-countdown.png",
@@ -1561,7 +1862,9 @@
     "h": 49,
     "origSizeKb": "4.3",
     "newSizeKb": "8.1",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-cover-1.png",
@@ -1572,7 +1875,9 @@
     "h": 87,
     "origSizeKb": "3.7",
     "newSizeKb": "5.9",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-cover-2.png",
@@ -1583,7 +1888,9 @@
     "h": 87,
     "origSizeKb": "3.8",
     "newSizeKb": "6.0",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-cover.png",
@@ -1594,7 +1901,9 @@
     "h": 87,
     "origSizeKb": "6.1",
     "newSizeKb": "6.1",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-event-1.png",
@@ -1605,7 +1914,9 @@
     "h": 118,
     "origSizeKb": "8.3",
     "newSizeKb": "6.7",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-event-2.png",
@@ -1616,7 +1927,9 @@
     "h": 118,
     "origSizeKb": "8.9",
     "newSizeKb": "6.6",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-message.png",
@@ -1627,7 +1940,9 @@
     "h": 80,
     "origSizeKb": "3.1",
     "newSizeKb": "8.4",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-row.png",
@@ -1638,7 +1953,9 @@
     "h": 82,
     "origSizeKb": "4.1",
     "newSizeKb": "4.6",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-rsvp.png",
@@ -1649,7 +1966,9 @@
     "h": 34,
     "origSizeKb": "2.7",
     "newSizeKb": "6.7",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "divider-story.png",
@@ -1660,7 +1979,9 @@
     "h": 79,
     "origSizeKb": "3.1",
     "newSizeKb": "7.8",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "event-bg-left.png",
@@ -1671,7 +1992,9 @@
     "h": 255,
     "origSizeKb": "10.3",
     "newSizeKb": "32.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "event-bg-right.png",
@@ -1682,7 +2005,9 @@
     "h": 186,
     "origSizeKb": "12.6",
     "newSizeKb": "49.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "event-bg-top.png",
@@ -1693,7 +2018,9 @@
     "h": 409,
     "origSizeKb": "11.5",
     "newSizeKb": "23.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "event-border-1.png",
@@ -1703,8 +2030,10 @@
     "w": 358,
     "h": 87,
     "origSizeKb": "12.5",
-    "newSizeKb": "18.7",
-    "isMono": true
+    "newSizeKb": "59.4",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "event-border-2.png",
@@ -1714,8 +2043,10 @@
     "w": 358,
     "h": 93,
     "origSizeKb": "12.6",
-    "newSizeKb": "19.1",
-    "isMono": true
+    "newSizeKb": "61.8",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "event-bottom-left.png",
@@ -1725,8 +2056,11 @@
     "w": 134,
     "h": 133,
     "origSizeKb": "27.9",
-    "newSizeKb": "139.3",
-    "isMono": false
+    "newSizeKb": "68.5",
+    "isMono": false,
+    "pathCount": 2,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "event-bottom-right.png",
@@ -1736,8 +2070,11 @@
     "w": 137,
     "h": 136,
     "origSizeKb": "28.9",
-    "newSizeKb": "173.1",
-    "isMono": false
+    "newSizeKb": "68.6",
+    "isMono": false,
+    "pathCount": 2,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "event-flower-3.png",
@@ -1747,8 +2084,10 @@
     "w": 108,
     "h": 289,
     "origSizeKb": "13.6",
-    "newSizeKb": "50.4",
-    "isMono": false
+    "newSizeKb": "79.2",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "event-flower-left.png",
@@ -1759,7 +2098,9 @@
     "h": 331,
     "origSizeKb": "14.4",
     "newSizeKb": "56.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "event-flower-right.png",
@@ -1770,7 +2111,9 @@
     "h": 369,
     "origSizeKb": "17.1",
     "newSizeKb": "32.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "event-story-flower.png",
@@ -1781,7 +2124,9 @@
     "h": 359,
     "origSizeKb": "28.6",
     "newSizeKb": "677.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "event-title-bg.png",
@@ -1792,7 +2137,9 @@
     "h": 201,
     "origSizeKb": "9.2",
     "newSizeKb": "44.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "event-top-left.png",
@@ -1802,8 +2149,11 @@
     "w": 134,
     "h": 133,
     "origSizeKb": "28.1",
-    "newSizeKb": "135.9",
-    "isMono": false
+    "newSizeKb": "66.4",
+    "isMono": false,
+    "pathCount": 2,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "event-top-right.png",
@@ -1813,8 +2163,11 @@
     "w": 137,
     "h": 136,
     "origSizeKb": "29.2",
-    "newSizeKb": "157.1",
-    "isMono": false
+    "newSizeKb": "67.2",
+    "isMono": false,
+    "pathCount": 2,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "flower-1.png",
@@ -1825,7 +2178,9 @@
     "h": 324,
     "origSizeKb": "60.3",
     "newSizeKb": "73.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "flower-11.png",
@@ -1835,8 +2190,10 @@
     "w": 369,
     "h": 537,
     "origSizeKb": "443.1",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "966.5",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "flower-3.png",
@@ -1846,8 +2203,10 @@
     "w": 1269,
     "h": 1461,
     "origSizeKb": "100.9",
-    "newSizeKb": "134.8",
-    "isMono": false
+    "newSizeKb": "520.9",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "flower-4.png",
@@ -1857,8 +2216,10 @@
     "w": 464,
     "h": 420,
     "origSizeKb": "133.7",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "1029.6",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "flower-5.png",
@@ -1869,7 +2230,9 @@
     "h": 420,
     "origSizeKb": "133.7",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "flower-6.png",
@@ -1879,8 +2242,10 @@
     "w": 464,
     "h": 399,
     "origSizeKb": "131.0",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "964.9",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "flower-7.png",
@@ -1890,8 +2255,10 @@
     "w": 514,
     "h": 399,
     "origSizeKb": "147.4",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "1110.8",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "flower-8.png",
@@ -1901,8 +2268,10 @@
     "w": 464,
     "h": 399,
     "origSizeKb": "128.2",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "982.4",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "flower-9.png",
@@ -1912,8 +2281,10 @@
     "w": 514,
     "h": 505,
     "origSizeKb": "185.4",
-    "newSizeKb": "0.4",
-    "isMono": false
+    "newSizeKb": "1363.5",
+    "isMono": false,
+    "pathCount": 8,
+    "isV4Elevated": true
   },
   {
     "file": "flower-add-1.png",
@@ -1924,7 +2295,9 @@
     "h": 187,
     "origSizeKb": "26.3",
     "newSizeKb": "19.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "flower-add-2.png",
@@ -1935,7 +2308,9 @@
     "h": 118,
     "origSizeKb": "8.9",
     "newSizeKb": "19.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "flower-add-3.png",
@@ -1946,7 +2321,9 @@
     "h": 123,
     "origSizeKb": "7.3",
     "newSizeKb": "11.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "flower-back-2.png",
@@ -1957,7 +2334,9 @@
     "h": 1954,
     "origSizeKb": "334.7",
     "newSizeKb": "1413.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "flower-back.png",
@@ -1968,7 +2347,9 @@
     "h": 1954,
     "origSizeKb": "333.8",
     "newSizeKb": "1330.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "flower-bride-small-1.png",
@@ -1979,7 +2360,9 @@
     "h": 425,
     "origSizeKb": "47.1",
     "newSizeKb": "283.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "flower-bride-small-2.png",
@@ -1990,7 +2373,9 @@
     "h": 477,
     "origSizeKb": "47.4",
     "newSizeKb": "222.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "flower-bride.png",
@@ -2001,7 +2386,9 @@
     "h": 397,
     "origSizeKb": "23.7",
     "newSizeKb": "61.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "flower.png",
@@ -2012,7 +2399,9 @@
     "h": 48,
     "origSizeKb": "2.2",
     "newSizeKb": "5.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "frame-1.png",
@@ -2022,8 +2411,10 @@
     "w": 611,
     "h": 515,
     "origSizeKb": "41.0",
-    "newSizeKb": "38.9",
-    "isMono": true
+    "newSizeKb": "146.8",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-2.png",
@@ -2033,8 +2424,10 @@
     "w": 690,
     "h": 690,
     "origSizeKb": "63.9",
-    "newSizeKb": "19.7",
-    "isMono": true
+    "newSizeKb": "67.3",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-3.png",
@@ -2044,8 +2437,10 @@
     "w": 900,
     "h": 858,
     "origSizeKb": "31.9",
-    "newSizeKb": "4.3",
-    "isMono": true
+    "newSizeKb": "37.3",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-bottom.svg",
@@ -2053,7 +2448,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "10.3",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "10.3",
+    "pathCount": 34,
+    "isV4Elevated": true
   },
   {
     "file": "frame-card-small.png",
@@ -2063,8 +2461,10 @@
     "w": 321,
     "h": 225,
     "origSizeKb": "6.7",
-    "newSizeKb": "15.0",
-    "isMono": true
+    "newSizeKb": "39.7",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-card.png",
@@ -2074,8 +2474,10 @@
     "w": 254,
     "h": 178,
     "origSizeKb": "5.0",
-    "newSizeKb": "12.2",
-    "isMono": true
+    "newSizeKb": "31.4",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-countdown.png",
@@ -2085,8 +2487,10 @@
     "w": 364,
     "h": 199,
     "origSizeKb": "13.4",
-    "newSizeKb": "33.0",
-    "isMono": true
+    "newSizeKb": "75.5",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-cover.png",
@@ -2096,8 +2500,10 @@
     "w": 819,
     "h": 1146,
     "origSizeKb": "11.4",
-    "newSizeKb": "2.9",
-    "isMono": true
+    "newSizeKb": "13.1",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-index.png",
@@ -2107,8 +2513,10 @@
     "w": 386,
     "h": 597,
     "origSizeKb": "44.4",
-    "newSizeKb": "64.5",
-    "isMono": true
+    "newSizeKb": "162.8",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-small-2.png",
@@ -2118,8 +2526,10 @@
     "w": 310,
     "h": 473,
     "origSizeKb": "4.9",
-    "newSizeKb": "8.4",
-    "isMono": true
+    "newSizeKb": "20.2",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-small.png",
@@ -2129,8 +2539,10 @@
     "w": 357,
     "h": 544,
     "origSizeKb": "7.0",
-    "newSizeKb": "10.1",
-    "isMono": true
+    "newSizeKb": "20.5",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "frame-top.svg",
@@ -2138,7 +2550,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "10.3",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "10.3",
+    "pathCount": 34,
+    "isV4Elevated": true
   },
   {
     "file": "home-flower.png",
@@ -2149,7 +2564,9 @@
     "h": 736,
     "origSizeKb": "44.6",
     "newSizeKb": "109.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "index-bg-bottom-right.png",
@@ -2159,8 +2576,10 @@
     "w": 429,
     "h": 429,
     "origSizeKb": "61.0",
-    "newSizeKb": "132.4",
-    "isMono": false
+    "newSizeKb": "92.8",
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "index-bg-center.png",
@@ -2171,7 +2590,9 @@
     "h": 495,
     "origSizeKb": "131.7",
     "newSizeKb": "620.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "index-bg-top-left.png",
@@ -2181,8 +2602,10 @@
     "w": 429,
     "h": 429,
     "origSizeKb": "61.0",
-    "newSizeKb": "131.6",
-    "isMono": false
+    "newSizeKb": "89.9",
+    "isMono": false,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "index-bg.jpg",
@@ -2191,7 +2614,9 @@
     "category": "Background Wallpaper",
     "origSizeKb": "154.3",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "index-flower-2.png",
@@ -2202,7 +2627,9 @@
     "h": 254,
     "origSizeKb": "28.8",
     "newSizeKb": "395.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 4,
+    "isV4Elevated": true
   },
   {
     "file": "index-flower-3.png",
@@ -2212,8 +2639,10 @@
     "w": 414,
     "h": 753,
     "origSizeKb": "24.6",
-    "newSizeKb": "54.6",
-    "isMono": false
+    "newSizeKb": "684.1",
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "index-flower-bottom.png",
@@ -2224,7 +2653,9 @@
     "h": 667,
     "origSizeKb": "45.3",
     "newSizeKb": "203.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "index-flower-top.png",
@@ -2235,7 +2666,9 @@
     "h": 379,
     "origSizeKb": "101.0",
     "newSizeKb": "75.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "index-top-flower.png",
@@ -2246,7 +2679,9 @@
     "h": 300,
     "origSizeKb": "68.2",
     "newSizeKb": "811.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "index_flower_bg.png",
@@ -2257,7 +2692,9 @@
     "h": 979,
     "origSizeKb": "156.8",
     "newSizeKb": "699.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "kdo46-bg-3.svg",
@@ -2268,7 +2705,9 @@
     "h": 1280,
     "origSizeKb": "150.8",
     "newSizeKb": "177.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "kdo46-bg.svg",
@@ -2279,7 +2718,9 @@
     "h": 1280,
     "origSizeKb": "150.8",
     "newSizeKb": "200.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "live-green.svg",
@@ -2287,7 +2728,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "0.7",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "0.7",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "live.svg",
@@ -2295,7 +2739,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "0.6",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "0.6",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "map-green.svg",
@@ -2303,7 +2750,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "1.2",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "1.2",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "maps.svg",
@@ -2311,7 +2761,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "2.8",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "2.8",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "mb-1.png",
@@ -2322,7 +2775,9 @@
     "h": 569,
     "origSizeKb": "122.7",
     "newSizeKb": "685.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "mb-2.png",
@@ -2333,7 +2788,9 @@
     "h": 583,
     "origSizeKb": "94.3",
     "newSizeKb": "351.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "mb-3.png",
@@ -2344,7 +2801,9 @@
     "h": 447,
     "origSizeKb": "69.7",
     "newSizeKb": "407.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "mempelai-bg.png",
@@ -2355,7 +2814,9 @@
     "h": 1067,
     "origSizeKb": "106.4",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "message-bg-2.png",
@@ -2366,7 +2827,9 @@
     "h": 847,
     "origSizeKb": "46.9",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "message-bg.png",
@@ -2377,7 +2840,9 @@
     "h": 591,
     "origSizeKb": "84.4",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "message-flower.png",
@@ -2388,7 +2853,9 @@
     "h": 273,
     "origSizeKb": "68.0",
     "newSizeKb": "144.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "message-frame.png",
@@ -2398,8 +2865,10 @@
     "w": 974,
     "h": 1652,
     "origSizeKb": "16.5",
-    "newSizeKb": "2.9",
-    "isMono": true
+    "newSizeKb": "18.0",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "message-left.png",
@@ -2410,7 +2879,9 @@
     "h": 737,
     "origSizeKb": "68.9",
     "newSizeKb": "76.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "message-right.png",
@@ -2421,7 +2892,9 @@
     "h": 737,
     "origSizeKb": "68.6",
     "newSizeKb": "83.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "ornament-1.svg",
@@ -2429,7 +2902,10 @@
     "type": "existing-svg",
     "category": "Vector Asli",
     "sizeKb": "0.5",
-    "isMono": true
+    "isMono": true,
+    "newSizeKb": "0.5",
+    "pathCount": 1,
+    "isV4Elevated": false
   },
   {
     "file": "paper-1.png",
@@ -2440,7 +2916,9 @@
     "h": 296,
     "origSizeKb": "208.4",
     "newSizeKb": "12.6",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "paper-story.png",
@@ -2451,7 +2929,9 @@
     "h": 979,
     "origSizeKb": "228.3",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "paper.png",
@@ -2462,7 +2942,9 @@
     "h": 688,
     "origSizeKb": "276.3",
     "newSizeKb": "571.9",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "particle.png",
@@ -2473,7 +2955,9 @@
     "h": 134,
     "origSizeKb": "8.0",
     "newSizeKb": "31.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "particle3.png",
@@ -2484,7 +2968,9 @@
     "h": 41,
     "origSizeKb": "1.8",
     "newSizeKb": "0.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "rips-1.png",
@@ -2495,7 +2981,9 @@
     "h": 150,
     "origSizeKb": "12.9",
     "newSizeKb": "166.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "rips-2.png",
@@ -2506,7 +2994,9 @@
     "h": 166,
     "origSizeKb": "14.2",
     "newSizeKb": "121.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "rsvp-bg-1.png",
@@ -2517,7 +3007,9 @@
     "h": 1883,
     "origSizeKb": "104.9",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "rsvp-bg-2.png",
@@ -2528,7 +3020,9 @@
     "h": 948,
     "origSizeKb": "92.0",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "rsvp-bg-3.png",
@@ -2539,7 +3033,9 @@
     "h": 272,
     "origSizeKb": "24.4",
     "newSizeKb": "115.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "rsvp-bg-4.png",
@@ -2550,7 +3046,9 @@
     "h": 264,
     "origSizeKb": "13.7",
     "newSizeKb": "200.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "rsvp-bg.png",
@@ -2561,7 +3059,9 @@
     "h": 1007,
     "origSizeKb": "118.3",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "rsvp-flower-3.png",
@@ -2571,8 +3071,10 @@
     "w": 253,
     "h": 354,
     "origSizeKb": "26.4",
-    "newSizeKb": "63.3",
-    "isMono": false
+    "newSizeKb": "420.7",
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "rsvp-left.png",
@@ -2583,7 +3085,9 @@
     "h": 303,
     "origSizeKb": "8.8",
     "newSizeKb": "33.6",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "rsvp-message.png",
@@ -2594,7 +3098,9 @@
     "h": 919,
     "origSizeKb": "139.8",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "rsvp-right.png",
@@ -2605,7 +3111,9 @@
     "h": 366,
     "origSizeKb": "14.4",
     "newSizeKb": "32.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "sidebar-2.png",
@@ -2616,7 +3124,9 @@
     "h": 470,
     "origSizeKb": "10.7",
     "newSizeKb": "7.5",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "sidebar-5.png",
@@ -2627,7 +3137,9 @@
     "h": 2102,
     "origSizeKb": "1025.0",
     "newSizeKb": "3788.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "splash1.png",
@@ -2638,7 +3150,9 @@
     "h": 1028,
     "origSizeKb": "17.5",
     "newSizeKb": "51.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "splash2.png",
@@ -2649,7 +3163,9 @@
     "h": 1028,
     "origSizeKb": "14.8",
     "newSizeKb": "67.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "stamp-1.png",
@@ -2660,7 +3176,9 @@
     "h": 191,
     "origSizeKb": "7.8",
     "newSizeKb": "16.3",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "stamp-2.png",
@@ -2671,7 +3189,9 @@
     "h": 191,
     "origSizeKb": "5.2",
     "newSizeKb": "9.8",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "story-bg-1.png",
@@ -2682,7 +3202,9 @@
     "h": 620,
     "origSizeKb": "67.0",
     "newSizeKb": "437.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-bg-2.png",
@@ -2693,7 +3215,9 @@
     "h": 259,
     "origSizeKb": "15.8",
     "newSizeKb": "178.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-bg-3.png",
@@ -2704,7 +3228,9 @@
     "h": 97,
     "origSizeKb": "5.1",
     "newSizeKb": "36.7",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "story-bg-4.png",
@@ -2715,7 +3241,9 @@
     "h": 97,
     "origSizeKb": "5.2",
     "newSizeKb": "37.9",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "story-bg-5.png",
@@ -2726,7 +3254,9 @@
     "h": 97,
     "origSizeKb": "4.0",
     "newSizeKb": "26.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "story-bg.png",
@@ -2737,7 +3267,9 @@
     "h": 639,
     "origSizeKb": "285.8",
     "newSizeKb": "0.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 0,
+    "isV4Elevated": false
   },
   {
     "file": "story-bottom-flower-1.png",
@@ -2748,7 +3280,9 @@
     "h": 359,
     "origSizeKb": "87.2",
     "newSizeKb": "269.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 4,
+    "isV4Elevated": true
   },
   {
     "file": "story-bottom-flower-2.png",
@@ -2759,7 +3293,9 @@
     "h": 359,
     "origSizeKb": "12.3",
     "newSizeKb": "273.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "story-bottom.svg",
@@ -2770,7 +3306,9 @@
     "h": 1000,
     "origSizeKb": "135.2",
     "newSizeKb": "560.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-center-bg.png",
@@ -2780,8 +3318,10 @@
     "w": 249,
     "h": 773,
     "origSizeKb": "166.6",
-    "newSizeKb": "0.1",
-    "isMono": false
+    "newSizeKb": "604.6",
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-center-flower.png",
@@ -2792,7 +3332,9 @@
     "h": 359,
     "origSizeKb": "78.0",
     "newSizeKb": "228.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 4,
+    "isV4Elevated": true
   },
   {
     "file": "story-flower-1.png",
@@ -2803,7 +3345,9 @@
     "h": 531,
     "origSizeKb": "106.2",
     "newSizeKb": "192.8",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "story-flower-2.png",
@@ -2814,7 +3358,9 @@
     "h": 229,
     "origSizeKb": "43.7",
     "newSizeKb": "82.0",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "story-flower-3.png",
@@ -2824,8 +3370,10 @@
     "w": 294,
     "h": 308,
     "origSizeKb": "50.2",
-    "newSizeKb": "45.3",
-    "isMono": false
+    "newSizeKb": "140.0",
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "story-flower-4.png",
@@ -2836,7 +3384,9 @@
     "h": 308,
     "origSizeKb": "50.0",
     "newSizeKb": "117.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-flower.png",
@@ -2847,7 +3397,9 @@
     "h": 229,
     "origSizeKb": "14.5",
     "newSizeKb": "53.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-frame.png",
@@ -2857,8 +3409,10 @@
     "w": 600,
     "h": 587,
     "origSizeKb": "83.8",
-    "newSizeKb": "17.4",
-    "isMono": true
+    "newSizeKb": "132.1",
+    "isMono": true,
+    "pathCount": 2,
+    "isV4Elevated": true
   },
   {
     "file": "story-left.png",
@@ -2868,8 +3422,10 @@
     "w": 93,
     "h": 177,
     "origSizeKb": "6.2",
-    "newSizeKb": "24.4",
-    "isMono": false
+    "newSizeKb": "542.3",
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-left.svg",
@@ -2880,7 +3436,9 @@
     "h": 1000,
     "origSizeKb": "135.2",
     "newSizeKb": "542.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-right.png",
@@ -2890,8 +3448,10 @@
     "w": 96,
     "h": 176,
     "origSizeKb": "6.6",
-    "newSizeKb": "40.1",
-    "isMono": false
+    "newSizeKb": "557.4",
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-right.svg",
@@ -2902,7 +3462,9 @@
     "h": 1000,
     "origSizeKb": "135.2",
     "newSizeKb": "557.4",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story-stamp.png",
@@ -2913,7 +3475,9 @@
     "h": 162,
     "origSizeKb": "9.9",
     "newSizeKb": "30.8",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "story-top-bg.png",
@@ -2924,7 +3488,9 @@
     "h": 153,
     "origSizeKb": "40.5",
     "newSizeKb": "157.1",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "story.png",
@@ -2935,7 +3501,9 @@
     "h": 234,
     "origSizeKb": "20.4",
     "newSizeKb": "82.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isV4Elevated": true
   },
   {
     "file": "story_bg.png",
@@ -2946,7 +3514,9 @@
     "h": 304,
     "origSizeKb": "188.0",
     "newSizeKb": "432.2",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "story_flower_item.png",
@@ -2957,7 +3527,9 @@
     "h": 214,
     "origSizeKb": "42.7",
     "newSizeKb": "94.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "title-bg-2.png",
@@ -2968,7 +3540,9 @@
     "h": 270,
     "origSizeKb": "55.9",
     "newSizeKb": "1127.3",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 7,
+    "isV4Elevated": true
   },
   {
     "file": "title-bg.png",
@@ -2979,7 +3553,9 @@
     "h": 116,
     "origSizeKb": "22.9",
     "newSizeKb": "201.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 6,
+    "isV4Elevated": true
   },
   {
     "file": "vector-2.png",
@@ -2990,7 +3566,10 @@
     "h": 96,
     "origSizeKb": "4.2",
     "newSizeKb": "16.5",
-    "isMono": false
+    "isMono": false,
+    "pathCount": 5,
+    "isWhitelisted": true,
+    "isV4Elevated": true
   },
   {
     "file": "wave-2.png",
@@ -3001,7 +3580,9 @@
     "h": 82,
     "origSizeKb": "4.4",
     "newSizeKb": "13.4",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "wave-3.png",
@@ -3012,7 +3593,9 @@
     "h": 82,
     "origSizeKb": "5.6",
     "newSizeKb": "19.8",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   },
   {
     "file": "wave.png",
@@ -3023,6 +3606,8 @@
     "h": 82,
     "origSizeKb": "3.3",
     "newSizeKb": "10.6",
-    "isMono": true
+    "isMono": true,
+    "pathCount": 1,
+    "isV4Elevated": true
   }
 ]
