@@ -1,8 +1,11 @@
+// src/components/templates/engines/RusticEngine.tsx
 "use client";
 
 import React, { useState } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { FloatingPetalsCanvas } from "@/components/invitation/canvas/FloatingPetalsCanvas";
+import { ThemedAssetOrnament } from "@/components/invitation/ornaments";
+import { getThemeAssets } from "@/lib/templates/themeAssetRegistry";
 import { MapPin, Stamp } from "lucide-react";
 import {
   CoupleSectionDispatcher,
@@ -41,6 +44,9 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
 
   const activeSession = sessions[selectedSession] || sessions.s1;
 
+  // Curated pure vector SVG assets for this Rustic theme
+  const assetBundle = getThemeAssets(theme?.id, "rustic");
+
   return (
     <div
       className="relative w-full min-h-screen font-serif overflow-x-hidden selection:bg-amber-800 selection:text-amber-100"
@@ -52,13 +58,48 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
       {/* 1. Falling Dried Leaves / Pampas Canvas */}
       <FloatingPetalsCanvas className="pointer-events-none opacity-40 z-10" />
 
+      {/* Subtle Kraft Paper Texture Background */}
+      {assetBundle.backgroundGradient && (
+        <div
+          className="absolute inset-0 pointer-events-none opacity-25 bg-cover bg-center"
+          style={{ backgroundImage: `url(${assetBundle.backgroundGradient})` }}
+        />
+      )}
+
       {/* ===================== SECTION 1: BESPOKE RUSTIC HERO (#hero) ===================== */}
       <section
         id="hero"
-        className="relative min-h-[92vh] flex flex-col items-center justify-center p-6 text-center space-y-6 pt-12"
+        className="relative min-h-[92vh] flex flex-col items-center justify-center p-6 text-center space-y-5 pt-12 z-10"
       >
+        {/* Corner Accents */}
+        {assetBundle.cornerFiligree && (
+          <>
+            <ThemedAssetOrnament
+              src={assetBundle.cornerFiligree}
+              className="absolute top-4 left-4 w-12 h-12 opacity-60 pointer-events-none"
+              alt="Corner Left"
+            />
+            <ThemedAssetOrnament
+              src={assetBundle.cornerFiligree}
+              flipHorizontal
+              className="absolute top-4 right-4 w-12 h-12 opacity-60 pointer-events-none"
+              alt="Corner Right"
+            />
+          </>
+        )}
+
+        {/* Hero Centerpiece: Dry Terracotta / Sage Bouquet */}
+        <div className="w-full flex justify-center my-1">
+          <ThemedAssetOrnament
+            src={assetBundle.heroCenterpiece}
+            priority
+            className="w-40 sm:w-52 h-auto filter drop-shadow-sm"
+            alt="Rustic Bouquet Centerpiece"
+          />
+        </div>
+
         {/* Postal Stamp Cancellation Mark */}
-        <div className="relative inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-amber-800/40 rounded-xl text-amber-900">
+        <div className="relative inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-amber-800/40 rounded-xl text-amber-900 bg-amber-50/50">
           <Stamp className="w-5 h-5 text-amber-800" />
           <span className="text-xs font-serif font-bold tracking-[0.2em] uppercase">
             POSTAGE PAID • KEBUMEN 2026
@@ -75,6 +116,15 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
           <p className="text-xs sm:text-sm text-amber-800/80 italic font-serif">
             &ldquo;In all the world, there is no heart for me like yours.&rdquo;
           </p>
+        </div>
+
+        {/* Thematic Rustic Section Divider */}
+        <div className="w-full flex justify-center my-1">
+          <ThemedAssetOrnament
+            src={assetBundle.sectionDivider}
+            className="w-36 sm:w-48 h-auto opacity-75"
+            alt="Rustic Divider"
+          />
         </div>
 
         {/* Vintage Postcard Styled Hero Couple Photo */}
@@ -99,6 +149,15 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
       {/* 2. Mempelai */}
       <CoupleSectionDispatcher bride={bride} groom={groom} theme={theme} />
 
+      {/* Thematic Divider */}
+      <div className="w-full flex justify-center py-4">
+        <ThemedAssetOrnament
+          src={assetBundle.sectionDivider}
+          className="w-36 sm:w-48 h-auto opacity-60"
+          alt="Section Divider"
+        />
+      </div>
+
       {/* 3. Jadwal Acara */}
       <ScheduleSectionDispatcher
         eventDate={eventDate}
@@ -115,6 +174,15 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
         googleMapsUrl={googleMapsUrl}
         theme={theme}
       />
+
+      {/* Thematic Divider */}
+      <div className="w-full flex justify-center py-4">
+        <ThemedAssetOrnament
+          src={assetBundle.sectionDivider}
+          className="w-36 sm:w-48 h-auto opacity-60"
+          alt="Section Divider"
+        />
+      </div>
 
       {/* 5. Sweet Memories / Kisah Cinta */}
       <StoriesSectionDispatcher stories={storyTimeline} theme={theme} />
@@ -133,6 +201,17 @@ export const RusticEngine: React.FC<DedicatedTemplateProps> = ({
         initialWishes={initialWishes}
         theme={theme}
       />
+
+      {/* Vintage Wax Stamp Outro */}
+      {assetBundle.closingSeal && (
+        <div className="w-full flex justify-center py-6">
+          <ThemedAssetOrnament
+            src={assetBundle.closingSeal}
+            className="w-18 h-18 sm:w-20 sm:h-20 filter drop-shadow-md"
+            alt="Rustic Seal"
+          />
+        </div>
+      )}
 
       {/* 9. Ucapan Penutup */}
       <ClosingSectionDispatcher

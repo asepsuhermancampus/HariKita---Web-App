@@ -1,8 +1,11 @@
+// src/components/templates/engines/CuteIllustratedEngine.tsx
 "use client";
 
 import React, { useState } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { ConfettiCanvas } from "@/components/invitation/canvas/ConfettiCanvas";
+import { ThemedAssetOrnament } from "@/components/invitation/ornaments";
+import { getThemeAssets } from "@/lib/templates/themeAssetRegistry";
 import { Heart, MapPin } from "lucide-react";
 import { CuteStorybookMascotSvg } from "@/components/invitation/svg";
 import {
@@ -41,6 +44,9 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
     year: "numeric",
   });
 
+  // Curated pure vector SVG assets for this Cute Illustrated theme
+  const assetBundle = getThemeAssets(theme?.id, "cute-illustrated");
+
   return (
     <div
       className="relative w-full min-h-screen text-slate-800 font-sans overflow-x-hidden selection:bg-pink-300"
@@ -53,17 +59,52 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
       {/* 1. Cheerful Party Confetti Canvas */}
       <ConfettiCanvas className="pointer-events-none opacity-40 z-10" />
 
+      {/* Subtle Pastel Background Overlay */}
+      {assetBundle.backgroundGradient && (
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20 bg-cover bg-center"
+          style={{ backgroundImage: `url(${assetBundle.backgroundGradient})` }}
+        />
+      )}
+
       {/* ===================== SECTION 1: CUTE ILLUSTRATED HERO (#hero) ===================== */}
       <section
         id="hero"
-        className="relative min-h-[92vh] flex flex-col items-center justify-center p-6 text-center space-y-6 pt-12"
+        className="relative min-h-[92vh] flex flex-col items-center justify-center p-6 text-center space-y-5 pt-12 z-10"
       >
+        {/* Corner Accents */}
+        {assetBundle.cornerFiligree && (
+          <>
+            <ThemedAssetOrnament
+              src={assetBundle.cornerFiligree}
+              className="absolute top-4 left-4 w-12 h-12 opacity-60 pointer-events-none"
+              alt="Corner Left"
+            />
+            <ThemedAssetOrnament
+              src={assetBundle.cornerFiligree}
+              flipHorizontal
+              className="absolute top-4 right-4 w-12 h-12 opacity-60 pointer-events-none"
+              alt="Corner Right"
+            />
+          </>
+        )}
+
+        {/* Hero Centerpiece: Pastel Illustrated Bouquet */}
+        <div className="w-full flex justify-center my-1">
+          <ThemedAssetOrnament
+            src={assetBundle.heroCenterpiece}
+            priority
+            className="w-36 sm:w-48 h-auto filter drop-shadow-sm"
+            alt="Cute Illustrated Centerpiece"
+          />
+        </div>
+
         {/* Storybook Mascot SVG + Cute Mascot Badge */}
         <div className="relative inline-flex items-center justify-center p-4 bg-white rounded-full shadow-xl border-4 border-pink-200">
-          <CuteStorybookMascotSvg className="w-14 h-14 text-pink-500" />
+          <CuteStorybookMascotSvg className="w-12 h-12 text-pink-500" />
           <div className="absolute -bottom-2 -right-2 flex items-center -space-x-2 text-2xl">
-            <span className="p-2 bg-pink-100 rounded-full border-2 border-pink-300 shadow-sm">👰🏻‍♀️</span>
-            <span className="p-2 bg-blue-100 rounded-full border-2 border-blue-300 shadow-sm">🤵🏻‍♂️</span>
+            <span className="p-1.5 bg-pink-100 rounded-full border-2 border-pink-300 shadow-sm">👰🏻‍♀️</span>
+            <span className="p-1.5 bg-blue-100 rounded-full border-2 border-blue-300 shadow-sm">🤵🏻‍♂️</span>
           </div>
         </div>
 
@@ -78,6 +119,15 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
           <p className="text-xs text-slate-500 font-medium">
             Yuk ramaikan hari bahagia kami berdua di Kebumen! 🎉
           </p>
+        </div>
+
+        {/* Thematic Section Divider */}
+        <div className="w-full flex justify-center my-1">
+          <ThemedAssetOrnament
+            src={assetBundle.sectionDivider}
+            className="w-36 sm:w-48 h-auto opacity-75"
+            alt="Cute Illustrated Divider"
+          />
         </div>
 
         {/* Chubby Pill Prewed Photo Card */}
@@ -102,6 +152,15 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
       {/* 2. Mempelai */}
       <CoupleSectionDispatcher bride={bride} groom={groom} theme={theme} />
 
+      {/* Thematic Divider */}
+      <div className="w-full flex justify-center py-4">
+        <ThemedAssetOrnament
+          src={assetBundle.sectionDivider}
+          className="w-36 sm:w-48 h-auto opacity-60"
+          alt="Section Divider"
+        />
+      </div>
+
       {/* 3. Jadwal Acara */}
       <ScheduleSectionDispatcher
         eventDate={eventDate}
@@ -118,6 +177,15 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
         googleMapsUrl={googleMapsUrl}
         theme={theme}
       />
+
+      {/* Thematic Divider */}
+      <div className="w-full flex justify-center py-4">
+        <ThemedAssetOrnament
+          src={assetBundle.sectionDivider}
+          className="w-36 sm:w-48 h-auto opacity-60"
+          alt="Section Divider"
+        />
+      </div>
 
       {/* 5. Sweet Memories / Kisah Cinta */}
       <StoriesSectionDispatcher stories={storyTimeline} theme={theme} />
@@ -136,6 +204,17 @@ export const CuteIllustratedEngine: React.FC<DedicatedTemplateProps> = ({
         initialWishes={initialWishes}
         theme={theme}
       />
+
+      {/* Cute Seal Outro */}
+      {assetBundle.closingSeal && (
+        <div className="w-full flex justify-center py-6">
+          <ThemedAssetOrnament
+            src={assetBundle.closingSeal}
+            className="w-16 h-16 sm:w-18 sm:h-18 filter drop-shadow-sm"
+            alt="Closing Seal"
+          />
+        </div>
+      )}
 
       {/* 9. Ucapan Penutup */}
       <ClosingSectionDispatcher
