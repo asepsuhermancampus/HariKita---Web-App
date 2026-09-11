@@ -1,3 +1,4 @@
+// src/components/pwa/PwaRegister.tsx
 "use client";
 
 import { useEffect } from "react";
@@ -5,7 +6,25 @@ import { useEffect } from "react";
 export function PwaRegister() {
   useEffect(() => {
     if (typeof window !== "undefined" && "serviceWorker" in navigator) {
-      // Register service worker after window load to not impact initial page performance
+      // In development mode, unregister any stale Service Worker and clear cache
+      // to prevent localhost chunk hijacking and unstyled CSS issues.
+      if (process.env.NODE_ENV !== "production") {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for (const registration of registrations) {
+            registration.unregister();
+          }
+        });
+        if ("caches" in window) {
+          caches.keys().then((names) => {
+            for (const name of names) {
+              caches.delete(name);
+            }
+          });
+        }
+        return;
+      }
+
+      // In production, register the Service Worker safely
       const handleLoad = () => {
         navigator.serviceWorker
           .register("/sw.js")
