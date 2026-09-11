@@ -3,7 +3,7 @@
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#e0d4c3"/>
       <stop offset="50%" stop-color="#e3d7c7"/>
-      <stop offset="100%" stop-color="#eadfcf"/>
+      <stop offset="100%" stop-color="#dfd2c1"/>
     </linearGradient>
   </defs>
   <rect width="414" height="966" fill="url(#bgGrad)"/>

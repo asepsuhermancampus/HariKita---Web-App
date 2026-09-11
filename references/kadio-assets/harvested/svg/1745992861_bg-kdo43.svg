@@ -2,8 +2,8 @@
   <defs>
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#faf5ea"/>
-      <stop offset="50%" stop-color="#fbfbfb"/>
-      <stop offset="100%" stop-color="#f9f7ef"/>
+      <stop offset="50%" stop-color="#faf8f4"/>
+      <stop offset="100%" stop-color="#f9f5f3"/>
     </linearGradient>
   </defs>
   <rect width="600" height="900" fill="url(#bgGrad)"/>

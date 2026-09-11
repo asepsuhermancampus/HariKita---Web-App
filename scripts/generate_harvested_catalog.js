@@ -87,7 +87,7 @@ function generateCatalog() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Master Catalog Aset Baru Kadio.id (277 Aset Hasil Deep Crawl) | HariKita</title>
+  <title>Master Catalog Aset Baru Kadio.id (${records.length} Aset Hasil Deep Crawl) | HariKita</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
