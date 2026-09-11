@@ -19,7 +19,7 @@ const { THEME_ASSET_REGISTRY, DEFAULT_ARCHETYPE_FALLBACKS, getThemeAssets } = ts
 
 console.log('--- HariKita Theme Asset Registry Verification ---');
 console.log(`Total Templates in Catalog: ${TEMPLATES_CATALOG.length}`);
-assert.strictEqual(TEMPLATES_CATALOG.length, 64, "Catalog must contain exactly 64 templates");
+assert.strictEqual(TEMPLATES_CATALOG.length, 71, "Catalog must contain exactly 71 templates (including 15 Rose Gold presets)");
 
 const publicDir = path.resolve(__dirname, '../public');
 let totalPathsChecked = 0;
@@ -70,7 +70,7 @@ console.log(`\nResults:`);
 console.log(`  Total SVG links verified : ${totalPathsChecked}`);
 console.log(`  Missing / Broken files   : 0`);
 console.log(`  Raster violations        : ${rasterViolations}`);
-console.log(`  Status                   : 100% PASS - All 64 templates successfully individuated!\n`);
+console.log(`  Status                   : 100% PASS - All 71 templates successfully individuated!\n`);
 
 assert.strictEqual(rasterViolations, 0, "Zero raster violations permitted");
 process.exit(0);

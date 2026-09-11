@@ -355,8 +355,16 @@ export const THEME_ASSET_REGISTRY: Record<string, ThemeAssetBundle> = {
   },
 
   // ==========================================
-  // 5. ROSE GOLD & ROYAL FOIL (8 Presets)
+  // 5. ROSE GOLD & ROYAL FOIL (15 Presets)
   // ==========================================
+  "rose-gold": {
+    heroCenterpiece: "/harikita-assets/floral/roses/rose-ivory-english-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-ornament-floral-01.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-20.svg",
+    cardBorder: "/harikita-assets/frames/photo-frames/frame-photo-card-gold-01.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-blush-01.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-cover-01.svg",
+  },
   "aurum-velvet": {
     heroCenterpiece: "/harikita-assets/floral/roses/rose-ivory-english-01.svg",
     cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-ornament-floral-01.svg",
@@ -389,6 +397,14 @@ export const THEME_ASSET_REGISTRY: Record<string, ThemeAssetBundle> = {
     backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-blush-01.svg",
     closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-story-01.svg",
   },
+  "golden-seafoam": {
+    heroCenterpiece: "/harikita-assets/floral/centerpieces/centerpiece-bouquet-sage-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-teal-top.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-04.svg",
+    cardBorder: "/harikita-assets/frames/full-cards/frame-full-card-gold-05.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-champagne-03.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-cover-01.svg",
+  },
   "emerald-seafoam": {
     heroCenterpiece: "/harikita-assets/floral/centerpieces/centerpiece-bouquet-sage-01.svg",
     cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-teal-top.svg",
@@ -405,6 +421,22 @@ export const THEME_ASSET_REGISTRY: Record<string, ThemeAssetBundle> = {
     backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-blush-01.svg",
     closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-01.svg",
   },
+  "blue-sapphire": {
+    heroCenterpiece: "/harikita-assets/floral/roses/rose-lilac-lavender-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-iceblue-10.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-06.svg",
+    cardBorder: "/harikita-assets/frames/photo-frames/frame-photo-card-gold-03.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-blush-01.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-01.svg",
+  },
+  "amber-grace": {
+    heroCenterpiece: "/harikita-assets/floral/centerpieces/centerpiece-bouquet-terracotta-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-iceblue-01.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-07.svg",
+    cardBorder: "/harikita-assets/frames/full-cards/frame-full-card-gold-06.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/textures/bg-paper-texture-champagne-01.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-02.svg",
+  },
   "copper-canyon": {
     heroCenterpiece: "/harikita-assets/floral/centerpieces/centerpiece-bouquet-terracotta-01.svg",
     cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-iceblue-01.svg",
@@ -413,6 +445,14 @@ export const THEME_ASSET_REGISTRY: Record<string, ThemeAssetBundle> = {
     backgroundGradient: "/harikita-assets/backgrounds/textures/bg-paper-texture-champagne-01.svg",
     closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-02.svg",
   },
+  "gilded-cameo": {
+    heroCenterpiece: "/harikita-assets/floral/headers-garlands/garland-header-blush-07.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-ornament-floral-02.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-08.svg",
+    cardBorder: "/harikita-assets/frames/full-cards/frame-full-card-gold-07.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-champagne-04.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-story-01.svg",
+  },
   "midnight-gilded": {
     heroCenterpiece: "/harikita-assets/floral/headers-garlands/garland-header-blush-07.svg",
     cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-ornament-floral-02.svg",
@@ -420,6 +460,62 @@ export const THEME_ASSET_REGISTRY: Record<string, ThemeAssetBundle> = {
     cardBorder: "/harikita-assets/frames/full-cards/frame-full-card-gold-07.svg",
     backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-champagne-04.svg",
     closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-story-01.svg",
+  },
+  "blush-botanique": {
+    heroCenterpiece: "/harikita-assets/floral/roses/rose-blush-mini-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-ornament-floral-01.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-09.svg",
+    cardBorder: "/harikita-assets/frames/photo-frames/frame-photo-card-gold-01.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-blush-01.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-cover-01.svg",
+  },
+  "champagne-spark": {
+    heroCenterpiece: "/harikita-assets/floral/roses/rose-champagne-peach-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-iceblue-02.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-10.svg",
+    cardBorder: "/harikita-assets/frames/full-cards/frame-full-card-gold-01.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-champagne-02.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-01.svg",
+  },
+  "pearl-radiance": {
+    heroCenterpiece: "/harikita-assets/floral/roses/rose-olive-gold-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-line-01.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-11.svg",
+    cardBorder: "/harikita-assets/frames/photo-frames/frame-photo-card-gold-02.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-champagne-03.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-story-01.svg",
+  },
+  "vintage-rosewood": {
+    heroCenterpiece: "/harikita-assets/floral/roses/rose-rustic-blossom-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-iceblue-03.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-12.svg",
+    cardBorder: "/harikita-assets/frames/full-cards/frame-full-card-gold-02.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/textures/bg-paper-texture-champagne-01.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-02.svg",
+  },
+  "crimson-metallique": {
+    heroCenterpiece: "/harikita-assets/floral/roses/rose-terracotta-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-iceblue-09.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-13.svg",
+    cardBorder: "/harikita-assets/frames/photo-frames/frame-photo-card-gold-03.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-blush-01.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-cover-01.svg",
+  },
+  "mauve-majesty": {
+    heroCenterpiece: "/harikita-assets/floral/roses/rose-dusty-blue-02.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-iceblue-10.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-14.svg",
+    cardBorder: "/harikita-assets/frames/full-cards/frame-full-card-gold-03.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-champagne-04.svg",
+    closingSeal: "/harikita-assets/decorative/stamps-wax/stamp-ornament-01.svg",
+  },
+  "starlight-aurum": {
+    heroCenterpiece: "/harikita-assets/decorative/stars-sparkles/star-sparkle-gold-01.svg",
+    cornerFiligree: "/harikita-assets/frames/filigree-corners/filigree-corner-iceblue-top-left.svg",
+    sectionDivider: "/harikita-assets/frames/dividers-horizontal/divider-flourish-gold-18.svg",
+    cardBorder: "/harikita-assets/frames/full-cards/frame-full-card-gold-04.svg",
+    backgroundGradient: "/harikita-assets/backgrounds/gradients/bg-card-gradient-blue-01.svg",
+    closingSeal: "/harikita-assets/decorative/stars-sparkles/sparkle-particle-01.svg",
   },
 
   // ==========================================

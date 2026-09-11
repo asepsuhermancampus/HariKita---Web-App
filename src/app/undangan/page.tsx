@@ -24,15 +24,31 @@ export default function UndanganCatalogPage() {
     "Cute",
   ];
 
+  const normalize = (str: string) => str.toLowerCase().replace(/[-\s]/g, "");
+
   const filteredThemes = ALL_INVITATION_TEMPLATES.filter((theme) => {
+    const selNorm = normalize(selectedCategory);
+    const catNorm = normalize(theme.category || "");
+    const archNorm = normalize(theme.archetypeId || "");
+
     const matchesCategory =
       selectedCategory === "All" ||
-      theme.category.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-      theme.archetypeId.toLowerCase().includes(selectedCategory.toLowerCase());
+      catNorm.includes(selNorm) ||
+      archNorm.includes(selNorm) ||
+      (selNorm === "rosegold" && (archNorm.includes("rose") || archNorm.includes("royal") || catNorm.includes("royal") || catNorm.includes("gold"))) ||
+      (selNorm === "cute" && (archNorm.includes("cute") || archNorm.includes("animated") || archNorm.includes("special"))) ||
+      (selNorm === "islamic" && (archNorm.includes("islamic") || archNorm.includes("syari"))) ||
+      (selNorm === "javanese" && (archNorm.includes("javanese") || archNorm.includes("traditional") || archNorm.includes("cultural"))) ||
+      (selNorm === "botanical" && (archNorm.includes("botanical") || archNorm.includes("floral")));
+
+    const queryNorm = searchQuery.toLowerCase().trim();
     const matchesSearch =
-      theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      theme.sourceOrigin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      theme.category.toLowerCase().includes(searchQuery.toLowerCase());
+      !queryNorm ||
+      theme.title.toLowerCase().includes(queryNorm) ||
+      theme.sourceOrigin.toLowerCase().includes(queryNorm) ||
+      theme.category.toLowerCase().includes(queryNorm) ||
+      theme.archetypeId.toLowerCase().includes(queryNorm);
+
     return matchesCategory && matchesSearch;
   });
 
@@ -60,9 +76,9 @@ export default function UndanganCatalogPage() {
             arch.id.includes("traditional") || arch.id.includes("javanese") ? "Javanese" :
             arch.id.includes("islamic") || arch.id.includes("syari") ? "Islamic" :
             arch.id.includes("minimalist") ? "Minimalist" :
-            arch.id.includes("fullscreen") || arch.id.includes("rose") ? "Rose Gold" :
-            arch.id.includes("animated") || arch.id.includes("motion") ? "Rustic" :
-            arch.id.includes("royal") || arch.id.includes("celestial") ? "Celestial" : "Cute";
+            arch.id.includes("royal") || arch.id.includes("rose") || arch.id.includes("fullscreen") ? "Rose Gold" :
+            arch.id.includes("rustic") || arch.id.includes("pampas") ? "Rustic" :
+            arch.id.includes("celestial") ? "Celestial" : "Cute";
 
           const isSelected = selectedCategory.toLowerCase() === categoryName.toLowerCase();
 
