@@ -1,9 +1,11 @@
+// src/components/templates/engines/RoseGoldEngine.tsx
 "use client";
 
 import React, { useState } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { GoldenDustCanvas } from "@/components/invitation/canvas/GoldenDustCanvas";
-import { OrnamentGoldFoilFrame } from "@/components/invitation/ornaments/OrnamentGoldFoilFrame";
+import { OrnamentGoldFoilFrame, ThemedAssetOrnament } from "@/components/invitation/ornaments";
+import { getThemeAssets } from "@/lib/templates/themeAssetRegistry";
 import { MapPin, Crown } from "lucide-react";
 import {
   CoupleSectionDispatcher,
@@ -43,6 +45,9 @@ export const RoseGoldEngine: React.FC<DedicatedTemplateProps> = ({
 
   const activeSession = sessions[selectedSession] || sessions.s1;
 
+  // Curated pure vector SVG assets for this Rose Gold theme
+  const assetBundle = getThemeAssets(theme?.id, "rose-gold");
+
   return (
     <div
       className="relative w-full min-h-screen font-serif overflow-x-hidden selection:bg-rose-900 selection:text-rose-100"
@@ -54,13 +59,48 @@ export const RoseGoldEngine: React.FC<DedicatedTemplateProps> = ({
       {/* 1. Rose Gold Dust Canvas */}
       <GoldenDustCanvas className="pointer-events-none opacity-60 z-10" />
 
+      {/* Subtle Background Pattern Texture */}
+      {assetBundle.backgroundGradient && (
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20 bg-cover bg-center"
+          style={{ backgroundImage: `url(${assetBundle.backgroundGradient})` }}
+        />
+      )}
+
       {/* ===================== SECTION 1: BESPOKE HERO (#hero) ===================== */}
       <section
         id="hero"
-        className="relative min-h-[95vh] flex flex-col items-center justify-center p-6 text-center space-y-6 pt-12"
+        className="relative min-h-[95vh] flex flex-col items-center justify-center p-6 text-center space-y-5 pt-12 z-10"
       >
+        {/* Corner Filigrees */}
+        {assetBundle.cornerFiligree && (
+          <>
+            <ThemedAssetOrnament
+              src={assetBundle.cornerFiligree}
+              className="absolute top-4 left-4 w-14 h-14 sm:w-16 sm:h-16 opacity-75 pointer-events-none"
+              alt="Corner Left"
+            />
+            <ThemedAssetOrnament
+              src={assetBundle.cornerFiligree}
+              flipHorizontal
+              className="absolute top-4 right-4 w-14 h-14 sm:w-16 sm:h-16 opacity-75 pointer-events-none"
+              alt="Corner Right"
+            />
+          </>
+        )}
+
+        {/* Hero Centerpiece: English Rose or Royal Bouquet */}
+        <div className="w-full flex justify-center my-1">
+          <ThemedAssetOrnament
+            src={assetBundle.heroCenterpiece}
+            priority
+            className="w-44 sm:w-56 h-auto filter drop-shadow-md"
+            alt="Hero Rose Centerpiece"
+          />
+        </div>
+
         <div className="relative">
-          <OrnamentGoldFoilFrame color={gildedGold} size={150} className="animate-pulse" />
+          <OrnamentGoldFoilFrame color={gildedGold} size={140} className="animate-pulse" />
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-3xl font-serif font-bold text-amber-200">
               {bride.name.charAt(0)} &amp; {groom.name.charAt(0)}
@@ -79,6 +119,15 @@ export const RoseGoldEngine: React.FC<DedicatedTemplateProps> = ({
           <p className="text-xs text-rose-200/70 font-serif italic">
             &ldquo;Two lives, two hearts, joined together in friendship, united forever in love.&rdquo;
           </p>
+        </div>
+
+        {/* Thematic Section Divider */}
+        <div className="w-full flex justify-center my-2">
+          <ThemedAssetOrnament
+            src={assetBundle.sectionDivider}
+            className="w-40 sm:w-52 h-auto opacity-80"
+            alt="Rose Gold Divider"
+          />
         </div>
 
         {/* Diamond Cut Beveled Couple Photo */}
@@ -103,6 +152,15 @@ export const RoseGoldEngine: React.FC<DedicatedTemplateProps> = ({
       {/* 2. Mempelai */}
       <CoupleSectionDispatcher bride={bride} groom={groom} theme={theme} />
 
+      {/* Thematic Divider */}
+      <div className="w-full flex justify-center py-4">
+        <ThemedAssetOrnament
+          src={assetBundle.sectionDivider}
+          className="w-36 sm:w-48 h-auto opacity-60"
+          alt="Section Divider"
+        />
+      </div>
+
       {/* 3. Jadwal Acara */}
       <ScheduleSectionDispatcher
         eventDate={eventDate}
@@ -119,6 +177,15 @@ export const RoseGoldEngine: React.FC<DedicatedTemplateProps> = ({
         googleMapsUrl={googleMapsUrl}
         theme={theme}
       />
+
+      {/* Thematic Divider */}
+      <div className="w-full flex justify-center py-4">
+        <ThemedAssetOrnament
+          src={assetBundle.sectionDivider}
+          className="w-36 sm:w-48 h-auto opacity-60"
+          alt="Section Divider"
+        />
+      </div>
 
       {/* 5. Sweet Memories / Kisah Cinta */}
       <StoriesSectionDispatcher stories={storyTimeline} theme={theme} />
@@ -137,6 +204,17 @@ export const RoseGoldEngine: React.FC<DedicatedTemplateProps> = ({
         initialWishes={initialWishes}
         theme={theme}
       />
+
+      {/* 3D Wax Seal Outro Stamp */}
+      {assetBundle.closingSeal && (
+        <div className="w-full flex justify-center py-6">
+          <ThemedAssetOrnament
+            src={assetBundle.closingSeal}
+            className="w-20 h-20 filter drop-shadow-xl"
+            alt="3D Wax Seal Outro"
+          />
+        </div>
+      )}
 
       {/* 9. Ucapan Penutup */}
       <ClosingSectionDispatcher
