@@ -21,11 +21,11 @@ function generateCatalog() {
     counts[key] = (counts[key] || 0) + 1;
   });
 
-  const floralCorners = counts['floral/corners'] || 0;
+  const floralRoses = counts['floral/roses'] || 0;
+  const floralMixed = counts['floral/mixed-botanical'] || 0;
   const floralHeaders = counts['floral/headers-garlands'] || 0;
   const floralCascades = counts['floral/side-cascades'] || 0;
   const floralCenterpieces = counts['floral/centerpieces'] || 0;
-  const floralStems = counts['floral/single-stems'] || 0;
 
   const framesCards = counts['frames/full-cards'] || 0;
   const framesFiligree = counts['frames/filigree-corners'] || 0;
@@ -379,8 +379,12 @@ function generateCatalog() {
       <div class="stat-lbl">Total Aset</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" style="color: #fed7aa;">${floralCorners}</div>
-      <div class="stat-lbl">🌸 Sudut L-Shape</div>
+      <div class="stat-num" style="color: #fed7aa;">${floralRoses}</div>
+      <div class="stat-lbl">🌹 Mawar / Roses</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color: #c084fc;">${floralMixed}</div>
+      <div class="stat-lbl">🌸 Bunga Campuran</div>
     </div>
     <div class="stat-card">
       <div class="stat-num" style="color: #fbcfe8;">${floralHeaders}</div>
@@ -406,14 +410,15 @@ function generateCatalog() {
 
   <div class="controls">
     <div class="search-row">
-      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cari nama aset, posisi (contoh: corner, cascade, garland, centerpiece, divider)..." oninput="filterAssets()">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cari nama aset, jenis bunga (contoh: rose, floral, cascade, garland, centerpiece, divider)..." oninput="filterAssets()">
     </div>
 
     <div>
       <div class="filter-group-title">🎯 Filter Posisi &amp; Anatomi Tata Letak:</div>
       <div class="filter-tabs">
         <button class="tab-btn" onclick="setFilter('all', this)">Semua (${manifest.length})</button>
-        <button class="tab-btn" onclick="setFilter('floral/corners', this)">🌸 Sudut L-Shape (${floralCorners})</button>
+        <button class="tab-btn" onclick="setFilter('floral/roses', this)">🌹 Mawar / Roses (${floralRoses})</button>
+        <button class="tab-btn" onclick="setFilter('floral/mixed-botanical', this)">🌸 Bunga Campuran (${floralMixed})</button>
         <button class="tab-btn" onclick="setFilter('floral/headers-garlands', this)">👑 Garlands Atas/Bawah (${floralHeaders})</button>
         <button class="tab-btn" onclick="setFilter('floral/side-cascades', this)">🌿 Samping Ponsel (${floralCascades})</button>
         <button class="tab-btn" onclick="setFilter('floral/centerpieces', this)">💐 Buket Tengah (${floralCenterpieces})</button>
