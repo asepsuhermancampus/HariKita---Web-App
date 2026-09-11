@@ -1,6 +1,6 @@
 # HariKita Assets Taxonomy & Migration Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Establish a permanent, categorized, and semantically named production asset library at `public/harikita-assets/` completely decoupled from `references/`, with 1-to-1 traceability and an interactive visual catalog.
 
@@ -30,7 +30,7 @@
 - Produces: `classifyAsset(filename, svgContent)` -> `{ category, subCategory, descriptor, color }`
 - Produces: `generateSemanticName(classification, index)` -> `string`
 
-- [ ] **Step 1: Write failing unit test for classification rules**
+- [x] **Step 1: Write failing unit test for classification rules**
 
 Test that:
 1. `1754648453_kdo54-bg-3.svg` is classified as `floral/corners`.
@@ -41,12 +41,12 @@ Test that:
 6. `vector-2.svg` is classified as `decorative/stars`.
 7. `gift.svg` or `map.svg` is classified as `icons/events`.
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `node scripts/test_asset_categorization.js`  
 Expected: FAIL ("Cannot find module organize_harikita_assets").
 
-- [ ] **Step 3: Implement `scripts/organize_harikita_assets.js`**
+- [x] **Step 3: Implement `scripts/organize_harikita_assets.js`**
 
 Implement:
 1. Directory structure creator for `public/harikita-assets/{floral,frames,backgrounds,decorative,icons}/*`.
@@ -55,12 +55,12 @@ Implement:
 4. Copy routine from `references/kadio-assets/harvested/svg/` to `public/harikita-assets/`.
 5. Manifest writer emitting `public/harikita-assets/harikita_manifest.json`.
 
-- [ ] **Step 4: Run unit test to verify it passes**
+- [x] **Step 4: Run unit test to verify it passes**
 
 Run: `node scripts/test_asset_categorization.js`  
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add scripts/test_asset_categorization.js scripts/organize_harikita_assets.js
@@ -80,7 +80,7 @@ git commit -m "feat(assets): implement classification and migration engine for h
 - Consumes: `references/kadio-assets/harvested/svg/`, `scripts/whitelist_registry.json`.
 - Produces: Over 280 organized, pure-vector SVG files in `public/harikita-assets/`.
 
-- [ ] **Step 1: Write verification script `scripts/verify_harikita_assets.js`**
+- [x] **Step 1: Write verification script `scripts/verify_harikita_assets.js`**
 
 Check that:
 1. Every file in `public/harikita-assets/` is a valid SVG with no raster artifacts (0 `<image>`, 0 `base64`).
@@ -88,17 +88,17 @@ Check that:
 3. All 9 whitelisted Grade A assets exist and match their locked originals.
 4. Source files in `references/kadio-assets/harvested/svg/` remain intact.
 
-- [ ] **Step 2: Execute migration engine**
+- [x] **Step 2: Execute migration engine**
 
 Run: `node scripts/organize_harikita_assets.js`  
 Expected: Output showing all assets categorized and copied with zero errors.
 
-- [ ] **Step 3: Run verification script**
+- [x] **Step 3: Run verification script**
 
 Run: `node scripts/verify_harikita_assets.js`  
 Expected: PASS with 100% pure vector validation and complete manifest coverage.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add public/harikita-assets/ scripts/verify_harikita_assets.js
@@ -117,7 +117,7 @@ git commit -m "feat(assets): deploy organized harikita-assets library and manife
 - Consumes: `public/harikita-assets/harikita_manifest.json`.
 - Produces: Standalone responsive web catalog at `public/harikita-assets/catalog.html`.
 
-- [ ] **Step 1: Implement `scripts/generate_harikita_catalog.js`**
+- [x] **Step 1: Implement `scripts/generate_harikita_catalog.js`**
 
 Features:
 1. Category tabs (`Semua`, `Floral`, `Frames`, `Backgrounds`, `Decorative`, `Icons`).
@@ -126,16 +126,16 @@ Features:
 4. "Salin Path" (Copy URL) button copying `/harikita-assets/...` for quick developer copy-pasting.
 5. Live Palette Switcher for monochrome assets.
 
-- [ ] **Step 2: Generate catalog**
+- [x] **Step 2: Generate catalog**
 
 Run: `node scripts/generate_harikita_catalog.js`  
 Expected: Generates `public/harikita-assets/catalog.html`.
 
-- [ ] **Step 3: Verify catalog**
+- [x] **Step 3: Verify catalog**
 
 Run automated check ensuring all image links in `catalog.html` point to existing SVGs with 0 broken links.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add scripts/generate_harikita_catalog.js public/harikita-assets/catalog.html
