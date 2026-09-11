@@ -30,6 +30,7 @@ function generateCatalog() {
   const framesCards = counts['frames/full-cards'] || 0;
   const framesFiligree = counts['frames/filigree-corners'] || 0;
   const framesDividers = counts['frames/dividers-horizontal'] || 0;
+  const framesDividersVert = counts['frames/dividers-vertical'] || 0;
   const framesPhoto = counts['frames/photo-frames'] || 0;
 
   const bgGradients = counts['backgrounds/gradients'] || 0;
@@ -417,7 +418,8 @@ function generateCatalog() {
         <button class="tab-btn" onclick="setFilter('floral/centerpieces', this)">💐 Buket Tengah (${floralCenterpieces})</button>
         <button class="tab-btn" onclick="setFilter('floral/single-stems', this)">🌱 Tangkai Tunggal (${floralStems})</button>
         <button class="tab-btn" onclick="setFilter('frames/filigree-corners', this)">✨ Renda Sudut Filigree (${framesFiligree})</button>
-        <button class="tab-btn" onclick="setFilter('frames/dividers-horizontal', this)">📏 Garis Pemisah (${framesDividers})</button>
+        <button class="tab-btn" onclick="setFilter('frames/dividers-horizontal', this)">📏 Garis Pemisah H (${framesDividers})</button>
+        <button class="tab-btn" onclick="setFilter('frames/dividers-vertical', this)">📐 Ornamen Vertikal (${framesDividersVert})</button>
         <button class="tab-btn" onclick="setFilter('frames/full-cards', this)">🖼️ Bingkai 1 Halaman (${framesCards})</button>
         <button class="tab-btn" onclick="setFilter('frames/photo-frames', this)">📷 Bingkai Foto (${framesPhoto})</button>
         <button class="tab-btn" onclick="setFilter('backgrounds/gradients', this)">🎨 Gradasi Latar (${bgGradients})</button>
