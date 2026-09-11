@@ -1,0 +1,336 @@
+{
+  "crawlDate": "2026-09-11T04:17:26.879Z",
+  "sourceCatalog": "https://undangan.awh.co.id/select-theme?type=wedding&theme=lite",
+  "themes": {
+    "lavender-haven": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-lavender-haven?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/splash_screen.png",
+          "savedFile": "ornaments/lavender-haven/splash_screen.png"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/mempelaiwanita.png",
+          "savedFile": "ornaments/lavender-haven/mempelaiwanita.png"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/mempelaipria.png",
+          "savedFile": "ornaments/lavender-haven/mempelaipria.png"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider1.jpg",
+          "savedFile": "ornaments/lavender-haven/default_slider1.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider2.jpg",
+          "savedFile": "ornaments/lavender-haven/default_slider2.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider3.jpg",
+          "savedFile": "ornaments/lavender-haven/default_slider3.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider4.jpg",
+          "savedFile": "ornaments/lavender-haven/default_slider4.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider5.jpg",
+          "savedFile": "ornaments/lavender-haven/default_slider5.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider6.jpg",
+          "savedFile": "ornaments/lavender-haven/default_slider6.jpg"
+        }
+      ]
+    },
+    "tropical-cocoa": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-tropical-cocoa?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/splash_screen.png",
+          "savedFile": "ornaments/tropical-cocoa/splash_screen.png"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023110800001254/galery7.jpg?v=1703041249",
+          "savedFile": "ornaments/tropical-cocoa/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023110800001254/galery8.jpg?v=1703041252",
+          "savedFile": "ornaments/tropical-cocoa/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023110800001254/galery9.jpg?v=1703041255",
+          "savedFile": "ornaments/tropical-cocoa/galery9.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider4.jpg",
+          "savedFile": "ornaments/tropical-cocoa/default_slider4.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider5.jpg",
+          "savedFile": "ornaments/tropical-cocoa/default_slider5.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/default_slider6.jpg",
+          "savedFile": "ornaments/tropical-cocoa/default_slider6.jpg"
+        }
+      ]
+    },
+    "follage-brown": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-follage-brown?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023102500001248/splashscreen.jpg?v=1698288690",
+          "savedFile": "ornaments/follage-brown/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023102500001248/galery7.jpg?v=1698290526",
+          "savedFile": "ornaments/follage-brown/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023102500001248/galery8.jpg?v=1698290529",
+          "savedFile": "ornaments/follage-brown/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023102500001248/galery9.jpg?v=1698290532",
+          "savedFile": "ornaments/follage-brown/galery9.jpg"
+        }
+      ]
+    },
+    "fallen-leave": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-fallen-leave?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/mempelaiwanita.png",
+          "savedFile": "ornaments/fallen-leave/mempelaiwanita.png"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/mempelaipria.png",
+          "savedFile": "ornaments/fallen-leave/mempelaipria.png"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W202305120000992/mempelaipria.png",
+          "savedFile": "ornaments/fallen-leave/mempelaipria.png"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023072500001206/galery7.jpg?v=1703037931",
+          "savedFile": "ornaments/fallen-leave/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023072500001206/galery8.jpg?v=1703037935",
+          "savedFile": "ornaments/fallen-leave/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/26/wedding/W2023072500001206/galery9.jpg?v=1703037938",
+          "savedFile": "ornaments/fallen-leave/galery9.jpg"
+        }
+      ]
+    },
+    "terra-hertitage-essence": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-terra-hertitage-essence?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110800001372/splashscreen.jpg?v=1731050916",
+          "savedFile": "ornaments/terra-hertitage-essence/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110800001372/galery7.jpg?v=17310507854382",
+          "savedFile": "ornaments/terra-hertitage-essence/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110800001372/galery8.jpg?v=17310507854531",
+          "savedFile": "ornaments/terra-hertitage-essence/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110800001372/galery9.jpg?v=17310507854691",
+          "savedFile": "ornaments/terra-hertitage-essence/galery9.jpg"
+        }
+      ]
+    },
+    "madison-red": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-madison-red?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110800001371/splashscreen.jpg?v=1731051027",
+          "savedFile": "ornaments/madison-red/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110800001371/galery7.jpg?v=17310512630659",
+          "savedFile": "ornaments/madison-red/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110800001371/galery8.jpg?v=17310512630803",
+          "savedFile": "ornaments/madison-red/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110800001371/galery9.jpg?v=17310512630961",
+          "savedFile": "ornaments/madison-red/galery9.jpg"
+        }
+      ]
+    },
+    "misty-reverie": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-misty-reverie?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/mempelaiwanita.png",
+          "savedFile": "ornaments/misty-reverie/mempelaiwanita.png"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/imagekit/mempelaipria.png",
+          "savedFile": "ornaments/misty-reverie/mempelaipria.png"
+        }
+      ]
+    },
+    "nature": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-nature?to=Johan%20Susanto",
+      "assets": []
+    },
+    "miracle": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-miracle?to=Johan%20Susanto",
+      "assets": []
+    },
+    "sky-mist-azure": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-sky-mist-azure?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110400001369/splashscreen.jpg?v=1730704475",
+          "savedFile": "ornaments/sky-mist-azure/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110400001369/galery7.jpg?v=17307044997951",
+          "savedFile": "ornaments/sky-mist-azure/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110400001369/galery8.jpg?v=17307044998107",
+          "savedFile": "ornaments/sky-mist-azure/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110400001369/galery9.jpg?v=17307044998290",
+          "savedFile": "ornaments/sky-mist-azure/galery9.jpg"
+        }
+      ]
+    },
+    "warm-brick-ember": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-warm-brick-ember?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110400001368/splashscreen.jpg?v=1730704519",
+          "savedFile": "ornaments/warm-brick-ember/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110400001368/galery7.jpg?v=17307045374995",
+          "savedFile": "ornaments/warm-brick-ember/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110400001368/galery8.jpg?v=17307045375145",
+          "savedFile": "ornaments/warm-brick-ember/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110400001368/galery9.jpg?v=17307045375326",
+          "savedFile": "ornaments/warm-brick-ember/galery9.jpg"
+        }
+      ]
+    },
+    "leavy-olive": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-leavy-olive?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110100001367/splashscreen.jpg?v=1730440888",
+          "savedFile": "ornaments/leavy-olive/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110100001367/galery7.jpg?v=17304409063097",
+          "savedFile": "ornaments/leavy-olive/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110100001367/galery8.jpg?v=17304409063257",
+          "savedFile": "ornaments/leavy-olive/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024110100001367/galery9.jpg?v=17304409063442",
+          "savedFile": "ornaments/leavy-olive/galery9.jpg"
+        }
+      ]
+    },
+    "golden-sunny-leaf": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-golden-sunny-leaf?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102800001365/splashscreen.jpg?v=1730100909",
+          "savedFile": "ornaments/golden-sunny-leaf/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102800001365/galery7.jpg?v=17301009381979",
+          "savedFile": "ornaments/golden-sunny-leaf/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102800001365/galery8.jpg?v=17301009382147",
+          "savedFile": "ornaments/golden-sunny-leaf/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102800001365/galery9.jpg?v=17301009382313",
+          "savedFile": "ornaments/golden-sunny-leaf/galery9.jpg"
+        }
+      ]
+    },
+    "fleur-de-joy": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-fleur-de-joy?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102800001364/splashscreen.jpg?v=1730100977",
+          "savedFile": "ornaments/fleur-de-joy/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102800001364/mempelaipria.jpg?v=1730101002",
+          "savedFile": "ornaments/fleur-de-joy/mempelaipria.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102800001364/mempelaiwanita.jpg?v=1730100995",
+          "savedFile": "ornaments/fleur-de-joy/mempelaiwanita.jpg"
+        }
+      ]
+    },
+    "sapphire-bliss": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-sapphire-bliss?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102500001363/splashscreen.jpg?v=1729848886",
+          "savedFile": "ornaments/sapphire-bliss/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102500001363/galery7.jpg?v=17298489053877",
+          "savedFile": "ornaments/sapphire-bliss/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102500001363/galery8.jpg?v=17298489054035",
+          "savedFile": "ornaments/sapphire-bliss/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102500001363/galery9.jpg?v=17301030267695",
+          "savedFile": "ornaments/sapphire-bliss/galery9.jpg"
+        }
+      ]
+    },
+    "la-rose-garden": {
+      "demoUrl": "https://undangan.awh.co.id/wedding-of-la-rose-garden?to=Johan%20Susanto",
+      "assets": [
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102500001362/splashscreen.jpg?v=1729848813",
+          "savedFile": "ornaments/la-rose-garden/splashscreen.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102500001362/galery7.jpg?v=17298488611070",
+          "savedFile": "ornaments/la-rose-garden/galery7.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102500001362/galery8.jpg?v=17298488611240",
+          "savedFile": "ornaments/la-rose-garden/galery8.jpg"
+        },
+        {
+          "originalUrl": "https://atlas.awh.co.id/awhp001/datamember/26/wedding/W2024102500001362/galery9.jpg?v=17301030075927",
+          "savedFile": "ornaments/la-rose-garden/galery9.jpg"
+        }
+      ]
+    }
+  }
+}
