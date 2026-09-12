@@ -150,10 +150,10 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
       </div>
     );
   } else {
-    // Horizontal variant (Ideal for Navbar and Footers) - Bounded Monogram Body Lockup
+    // Horizontal variant (Ideal for Navbar and Footers) - Bounded Monogram Body Lockup (Nudged)
     const sWidth = 46 * scale;
     const sHeight = sWidth * (678 / 741);
-    const wWidth = 108 * scale;
+    const wWidth = 104 * scale;
     const wHeight = wWidth * (388 / 1898);
 
     content = (
@@ -169,7 +169,7 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
           <path d={SYMBOL_PATH} fill="currentColor" fillRule="evenodd" />
         </svg>
 
-        <div className="flex flex-col justify-end pb-0.5">
+        <div className="flex flex-col justify-end translate-y-[2.5px]">
           <svg
             width={wWidth}
             height={wHeight}
@@ -183,7 +183,7 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
 
           {showSubtitle && (
             <span
-              className="text-[7px] uppercase tracking-[0.28em] font-semibold mt-1 leading-none"
+              className="text-[6.8px] uppercase tracking-[0.28em] font-semibold mt-0.5 leading-none"
               style={{ color: subtitleColor }}
             >
               WEDDING &amp; EVENTS
