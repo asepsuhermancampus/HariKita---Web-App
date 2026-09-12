@@ -20,14 +20,14 @@ const symbolFile = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="602 13 741 
 </svg>`;
 fs.writeFileSync(path.join(brandDir, 'harikita-symbol.svg'), symbolFile);
 
-// 2. Horizontal Logo SVG (Light Background - Navbar) - Bounded Monogram Body Lockup (Nudged)
+// 2. Horizontal Logo SVG (Light Background - Navbar) - Bounded Monogram Body Lockup (Calibrated 122px)
 const horizontalFile = `<svg xmlns="http://www.w3.org/2000/svg" width="460" height="130" viewBox="0 0 460 130" fill="none">
   <!-- Symbol: Taupe #88735B (Height 69.5, shoulder at Y=45.1, baseline at Y=99.5) -->
   <svg x="20" y="30" width="76" height="69.5" viewBox="602 13 741 678">
     <path d="${symbolPath}" fill="#88735B" fill-rule="evenodd"/>
   </svg>
-  <!-- Wordmark: Charcoal #2B2B2B (Top locked flush under shoulder Y=48) -->
-  <svg x="108" y="48" width="170" height="34.7" viewBox="26 36 1898 388">
+  <!-- Wordmark: Charcoal #2B2B2B (Top locked flush touching shoulder Y=45) -->
+  <svg x="108" y="45" width="200" height="40.9" viewBox="26 36 1898 388">
     <path d="${wordmarkPath}" fill="#2B2B2B" fill-rule="evenodd"/>
   </svg>
   <!-- Subtitle: WEDDING & EVENTS (Bottom locked at baseline Y=98.5) -->

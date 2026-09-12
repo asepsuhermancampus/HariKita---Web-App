@@ -150,10 +150,10 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
       </div>
     );
   } else {
-    // Horizontal variant (Ideal for Navbar and Footers) - Bounded Monogram Body Lockup (Nudged)
+    // Horizontal variant (Ideal for Navbar and Footers) - Bounded Monogram Body Lockup (Calibrated 122px)
     const sWidth = 46 * scale;
     const sHeight = sWidth * (678 / 741);
-    const wWidth = 104 * scale;
+    const wWidth = 122 * scale;
     const wHeight = wWidth * (388 / 1898);
 
     content = (
