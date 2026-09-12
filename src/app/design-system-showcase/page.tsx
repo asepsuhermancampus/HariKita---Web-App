@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Sparkles,
@@ -15,6 +15,7 @@ import {
   Palette,
   Type,
   Grid,
+  Info,
 } from 'lucide-react';
 import { HariKitaLogo } from '@/components/brand/HariKitaLogo';
 import {
@@ -43,11 +44,89 @@ import {
   MobileStickyBookingBar,
 } from '@/components/harikita/mobile';
 import { getHariKitaAssets, getAllCategories } from '@/lib/harikita-assets';
+import { HariKitaAsset } from '@/types/harikita-asset';
+import { cn } from '@/lib/utils';
+
+// In-memory cache for loaded SVG contents
+const svgCache: Record<string, string> = {};
+
+function SvgAssetViewer({
+  asset,
+  colorClass,
+}: {
+  asset: HariKitaAsset;
+  colorClass: string;
+}) {
+  const [svgContent, setSvgContent] = useState<string | null>(
+    svgCache[asset.filePath] || null
+  );
+  const src = `/${asset.filePath.replace(/^\//, '')}`;
+
+  useEffect(() => {
+    if (asset.format === 'webp') return;
+    if (svgCache[asset.filePath]) {
+      setSvgContent(svgCache[asset.filePath]);
+      return;
+    }
+
+    let isMounted = true;
+    fetch(src)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.text();
+      })
+      .then((data) => {
+        if (isMounted) {
+          svgCache[asset.filePath] = data;
+          setSvgContent(data);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load asset:', src, err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [asset.filePath, asset.format, src]);
+
+  if (asset.format === 'webp') {
+    return (
+      <img
+        src={src}
+        alt={asset.name}
+        className="h-full w-full object-cover rounded-md"
+        loading="lazy"
+      />
+    );
+  }
+
+  if (!svgContent) {
+    return (
+      <div className="flex h-full w-full items-center justify-center opacity-30">
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        'flex h-full w-full items-center justify-center transition-colors duration-200',
+        '[&>svg]:max-h-full [&>svg]:max-w-full [&>svg]:object-contain',
+        colorClass
+      )}
+      dangerouslySetInnerHTML={{ __html: svgContent }}
+    />
+  );
+}
 
 export default function DesignSystemShowcasePage() {
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [assetColor, setAssetColor] = useState<'taupe' | 'charcoal' | 'champagne' | 'soft-beige'>('taupe');
+  const [assetColor, setAssetColor] = useState<
+    'taupe' | 'charcoal' | 'champagne' | 'soft-beige'
+  >('taupe');
   const [toggleState, setToggleState] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [mobileTab, setMobileTab] = useState<string>('beranda');
@@ -61,11 +140,46 @@ export default function DesignSystemShowcasePage() {
       : allAssets.filter((a) => a.category === activeCategory);
 
   const colors = [
-    { name: 'Charcoal', hex: '#2B2B2B', rgb: '43, 43, 43', usage: 'Primary Text, Dark Sections, Deep Accents', class: 'bg-hk-charcoal', textClass: 'text-hk-charcoal' },
-    { name: 'Taupe', hex: '#88735B', rgb: '136, 115, 91', usage: 'Primary Brand Color, Primary Buttons, Symbols', class: 'bg-hk-taupe', textClass: 'text-hk-taupe' },
-    { name: 'Champagne', hex: '#C9A88A', rgb: '201, 168, 138', usage: 'Borders, Outlines, Muted Accents, Foil', class: 'bg-hk-champagne', textClass: 'text-hk-champagne' },
-    { name: 'Soft Beige', hex: '#E8DED1', rgb: '232, 222, 209', usage: 'Dividers, Secondary Surfaces, Subtle Pills', class: 'bg-hk-soft-beige', textClass: 'text-hk-soft-beige' },
-    { name: 'Ivory', hex: '#F8F6F1', rgb: '248, 246, 241', usage: 'Background Canvas, Card Containers', class: 'bg-hk-ivory', textClass: 'text-hk-ivory' },
+    {
+      name: 'Charcoal',
+      hex: '#2B2B2B',
+      rgb: '43, 43, 43',
+      usage: 'Primary Text, Dark Sections, Deep Accents',
+      class: 'bg-hk-charcoal',
+      textClass: 'text-hk-charcoal',
+    },
+    {
+      name: 'Taupe',
+      hex: '#88735B',
+      rgb: '136, 115, 91',
+      usage: 'Primary Brand Color, Primary Buttons, Symbols',
+      class: 'bg-hk-taupe',
+      textClass: 'text-hk-taupe',
+    },
+    {
+      name: 'Champagne',
+      hex: '#C9A88A',
+      rgb: '201, 168, 138',
+      usage: 'Borders, Outlines, Muted Accents, Foil',
+      class: 'bg-hk-champagne',
+      textClass: 'text-hk-champagne',
+    },
+    {
+      name: 'Soft Beige',
+      hex: '#E8DED1',
+      rgb: '232, 222, 209',
+      usage: 'Dividers, Secondary Surfaces, Subtle Pills',
+      class: 'bg-hk-soft-beige',
+      textClass: 'text-hk-soft-beige',
+    },
+    {
+      name: 'Ivory',
+      hex: '#F8F6F1',
+      rgb: '248, 246, 241',
+      usage: 'Background Canvas, Card Containers',
+      class: 'bg-hk-ivory',
+      textClass: 'text-hk-ivory',
+    },
   ];
 
   const handleCopy = (hex: string) => {
@@ -83,8 +197,16 @@ export default function DesignSystemShowcasePage() {
 
   return (
     <div className="min-h-screen bg-hk-ivory text-hk-charcoal selection:bg-hk-champagne selection:text-white">
-      {/* Sticky Showcase Topbar */}
-      <nav className="sticky top-0 z-50 border-b border-hk-champagne/40 bg-white/90 px-6 py-3.5 backdrop-blur-md">
+      {/* Reference Notice Banner */}
+      <div className="bg-hk-soft-beige/80 border-b border-hk-champagne/40 px-4 py-2 text-center text-xs font-manrope text-hk-charcoal flex items-center justify-center gap-2">
+        <Info className="h-4 w-4 text-hk-taupe shrink-0" />
+        <span>
+          <strong>Living Style Guide &amp; Design System Reference:</strong> Halaman ini khusus untuk acuan sistem desain &amp; katalog visual resmi HariKita.
+        </span>
+      </div>
+
+      {/* Showcase Dedicated Topbar */}
+      <nav className="sticky top-0 z-40 border-b border-hk-champagne/40 bg-white/95 px-6 py-3.5 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center gap-4">
             <HariKitaLogo variant="horizontal" size="sm" asLink={false} />
@@ -95,19 +217,34 @@ export default function DesignSystemShowcasePage() {
           </div>
 
           <div className="flex items-center gap-2 text-xs font-manrope font-semibold">
-            <a href="#palette" className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50">
+            <a
+              href="#palette"
+              className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+            >
               Palet
             </a>
-            <a href="#typography" className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50">
+            <a
+              href="#typography"
+              className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+            >
               Tipografi
             </a>
-            <a href="#assets" className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50">
+            <a
+              href="#assets"
+              className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+            >
               Aset ({allAssets.length})
             </a>
-            <a href="#components" className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50">
+            <a
+              href="#components"
+              className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+            >
               Komponen UI
             </a>
-            <a href="#mobile" className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50">
+            <a
+              href="#mobile"
+              className="rounded-full px-3 py-1.5 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+            >
               Mobile Simulator
             </a>
           </div>
@@ -115,7 +252,7 @@ export default function DesignSystemShowcasePage() {
       </nav>
 
       {/* Hero Header */}
-      <header className="border-b border-hk-champagne/30 bg-gradient-to-b from-white to-hk-ivory px-6 py-16 text-center">
+      <header className="border-b border-hk-champagne/30 bg-gradient-to-b from-white to-hk-ivory px-6 py-14 text-center">
         <div className="mx-auto max-w-4xl">
           <BadgePremium label="OFFICIAL DESIGN SYSTEM" variant="pill" className="mb-4" />
           <h1 className="font-editorial text-4xl font-normal tracking-tight text-hk-charcoal md:text-6xl">
@@ -134,7 +271,7 @@ export default function DesignSystemShowcasePage() {
 
       <main className="mx-auto max-w-7xl px-6 py-16 space-y-24">
         {/* SECTION 1: 5-COLOR PALETTE */}
-        <section id="palette" className="scroll-mt-20">
+        <section id="palette" className="scroll-mt-24">
           <div className="mb-8 flex items-center justify-between border-b border-hk-champagne/40 pb-4">
             <div>
               <div className="flex items-center gap-2 text-hk-taupe">
@@ -196,7 +333,7 @@ export default function DesignSystemShowcasePage() {
         </section>
 
         {/* SECTION 2: TYPOGRAPHY SPECIMEN */}
-        <section id="typography" className="scroll-mt-20">
+        <section id="typography" className="scroll-mt-24">
           <div className="mb-8 flex items-center justify-between border-b border-hk-champagne/40 pb-4">
             <div>
               <div className="flex items-center gap-2 text-hk-taupe">
@@ -300,7 +437,7 @@ export default function DesignSystemShowcasePage() {
         </section>
 
         {/* SECTION 3: ASSET CATALOG GALLERY */}
-        <section id="assets" className="scroll-mt-20">
+        <section id="assets" className="scroll-mt-24">
           <div className="mb-6 flex flex-col gap-4 border-b border-hk-champagne/40 pb-4 md:flex-row md:items-end md:justify-between">
             <div>
               <div className="flex items-center gap-2 text-hk-taupe">
@@ -319,20 +456,22 @@ export default function DesignSystemShowcasePage() {
               <span className="font-manrope text-xs font-semibold text-hk-charcoal/70">
                 Warna Stroke:
               </span>
-              <div className="flex rounded-full border border-hk-champagne/60 bg-white p-1">
-                {(['taupe', 'charcoal', 'champagne', 'soft-beige'] as const).map((clr) => (
-                  <button
-                    key={clr}
-                    onClick={() => setAssetColor(clr)}
-                    className={`rounded-full px-3 py-1 text-xs font-manrope font-semibold capitalize transition-colors ${
-                      assetColor === clr
-                        ? 'bg-hk-taupe text-white shadow-sm'
-                        : 'text-hk-charcoal/70 hover:text-hk-charcoal'
-                    }`}
-                  >
-                    {clr}
-                  </button>
-                ))}
+              <div className="flex rounded-full border border-hk-champagne/60 bg-white p-1 shadow-sm">
+                {(['taupe', 'charcoal', 'champagne', 'soft-beige'] as const).map(
+                  (clr) => (
+                    <button
+                      key={clr}
+                      onClick={() => setAssetColor(clr)}
+                      className={`rounded-full px-3 py-1 text-xs font-manrope font-semibold capitalize transition-colors ${
+                        assetColor === clr
+                          ? 'bg-hk-taupe text-white shadow-sm'
+                          : 'text-hk-charcoal/70 hover:text-hk-charcoal'
+                      }`}
+                    >
+                      {clr}
+                    </button>
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -361,14 +500,11 @@ export default function DesignSystemShowcasePage() {
                 key={asset.id}
                 className="group flex flex-col items-center justify-between rounded-xl border border-hk-champagne/40 bg-white p-3 shadow-sm transition-all hover:border-hk-taupe hover:shadow-md"
               >
-                {/* Asset Preview Container */}
-                <div
-                  className={`flex h-28 w-full items-center justify-center rounded-lg bg-hk-ivory p-2 ${assetColorClasses[assetColor]}`}
-                >
-                  <img
-                    src={asset.path}
-                    alt={asset.name}
-                    className="max-h-full max-w-full object-contain text-current"
+                {/* Asset Preview Container with Dynamic SvgAssetViewer */}
+                <div className="flex h-28 w-full items-center justify-center rounded-lg bg-hk-ivory p-3 overflow-hidden">
+                  <SvgAssetViewer
+                    asset={asset}
+                    colorClass={assetColorClasses[assetColor]}
                   />
                 </div>
 
@@ -387,7 +523,7 @@ export default function DesignSystemShowcasePage() {
         </section>
 
         {/* SECTION 4: 15 UI COMPONENT VARIANTS */}
-        <section id="components" className="scroll-mt-20">
+        <section id="components" className="scroll-mt-24">
           <div className="mb-8 flex items-center justify-between border-b border-hk-champagne/40 pb-4">
             <div>
               <div className="flex items-center gap-2 text-hk-taupe">
@@ -436,10 +572,26 @@ export default function DesignSystemShowcasePage() {
                   2. Circular Action Buttons
                 </h4>
                 <div className="flex items-center gap-3">
-                  <IconButtonCircle icon={<Heart className="h-4 w-4" />} variant="taupe" label="Suka" />
-                  <IconButtonCircle icon={<Bookmark className="h-4 w-4" />} variant="champagne" label="Simpan" />
-                  <IconButtonCircle icon={<Share2 className="h-4 w-4" />} variant="outline" label="Bagikan" />
-                  <IconButtonCircle icon={<ArrowRight className="h-4 w-4" />} variant="surface" label="Lanjut" />
+                  <IconButtonCircle
+                    icon={<Heart className="h-4 w-4" />}
+                    variant="taupe"
+                    label="Suka"
+                  />
+                  <IconButtonCircle
+                    icon={<Bookmark className="h-4 w-4" />}
+                    variant="champagne"
+                    label="Simpan"
+                  />
+                  <IconButtonCircle
+                    icon={<Share2 className="h-4 w-4" />}
+                    variant="outline"
+                    label="Bagikan"
+                  />
+                  <IconButtonCircle
+                    icon={<ArrowRight className="h-4 w-4" />}
+                    variant="surface"
+                    label="Lanjut"
+                  />
                 </div>
               </div>
 
@@ -511,19 +663,27 @@ export default function DesignSystemShowcasePage() {
               </h4>
               <div className="space-y-4">
                 <div>
-                  <span className="font-manrope text-xs text-hk-taupe">Variant: Diamond Center</span>
+                  <span className="font-manrope text-xs text-hk-taupe">
+                    Variant: Diamond Center
+                  </span>
                   <DecorativeDivider variant="diamond" color="taupe" />
                 </div>
                 <div>
-                  <span className="font-manrope text-xs text-hk-taupe">Variant: Botanical Center</span>
+                  <span className="font-manrope text-xs text-hk-taupe">
+                    Variant: Botanical Center
+                  </span>
                   <DecorativeDivider variant="botanical" color="champagne" />
                 </div>
                 <div>
-                  <span className="font-manrope text-xs text-hk-taupe">Variant: Symmetrical Loop</span>
+                  <span className="font-manrope text-xs text-hk-taupe">
+                    Variant: Symmetrical Loop
+                  </span>
                   <DecorativeDivider variant="loop" color="taupe" />
                 </div>
                 <div>
-                  <span className="font-manrope text-xs text-hk-taupe">Variant: Minimal Hairline</span>
+                  <span className="font-manrope text-xs text-hk-taupe">
+                    Variant: Minimal Hairline
+                  </span>
                   <DecorativeDivider variant="minimal" color="champagne" />
                 </div>
               </div>
@@ -557,8 +717,9 @@ export default function DesignSystemShowcasePage() {
                   subtitle="PROTEKSI KELUARGA"
                 >
                   <p className="font-manrope text-xs leading-relaxed text-hk-charcoal/80 text-center">
-                    Dana DP 30% mengunci tanggal vendor. 70% pelunasan dijaga aman di rekening bersama
-                    dan baru diteruskan setelah acara selesai dengan memuaskan.
+                    Dana DP 30% mengunci tanggal vendor. 70% pelunasan dijaga aman di
+                    rekening bersama dan baru diteruskan setelah acara selesai dengan
+                    memuaskan.
                   </p>
                   <div className="mt-4 flex justify-center">
                     <ButtonPrimary size="sm">Pelajari Sistem Escrow</ButtonPrimary>
@@ -570,7 +731,7 @@ export default function DesignSystemShowcasePage() {
         </section>
 
         {/* SECTION 5: INTERACTIVE MOBILE VIEWPORT SIMULATOR */}
-        <section id="mobile" className="scroll-mt-20">
+        <section id="mobile" className="scroll-mt-24">
           <div className="mb-8 flex items-center justify-between border-b border-hk-champagne/40 pb-4">
             <div>
               <div className="flex items-center gap-2 text-hk-taupe">
@@ -595,57 +756,62 @@ export default function DesignSystemShowcasePage() {
               <div className="absolute top-2 left-1/2 z-50 h-4 w-28 -translate-x-1/2 rounded-full bg-hk-charcoal" />
 
               {/* Mobile Screen Scrollable Area */}
-              <div className="relative h-[680px] overflow-y-auto pb-24">
-                {/* Mobile Header */}
-                <MobileHeader />
+              <div className="relative h-[680px] overflow-y-auto flex flex-col justify-between">
+                <div>
+                  {/* Mobile Header */}
+                  <MobileHeader />
 
-                {/* Mobile Hero */}
-                <MobileHero />
+                  {/* Mobile Hero */}
+                  <MobileHero />
 
-                {/* Mobile Services Section */}
-                <div className="px-4 py-6 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-editorial text-xl font-medium text-hk-charcoal">
-                      Layanan Terpadu Kebumen
-                    </h3>
-                    <ButtonGhost size="sm">Lihat Semua</ButtonGhost>
+                  {/* Mobile Services Section */}
+                  <div className="px-4 py-6 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-editorial text-xl font-medium text-hk-charcoal">
+                        Layanan Terpadu Kebumen
+                      </h3>
+                      <ButtonGhost size="sm">Lihat Semua</ButtonGhost>
+                    </div>
+
+                    <MobileServiceCard
+                      title="Busana &amp; Kebaya Adat"
+                      category="BUSANA"
+                      priceHint="Mulai Rp 2.500.000"
+                      iconSrc="/assets/harikita/icons/icon-love-story.svg"
+                      badge="Fitting Gratis"
+                    />
+
+                    <MobileServiceCard
+                      title="Liputan Foto &amp; Cinematic Reels"
+                      category="DOKUMENTASI"
+                      priceHint="Mulai Rp 3.200.000"
+                      iconSrc="/assets/harikita/icons/icon-two-people.svg"
+                    />
                   </div>
 
-                  <MobileServiceCard
-                    title="Busana &amp; Kebaya Adat"
-                    category="BUSANA"
-                    priceHint="Mulai Rp 2.500.000"
-                    iconSrc="/assets/harikita/icons/icon-love-story.svg"
-                    badge="Fitting Gratis"
-                  />
-
-                  <MobileServiceCard
-                    title="Liputan Foto &amp; Cinematic Reels"
-                    category="DOKUMENTASI"
-                    priceHint="Mulai Rp 3.200.000"
-                    iconSrc="/assets/harikita/icons/icon-two-people.svg"
-                  />
+                  {/* Mobile Invitation Preview Section */}
+                  <div className="px-4 py-6 bg-white border-t border-hk-soft-beige">
+                    <h3 className="font-editorial text-xl font-medium text-hk-charcoal text-center mb-4">
+                      Undangan Digital Eksklusif
+                    </h3>
+                    <MobileInvitationPreview />
+                  </div>
                 </div>
 
-                {/* Mobile Invitation Preview Section */}
-                <div className="px-4 py-6 bg-white border-t border-hk-soft-beige">
-                  <h3 className="font-editorial text-xl font-medium text-hk-charcoal text-center mb-4">
-                    Undangan Digital Eksklusif
-                  </h3>
-                  <MobileInvitationPreview />
+                {/* Mobile Bottom Controls Locked to Simulator */}
+                <div className="sticky bottom-0 z-30 flex flex-col w-full">
+                  <MobileStickyBookingBar
+                    price="Rp 8.500.000"
+                    priceLabel="Estimasi Paket Intim"
+                    fixed={false}
+                  />
+
+                  <MobileBottomNav
+                    activeTab={mobileTab}
+                    onTabChange={setMobileTab}
+                    fixed={false}
+                  />
                 </div>
-
-                {/* Mobile Sticky Booking Bar */}
-                <MobileStickyBookingBar
-                  price="Rp 8.500.000"
-                  priceLabel="Estimasi Paket Intim"
-                />
-
-                {/* Mobile Bottom Nav */}
-                <MobileBottomNav
-                  activeTab={mobileTab}
-                  onTabChange={setMobileTab}
-                />
               </div>
             </div>
 
@@ -656,7 +822,7 @@ export default function DesignSystemShowcasePage() {
         </section>
       </main>
 
-      {/* Footer */}
+      {/* Showcase Dedicated Footer */}
       <footer className="border-t border-hk-champagne/40 bg-white py-12 text-center">
         <div className="mx-auto max-w-4xl px-6">
           <HariKitaLogo variant="horizontal" size="md" asLink={false} />
@@ -664,7 +830,7 @@ export default function DesignSystemShowcasePage() {
             "Rangkai Hari Bahagiamu, Menyelaraskan Restu &amp; Impian."
           </p>
           <p className="mt-4 font-manrope text-xs text-hk-charcoal/60">
-            &copy; 2026 HariKita. All Rights Reserved. Hyperlocal Pilot: Kabupaten Kebumen, Jawa Tengah.
+            &copy; 2026 HariKita. Design System &amp; Living Style Guide. Hyperlocal Pilot: Kabupaten Kebumen, Jawa Tengah.
           </p>
         </div>
       </footer>

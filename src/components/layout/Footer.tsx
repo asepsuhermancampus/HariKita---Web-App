@@ -9,8 +9,9 @@ import { ShieldCheck, MapPin, Heart, Phone, Sparkles } from "lucide-react";
 export const Footer = () => {
   const pathname = usePathname();
   const isInvitationDetailPage = pathname && pathname.startsWith("/undangan/") && pathname !== "/undangan";
+  const isDesignSystemShowcase = pathname === "/design-system-showcase";
 
-  if (isInvitationDetailPage) {
+  if (isInvitationDetailPage || isDesignSystemShowcase) {
     return null;
   }
   return (

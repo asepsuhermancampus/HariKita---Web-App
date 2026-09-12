@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 export interface MobileBottomNavProps {
   activeTab?: string;
   onTabChange?: (tabId: string) => void;
+  fixed?: boolean;
   className?: string;
 }
 
@@ -20,15 +21,17 @@ export const MOBILE_NAV_ITEMS = [
 export function MobileBottomNav({
   activeTab = 'beranda',
   onTabChange,
+  fixed = true,
   className,
 }: MobileBottomNavProps) {
   return (
     <nav
       aria-label="Navigasi Bawah Ponsel"
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-50 flex h-16 w-full items-center justify-around',
+        'flex h-16 w-full items-center justify-around',
         'border-t border-hk-champagne/30 bg-white/95 px-2 backdrop-blur-lg',
         'shadow-[0_-2px_10px_rgba(0,0,0,0.04)]',
+        fixed ? 'fixed bottom-0 left-0 right-0 z-50' : 'sticky bottom-0 left-0 right-0 z-30',
         className
       )}
     >

@@ -11,6 +11,7 @@ export interface MobileStickyBookingBarProps {
   ctaText?: string;
   onBookingClick?: () => void;
   disabled?: boolean;
+  fixed?: boolean;
   className?: string;
 }
 
@@ -21,14 +22,16 @@ export function MobileStickyBookingBar({
   ctaText = 'Booking Tanggal',
   onBookingClick,
   disabled = false,
+  fixed = true,
   className,
 }: MobileStickyBookingBarProps) {
   return (
     <div
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between gap-4',
+        'flex items-center justify-between gap-4',
         'border-t border-hk-champagne/40 bg-white/95 px-4 py-3 backdrop-blur-md',
         'shadow-[0_-4px_20px_rgba(0,0,0,0.08)]',
+        fixed ? 'fixed bottom-0 left-0 right-0 z-40' : 'sticky bottom-0 left-0 right-0 z-20',
         className
       )}
     >

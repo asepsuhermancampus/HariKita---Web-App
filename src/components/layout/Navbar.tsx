@@ -16,8 +16,9 @@ export const Navbar = () => {
   ];
 
   const isInvitationDetailPage = pathname && pathname.startsWith("/undangan/") && pathname !== "/undangan";
+  const isDesignSystemShowcase = pathname === "/design-system-showcase";
 
-  if (isInvitationDetailPage) {
+  if (isInvitationDetailPage || isDesignSystemShowcase) {
     return null;
   }
 
