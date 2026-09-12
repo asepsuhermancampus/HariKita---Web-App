@@ -37,15 +37,15 @@ async function repairCards() {
   const w = info.width, h = info.height;
 
   const cardsConfig = [
-    { id: 'card-invitation-01.svg', minX: 30, maxX: 740, minY: 80, maxY: 520 },
+    { id: 'card-invitation-01.svg', minX: 30, maxX: 765, minY: 80, maxY: 520 },
     { id: 'card-invitation-02.svg', minX: 740, maxX: 1350, minY: 100, maxY: 730 },
     { id: 'card-invitation-03.svg', minX: 1400, maxX: 1900, minY: 100, maxY: 730 },
     { id: 'card-invitation-04.svg', minX: 60, maxX: 700, minY: 600, maxY: 1120 },
     { id: 'card-invitation-05.svg', minX: 780, maxX: 1250, minY: 820, maxY: 1450 },
     { id: 'card-invitation-06.svg', minX: 1330, maxX: 1960, minY: 790, maxY: 1350 },
     { id: 'card-invitation-07.svg', minX: 50, maxX: 730, minY: 1120, maxY: 1830 },
-    { id: 'card-invitation-08.svg', minX: 720, maxX: 1395, minY: 1580, maxY: 1900 },
-    { id: 'card-invitation-09.svg', minX: 1330, maxX: 2000, minY: 1280, maxY: 1920 },
+    { id: 'card-invitation-08.svg', minX: 700, maxX: 1370, minY: 1440, maxY: 1910 },
+    { id: 'card-invitation-09.svg', minX: 1400, maxX: 2000, minY: 1350, maxY: 1930 },
   ];
 
   const cardsDir = path.join(ASSET_DIR, 'cards');

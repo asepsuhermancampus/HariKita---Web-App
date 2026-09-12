@@ -92,3 +92,20 @@ Semua test suite dan scanner validasi telah dijalankan dan lulus 100%:
 1. `node scripts/audit_svg_clipping.js`: **0 Clipped pada aset reguler, 0 Tight margins.**
 2. `node scripts/verify_assets_complete.js`: **243 / 243 assets valid (100% PASSED).**
 3. `node scripts/run_all_verifications.js`: **Semua 6 gate kualitas (Tokens, Standards, Schema, UI Variants, Mobile Components, Route Check) dinyatakan LULUS 100%.**
+
+---
+
+## 5. Penyempurnaan Tambahan (*Pass 3 Refinements*)
+Berdasarkan tinjauan visual presisi pengguna:
+1. **Card Invitation 01 (`card-invitation-01.svg`):**
+   - Batas kanan diperlebar ke `maxX: 765` (dari `maxX: 740`), mengamankan sulur bunga terluar pada rentang `x=[740..749]` dengan *safe margin* 25px.
+2. **Card Invitation 09 (`card-invitation-09.svg`):**
+   - Titik awal ekstraksi digeser ke `minX: 1400` (dari `minX: 1330`), memisahkan secara tuntas batas Card 08 (berakhir di `x=1380`) dan Card 09 (mulai di `x=1411`), menghilangkan 100% serpihan asing.
+3. **Texture Paper Dark & Texture Linen Dark (`.webp`):**
+   - Diregenerasi sebagai format **RGBA WebP Transparan Berkelas**.
+   - Warna dasar menggunakan palet coklat resmi HariKita `#6B5741` (*Warm Taupe Brown* / `--color-gold-dark`).
+   - Saluran transparansi (*alpha channel*) mengekstrak serat kertas alami (15%..45% opasitas) dan jalinan silang kain linen asli (18%..55% opasitas).
+   - Menghasilkan efek *tactile overlay* yang natural, elegan, dan fleksibel di atas latar belakang gelap maupun terang tanpa menutupi permukaan secara pekat.
+4. **Halaman Inspeksi Visual:**
+   - Tersedia di `public/review-cards-textures.html` untuk mempermudah peninjauan langsung di peramban.
+
