@@ -309,30 +309,99 @@ async function main() {
     }
   }
 
-  // 16 square botanical frames with exact 240x230 box around center
-  const kotakX = [160, 390, 645, 880, 1120, 1420, 1655, 1870];
-  const kotakY = [195, 440];
+  // 16 square botanical frames with pure CCL and boundary gap isolation (zero bleed)
   for (let r = 0; r < 2; r++) {
     for (let c = 0; c < 8; c++) {
-      const cx = kotakX[c];
-      const cy = kotakY[r];
-      const left = Math.max(0, Math.round(cx - 120));
-      const top = Math.max(0, Math.round(cy - 115));
-      const width = Math.min(2048 - left, 240);
-      const height = Math.min(630 - top, 230);
+      const cellLeft = c * 256;
+      const cellTop = r * 315;
+      const cellW = 256;
+      const cellH = 315;
 
-      const crop = await sharp(sheetKotak)
-        .extract({ left, top, width, height })
+      const { data, info } = await sharp(sheetKotak)
+        .extract({ left: cellLeft, top: cellTop, width: cellW, height: cellH })
         .grayscale()
-        .threshold(200)
-        .toBuffer();
+        .raw()
+        .toBuffer({ resolveWithObject: true });
 
-      const svg = await traceBuffer(crop, { turdSize: 10 });
+      const w = info.width, h = info.height;
+      const binary = new Uint8Array(w * h);
+      for (let i = 0; i < w * h; i++) binary[i] = data[i] < 210 ? 1 : 0;
+
+      const visited = new Uint8Array(w * h);
+      const comps = [];
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const pidx = y * w + x;
+          if (binary[pidx] && !visited[pidx]) {
+            let minX = x, maxX = x, minY = y, maxY = y;
+            let count = 0;
+            const q = [pidx];
+            visited[pidx] = 1;
+            let head = 0;
+            const px = [];
+            while (head < q.length) {
+              const curr = q[head++];
+              const cy = Math.floor(curr / w), cx = curr % w;
+              count++;
+              px.push(curr);
+              if (cx < minX) minX = cx; if (cx > maxX) maxX = cx;
+              if (cy < minY) minY = cy; if (cy > maxY) maxY = cy;
+              for (let dy = -2; dy <= 2; dy++) {
+                for (let dx = -2; dx <= 2; dx++) {
+                  const ny = cy + dy, nx = cx + dx;
+                  if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
+                    const nidx = ny * w + nx;
+                    if (binary[nidx] && !visited[nidx]) {
+                      visited[nidx] = 1;
+                      q.push(nidx);
+                    }
+                  }
+                }
+              }
+            }
+            if (count > 20) comps.push({ count, minX, maxX, minY, maxY, px });
+          }
+        }
+      }
+
+      comps.sort((a,b) => b.count - a.count);
+      const comp0 = comps[0];
+      const keepPixels = new Set();
+      let bMinX = w, bMaxX = 0, bMinY = h, bMaxY = 0;
+
+      for (const comp of comps) {
+        const isLeftBleed = comp.minX <= 5 && comp.maxX < comp0.minX - 15;
+        const isRightBleed = comp.maxX >= w - 5 && comp.minX > comp0.maxX + 15;
+        if (!isLeftBleed && !isRightBleed) {
+          for (const p of comp.px) keepPixels.add(p);
+          if (comp.minX < bMinX) bMinX = comp.minX;
+          if (comp.maxX > bMaxX) bMaxX = comp.maxX;
+          if (comp.minY < bMinY) bMinY = comp.minY;
+          if (comp.maxY > bMaxY) bMaxY = comp.maxY;
+        }
+      }
+
+      const pad = 12;
+      const outW = bMaxX - bMinX + 1 + pad * 2;
+      const outH = bMaxY - bMinY + 1 + pad * 2;
+      const cleanBuf = Buffer.alloc(outW * outH, 255);
+      for (const p of keepPixels) {
+        const cy = Math.floor(p / w);
+        const cx = p % w;
+        const ox = cx - bMinX + pad;
+        const oy = cy - bMinY + pad;
+        if (ox >= 0 && ox < outW && oy >= 0 && oy < outH) {
+          cleanBuf[oy * outW + ox] = data[p];
+        }
+      }
+
+      const png = await sharp(cleanBuf, { raw: { width: outW, height: outH, channels: 1 } }).png().toBuffer();
+      const svg = await traceBuffer(png, { turdSize: 8 });
       fs.writeFileSync(path.join(ornamenDir, `botanical-${String(oCount).padStart(2, '0')}.svg`), svg);
       oCount++;
     }
   }
-  console.log(`✅ 32 Ornaments written.\n`);
+  console.log(`✅ 32 Ornaments written (including 16 pure square frames with zero bleed).\n`);
 
   // CATEGORY 9: CUSTOM WEDDING ICONS (20 ITEMS)
   console.log('▶ Writing icons (20 pure items)...');
