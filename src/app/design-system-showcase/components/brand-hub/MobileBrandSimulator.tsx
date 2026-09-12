@@ -34,11 +34,11 @@ export function MobileBrandSimulator() {
         </span>
       </div>
 
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center w-full px-1 sm:px-0">
         {/* Phone Bezel Simulator Frame */}
-        <div className="relative w-full max-w-[390px] overflow-hidden rounded-[40px] border-[8px] border-hk-charcoal bg-hk-ivory shadow-2xl">
+        <div className="relative w-full max-w-[375px] overflow-hidden rounded-[36px] sm:rounded-[40px] border-[6px] sm:border-[8px] border-hk-charcoal bg-hk-ivory shadow-2xl">
           {/* Phone Speaker Notch */}
-          <div className="absolute top-2 left-1/2 z-50 h-4 w-28 -translate-x-1/2 rounded-full bg-hk-charcoal" />
+          <div className="absolute top-2 left-1/2 z-50 h-3.5 sm:h-4 w-24 sm:w-28 -translate-x-1/2 rounded-full bg-hk-charcoal" />
 
           {/* Mobile Screen Scrollable Area */}
           <div className="relative h-[680px] overflow-y-auto flex flex-col justify-between">

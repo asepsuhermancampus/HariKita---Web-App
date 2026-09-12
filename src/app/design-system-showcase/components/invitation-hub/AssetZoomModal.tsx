@@ -36,31 +36,31 @@ export function AssetZoomModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-hk-champagne/60 bg-white p-6 md:p-8 shadow-2xl"
+        className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl border border-hk-champagne/60 bg-white p-4 sm:p-6 md:p-8 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
+        {/* Close Button (min 44px touch target) */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 rounded-full p-2 text-hk-charcoal/70 hover:bg-hk-soft-beige/50 hover:text-hk-charcoal transition-colors"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 flex h-11 w-11 items-center justify-center rounded-full text-hk-charcoal/70 hover:bg-hk-soft-beige/50 hover:text-hk-charcoal transition-colors z-20"
           aria-label="Tutup"
         >
           <X className="h-5 w-5" />
         </button>
 
         {/* Modal Header */}
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6 pr-8">
           <span className="rounded-full bg-hk-soft-beige px-3 py-1 font-manrope text-xs font-bold uppercase tracking-wider text-hk-taupe">
             {asset.categoryLabel || asset.category}
           </span>
-          <h3 className="mt-2 font-editorial text-3xl text-hk-charcoal">
+          <h3 className="mt-2 font-editorial text-2xl sm:text-3xl text-hk-charcoal">
             {asset.name}
           </h3>
-          <p className="font-mono text-xs text-hk-taupe">{asset.filePath}</p>
+          <p className="font-mono text-[11px] text-hk-taupe truncate">{asset.filePath}</p>
         </div>
 
         {/* Large Vector Canvas Area with Checkerboard Background */}
-        <div className="relative flex h-72 w-full items-center justify-center rounded-xl border border-hk-champagne/40 bg-[linear-gradient(45deg,#f8f6f1_25%,transparent_25%),linear-gradient(-45deg,#f8f6f1_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#f8f6f1_75%),linear-gradient(-45deg,transparent_75%,#f8f6f1_75%)] bg-[size:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0px] p-6 shadow-inner">
+        <div className="relative flex h-52 sm:h-72 w-full items-center justify-center rounded-xl border border-hk-champagne/40 bg-[linear-gradient(45deg,#f8f6f1_25%,transparent_25%),linear-gradient(-45deg,#f8f6f1_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#f8f6f1_75%),linear-gradient(-45deg,transparent_75%,#f8f6f1_75%)] bg-[size:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0px] p-4 sm:p-6 shadow-inner">
           <div className="h-full w-full flex items-center justify-center [&>div]:max-h-full [&>div]:max-w-full">
             <SvgAssetViewer asset={asset} colorClass={colorClass} />
           </div>

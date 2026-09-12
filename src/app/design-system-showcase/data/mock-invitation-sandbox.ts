@@ -316,6 +316,20 @@ export const SANDBOX_GALLERY_PHOTOS = [
     subtitle: 'Alun-alun Pancasila Kebumen',
     orientation: 'landscape',
   },
+  {
+    id: 'g-9',
+    src: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    title: 'Senyum Restu Keluarga',
+    subtitle: 'Gombong Heritage',
+    orientation: 'portrait',
+  },
+  {
+    id: 'g-10',
+    src: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=1000&q=80',
+    title: 'Sumpah Setia Abadi',
+    subtitle: 'Kawasan Karst Karangbolong',
+    orientation: 'landscape',
+  },
 ];
 
 export const SANDBOX_GIFT_DATA = {

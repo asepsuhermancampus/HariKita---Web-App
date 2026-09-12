@@ -44,11 +44,11 @@ export function ShowcaseHeader({
           </div>
 
           {/* Center: Dual-Hub Tab Switcher */}
-          <div className="flex items-center rounded-full border border-hk-champagne/60 bg-hk-ivory p-1 shadow-inner">
+          <div className="flex items-center justify-center rounded-full border border-hk-champagne/60 bg-hk-ivory p-1 shadow-inner w-full sm:w-auto">
             <button
               onClick={() => onSelectHub('brand')}
               className={cn(
-                'flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
+                'flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
                 activeHub === 'brand'
                   ? 'bg-hk-taupe text-white shadow-sm'
                   : 'text-hk-charcoal/70 hover:text-hk-charcoal'
@@ -61,7 +61,7 @@ export function ShowcaseHeader({
             <button
               onClick={() => onSelectHub('invitation')}
               className={cn(
-                'flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
+                'flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-full px-3 sm:px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
                 activeHub === 'invitation'
                   ? 'bg-hk-taupe text-white shadow-sm'
                   : 'text-hk-charcoal/70 hover:text-hk-charcoal'
@@ -69,43 +69,43 @@ export function ShowcaseHeader({
             >
               <Sparkles className="h-3.5 w-3.5" />
               <span>Wedding System</span>
-              <span className="rounded-full bg-hk-champagne/30 px-2 py-0.2 text-[10px] text-hk-charcoal font-bold">
+              <span className="hidden xs:inline rounded-full bg-hk-champagne/30 px-1.5 py-0.2 text-[9px] text-hk-charcoal font-bold">
                 Sandbox
               </span>
             </button>
           </div>
 
-          {/* Right: Dynamic Sub-Navigation Anchor Links */}
-          <nav className="flex flex-wrap items-center gap-1.5 text-xs font-manrope font-semibold">
+          {/* Right: Dynamic Sub-Navigation Anchor Links (Horizontal Scroll on Mobile) */}
+          <nav className="flex items-center gap-1.5 text-xs font-manrope font-semibold overflow-x-auto no-scrollbar w-full md:w-auto py-1 whitespace-nowrap -mx-2 px-2 md:mx-0 md:px-0">
             {activeHub === 'brand' ? (
               <>
                 <a
                   href="#palette"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   Palet
                 </a>
                 <a
                   href="#typography"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   Tipografi
                 </a>
                 <a
                   href="#assets"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   Aset ({brandAssetCount})
                 </a>
                 <a
                   href="#components"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   Komponen UI
                 </a>
                 <a
                   href="#mobile"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   Mobile Simulator
                 </a>
@@ -114,25 +114,25 @@ export function ShowcaseHeader({
               <>
                 <a
                   href="#archetypes"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   8 Arketipe
                 </a>
                 <a
                   href="#invitation-assets"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   243 Aset Fine-Line
                 </a>
                 <a
                   href="#invitation-components"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   Playground Komponen
                 </a>
                 <a
                   href="#sandbox-mobile"
-                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
                   Simulator 375px
                 </a>

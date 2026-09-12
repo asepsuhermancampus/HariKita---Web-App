@@ -44,11 +44,11 @@ export function InvitationMobileFrameSection() {
         </span>
       </div>
 
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center w-full px-1 sm:px-0">
         {/* Smartphone Bezel */}
-        <div className="relative w-full max-w-[390px] overflow-hidden rounded-[40px] border-[8px] border-hk-charcoal bg-hk-ivory shadow-2xl">
+        <div className="relative w-full max-w-[375px] overflow-hidden rounded-[36px] sm:rounded-[40px] border-[6px] sm:border-[8px] border-hk-charcoal bg-hk-ivory shadow-2xl">
           {/* Speaker Notch */}
-          <div className="absolute top-2 left-1/2 z-50 h-4 w-28 -translate-x-1/2 rounded-full bg-hk-charcoal" />
+          <div className="absolute top-2 left-1/2 z-50 h-3.5 sm:h-4 w-24 sm:w-28 -translate-x-1/2 rounded-full bg-hk-charcoal" />
 
           {/* Scrollable Viewport Content */}
           <div className="relative h-[720px] overflow-y-auto bg-[#FAF8F5] text-hk-charcoal">

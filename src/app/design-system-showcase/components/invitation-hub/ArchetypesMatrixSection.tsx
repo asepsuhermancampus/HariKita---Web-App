@@ -79,20 +79,20 @@ export function ArchetypesMatrixSection() {
       {/* Live Archetype Inspector & Interactive Mock Card */}
       <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
         {/* Left Panel: Token Details (7 cols) */}
-        <div className="lg:col-span-7 rounded-2xl border border-hk-champagne/40 bg-white p-6 md:p-8 shadow-sm space-y-6">
-          <div className="flex items-start justify-between">
+        <div className="lg:col-span-7 rounded-2xl border border-hk-champagne/40 bg-white p-4 sm:p-6 md:p-8 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
             <div>
               <span className="rounded-full bg-hk-soft-beige/80 px-3 py-1 font-manrope text-xs font-bold uppercase tracking-wider text-hk-taupe">
                 Arketipe Terpilih
               </span>
-              <h3 className="mt-2 font-editorial text-3xl text-hk-charcoal">
+              <h3 className="mt-2 font-editorial text-2xl sm:text-3xl text-hk-charcoal">
                 {activeArchetype.name}
               </h3>
-              <p className="font-editorial text-lg italic text-hk-taupe">
+              <p className="font-editorial text-base sm:text-lg italic text-hk-taupe">
                 {activeArchetype.subtitle}
               </p>
             </div>
-            <span className="rounded-lg border border-hk-champagne/50 bg-hk-ivory px-3 py-1.5 font-manrope text-xs font-semibold text-hk-charcoal">
+            <span className="self-start rounded-lg border border-hk-champagne/50 bg-hk-ivory px-3 py-1.5 font-manrope text-[11px] sm:text-xs font-semibold text-hk-charcoal">
               {activeArchetype.geometryBadge}
             </span>
           </div>
