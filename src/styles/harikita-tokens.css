@@ -1,0 +1,48 @@
+/* HariKita Official Brand Design System Tokens */
+/* Reference: HariKita-DesignSystem-Asset.png & New-Refactor-Requirement */
+
+:root {
+  /* Official 5-Color Palette */
+  --color-charcoal: #2B2B2B;      /* RGB: 43, 43, 43 */
+  --color-taupe: #88735B;         /* RGB: 136, 115, 91 */
+  --color-champagne: #C9A88A;     /* RGB: 201, 168, 138 */
+  --color-soft-beige: #E8DED1;    /* RGB: 232, 222, 209 */
+  --color-ivory: #F8F6F1;         /* RGB: 248, 246, 241 */
+
+  /* HK Namespace Aliases */
+  --hk-charcoal: var(--color-charcoal);
+  --hk-taupe: var(--color-taupe);
+  --hk-champagne: var(--color-champagne);
+  --hk-soft-beige: var(--color-soft-beige);
+  --hk-ivory: var(--color-ivory);
+  --hk-canvas: var(--color-ivory);
+
+  /* Typography Scales */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+}
+
+/* Background Utility Classes */
+.bg-hk-charcoal { background-color: var(--color-charcoal); }
+.bg-hk-taupe { background-color: var(--color-taupe); }
+.bg-hk-champagne { background-color: var(--color-champagne); }
+.bg-hk-soft-beige { background-color: var(--color-soft-beige); }
+.bg-hk-ivory { background-color: var(--color-ivory); }
+
+/* Text Utility Classes */
+.text-hk-charcoal { color: var(--color-charcoal); }
+.text-hk-taupe { color: var(--color-taupe); }
+.text-hk-champagne { color: var(--color-champagne); }
+.text-hk-soft-beige { color: var(--color-soft-beige); }
+.text-hk-ivory { color: var(--color-ivory); }
+
+/* Border Utility Classes */
+.border-hk-charcoal { border-color: var(--color-charcoal); }
+.border-hk-taupe { border-color: var(--color-taupe); }
+.border-hk-champagne { border-color: var(--color-champagne); }
+.border-hk-soft-beige { border-color: var(--color-soft-beige); }
+.border-hk-ivory { border-color: var(--color-ivory); }
+
+/* Typography Utility Classes */
+.font-editorial { font-family: var(--font-display); }
+.font-manrope { font-family: var(--font-body); }

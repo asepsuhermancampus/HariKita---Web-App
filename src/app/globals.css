@@ -1,32 +1,40 @@
+@import "../styles/harikita-tokens.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* HariKita Official Brand Identity Tokens (from HariKita-Design.png) */
-  --hk-canvas: #FAF8F5;
-  --hk-ivory: #F8F6F1;
-  --hk-soft-beige: #E5DED5;
+  /* HariKita Official Brand Identity Tokens (from HariKita-DesignSystem-Asset.png) */
+  --color-charcoal: #2B2B2B;
+  --color-taupe: #88735B;
+  --color-champagne: #C9A88A;
+  --color-soft-beige: #E8DED1;
+  --color-ivory: #F8F6F1;
+
   --hk-charcoal: #2B2B2B;
   --hk-taupe: #88735B;
-  --hk-champagne: #C5B39F;
+  --hk-champagne: #C9A88A;
+  --hk-soft-beige: #E8DED1;
+  --hk-ivory: #F8F6F1;
+  --hk-canvas: #F8F6F1;
 
   /* Legacy aliases for backward compatibility */
-  --color-canvas: #FAF8F5;
-  --color-canvas-subtle: #F3EDE6;
-  --color-gold: #C5A880;
-  --color-gold-light: #E3CAA5;
-  --color-gold-dark: #A3865E;
-  --color-plum: #4A2E35;
+  --color-canvas: #F8F6F1;
+  --color-canvas-subtle: #E8DED1;
+  --color-gold: #88735B;
+  --color-gold-light: #C9A88A;
+  --color-gold-dark: #6B5741;
+  --color-plum: #2B2B2B;
   --color-plum-light: #6B5E62;
-  --color-plum-dark: #2A181D;
-  --color-rose-sand: #D4A89C;
+  --color-plum-dark: #1F1F1F;
+  --color-rose-sand: #C9A88A;
 }
 
 body {
-  background-color: var(--color-canvas);
-  color: var(--color-plum);
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-ivory);
+  color: var(--color-charcoal);
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
