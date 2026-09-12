@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+        <path d="M50 30 Q48 50 50 90" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
+        <path d="M50 55 C40 50 35 40 42 35 C48 38 49 48 50 55" stroke="currentColor" stroke-width="1"/>
+        <path d="M50 68 C60 62 65 52 58 47 C52 50 51 60 50 68" stroke="currentColor" stroke-width="1"/>
+        <ellipse cx="50" cy="30" rx="6" ry="12" transform="rotate(0 50 30)" stroke="currentColor" stroke-width="1" fill="none"/><ellipse cx="50" cy="30" rx="6" ry="12" transform="rotate(51.42857142857143 50 30)" stroke="currentColor" stroke-width="1" fill="none"/><ellipse cx="50" cy="30" rx="6" ry="12" transform="rotate(102.85714285714286 50 30)" stroke="currentColor" stroke-width="1" fill="none"/><ellipse cx="50" cy="30" rx="6" ry="12" transform="rotate(154.28571428571428 50 30)" stroke="currentColor" stroke-width="1" fill="none"/><ellipse cx="50" cy="30" rx="6" ry="12" transform="rotate(205.71428571428572 50 30)" stroke="currentColor" stroke-width="1" fill="none"/><ellipse cx="50" cy="30" rx="6" ry="12" transform="rotate(257.14285714285717 50 30)" stroke="currentColor" stroke-width="1" fill="none"/><ellipse cx="50" cy="30" rx="6" ry="12" transform="rotate(308.57142857142856 50 30)" stroke="currentColor" stroke-width="1" fill="none"/>
+        <circle cx="50" cy="30" r="3" fill="none" stroke="currentColor" stroke-width="1"/>
+      </svg>

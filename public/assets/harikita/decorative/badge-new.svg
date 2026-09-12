@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+      <polygon points="30,8 70,8 92,30 92,70 70,92 30,92 8,70 8,30" stroke="currentColor" stroke-width="1.2"/>
+      <polygon points="32,13 68,13 87,32 87,68 68,87 32,87 13,68 13,32" stroke="currentColor" stroke-width="0.8"/>
+      <text x="50" y="55" text-anchor="middle" font-family="'Manrope', sans-serif" font-weight="600" font-size="12" letter-spacing="3" fill="currentColor">NEW</text>
+    </svg>
