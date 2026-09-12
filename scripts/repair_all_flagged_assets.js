@@ -44,7 +44,7 @@ async function repairCards() {
     { id: 'card-invitation-05.svg', minX: 780, maxX: 1250, minY: 820, maxY: 1450 },
     { id: 'card-invitation-06.svg', minX: 1330, maxX: 1960, minY: 790, maxY: 1350 },
     { id: 'card-invitation-07.svg', minX: 50, maxX: 730, minY: 1120, maxY: 1830 },
-    { id: 'card-invitation-08.svg', minX: 700, maxX: 1370, minY: 1440, maxY: 1910 },
+    { id: 'card-invitation-08.svg', minX: 720, maxX: 1395, minY: 1580, maxY: 1900 },
     { id: 'card-invitation-09.svg', minX: 1330, maxX: 2000, minY: 1280, maxY: 1920 },
   ];
 
@@ -106,7 +106,7 @@ async function repairCards() {
 
     for (const comp of comps) {
       const touchesBorder = comp.cMinX <= 2 || comp.cMaxX >= rW - 3 || comp.cMinY <= 2 || comp.cMaxY >= rH - 3;
-      const isNeighbor = touchesBorder && (comp !== cardComp && (comp.cMaxX < cardComp.cMinX - 10 || comp.cMinX > cardComp.cMinX + 10));
+      const isNeighbor = touchesBorder && (comp !== cardComp && (comp.cMaxX < cardComp.cMinX - 10 || comp.cMinX > cardComp.cMaxX + 10));
       if (!isNeighbor) {
         for (const p of comp.px) keepPixels.add(p);
         if (comp.cMinX < bMinX) bMinX = comp.cMinX;
@@ -153,6 +153,7 @@ async function repairBlooms() {
     { id: 14, cx: 360, cy: 800 },
     { id: 15, cx: 790, cy: 810 },
     { id: 16, cx: 1300, cy: 810 },
+    { id: 17, cx: 1700, cy: 800 }, // 8th seed prevents bleed into bloom 16
   ];
 
   const binary = new Uint8Array(w * h);
@@ -214,7 +215,7 @@ async function repairBlooms() {
   }
 
   const bloomsDir = path.join(ASSET_DIR, 'flowers', 'blooms');
-  for (const s of seeds) {
+  for (const s of seeds.slice(0, 7)) { // Only export blooms 10 to 16
     const assigned = bloomComps[s.id];
     let bMinX = w, bMaxX = 0, bMinY = h, bMaxY = 0;
     const keepPixels = new Set();
@@ -545,6 +546,58 @@ async function repairSymbol07() {
   console.log('  ✅ Saved symbol-07.svg (Centered with 15px safe margin)');
 }
 
+async function repairDarkTextures() {
+  console.log('\n▶ [7/7] Generating Ultra-Luxury Dark Textures (Photographic Composite Overlay)...');
+  const size = 1500;
+  const rawTextureDir = path.join(RAW_DIR, 'asset-mentah-background-pattern-and-texture');
+  const textureDir = path.join(ASSET_DIR, 'textures');
+  const t1 = path.join(rawTextureDir, '1.jpeg');
+  const t3 = path.join(rawTextureDir, '3.jpeg');
+
+  const darkBase = await sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 3,
+      background: { r: 39, g: 30, b: 34 } // Deep Plum Charcoal #271E22
+    }
+  }).png().toBuffer();
+
+  if (fs.existsSync(t1)) {
+    const paperOverlay = await sharp(t1)
+      .resize(size, size, { fit: 'cover' })
+      .grayscale()
+      .normalize()
+      .linear(0.32, 0.34)
+      .png()
+      .toBuffer();
+
+    const outPaperPath = path.join(textureDir, 'texture-paper-dark.webp');
+    await sharp(darkBase)
+      .composite([{ input: paperOverlay, blend: 'overlay' }])
+      .webp({ quality: 85 })
+      .toFile(outPaperPath);
+    console.log(`  ✅ texture-paper-dark.webp generated (${fs.statSync(outPaperPath).size} bytes)`);
+  }
+
+  if (fs.existsSync(t3)) {
+    const linenOverlay = await sharp(t3)
+      .resize(size, size, { fit: 'cover' })
+      .grayscale()
+      .normalize()
+      .linear(0.36, 0.32)
+      .png()
+      .toBuffer();
+
+    const outLinenPath = path.join(textureDir, 'texture-linen-dark.webp');
+    await sharp(darkBase)
+      .composite([{ input: linenOverlay, blend: 'overlay' }])
+      .webp({ quality: 85 })
+      .toFile(outLinenPath);
+    console.log(`  ✅ texture-linen-dark.webp generated (${fs.statSync(outLinenPath).size} bytes)`);
+  }
+}
+
 async function main() {
   console.log('================================================================');
   console.log('     HARIKITA COMPREHENSIVE ASSET REPAIR & PURIFICATION         ');
@@ -556,6 +609,7 @@ async function main() {
   await repairBotanicalLingkaran();
   await repairBotanicalKotak();
   await repairSymbol07();
+  await repairDarkTextures();
 
   console.log('\n================================================================');
   console.log('  🎉 ALL FLAGGED ASSETS SUCCESSFULLY REPAIRED & PURIFIED!      ');

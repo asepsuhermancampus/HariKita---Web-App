@@ -3,7 +3,7 @@ const path = require('path');
 const sharp = require('sharp');
 
 const ASSET_DIR = path.join(__dirname, '..', 'public', 'assets', 'harikita');
-const REPORT_MD = path.join(__dirname, '..', 'docs', 'assets', 'AUDIT_CLIPPING_REPORT.md');
+const REPORT_MD = path.join(__dirname, '..', 'docs', 'assets', 'AUDIT_CLIPPING_SCAN_RAW.md');
 
 // User's manual flagged list
 const USER_FLAGGED = new Set([
