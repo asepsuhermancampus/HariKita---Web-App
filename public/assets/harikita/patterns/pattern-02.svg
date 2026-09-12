@@ -1,3 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-        <path d="M10 50 C10 25 40 25 40 50 M60 50 C60 25 90 25 90 50 M10 100 C10 75 40 75 40 100 M60 100 C60 75 90 75 90 100" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
-      </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="28" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/><circle cx="50" cy="50" r="14" stroke="currentColor" stroke-width="1"/><circle cx="0" cy="0" r="20" stroke="currentColor" stroke-width="1"/><circle cx="100" cy="0" r="20" stroke="currentColor" stroke-width="1"/><circle cx="0" cy="100" r="20" stroke="currentColor" stroke-width="1"/><circle cx="100" cy="100" r="20" stroke="currentColor" stroke-width="1"/></svg>

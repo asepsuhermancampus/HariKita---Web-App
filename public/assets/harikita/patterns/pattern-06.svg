@@ -1,3 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-        <path d="M0 30 C30 10 70 50 100 30 M0 70 C30 50 70 90 100 70" stroke="currentColor" stroke-width="0.8" opacity="0.3"/>
-      </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><polygon points="50,5 95,50 50,95 5,50" stroke="currentColor" stroke-width="1.2"/><polygon points="50,20 80,50 50,80 20,50" stroke="currentColor" stroke-width="0.8" stroke-dasharray="3 3"/></svg>

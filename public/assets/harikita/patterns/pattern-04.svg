@@ -1,3 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-        <path d="M20 40 Q25 20 30 15 M23 28 C20 25 26 22 23 28 M70 80 Q75 60 80 55" stroke="currentColor" stroke-width="0.8" opacity="0.4"/>
-      </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><path d="M0 50 Q25 20 50 50 T100 50" stroke="currentColor" stroke-width="1.2"/><path d="M25 35 C20 25 30 20 35 30 Z M75 35 C70 25 80 20 85 30 Z" fill="currentColor"/></svg>

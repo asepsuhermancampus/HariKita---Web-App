@@ -246,7 +246,7 @@
     "categoryLabel": "Invitation & Card Design Elements",
     "filePath": "assets/harikita/cards/card-invitation-01.svg",
     "format": "svg",
-    "viewBox": "0 0 140 200",
+    "viewBox": "0 0 400 600",
     "aspectRatio": "square/proportional",
     "tags": [
       "cards",
@@ -261,7 +261,7 @@
     "categoryLabel": "Invitation & Card Design Elements",
     "filePath": "assets/harikita/cards/card-invitation-02.svg",
     "format": "svg",
-    "viewBox": "0 0 140 200",
+    "viewBox": "0 0 400 600",
     "aspectRatio": "square/proportional",
     "tags": [
       "cards",
@@ -276,7 +276,7 @@
     "categoryLabel": "Invitation & Card Design Elements",
     "filePath": "assets/harikita/cards/card-invitation-03.svg",
     "format": "svg",
-    "viewBox": "0 0 140 200",
+    "viewBox": "0 0 400 600",
     "aspectRatio": "square/proportional",
     "tags": [
       "cards",
@@ -291,7 +291,7 @@
     "categoryLabel": "Invitation & Card Design Elements",
     "filePath": "assets/harikita/cards/card-invitation-04.svg",
     "format": "svg",
-    "viewBox": "0 0 140 200",
+    "viewBox": "0 0 400 600",
     "aspectRatio": "square/proportional",
     "tags": [
       "cards",
@@ -306,7 +306,7 @@
     "categoryLabel": "Invitation & Card Design Elements",
     "filePath": "assets/harikita/cards/card-invitation-05.svg",
     "format": "svg",
-    "viewBox": "0 0 140 200",
+    "viewBox": "0 0 400 600",
     "aspectRatio": "square/proportional",
     "tags": [
       "cards",
@@ -321,7 +321,7 @@
     "categoryLabel": "Invitation & Card Design Elements",
     "filePath": "assets/harikita/cards/card-invitation-06.svg",
     "format": "svg",
-    "viewBox": "0 0 140 200",
+    "viewBox": "0 0 400 600",
     "aspectRatio": "square/proportional",
     "tags": [
       "cards",
@@ -336,7 +336,7 @@
     "categoryLabel": "Invitation & Card Design Elements",
     "filePath": "assets/harikita/cards/card-invitation-07.svg",
     "format": "svg",
-    "viewBox": "0 0 140 200",
+    "viewBox": "0 0 400 600",
     "aspectRatio": "square/proportional",
     "tags": [
       "cards",
@@ -351,11 +351,101 @@
     "categoryLabel": "Invitation & Card Design Elements",
     "filePath": "assets/harikita/cards/card-invitation-08.svg",
     "format": "svg",
-    "viewBox": "0 0 140 200",
+    "viewBox": "0 0 400 600",
     "aspectRatio": "square/proportional",
     "tags": [
       "cards",
       "card-invitation-08"
+    ],
+    "suggestedUsage": "Decorative element for Invitation & Card Design Elements"
+  },
+  {
+    "id": "card-invitation-09",
+    "name": "Card Invitation 09",
+    "category": "cards",
+    "categoryLabel": "Invitation & Card Design Elements",
+    "filePath": "assets/harikita/cards/card-invitation-09.svg",
+    "format": "svg",
+    "viewBox": "0 0 400 600",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "cards",
+      "card-invitation-09"
+    ],
+    "suggestedUsage": "Decorative element for Invitation & Card Design Elements"
+  },
+  {
+    "id": "card-invitation-10",
+    "name": "Card Invitation 10",
+    "category": "cards",
+    "categoryLabel": "Invitation & Card Design Elements",
+    "filePath": "assets/harikita/cards/card-invitation-10.svg",
+    "format": "svg",
+    "viewBox": "0 0 400 600",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "cards",
+      "card-invitation-10"
+    ],
+    "suggestedUsage": "Decorative element for Invitation & Card Design Elements"
+  },
+  {
+    "id": "card-invitation-11",
+    "name": "Card Invitation 11",
+    "category": "cards",
+    "categoryLabel": "Invitation & Card Design Elements",
+    "filePath": "assets/harikita/cards/card-invitation-11.svg",
+    "format": "svg",
+    "viewBox": "0 0 400 600",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "cards",
+      "card-invitation-11"
+    ],
+    "suggestedUsage": "Decorative element for Invitation & Card Design Elements"
+  },
+  {
+    "id": "card-invitation-12",
+    "name": "Card Invitation 12",
+    "category": "cards",
+    "categoryLabel": "Invitation & Card Design Elements",
+    "filePath": "assets/harikita/cards/card-invitation-12.svg",
+    "format": "svg",
+    "viewBox": "0 0 400 600",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "cards",
+      "card-invitation-12"
+    ],
+    "suggestedUsage": "Decorative element for Invitation & Card Design Elements"
+  },
+  {
+    "id": "card-invitation-13",
+    "name": "Card Invitation 13",
+    "category": "cards",
+    "categoryLabel": "Invitation & Card Design Elements",
+    "filePath": "assets/harikita/cards/card-invitation-13.svg",
+    "format": "svg",
+    "viewBox": "0 0 400 600",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "cards",
+      "card-invitation-13"
+    ],
+    "suggestedUsage": "Decorative element for Invitation & Card Design Elements"
+  },
+  {
+    "id": "card-invitation-14",
+    "name": "Card Invitation 14",
+    "category": "cards",
+    "categoryLabel": "Invitation & Card Design Elements",
+    "filePath": "assets/harikita/cards/card-invitation-14.svg",
+    "format": "svg",
+    "viewBox": "0 0 400 600",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "cards",
+      "card-invitation-14"
     ],
     "suggestedUsage": "Decorative element for Invitation & Card Design Elements"
   },
@@ -786,7 +876,7 @@
     "categoryLabel": "Small Floral Accents",
     "filePath": "assets/harikita/flowers/accents/flower-accent-01.svg",
     "format": "svg",
-    "viewBox": "0 0 40 40",
+    "viewBox": "0 0 281 220",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -801,7 +891,7 @@
     "categoryLabel": "Small Floral Accents",
     "filePath": "assets/harikita/flowers/accents/flower-accent-02.svg",
     "format": "svg",
-    "viewBox": "0 0 40 40",
+    "viewBox": "0 0 281 220",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -816,7 +906,7 @@
     "categoryLabel": "Small Floral Accents",
     "filePath": "assets/harikita/flowers/accents/flower-accent-03.svg",
     "format": "svg",
-    "viewBox": "0 0 40 40",
+    "viewBox": "0 0 281 220",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -831,7 +921,7 @@
     "categoryLabel": "Small Floral Accents",
     "filePath": "assets/harikita/flowers/accents/flower-accent-04.svg",
     "format": "svg",
-    "viewBox": "0 0 40 40",
+    "viewBox": "0 0 281 220",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -846,7 +936,7 @@
     "categoryLabel": "Small Floral Accents",
     "filePath": "assets/harikita/flowers/accents/flower-accent-05.svg",
     "format": "svg",
-    "viewBox": "0 0 40 40",
+    "viewBox": "0 0 281 220",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -861,11 +951,101 @@
     "categoryLabel": "Small Floral Accents",
     "filePath": "assets/harikita/flowers/accents/flower-accent-06.svg",
     "format": "svg",
-    "viewBox": "0 0 40 40",
+    "viewBox": "0 0 281 220",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
       "flower-accent-06"
+    ],
+    "suggestedUsage": "Decorative element for Small Floral Accents"
+  },
+  {
+    "id": "flower-accent-07",
+    "name": "Flower Accent 07",
+    "category": "flowers/accents",
+    "categoryLabel": "Small Floral Accents",
+    "filePath": "assets/harikita/flowers/accents/flower-accent-07.svg",
+    "format": "svg",
+    "viewBox": "0 0 256 290",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-accent-07"
+    ],
+    "suggestedUsage": "Decorative element for Small Floral Accents"
+  },
+  {
+    "id": "flower-accent-08",
+    "name": "Flower Accent 08",
+    "category": "flowers/accents",
+    "categoryLabel": "Small Floral Accents",
+    "filePath": "assets/harikita/flowers/accents/flower-accent-08.svg",
+    "format": "svg",
+    "viewBox": "0 0 256 290",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-accent-08"
+    ],
+    "suggestedUsage": "Decorative element for Small Floral Accents"
+  },
+  {
+    "id": "flower-accent-09",
+    "name": "Flower Accent 09",
+    "category": "flowers/accents",
+    "categoryLabel": "Small Floral Accents",
+    "filePath": "assets/harikita/flowers/accents/flower-accent-09.svg",
+    "format": "svg",
+    "viewBox": "0 0 256 290",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-accent-09"
+    ],
+    "suggestedUsage": "Decorative element for Small Floral Accents"
+  },
+  {
+    "id": "flower-accent-10",
+    "name": "Flower Accent 10",
+    "category": "flowers/accents",
+    "categoryLabel": "Small Floral Accents",
+    "filePath": "assets/harikita/flowers/accents/flower-accent-10.svg",
+    "format": "svg",
+    "viewBox": "0 0 256 290",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-accent-10"
+    ],
+    "suggestedUsage": "Decorative element for Small Floral Accents"
+  },
+  {
+    "id": "flower-accent-11",
+    "name": "Flower Accent 11",
+    "category": "flowers/accents",
+    "categoryLabel": "Small Floral Accents",
+    "filePath": "assets/harikita/flowers/accents/flower-accent-11.svg",
+    "format": "svg",
+    "viewBox": "0 0 256 290",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-accent-11"
+    ],
+    "suggestedUsage": "Decorative element for Small Floral Accents"
+  },
+  {
+    "id": "flower-accent-12",
+    "name": "Flower Accent 12",
+    "category": "flowers/accents",
+    "categoryLabel": "Small Floral Accents",
+    "filePath": "assets/harikita/flowers/accents/flower-accent-12.svg",
+    "format": "svg",
+    "viewBox": "0 0 256 290",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-accent-12"
     ],
     "suggestedUsage": "Decorative element for Small Floral Accents"
   },
@@ -876,7 +1056,7 @@
     "categoryLabel": "Flower Blooms",
     "filePath": "assets/harikita/flowers/blooms/flower-bloom-01.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -891,7 +1071,7 @@
     "categoryLabel": "Flower Blooms",
     "filePath": "assets/harikita/flowers/blooms/flower-bloom-02.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -906,7 +1086,7 @@
     "categoryLabel": "Flower Blooms",
     "filePath": "assets/harikita/flowers/blooms/flower-bloom-03.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -921,7 +1101,7 @@
     "categoryLabel": "Flower Blooms",
     "filePath": "assets/harikita/flowers/blooms/flower-bloom-04.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -936,7 +1116,7 @@
     "categoryLabel": "Flower Blooms",
     "filePath": "assets/harikita/flowers/blooms/flower-bloom-05.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -951,11 +1131,161 @@
     "categoryLabel": "Flower Blooms",
     "filePath": "assets/harikita/flowers/blooms/flower-bloom-06.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
       "flower-bloom-06"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-07",
+    "name": "Flower Bloom 07",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-07.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-07"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-08",
+    "name": "Flower Bloom 08",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-08.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-08"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-09",
+    "name": "Flower Bloom 09",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-09.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-09"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-10",
+    "name": "Flower Bloom 10",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-10.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-10"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-11",
+    "name": "Flower Bloom 11",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-11.svg",
+    "format": "svg",
+    "viewBox": "0 0 462 531",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-11"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-12",
+    "name": "Flower Bloom 12",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-12.svg",
+    "format": "svg",
+    "viewBox": "0 0 462 531",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-12"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-13",
+    "name": "Flower Bloom 13",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-13.svg",
+    "format": "svg",
+    "viewBox": "0 0 462 531",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-13"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-14",
+    "name": "Flower Bloom 14",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-14.svg",
+    "format": "svg",
+    "viewBox": "0 0 462 531",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-14"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-15",
+    "name": "Flower Bloom 15",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-15.svg",
+    "format": "svg",
+    "viewBox": "0 0 462 531",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-15"
+    ],
+    "suggestedUsage": "Decorative element for Flower Blooms"
+  },
+  {
+    "id": "flower-bloom-16",
+    "name": "Flower Bloom 16",
+    "category": "flowers/blooms",
+    "categoryLabel": "Flower Blooms",
+    "filePath": "assets/harikita/flowers/blooms/flower-bloom-16.svg",
+    "format": "svg",
+    "viewBox": "0 0 462 531",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-bloom-16"
     ],
     "suggestedUsage": "Decorative element for Flower Blooms"
   },
@@ -966,7 +1296,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-01.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -981,7 +1311,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-02.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -996,7 +1326,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-03.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1011,7 +1341,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-04.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1026,7 +1356,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-05.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1041,7 +1371,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-06.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1056,7 +1386,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-07.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1071,7 +1401,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-08.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1086,7 +1416,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-09.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1101,7 +1431,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-10.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1116,7 +1446,7 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-11.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
@@ -1131,13 +1461,343 @@
     "categoryLabel": "Single Stem Flowers",
     "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-12.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 301 240",
     "aspectRatio": "square/proportional",
     "tags": [
       "flowers",
       "flower-single-stem-12"
     ],
     "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-13",
+    "name": "Flower Single Stem 13",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-13.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-13"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-14",
+    "name": "Flower Single Stem 14",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-14.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-14"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-15",
+    "name": "Flower Single Stem 15",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-15.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-15"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-16",
+    "name": "Flower Single Stem 16",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-16.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-16"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-17",
+    "name": "Flower Single Stem 17",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-17.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-17"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-18",
+    "name": "Flower Single Stem 18",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-18.svg",
+    "format": "svg",
+    "viewBox": "0 0 301 240",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-18"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-19",
+    "name": "Flower Single Stem 19",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-19.svg",
+    "format": "svg",
+    "viewBox": "0 0 379 183",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-19"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-20",
+    "name": "Flower Single Stem 20",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-20.svg",
+    "format": "svg",
+    "viewBox": "0 0 379 183",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-20"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-21",
+    "name": "Flower Single Stem 21",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-21.svg",
+    "format": "svg",
+    "viewBox": "0 0 379 183",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-21"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-22",
+    "name": "Flower Single Stem 22",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-22.svg",
+    "format": "svg",
+    "viewBox": "0 0 379 183",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-22"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-23",
+    "name": "Flower Single Stem 23",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-23.svg",
+    "format": "svg",
+    "viewBox": "0 0 379 183",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-23"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "flower-single-stem-24",
+    "name": "Flower Single Stem 24",
+    "category": "flowers/single-stem",
+    "categoryLabel": "Single Stem Flowers",
+    "filePath": "assets/harikita/flowers/single-stem/flower-single-stem-24.svg",
+    "format": "svg",
+    "viewBox": "0 0 379 183",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "flowers",
+      "flower-single-stem-24"
+    ],
+    "suggestedUsage": "Decorative element for Single Stem Flowers"
+  },
+  {
+    "id": "icon-bridal-dress",
+    "name": "Icon Bridal Dress",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-bridal-dress.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-bridal-dress"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-camera-photo",
+    "name": "Icon Camera Photo",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-camera-photo.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-camera-photo"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-catering-plate",
+    "name": "Icon Catering Plate",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-catering-plate.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-catering-plate"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-ceremony-arch",
+    "name": "Icon Ceremony Arch",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-ceremony-arch.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-ceremony-arch"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-digital-invitation",
+    "name": "Icon Digital Invitation",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-digital-invitation.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-digital-invitation"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-engagement-ring",
+    "name": "Icon Engagement Ring",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-engagement-ring.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-engagement-ring"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-fitting-calendar",
+    "name": "Icon Fitting Calendar",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-fitting-calendar.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-fitting-calendar"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-floral-bouquet",
+    "name": "Icon Floral Bouquet",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-floral-bouquet.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-floral-bouquet"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-groom-attire",
+    "name": "Icon Groom Attire",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-groom-attire.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-groom-attire"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-illustrated-map",
+    "name": "Icon Illustrated Map",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-illustrated-map.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-illustrated-map"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
   },
   {
     "id": "icon-invitation",
@@ -1176,11 +1836,71 @@
     "categoryLabel": "Custom Concept Icons",
     "filePath": "assets/harikita/icons/icon-love-story.svg",
     "format": "svg",
-    "viewBox": "0 0 48 48",
+    "viewBox": "0 0 369 376",
     "aspectRatio": "square/proportional",
     "tags": [
       "icons",
       "icon-love-story"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-makeup-beauty",
+    "name": "Icon Makeup Beauty",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-makeup-beauty.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-makeup-beauty"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-seserahan-box",
+    "name": "Icon Seserahan Box",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-seserahan-box.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-seserahan-box"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-souvenir-candle",
+    "name": "Icon Souvenir Candle",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-souvenir-candle.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-souvenir-candle"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-tiered-cake",
+    "name": "Icon Tiered Cake",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-tiered-cake.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-tiered-cake"
     ],
     "suggestedUsage": "Decorative element for Custom Concept Icons"
   },
@@ -1206,11 +1926,26 @@
     "categoryLabel": "Custom Concept Icons",
     "filePath": "assets/harikita/icons/icon-two-people.svg",
     "format": "svg",
-    "viewBox": "0 0 48 48",
+    "viewBox": "0 0 369 376",
     "aspectRatio": "square/proportional",
     "tags": [
       "icons",
       "icon-two-people"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
+    "id": "icon-video-cinematic",
+    "name": "Icon Video Cinematic",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-video-cinematic.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-video-cinematic"
     ],
     "suggestedUsage": "Decorative element for Custom Concept Icons"
   },
@@ -1230,13 +1965,28 @@
     "suggestedUsage": "Decorative element for Custom Concept Icons"
   },
   {
+    "id": "icon-wedding-rings",
+    "name": "Icon Wedding Rings",
+    "category": "icons",
+    "categoryLabel": "Custom Concept Icons",
+    "filePath": "assets/harikita/icons/icon-wedding-rings.svg",
+    "format": "svg",
+    "viewBox": "0 0 369 376",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "icons",
+      "icon-wedding-rings"
+    ],
+    "suggestedUsage": "Decorative element for Custom Concept Icons"
+  },
+  {
     "id": "branch-01",
     "name": "Branch 01",
     "category": "leaves/branches",
     "categoryLabel": "Branches",
     "filePath": "assets/harikita/leaves/branches/branch-01.svg",
     "format": "svg",
-    "viewBox": "0 0 100 120",
+    "viewBox": "0 0 632 974",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1251,7 +2001,7 @@
     "categoryLabel": "Branches",
     "filePath": "assets/harikita/leaves/branches/branch-02.svg",
     "format": "svg",
-    "viewBox": "0 0 100 120",
+    "viewBox": "0 0 632 974",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1266,7 +2016,7 @@
     "categoryLabel": "Branches",
     "filePath": "assets/harikita/leaves/branches/branch-03.svg",
     "format": "svg",
-    "viewBox": "0 0 100 120",
+    "viewBox": "0 0 632 974",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1281,11 +2031,131 @@
     "categoryLabel": "Branches",
     "filePath": "assets/harikita/leaves/branches/branch-04.svg",
     "format": "svg",
-    "viewBox": "0 0 100 120",
+    "viewBox": "0 0 632 974",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
       "branch-04"
+    ],
+    "suggestedUsage": "Decorative element for Branches"
+  },
+  {
+    "id": "branch-05",
+    "name": "Branch 05",
+    "category": "leaves/branches",
+    "categoryLabel": "Branches",
+    "filePath": "assets/harikita/leaves/branches/branch-05.svg",
+    "format": "svg",
+    "viewBox": "0 0 632 974",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "branch-05"
+    ],
+    "suggestedUsage": "Decorative element for Branches"
+  },
+  {
+    "id": "branch-06",
+    "name": "Branch 06",
+    "category": "leaves/branches",
+    "categoryLabel": "Branches",
+    "filePath": "assets/harikita/leaves/branches/branch-06.svg",
+    "format": "svg",
+    "viewBox": "0 0 632 974",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "branch-06"
+    ],
+    "suggestedUsage": "Decorative element for Branches"
+  },
+  {
+    "id": "branch-07",
+    "name": "Branch 07",
+    "category": "leaves/branches",
+    "categoryLabel": "Branches",
+    "filePath": "assets/harikita/leaves/branches/branch-07.svg",
+    "format": "svg",
+    "viewBox": "0 0 632 974",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "branch-07"
+    ],
+    "suggestedUsage": "Decorative element for Branches"
+  },
+  {
+    "id": "branch-08",
+    "name": "Branch 08",
+    "category": "leaves/branches",
+    "categoryLabel": "Branches",
+    "filePath": "assets/harikita/leaves/branches/branch-08.svg",
+    "format": "svg",
+    "viewBox": "0 0 632 974",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "branch-08"
+    ],
+    "suggestedUsage": "Decorative element for Branches"
+  },
+  {
+    "id": "branch-09",
+    "name": "Branch 09",
+    "category": "leaves/branches",
+    "categoryLabel": "Branches",
+    "filePath": "assets/harikita/leaves/branches/branch-09.svg",
+    "format": "svg",
+    "viewBox": "0 0 632 974",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "branch-09"
+    ],
+    "suggestedUsage": "Decorative element for Branches"
+  },
+  {
+    "id": "branch-10",
+    "name": "Branch 10",
+    "category": "leaves/branches",
+    "categoryLabel": "Branches",
+    "filePath": "assets/harikita/leaves/branches/branch-10.svg",
+    "format": "svg",
+    "viewBox": "0 0 632 974",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "branch-10"
+    ],
+    "suggestedUsage": "Decorative element for Branches"
+  },
+  {
+    "id": "branch-11",
+    "name": "Branch 11",
+    "category": "leaves/branches",
+    "categoryLabel": "Branches",
+    "filePath": "assets/harikita/leaves/branches/branch-11.svg",
+    "format": "svg",
+    "viewBox": "0 0 632 974",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "branch-11"
+    ],
+    "suggestedUsage": "Decorative element for Branches"
+  },
+  {
+    "id": "branch-12",
+    "name": "Branch 12",
+    "category": "leaves/branches",
+    "categoryLabel": "Branches",
+    "filePath": "assets/harikita/leaves/branches/branch-12.svg",
+    "format": "svg",
+    "viewBox": "0 0 632 974",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "branch-12"
     ],
     "suggestedUsage": "Decorative element for Branches"
   },
@@ -1296,7 +2166,7 @@
     "categoryLabel": "Leaf Sprigs",
     "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-01.svg",
     "format": "svg",
-    "viewBox": "0 0 60 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1311,7 +2181,7 @@
     "categoryLabel": "Leaf Sprigs",
     "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-02.svg",
     "format": "svg",
-    "viewBox": "0 0 60 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1326,7 +2196,7 @@
     "categoryLabel": "Leaf Sprigs",
     "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-03.svg",
     "format": "svg",
-    "viewBox": "0 0 60 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1341,7 +2211,7 @@
     "categoryLabel": "Leaf Sprigs",
     "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-04.svg",
     "format": "svg",
-    "viewBox": "0 0 60 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1356,7 +2226,7 @@
     "categoryLabel": "Leaf Sprigs",
     "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-05.svg",
     "format": "svg",
-    "viewBox": "0 0 60 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1371,7 +2241,7 @@
     "categoryLabel": "Leaf Sprigs",
     "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-06.svg",
     "format": "svg",
-    "viewBox": "0 0 60 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1386,7 +2256,7 @@
     "categoryLabel": "Leaf Sprigs",
     "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-07.svg",
     "format": "svg",
-    "viewBox": "0 0 60 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1401,11 +2271,131 @@
     "categoryLabel": "Leaf Sprigs",
     "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-08.svg",
     "format": "svg",
-    "viewBox": "0 0 60 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
       "leaf-sprig-08"
+    ],
+    "suggestedUsage": "Decorative element for Leaf Sprigs"
+  },
+  {
+    "id": "leaf-sprig-09",
+    "name": "Leaf Sprig 09",
+    "category": "leaves/sprigs",
+    "categoryLabel": "Leaf Sprigs",
+    "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-09.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "leaf-sprig-09"
+    ],
+    "suggestedUsage": "Decorative element for Leaf Sprigs"
+  },
+  {
+    "id": "leaf-sprig-10",
+    "name": "Leaf Sprig 10",
+    "category": "leaves/sprigs",
+    "categoryLabel": "Leaf Sprigs",
+    "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-10.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "leaf-sprig-10"
+    ],
+    "suggestedUsage": "Decorative element for Leaf Sprigs"
+  },
+  {
+    "id": "leaf-sprig-11",
+    "name": "Leaf Sprig 11",
+    "category": "leaves/sprigs",
+    "categoryLabel": "Leaf Sprigs",
+    "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-11.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "leaf-sprig-11"
+    ],
+    "suggestedUsage": "Decorative element for Leaf Sprigs"
+  },
+  {
+    "id": "leaf-sprig-12",
+    "name": "Leaf Sprig 12",
+    "category": "leaves/sprigs",
+    "categoryLabel": "Leaf Sprigs",
+    "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-12.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "leaf-sprig-12"
+    ],
+    "suggestedUsage": "Decorative element for Leaf Sprigs"
+  },
+  {
+    "id": "leaf-sprig-13",
+    "name": "Leaf Sprig 13",
+    "category": "leaves/sprigs",
+    "categoryLabel": "Leaf Sprigs",
+    "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-13.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "leaf-sprig-13"
+    ],
+    "suggestedUsage": "Decorative element for Leaf Sprigs"
+  },
+  {
+    "id": "leaf-sprig-14",
+    "name": "Leaf Sprig 14",
+    "category": "leaves/sprigs",
+    "categoryLabel": "Leaf Sprigs",
+    "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-14.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "leaf-sprig-14"
+    ],
+    "suggestedUsage": "Decorative element for Leaf Sprigs"
+  },
+  {
+    "id": "leaf-sprig-15",
+    "name": "Leaf Sprig 15",
+    "category": "leaves/sprigs",
+    "categoryLabel": "Leaf Sprigs",
+    "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-15.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "leaf-sprig-15"
+    ],
+    "suggestedUsage": "Decorative element for Leaf Sprigs"
+  },
+  {
+    "id": "leaf-sprig-16",
+    "name": "Leaf Sprig 16",
+    "category": "leaves/sprigs",
+    "categoryLabel": "Leaf Sprigs",
+    "filePath": "assets/harikita/leaves/sprigs/leaf-sprig-16.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "leaf-sprig-16"
     ],
     "suggestedUsage": "Decorative element for Leaf Sprigs"
   },
@@ -1416,7 +2406,7 @@
     "categoryLabel": "Stems",
     "filePath": "assets/harikita/leaves/stems/stem-01.svg",
     "format": "svg",
-    "viewBox": "0 0 40 120",
+    "viewBox": "0 0 277 994",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1431,7 +2421,7 @@
     "categoryLabel": "Stems",
     "filePath": "assets/harikita/leaves/stems/stem-02.svg",
     "format": "svg",
-    "viewBox": "0 0 40 120",
+    "viewBox": "0 0 277 994",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1446,7 +2436,7 @@
     "categoryLabel": "Stems",
     "filePath": "assets/harikita/leaves/stems/stem-03.svg",
     "format": "svg",
-    "viewBox": "0 0 40 120",
+    "viewBox": "0 0 277 994",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
@@ -1461,11 +2451,101 @@
     "categoryLabel": "Stems",
     "filePath": "assets/harikita/leaves/stems/stem-04.svg",
     "format": "svg",
-    "viewBox": "0 0 40 120",
+    "viewBox": "0 0 277 994",
     "aspectRatio": "square/proportional",
     "tags": [
       "leaves",
       "stem-04"
+    ],
+    "suggestedUsage": "Decorative element for Stems"
+  },
+  {
+    "id": "stem-05",
+    "name": "Stem 05",
+    "category": "leaves/stems",
+    "categoryLabel": "Stems",
+    "filePath": "assets/harikita/leaves/stems/stem-05.svg",
+    "format": "svg",
+    "viewBox": "0 0 277 994",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "stem-05"
+    ],
+    "suggestedUsage": "Decorative element for Stems"
+  },
+  {
+    "id": "stem-06",
+    "name": "Stem 06",
+    "category": "leaves/stems",
+    "categoryLabel": "Stems",
+    "filePath": "assets/harikita/leaves/stems/stem-06.svg",
+    "format": "svg",
+    "viewBox": "0 0 277 994",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "stem-06"
+    ],
+    "suggestedUsage": "Decorative element for Stems"
+  },
+  {
+    "id": "stem-07",
+    "name": "Stem 07",
+    "category": "leaves/stems",
+    "categoryLabel": "Stems",
+    "filePath": "assets/harikita/leaves/stems/stem-07.svg",
+    "format": "svg",
+    "viewBox": "0 0 277 994",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "stem-07"
+    ],
+    "suggestedUsage": "Decorative element for Stems"
+  },
+  {
+    "id": "stem-08",
+    "name": "Stem 08",
+    "category": "leaves/stems",
+    "categoryLabel": "Stems",
+    "filePath": "assets/harikita/leaves/stems/stem-08.svg",
+    "format": "svg",
+    "viewBox": "0 0 277 994",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "stem-08"
+    ],
+    "suggestedUsage": "Decorative element for Stems"
+  },
+  {
+    "id": "stem-09",
+    "name": "Stem 09",
+    "category": "leaves/stems",
+    "categoryLabel": "Stems",
+    "filePath": "assets/harikita/leaves/stems/stem-09.svg",
+    "format": "svg",
+    "viewBox": "0 0 277 994",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "stem-09"
+    ],
+    "suggestedUsage": "Decorative element for Stems"
+  },
+  {
+    "id": "stem-10",
+    "name": "Stem 10",
+    "category": "leaves/stems",
+    "categoryLabel": "Stems",
+    "filePath": "assets/harikita/leaves/stems/stem-10.svg",
+    "format": "svg",
+    "viewBox": "0 0 277 994",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "leaves",
+      "stem-10"
     ],
     "suggestedUsage": "Decorative element for Stems"
   },
@@ -1476,7 +2556,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-01.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 42",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1491,7 +2571,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-02.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 42",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1506,7 +2586,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-03.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 42",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1521,7 +2601,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-04.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 40",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1536,7 +2616,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-05.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 40",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1551,7 +2631,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-06.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 40",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1566,7 +2646,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-07.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 50",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1581,7 +2661,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-08.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 50",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1596,7 +2676,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-09.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 50",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1611,7 +2691,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-10.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 45",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1626,7 +2706,7 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-11.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 45",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
@@ -1641,11 +2721,146 @@
     "categoryLabel": "Decorative Lines & Dividers",
     "filePath": "assets/harikita/lines/divider-12.svg",
     "format": "svg",
-    "viewBox": "0 0 200 40",
+    "viewBox": "0 0 220 45",
     "aspectRatio": "square/proportional",
     "tags": [
       "lines",
       "divider-12"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-13",
+    "name": "Divider 13",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-13.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 42",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-13"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-14",
+    "name": "Divider 14",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-14.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 42",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-14"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-15",
+    "name": "Divider 15",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-15.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 42",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-15"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-16",
+    "name": "Divider 16",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-16.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 35",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-16"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-17",
+    "name": "Divider 17",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-17.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 35",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-17"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-18",
+    "name": "Divider 18",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-18.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 35",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-18"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-19",
+    "name": "Divider 19",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-19.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 40",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-19"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-20",
+    "name": "Divider 20",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-20.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 40",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-20"
+    ],
+    "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
+  },
+  {
+    "id": "divider-21",
+    "name": "Divider 21",
+    "category": "lines",
+    "categoryLabel": "Decorative Lines & Dividers",
+    "filePath": "assets/harikita/lines/divider-21.svg",
+    "format": "svg",
+    "viewBox": "0 0 220 40",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "lines",
+      "divider-21"
     ],
     "suggestedUsage": "Decorative element for Decorative Lines & Dividers"
   },
@@ -1656,7 +2871,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-01.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1671,7 +2886,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-02.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1686,7 +2901,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-03.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1701,7 +2916,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-04.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1716,7 +2931,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-05.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1731,7 +2946,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-06.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1746,7 +2961,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-07.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1761,7 +2976,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-08.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1776,7 +2991,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-09.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1791,7 +3006,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-10.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1806,7 +3021,7 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-11.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
@@ -1821,11 +3036,311 @@
     "categoryLabel": "Floral & Botanical Ornaments",
     "filePath": "assets/harikita/ornaments/botanical-12.svg",
     "format": "svg",
-    "viewBox": "0 0 100 100",
+    "viewBox": "0 0 472 472",
     "aspectRatio": "square/proportional",
     "tags": [
       "ornaments",
       "botanical-12"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-13",
+    "name": "Botanical 13",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-13.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-13"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-14",
+    "name": "Botanical 14",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-14.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-14"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-15",
+    "name": "Botanical 15",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-15.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-15"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-16",
+    "name": "Botanical 16",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-16.svg",
+    "format": "svg",
+    "viewBox": "0 0 472 472",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-16"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-17",
+    "name": "Botanical 17",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-17.svg",
+    "format": "svg",
+    "viewBox": "0 0 262 425",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-17"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-18",
+    "name": "Botanical 18",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-18.svg",
+    "format": "svg",
+    "viewBox": "0 0 262 425",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-18"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-19",
+    "name": "Botanical 19",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-19.svg",
+    "format": "svg",
+    "viewBox": "0 0 262 425",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-19"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-20",
+    "name": "Botanical 20",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-20.svg",
+    "format": "svg",
+    "viewBox": "0 0 262 425",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-20"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-21",
+    "name": "Botanical 21",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-21.svg",
+    "format": "svg",
+    "viewBox": "0 0 262 425",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-21"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-22",
+    "name": "Botanical 22",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-22.svg",
+    "format": "svg",
+    "viewBox": "0 0 262 425",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-22"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-23",
+    "name": "Botanical 23",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-23.svg",
+    "format": "svg",
+    "viewBox": "0 0 262 425",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-23"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-24",
+    "name": "Botanical 24",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-24.svg",
+    "format": "svg",
+    "viewBox": "0 0 262 425",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-24"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-25",
+    "name": "Botanical 25",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-25.svg",
+    "format": "svg",
+    "viewBox": "0 0 236 295",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-25"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-26",
+    "name": "Botanical 26",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-26.svg",
+    "format": "svg",
+    "viewBox": "0 0 236 295",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-26"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-27",
+    "name": "Botanical 27",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-27.svg",
+    "format": "svg",
+    "viewBox": "0 0 236 295",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-27"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-28",
+    "name": "Botanical 28",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-28.svg",
+    "format": "svg",
+    "viewBox": "0 0 236 295",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-28"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-29",
+    "name": "Botanical 29",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-29.svg",
+    "format": "svg",
+    "viewBox": "0 0 236 295",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-29"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-30",
+    "name": "Botanical 30",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-30.svg",
+    "format": "svg",
+    "viewBox": "0 0 236 295",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-30"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-31",
+    "name": "Botanical 31",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-31.svg",
+    "format": "svg",
+    "viewBox": "0 0 236 295",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-31"
+    ],
+    "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
+  },
+  {
+    "id": "botanical-32",
+    "name": "Botanical 32",
+    "category": "ornaments",
+    "categoryLabel": "Floral & Botanical Ornaments",
+    "filePath": "assets/harikita/ornaments/botanical-32.svg",
+    "format": "svg",
+    "viewBox": "0 0 236 295",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "ornaments",
+      "botanical-32"
     ],
     "suggestedUsage": "Decorative element for Floral & Botanical Ornaments"
   },
@@ -1950,6 +3465,108 @@
     "suggestedUsage": "Decorative element for Background Patterns"
   },
   {
+    "id": "pattern-09",
+    "name": "Pattern 09",
+    "category": "patterns",
+    "categoryLabel": "Background Patterns",
+    "filePath": "assets/harikita/patterns/pattern-09.svg",
+    "format": "svg",
+    "viewBox": "0 0 100 100",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "patterns",
+      "pattern-09"
+    ],
+    "suggestedUsage": "Decorative element for Background Patterns"
+  },
+  {
+    "id": "pattern-10",
+    "name": "Pattern 10",
+    "category": "patterns",
+    "categoryLabel": "Background Patterns",
+    "filePath": "assets/harikita/patterns/pattern-10.svg",
+    "format": "svg",
+    "viewBox": "0 0 100 100",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "patterns",
+      "pattern-10"
+    ],
+    "suggestedUsage": "Decorative element for Background Patterns"
+  },
+  {
+    "id": "pattern-11",
+    "name": "Pattern 11",
+    "category": "patterns",
+    "categoryLabel": "Background Patterns",
+    "filePath": "assets/harikita/patterns/pattern-11.svg",
+    "format": "svg",
+    "viewBox": "0 0 100 100",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "patterns",
+      "pattern-11"
+    ],
+    "suggestedUsage": "Decorative element for Background Patterns"
+  },
+  {
+    "id": "pattern-12",
+    "name": "Pattern 12",
+    "category": "patterns",
+    "categoryLabel": "Background Patterns",
+    "filePath": "assets/harikita/patterns/pattern-12.svg",
+    "format": "svg",
+    "viewBox": "0 0 100 100",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "patterns",
+      "pattern-12"
+    ],
+    "suggestedUsage": "Decorative element for Background Patterns"
+  },
+  {
+    "id": "texture-canvas-woven",
+    "name": "Texture Canvas Woven",
+    "category": "textures",
+    "categoryLabel": "Paper & Linen Textures",
+    "filePath": "assets/harikita/textures/texture-canvas-woven.webp",
+    "format": "webp",
+    "aspectRatio": "cover",
+    "tags": [
+      "textures",
+      "texture-canvas-woven"
+    ],
+    "suggestedUsage": "Decorative element for Paper & Linen Textures"
+  },
+  {
+    "id": "texture-deckle-paper",
+    "name": "Texture Deckle Paper",
+    "category": "textures",
+    "categoryLabel": "Paper & Linen Textures",
+    "filePath": "assets/harikita/textures/texture-deckle-paper.webp",
+    "format": "webp",
+    "aspectRatio": "cover",
+    "tags": [
+      "textures",
+      "texture-deckle-paper"
+    ],
+    "suggestedUsage": "Decorative element for Paper & Linen Textures"
+  },
+  {
+    "id": "texture-gold-foil",
+    "name": "Texture Gold Foil",
+    "category": "textures",
+    "categoryLabel": "Paper & Linen Textures",
+    "filePath": "assets/harikita/textures/texture-gold-foil.webp",
+    "format": "webp",
+    "aspectRatio": "cover",
+    "tags": [
+      "textures",
+      "texture-gold-foil"
+    ],
+    "suggestedUsage": "Decorative element for Paper & Linen Textures"
+  },
+  {
     "id": "texture-linen-dark",
     "name": "Texture Linen Dark",
     "category": "textures",
@@ -2002,6 +3619,20 @@
     "tags": [
       "textures",
       "texture-paper-light"
+    ],
+    "suggestedUsage": "Decorative element for Paper & Linen Textures"
+  },
+  {
+    "id": "texture-parchment-antique",
+    "name": "Texture Parchment Antique",
+    "category": "textures",
+    "categoryLabel": "Paper & Linen Textures",
+    "filePath": "assets/harikita/textures/texture-parchment-antique.webp",
+    "format": "webp",
+    "aspectRatio": "cover",
+    "tags": [
+      "textures",
+      "texture-parchment-antique"
     ],
     "suggestedUsage": "Decorative element for Paper & Linen Textures"
   }

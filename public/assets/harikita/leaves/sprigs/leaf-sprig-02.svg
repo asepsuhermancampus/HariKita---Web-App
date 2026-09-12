@@ -1,7 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 100" fill="none">
-        <path d="M30 90 Q30 50 30 15" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
-        <path d="M30 70 C20 65 15 55 22 50 C28 52 30 62 30 70" stroke="currentColor" stroke-width="1"/>
-        <path d="M30 55 C40 50 45 40 38 35 C32 37 30 47 30 55" stroke="currentColor" stroke-width="1"/>
-        <path d="M30 40 C20 35 15 25 22 20 C28 22 30 32 30 40" stroke="currentColor" stroke-width="1"/>
-        <path d="M30 25 C40 20 45 10 38 5 C32 7 30 17 30 25" stroke="currentColor" stroke-width="1"/>
-      </svg>
+<svg fill="currentColor" vector-effect="non-scaling-stroke" xmlns="http://www.w3.org/2000/svg" width="472" height="472" viewBox="0 0 472 472" version="1.1">
+	<path d="M 465.439 250.874 C 456.278 256.461, 442.776 278.176, 436.490 297.435 C 430.836 314.754, 429.525 325.387, 429.512 354 C 429.504 370.635, 429.994 384.036, 430.826 390 C 434.090 413.377, 439.651 441.077, 445.783 464.500 C 447.555 471.267, 447.726 471.511, 450.943 471.823 C 453.735 472.095, 454.165 471.872, 453.615 470.439 C 452.572 467.720, 443.361 429.162, 442.044 422 C 441.387 418.425, 440.439 413.475, 439.938 411 C 436.699 394.988, 435.569 380.446, 435.548 354.500 C 435.530 332.576, 435.859 325.855, 437.295 318.752 C 442.337 293.816, 448.922 278.580, 460.959 264 C 466.231 257.614, 468.999 255.080, 470.750 255.033 C 471.465 255.014, 472 253.716, 472 252 C 472 248.413, 470.030 248.075, 465.439 250.874" stroke="none" fill="currentColor" fill-rule="evenodd"/>
+</svg>
