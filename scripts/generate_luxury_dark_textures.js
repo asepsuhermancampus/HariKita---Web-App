@@ -9,7 +9,7 @@ async function generateLuxuryDarkTextures() {
   console.log('▶ Generating Elegant Transparent Brown Textures (RGBA WebP)...');
   const size = 1500;
   const t1 = path.join(RAW_DIR, '1.jpeg'); // Real handmade paper
-  const t3 = path.join(RAW_DIR, '3.jpeg'); // Real natural linen fabric
+  const tLinen = path.join(RAW_DIR, 'authentic_linen_weave.jpg'); // Pure authentic woven linen fabric
 
   // Brand brown from HariKita palette: #6B5741 (Deep Taupe Brown / --color-gold-dark)
   const brownR = 107, brownG = 87, brownB = 65;
@@ -42,21 +42,21 @@ async function generateLuxuryDarkTextures() {
     console.log(`✅ texture-paper-dark.webp successfully generated (${fs.statSync(outPaperPath).size} bytes)`);
   }
 
-  // 2. LINEN DARK (Transparent Brown Linen):
-  if (fs.existsSync(t3)) {
-    const linenRaw = await sharp(t3)
+  // 2. LINEN DARK (Pure Authentic Woven Linen Fabric in Transparent Brown):
+  if (fs.existsSync(tLinen)) {
+    const linenRaw = await sharp(tLinen)
       .resize(size, size, { fit: 'cover' })
       .grayscale()
       .normalize()
       .raw()
       .toBuffer();
 
-    // Create RGBA buffer: RGB is brand brown, Alpha encodes textile cross-weave
+    // Create RGBA buffer: RGB is brand brown, Alpha encodes pure textile cross-weave threads
     const linenRGBA = Buffer.alloc(size * size * 4);
     for (let i = 0; i < size * size; i++) {
       const val = linenRaw[i];
-      // Subtle elegant opacity: 18% to 55% (46 to 140 alpha)
-      const alpha = Math.round(46 + (val / 255) * 94);
+      // Tactile textile weave in elegant opacity (16% to 58%)
+      const alpha = Math.round(40 + (val / 255) * 108);
       linenRGBA[i * 4] = brownR;
       linenRGBA[i * 4 + 1] = brownG;
       linenRGBA[i * 4 + 2] = brownB;

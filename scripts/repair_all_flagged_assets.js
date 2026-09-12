@@ -37,7 +37,7 @@ async function repairCards() {
   const w = info.width, h = info.height;
 
   const cardsConfig = [
-    { id: 'card-invitation-01.svg', minX: 30, maxX: 765, minY: 80, maxY: 520 },
+    { id: 'card-invitation-01.svg', minX: 30, maxX: 838, minY: 80, maxY: 520 },
     { id: 'card-invitation-02.svg', minX: 740, maxX: 1350, minY: 100, maxY: 730 },
     { id: 'card-invitation-03.svg', minX: 1400, maxX: 1900, minY: 100, maxY: 730 },
     { id: 'card-invitation-04.svg', minX: 60, maxX: 700, minY: 600, maxY: 1120 },

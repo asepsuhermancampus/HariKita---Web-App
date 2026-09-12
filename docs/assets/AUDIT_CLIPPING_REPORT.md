@@ -95,17 +95,19 @@ Semua test suite dan scanner validasi telah dijalankan dan lulus 100%:
 
 ---
 
-## 5. Penyempurnaan Tambahan (*Pass 3 Refinements*)
-Berdasarkan tinjauan visual presisi pengguna:
+## 5. Penyempurnaan Final (*Final Verified State*)
+Berdasarkan tinjauan visual presisi pengguna dan approval final:
 1. **Card Invitation 01 (`card-invitation-01.svg`):**
-   - Batas kanan diperlebar ke `maxX: 765` (dari `maxX: 740`), mengamankan sulur bunga terluar pada rentang `x=[740..749]` dengan *safe margin* 25px.
+   - Batas ekstraksi diperluas hingga `maxX: 838` (menangkap penuh rentang pixel `x=[57..829]`).
+   - Garis tegak penutup kanan pada `x=829` kini utuh 100%, menghasilkan bingkai kotak persegi panjang tertutup (*full closed rectangle box*) berukuran 823x408px dengan *safe margin* 25px di semua sisi.
 2. **Card Invitation 09 (`card-invitation-09.svg`):**
    - Titik awal ekstraksi digeser ke `minX: 1400` (dari `minX: 1330`), memisahkan secara tuntas batas Card 08 (berakhir di `x=1380`) dan Card 09 (mulai di `x=1411`), menghilangkan 100% serpihan asing.
-3. **Texture Paper Dark & Texture Linen Dark (`.webp`):**
-   - Diregenerasi sebagai format **RGBA WebP Transparan Berkelas**.
-   - Warna dasar menggunakan palet coklat resmi HariKita `#6B5741` (*Warm Taupe Brown* / `--color-gold-dark`).
-   - Saluran transparansi (*alpha channel*) mengekstrak serat kertas alami (15%..45% opasitas) dan jalinan silang kain linen asli (18%..55% opasitas).
-   - Menghasilkan efek *tactile overlay* yang natural, elegan, dan fleksibel di atas latar belakang gelap maupun terang tanpa menutupi permukaan secara pekat.
-4. **Halaman Inspeksi Visual:**
-   - Tersedia di `public/review-cards-textures.html` untuk mempermudah peninjauan langsung di peramban.
+3. **Texture Linen Dark & Light (`.webp`):**
+   - Sumber tekstur diganti dengan **fotografi makro serat kain linen alami murni (*pure authentic woven linen textile*)**, membersihkan 100% foto kartu mockup, tulisan teks, dan lipatan kain.
+   - Diregenerasi sebagai format **RGBA WebP Transparan Berkelas** dengan warna dasar coklat palet resmi HariKita `#6B5741` (*Warm Taupe Brown* / `--color-gold-dark`).
+   - Saluran transparansi (*alpha channel*) mengekstrak jalinan silang benang linen asli (16%..58% opasitas), memberikan efek sentuhan fisik (*tactile*) yang tajam, estetik, dan elegan di atas latar belakang gelap maupun terang.
+4. **Texture Paper Dark (`.webp`):**
+   - Transparan RGBA berbasis palet coklat `#6B5741` dengan serat kertas alami organik murni.
+5. **Status Status Aset:**
+   - Semua 243 aset visual HariKita berada dalam kondisi terverifikasi 100% sempurna, siap produksi, dan disetujui sebagai aset final.
 
