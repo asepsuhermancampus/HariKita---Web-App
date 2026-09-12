@@ -20,18 +20,18 @@ const symbolFile = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="602 13 741 
 </svg>`;
 fs.writeFileSync(path.join(brandDir, 'harikita-symbol.svg'), symbolFile);
 
-// 2. Horizontal Logo SVG (Light Background - Navbar)
-const horizontalFile = `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="140" viewBox="0 0 500 140" fill="none">
+// 2. Horizontal Logo SVG (Light Background - Navbar) - Calibrated Balanced Editorial
+const horizontalFile = `<svg xmlns="http://www.w3.org/2000/svg" width="460" height="130" viewBox="0 0 460 130" fill="none">
   <!-- Symbol: Taupe #88735B -->
-  <svg x="20" y="35" width="76" height="70" viewBox="602 13 741 678">
+  <svg x="20" y="34" width="68" height="62.2" viewBox="602 13 741 678">
     <path d="${symbolPath}" fill="#88735B" fill-rule="evenodd"/>
   </svg>
   <!-- Wordmark: Charcoal #2B2B2B -->
-  <svg x="115" y="35" width="240" height="49" viewBox="26 36 1898 388">
+  <svg x="104" y="37" width="196" height="40" viewBox="26 36 1898 388">
     <path d="${wordmarkPath}" fill="#2B2B2B" fill-rule="evenodd"/>
   </svg>
   <!-- Subtitle: WEDDING & EVENTS -->
-  <text x="117" y="103" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#88735B" letter-spacing="3.8">WEDDING &amp; EVENTS</text>
+  <text x="106" y="93" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="9" font-weight="600" fill="#88735B" letter-spacing="3.2">WEDDING &amp; EVENTS</text>
 </svg>`;
 fs.writeFileSync(path.join(brandDir, 'harikita-logo-horizontal.svg'), horizontalFile);
 

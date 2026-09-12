@@ -150,14 +150,14 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
       </div>
     );
   } else {
-    // Horizontal variant (Ideal for Navbar and Footers)
-    const sWidth = 44 * scale;
+    // Horizontal variant (Ideal for Navbar and Footers) - Calibrated Balanced Editorial
+    const sWidth = 38 * scale;
     const sHeight = sWidth * (678 / 741);
-    const wWidth = 148 * scale;
+    const wWidth = 118 * scale;
     const wHeight = wWidth * (388 / 1898);
 
     content = (
-      <div className="flex items-center gap-3 select-none group">
+      <div className="flex items-center gap-2.5 select-none group">
         <svg
           width={sWidth}
           height={sHeight}
@@ -183,7 +183,7 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
 
           {showSubtitle && (
             <span
-              className="text-[7.5px] sm:text-[8.5px] uppercase tracking-[0.28em] font-semibold mt-1"
+              className="text-[7.5px] uppercase tracking-[0.26em] font-semibold mt-0.5 leading-none"
               style={{ color: subtitleColor }}
             >
               WEDDING &amp; EVENTS
@@ -196,11 +196,11 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
 
   if (asLink) {
     return (
-      <Link href={href} className={`focus:outline-none inline-block ${className}`}>
+      <Link href={href} className={`focus:outline-none inline-flex items-center ${className}`}>
         {content}
       </Link>
     );
   }
 
-  return <div className={`inline-block ${className}`}>{content}</div>;
+  return <div className={`inline-flex items-center ${className}`}>{content}</div>;
 };
