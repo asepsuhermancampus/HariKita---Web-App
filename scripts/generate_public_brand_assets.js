@@ -20,18 +20,18 @@ const symbolFile = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="602 13 741 
 </svg>`;
 fs.writeFileSync(path.join(brandDir, 'harikita-symbol.svg'), symbolFile);
 
-// 2. Horizontal Logo SVG (Light Background - Navbar) - Bounded Monogram Body Lockup (Calibrated 122px)
-const horizontalFile = `<svg xmlns="http://www.w3.org/2000/svg" width="460" height="130" viewBox="0 0 460 130" fill="none">
-  <!-- Symbol: Taupe #88735B (Height 69.5, shoulder at Y=45.1, baseline at Y=99.5) -->
-  <svg x="20" y="30" width="76" height="69.5" viewBox="602 13 741 678">
+// 2. Horizontal Logo SVG (Light Background - Navbar) - Unified Single-SVG Vector Lockup
+const horizontalFile = `<svg xmlns="http://www.w3.org/2000/svg" width="424" height="100" viewBox="0 0 424 100" fill="none">
+  <!-- Monogram Symbol H&K (Height 100, Y=0 to Y=100) -->
+  <svg x="0" y="0" width="109.3" height="100" viewBox="602 13 741 678">
     <path d="${symbolPath}" fill="#88735B" fill-rule="evenodd"/>
   </svg>
-  <!-- Wordmark: Charcoal #2B2B2B (Top locked flush touching shoulder Y=45) -->
-  <svg x="108" y="45" width="200" height="40.9" viewBox="26 36 1898 388">
+  <!-- Wordmark HariKita (Top locked flush at Y=20.5, Height 58.0) -->
+  <svg x="135" y="20.5" width="283.7" height="58.0" viewBox="26 36 1898 388">
     <path d="${wordmarkPath}" fill="#2B2B2B" fill-rule="evenodd"/>
   </svg>
-  <!-- Subtitle: WEDDING & EVENTS (Bottom locked at baseline Y=98.5) -->
-  <text x="110" y="98.5" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11" font-weight="600" fill="#88735B" letter-spacing="3.8">WEDDING &amp; EVENTS</text>
+  <!-- Subtitle WEDDING & EVENTS (Baseline locked flush at bottom Y=98) -->
+  <text x="138" y="98" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-size="17" font-weight="600" fill="#88735B" letter-spacing="4.8">WEDDING &amp; EVENTS</text>
 </svg>`;
 fs.writeFileSync(path.join(brandDir, 'harikita-logo-horizontal.svg'), horizontalFile);
 

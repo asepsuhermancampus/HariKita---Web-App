@@ -150,47 +150,56 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
       </div>
     );
   } else {
-    // Horizontal variant (Ideal for Navbar and Footers) - Bounded Monogram Body Lockup (Calibrated 122px)
-    const sWidth = 46 * scale;
-    const sHeight = sWidth * (678 / 741);
-    const wWidth = 122 * scale;
-    const wHeight = wWidth * (388 / 1898);
+    // Horizontal variant (Ideal for Navbar and Footers) - Unified Single-SVG Vector Lockup
+    const logoHeight = 40 * scale;
+    const logoWidth = logoHeight * (424 / 100);
 
     content = (
-      <div className="flex items-end gap-2.5 select-none group">
+      <svg
+        width={logoWidth}
+        height={logoHeight}
+        viewBox="0 0 424 100"
+        fill="none"
+        className="shrink-0 select-none group"
+      >
+        {/* Monogram Symbol H&K (Height 100, Y=0 to Y=100) */}
         <svg
-          width={sWidth}
-          height={sHeight}
+          x="0"
+          y="0"
+          width="109.3"
+          height="100"
           viewBox="602 13 741 678"
-          fill="currentColor"
-          className="shrink-0 transition-transform duration-300 group-hover:scale-105"
-          style={{ color: symbolColor }}
+          className="transition-transform duration-300 group-hover:scale-105"
         >
-          <path d={SYMBOL_PATH} fill="currentColor" fillRule="evenodd" />
+          <path d={SYMBOL_PATH} fill={symbolColor} fillRule="evenodd" />
         </svg>
 
-        <div className="flex flex-col justify-end translate-y-[2.5px]">
-          <svg
-            width={wWidth}
-            height={wHeight}
-            viewBox="26 36 1898 388"
-            fill="currentColor"
-            className="shrink-0"
-            style={{ color: wordmarkColor }}
-          >
-            <path d={WORDMARK_PATH} fill="currentColor" fillRule="evenodd" />
-          </svg>
+        {/* Wordmark HariKita (Top locked flush at Y=20.5, Height 58.0) */}
+        <svg
+          x="135"
+          y={showSubtitle ? "20.5" : "21"}
+          width="283.7"
+          height="58.0"
+          viewBox="26 36 1898 388"
+        >
+          <path d={WORDMARK_PATH} fill={wordmarkColor} fillRule="evenodd" />
+        </svg>
 
-          {showSubtitle && (
-            <span
-              className="text-[6.8px] uppercase tracking-[0.28em] font-semibold mt-0.5 leading-none"
-              style={{ color: subtitleColor }}
-            >
-              WEDDING &amp; EVENTS
-            </span>
-          )}
-        </div>
-      </div>
+        {/* Subtitle WEDDING & EVENTS (Baseline locked flush at bottom Y=98) */}
+        {showSubtitle && (
+          <text
+            x="138"
+            y="98"
+            fontFamily="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif"
+            fontSize="17"
+            fontWeight="600"
+            fill={subtitleColor}
+            letterSpacing="4.8"
+          >
+            WEDDING &amp; EVENTS
+          </text>
+        )}
+      </svg>
     );
   }
 
