@@ -90,7 +90,8 @@ interface HariKitaLogoProps {
 ```
 
 * **Varian Horizontal:**
-  * Simbol di kiri + Wordmark "HariKita" dan "WEDDING & EVENTS" di kanan.
+  * Arsitektur: **Single-SVG Vektor Tunggal (`viewBox="0 0 424 100"`)** bebas layout shifts, mengunci koordinat pundak simbol (Y=20.5) dengan puncak huruf "HariKita", serta dasar simbol (Y=100.0) dengan baseline "WEDDING & EVENTS".
+  * Simbol di kiri (109x100) + Wordmark "HariKita" (284x58 pada Y=20.5) + Subtitle "WEDDING & EVENTS" (font 17 pada Y=98).
   * Digunakan pada **Navbar** (`Navbar.tsx`) dan **Footer** (`Footer.tsx`).
 * **Varian Stacked:**
   * Simbol di atas + Wordmark di tengah + Subtitle + Hairline Divider + Tagline *"Your Day. Our Story"*.
