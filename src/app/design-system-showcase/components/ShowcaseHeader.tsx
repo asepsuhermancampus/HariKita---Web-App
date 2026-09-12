@@ -1,0 +1,146 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { Sparkles, Palette, Layers, Grid, Smartphone, Info } from 'lucide-react';
+import { HariKitaLogo } from '@/components/brand/HariKitaLogo';
+import { cn } from '@/lib/utils';
+
+export type ShowcaseHubType = 'brand' | 'invitation';
+
+interface ShowcaseHeaderProps {
+  activeHub: ShowcaseHubType;
+  onSelectHub: (hub: ShowcaseHubType) => void;
+  brandAssetCount: number;
+}
+
+export function ShowcaseHeader({
+  activeHub,
+  onSelectHub,
+  brandAssetCount,
+}: ShowcaseHeaderProps) {
+  return (
+    <>
+      {/* Reference Notice Banner */}
+      <div className="bg-hk-soft-beige/80 border-b border-hk-champagne/40 px-4 py-2 text-center text-xs font-manrope text-hk-charcoal flex items-center justify-center gap-2">
+        <Info className="h-4 w-4 text-hk-taupe shrink-0" />
+        <span>
+          <strong>Living Style Guide &amp; Design System Reference:</strong> Halaman ini khusus untuk acuan sistem desain &amp; katalog visual resmi HariKita (Kabupaten Kebumen).
+        </span>
+      </div>
+
+      {/* Main Sticky Topbar */}
+      <header className="sticky top-0 z-40 border-b border-hk-champagne/40 bg-white/95 px-6 py-3.5 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          {/* Logo & Hub Title */}
+          <div className="flex items-center gap-4">
+            <HariKitaLogo variant="horizontal" size="sm" asLink={false} />
+            <div className="hidden h-5 w-[1px] bg-hk-champagne/40 md:block" />
+            <span className="hidden font-editorial text-sm font-medium italic text-hk-taupe md:inline">
+              {activeHub === 'brand'
+                ? 'Core Brand & UI Foundation'
+                : 'Wedding Invitation System & Sandbox'}
+            </span>
+          </div>
+
+          {/* Center: Dual-Hub Tab Switcher */}
+          <div className="flex items-center rounded-full border border-hk-champagne/60 bg-hk-ivory p-1 shadow-inner">
+            <button
+              onClick={() => onSelectHub('brand')}
+              className={cn(
+                'flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
+                activeHub === 'brand'
+                  ? 'bg-hk-taupe text-white shadow-sm'
+                  : 'text-hk-charcoal/70 hover:text-hk-charcoal'
+              )}
+            >
+              <Palette className="h-3.5 w-3.5" />
+              <span>Core Brand</span>
+            </button>
+
+            <button
+              onClick={() => onSelectHub('invitation')}
+              className={cn(
+                'flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
+                activeHub === 'invitation'
+                  ? 'bg-hk-taupe text-white shadow-sm'
+                  : 'text-hk-charcoal/70 hover:text-hk-charcoal'
+              )}
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Wedding System</span>
+              <span className="rounded-full bg-hk-champagne/30 px-2 py-0.2 text-[10px] text-hk-charcoal font-bold">
+                Sandbox
+              </span>
+            </button>
+          </div>
+
+          {/* Right: Dynamic Sub-Navigation Anchor Links */}
+          <nav className="flex flex-wrap items-center gap-1.5 text-xs font-manrope font-semibold">
+            {activeHub === 'brand' ? (
+              <>
+                <a
+                  href="#palette"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  Palet
+                </a>
+                <a
+                  href="#typography"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  Tipografi
+                </a>
+                <a
+                  href="#assets"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  Aset ({brandAssetCount})
+                </a>
+                <a
+                  href="#components"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  Komponen UI
+                </a>
+                <a
+                  href="#mobile"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  Mobile Simulator
+                </a>
+              </>
+            ) : (
+              <>
+                <a
+                  href="#archetypes"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  8 Arketipe
+                </a>
+                <a
+                  href="#invitation-assets"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  243 Aset Fine-Line
+                </a>
+                <a
+                  href="#invitation-components"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  Playground Komponen
+                </a>
+                <a
+                  href="#sandbox-mobile"
+                  className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50"
+                >
+                  Simulator 375px
+                </a>
+              </>
+            )}
+          </nav>
+        </div>
+      </header>
+    </>
+  );
+}
