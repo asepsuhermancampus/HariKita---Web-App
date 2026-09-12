@@ -10,7 +10,7 @@ assert(fs.existsSync('public/brand/harikita-logo-stacked.svg'), 'Missing harikit
 assert(fs.existsSync('public/favicon.svg'), 'Missing favicon.svg');
 assert(fs.existsSync('public/icons/icon-192x192.png'), 'Missing icon-192x192.png');
 assert(fs.existsSync('public/icons/icon-512x512.png'), 'Missing icon-512x512.png');
-assert(fs.existsSync('public/manifest.webmanifest'), 'Missing manifest.webmanifest');
+assert(fs.existsSync('src/app/manifest.ts') || fs.existsSync('public/manifest.json'), 'Missing PWA manifest');
 
 // 2. Check no broken raster image imports in components
 const logoComp = fs.readFileSync('src/components/brand/HariKitaLogo.tsx', 'utf8');
