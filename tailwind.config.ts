@@ -9,6 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        hk: {
+          canvas: "var(--hk-canvas)",
+          ivory: "var(--hk-ivory)",
+          "soft-beige": "var(--hk-soft-beige)",
+          charcoal: "var(--hk-charcoal)",
+          taupe: "var(--hk-taupe)",
+          champagne: "var(--hk-champagne)",
+        },
         canvas: "#FAF8F5",
         "canvas-subtle": "#F3EDE6",
         gold: {
@@ -23,8 +31,10 @@ const config: Config = {
         },
       },
       fontFamily: {
+        editorial: ["Cormorant Garamond", "Georgia", "serif"],
+        manrope: ["Manrope", "system-ui", "sans-serif"],
         serif: ["Playfair Display", "Cinzel", "Georgia", "serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Manrope", "Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
       },
     },
   },

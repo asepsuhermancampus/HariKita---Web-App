@@ -3,6 +3,15 @@
 @tailwind utilities;
 
 :root {
+  /* HariKita Official Brand Identity Tokens (from HariKita-Design.png) */
+  --hk-canvas: #FAF8F5;
+  --hk-ivory: #F8F6F1;
+  --hk-soft-beige: #E5DED5;
+  --hk-charcoal: #2B2B2B;
+  --hk-taupe: #88735B;
+  --hk-champagne: #C5B39F;
+
+  /* Legacy aliases for backward compatibility */
   --color-canvas: #FAF8F5;
   --color-canvas-subtle: #F3EDE6;
   --color-gold: #C5A880;
