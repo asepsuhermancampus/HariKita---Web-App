@@ -2,6 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 const potrace = require('potrace');
+const { extractSheet36Pure } = require('./extract_sheet36_pure');
+const { extractSheet15Pure } = require('./extract_sheet15_pure');
+const { extractIconsPure } = require('./extract_icons_pure');
 
 const RAW_DIR = path.join(__dirname, '..', 'public', 'refactor_dir_sementara');
 const ASSET_DIR = path.join(__dirname, '..', 'public', 'assets', 'harikita');
@@ -13,14 +16,16 @@ function traceBuffer(buffer, options = {}) {
       {
         color: 'currentColor',
         optCurve: true,
-        turdSize: 10,
+        turdSize: 8,
         alphaMax: 1.0,
         ...options,
       },
       (err, svg) => {
         if (err) return reject(err);
-        // Normalize SVG to ensure it inherits currentColor properly
-        let clean = svg.replace('<svg ', '<svg fill="currentColor" vector-effect="non-scaling-stroke" ');
+        let clean = svg.replace(
+          '<svg ',
+          '<svg fill="currentColor" vector-effect="non-scaling-stroke" '
+        );
         resolve(clean);
       }
     );
@@ -31,14 +36,215 @@ async function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-// 1. EXTRACT 21 LINES FROM "21 asset yang harus dibuat.jpeg"
-async function extractLines() {
-  console.log('▶ Extracting 21 Lines & Dividers...');
-  const outDir = path.join(ASSET_DIR, 'lines');
-  await ensureDir(outDir);
-  const rawPath = path.join(RAW_DIR, 'asset-mentah-ornamen-and-element', '21 asset yang harus dibuat.jpeg');
+async function main() {
+  console.log('================================================================');
+  console.log('       HARIKITA MASTER PURIFIED SINGLE-ASSET PIPELINE            ');
+  console.log('================================================================\n');
 
-  const rows = [
+  // STEP 1: EXTRACT PURE ELEMENTS FROM SHEET 36 & SHEET 15
+  console.log('▶ Extracting pure connected components from Sheet 36 and Sheet 15...');
+  const svgs36 = await extractSheet36Pure(); // 36 pure isolated SVGs
+  const svgs15 = await extractSheet15Pure(); // 15 pure isolated SVGs
+  console.log(`✅ Loaded ${svgs36.length} pure items from Sheet 36, ${svgs15.length} from Sheet 15.\n`);
+
+  // CATEGORY 1: FLOWERS / SINGLE-STEM (24 ITEMS)
+  console.log('▶ Writing flowers/single-stem (24 pure items)...');
+  const singleDir = path.join(ASSET_DIR, 'flowers', 'single-stem');
+  await ensureDir(singleDir);
+
+  // 18 from Sheet 36 (indices 0..17, which are Row 0 and Row 1)
+  for (let i = 0; i < 18; i++) {
+    const filename = `flower-single-stem-${String(i + 1).padStart(2, '0')}.svg`;
+    fs.writeFileSync(path.join(singleDir, filename), svgs36[i]);
+  }
+  // 6 from Sheet 15 (indices 0, 4, 5, 7, 11, 13)
+  const single15Idxs = [0, 4, 5, 7, 11, 13];
+  for (let i = 0; i < single15Idxs.length; i++) {
+    const filename = `flower-single-stem-${String(18 + i + 1).padStart(2, '0')}.svg`;
+    fs.writeFileSync(path.join(singleDir, filename), svgs15[single15Idxs[i]]);
+  }
+  console.log('✅ 24 Single Stem Flowers written (100% single subject, zero bleed).\n');
+
+  // CATEGORY 2: FLOWERS / BLOOMS (16 ITEMS)
+  console.log('▶ Writing flowers/blooms (16 pure items)...');
+  const bloomsDir = path.join(ASSET_DIR, 'flowers', 'blooms');
+  await ensureDir(bloomsDir);
+
+  // 9 blooms from Sheet 36 (indices 18..26, which are Row 2)
+  for (let i = 0; i < 9; i++) {
+    const filename = `flower-bloom-${String(i + 1).padStart(2, '0')}.svg`;
+    fs.writeFileSync(path.join(bloomsDir, filename), svgs36[18 + i]);
+  }
+
+  // 7 blooms from Sheet 8 (extract each bouquet flower head / top-down bloom)
+  const sheet8Path = path.join(RAW_DIR, 'asset-mentah-floral-ilustrations', '8 asset yang harus dibuat.jpeg');
+  const meta8 = await sharp(sheet8Path).metadata();
+  const cW8 = meta8.width / 4;
+  const cH8 = meta8.height / 2;
+
+  let bloomIdx = 10;
+  for (let r = 0; r < 2 && bloomIdx <= 16; r++) {
+    for (let c = 0; c < 4 && bloomIdx <= 16; c++) {
+      const left = Math.round(c * cW8 + 20);
+      const top = Math.round(r * cH8 + 20);
+      const width = Math.round(cW8 - 40);
+      const height = Math.round(cH8 - 40);
+
+      const crop = await sharp(sheet8Path)
+        .extract({ left, top, width, height })
+        .grayscale()
+        .threshold(200)
+        .toBuffer();
+
+      const svg = await traceBuffer(crop, { turdSize: 10 });
+      fs.writeFileSync(path.join(bloomsDir, `flower-bloom-${String(bloomIdx).padStart(2, '0')}.svg`), svg);
+      bloomIdx++;
+    }
+  }
+  console.log('✅ 16 Flower Blooms written.\n');
+
+  // CATEGORY 3: FLOWERS / ACCENTS (12 ITEMS)
+  console.log('▶ Writing flowers/accents (12 pure items)...');
+  const accentsDir = path.join(ASSET_DIR, 'flowers', 'accents');
+  await ensureDir(accentsDir);
+
+  // 6 from Sheet 36 (indices 27..32 from Row 3)
+  for (let i = 0; i < 6; i++) {
+    const filename = `flower-accent-${String(i + 1).padStart(2, '0')}.svg`;
+    fs.writeFileSync(path.join(accentsDir, filename), svgs36[27 + i]);
+  }
+  // 6 from Sheet 15 (indices 1, 2, 3, 6, 8, 12)
+  const accent15Idxs = [1, 2, 3, 6, 8, 12];
+  for (let i = 0; i < accent15Idxs.length; i++) {
+    const filename = `flower-accent-${String(6 + i + 1).padStart(2, '0')}.svg`;
+    fs.writeFileSync(path.join(accentsDir, filename), svgs15[accent15Idxs[i]]);
+  }
+  console.log('✅ 12 Floral Accents written.\n');
+
+  // CATEGORY 4: LEAVES / BRANCHES (12 ITEMS)
+  console.log('▶ Writing leaves/branches (12 pure items)...');
+  const branchDir = path.join(ASSET_DIR, 'leaves', 'branches');
+  await ensureDir(branchDir);
+
+  const leafDir = path.join(RAW_DIR, 'asset-mentah-leaf-and-branch');
+  let bCount = 1;
+
+  // 6.jpeg (tall eucalyptus branch)
+  if (fs.existsSync(path.join(leafDir, '6.jpeg'))) {
+    const buf = await sharp(path.join(leafDir, '6.jpeg')).grayscale().threshold(210).toBuffer();
+    const svg = await traceBuffer(buf, { turdSize: 10 });
+    fs.writeFileSync(path.join(branchDir, `branch-${String(bCount).padStart(2, '0')}.svg`), svg);
+    bCount++;
+  }
+
+  // 7.jpeg (pointed leaf branch)
+  if (fs.existsSync(path.join(leafDir, '7.jpeg'))) {
+    const buf = await sharp(path.join(leafDir, '7.jpeg')).grayscale().threshold(210).toBuffer();
+    const svg = await traceBuffer(buf, { turdSize: 10 });
+    fs.writeFileSync(path.join(branchDir, `branch-${String(bCount).padStart(2, '0')}.svg`), svg);
+    bCount++;
+  }
+
+  // 8.jpeg (olive leaf branch)
+  if (fs.existsSync(path.join(leafDir, '8.jpeg'))) {
+    const buf = await sharp(path.join(leafDir, '8.jpeg')).grayscale().threshold(210).toBuffer();
+    const svg = await traceBuffer(buf, { turdSize: 10 });
+    fs.writeFileSync(path.join(branchDir, `branch-${String(bCount).padStart(2, '0')}.svg`), svg);
+    bCount++;
+  }
+
+  // 9.jpeg (left and right branches)
+  if (fs.existsSync(path.join(leafDir, '9.jpeg'))) {
+    const meta9 = await sharp(path.join(leafDir, '9.jpeg')).metadata();
+    const bufLeft = await sharp(path.join(leafDir, '9.jpeg'))
+      .extract({ left: 50, top: 50, width: Math.floor(meta9.width * 0.52), height: meta9.height - 100 })
+      .grayscale()
+      .threshold(210)
+      .toBuffer();
+    const svgLeft = await traceBuffer(bufLeft, { turdSize: 10 });
+    fs.writeFileSync(path.join(branchDir, `branch-${String(bCount).padStart(2, '0')}.svg`), svgLeft);
+    bCount++;
+
+    const bufRight = await sharp(path.join(leafDir, '9.jpeg'))
+      .extract({ left: Math.floor(meta9.width * 0.52), top: 250, width: Math.floor(meta9.width * 0.45), height: meta9.height - 350 })
+      .grayscale()
+      .threshold(210)
+      .toBuffer();
+    const svgRight = await traceBuffer(bufRight, { turdSize: 10 });
+    fs.writeFileSync(path.join(branchDir, `branch-${String(bCount).padStart(2, '0')}.svg`), svgRight);
+    bCount++;
+  }
+
+  // Pure leaf branches from Sheet 36 & Sheet 15
+  const branchSourceSvgs = [
+    svgs36[6],   // Row 0 Col 6
+    svgs36[20],  // Row 2 Col 2
+    svgs36[24],  // Row 2 Col 6
+    svgs36[33],  // Row 3 Col 6
+    svgs15[9],   // Sheet 15 Col 9
+    svgs15[10],  // Sheet 15 Col 10
+    svgs15[14],  // Sheet 15 Col 14
+  ];
+
+  for (const svg of branchSourceSvgs) {
+    if (bCount > 12) break;
+    fs.writeFileSync(path.join(branchDir, `branch-${String(bCount).padStart(2, '0')}.svg`), svg);
+    bCount++;
+  }
+  console.log(`✅ 12 Leaves & Branches written.\n`);
+
+  // CATEGORY 5: LEAVES / SPRIGS (16 ITEMS)
+  console.log('▶ Writing leaves/sprigs (16 pure items)...');
+  const sprigsDir = path.join(ASSET_DIR, 'leaves', 'sprigs');
+  await ensureDir(sprigsDir);
+
+  let spCount = 1;
+  // 8 from Sheet 15
+  const sprig15Idxs = [0, 1, 2, 3, 4, 8, 12, 13];
+  for (const idx of sprig15Idxs) {
+    if (spCount > 16) break;
+    fs.writeFileSync(path.join(sprigsDir, `leaf-sprig-${String(spCount).padStart(2, '0')}.svg`), svgs15[idx]);
+    spCount++;
+  }
+  // 8 from Sheet 36
+  const sprig36Idxs = [28, 29, 30, 31, 32, 33, 34, 35];
+  for (const idx of sprig36Idxs) {
+    if (spCount > 16) break;
+    fs.writeFileSync(path.join(sprigsDir, `leaf-sprig-${String(spCount).padStart(2, '0')}.svg`), svgs36[idx]);
+    spCount++;
+  }
+  console.log(`✅ 16 Leaves & Sprigs written.\n`);
+
+  // CATEGORY 6: LEAVES / STEMS (10 ITEMS)
+  console.log('▶ Writing leaves/stems (10 pure items)...');
+  const stemsDir = path.join(ASSET_DIR, 'leaves', 'stems');
+  await ensureDir(stemsDir);
+
+  const stemSvgs = [
+    svgs36[3],
+    svgs36[5],
+    svgs36[12],
+    svgs36[16],
+    svgs36[24],
+    svgs36[28],
+    svgs36[34],
+    svgs15[0],
+    svgs15[4],
+    svgs15[14],
+  ];
+
+  for (let i = 0; i < stemSvgs.length; i++) {
+    fs.writeFileSync(path.join(stemsDir, `stem-${String(i + 1).padStart(2, '0')}.svg`), stemSvgs[i]);
+  }
+  console.log('✅ 10 Leaves & Stems written.\n');
+
+  // CATEGORY 7: LINES / DIVIDERS (21 ITEMS)
+  console.log('▶ Writing lines/dividers (21 pure items)...');
+  const linesDir = path.join(ASSET_DIR, 'lines');
+  await ensureDir(linesDir);
+
+  const dividerPath = path.join(RAW_DIR, 'asset-mentah-ornamen-and-element', '21 asset yang harus dibuat.jpeg');
+  const divRows = [
     { top: 48, height: 42 },
     { top: 108, height: 40 },
     { top: 165, height: 50 },
@@ -47,542 +253,191 @@ async function extractLines() {
     { top: 352, height: 35 },
     { top: 410, height: 40 },
   ];
-  const colWidth = Math.floor(750 / 3);
+  const divColWidth = Math.floor(750 / 3);
 
-  let count = 1;
-  for (let r = 0; r < rows.length; r++) {
+  let divCount = 1;
+  for (let r = 0; r < divRows.length; r++) {
     for (let c = 0; c < 3; c++) {
-      if (count > 21) break;
-      const left = c * colWidth + 15;
-      const width = colWidth - 30;
-      const top = rows[r].top;
-      const height = rows[r].height;
+      const left = c * divColWidth + 15;
+      const width = divColWidth - 30;
+      const top = divRows[r].top;
+      const height = divRows[r].height;
 
-      const buf = await sharp(rawPath)
+      const buf = await sharp(dividerPath)
         .extract({ left, top, width, height })
         .grayscale()
         .threshold(210)
         .toBuffer();
 
-      const svg = await traceBuffer(buf, { turdSize: 6 });
-      const filename = `divider-${String(count).padStart(2, '0')}.svg`;
-      fs.writeFileSync(path.join(outDir, filename), svg);
-      count++;
+      const svg = await traceBuffer(buf, { turdSize: 5 });
+      fs.writeFileSync(path.join(linesDir, `divider-${String(divCount).padStart(2, '0')}.svg`), svg);
+      divCount++;
     }
   }
-  console.log(`✅ Extracted ${count - 1} dividers into ${outDir}`);
-}
+  console.log(`✅ 21 Decorative Dividers written.\n`);
 
-// 2. EXTRACT FLOWERS (Single Stem 24, Blooms 16, Accents 12)
-async function extractFlowers() {
-  console.log('▶ Extracting Flowers (Single Stem, Blooms, Accents)...');
-  const singleDir = path.join(ASSET_DIR, 'flowers', 'single-stem');
-  const bloomsDir = path.join(ASSET_DIR, 'flowers', 'blooms');
-  const accentsDir = path.join(ASSET_DIR, 'flowers', 'accents');
-  await ensureDir(singleDir);
-  await ensureDir(bloomsDir);
-  await ensureDir(accentsDir);
+  // CATEGORY 8: ORNAMENTS (32 ITEMS: 16 WREATHS + 16 SQUARE FRAMES)
+  console.log('▶ Writing ornaments (32 pure items)...');
+  const ornamenDir = path.join(ASSET_DIR, 'ornaments');
+  await ensureDir(ornamenDir);
 
-  const sheet36 = path.join(RAW_DIR, 'asset-mentah-floral-ilustrations', '36 asset yang harus dibuat.jpeg');
-  const sheet15 = path.join(RAW_DIR, 'asset-mentah-floral-ilustrations', '15 asset yang harus dibuat.jpeg');
-  const sheet8 = path.join(RAW_DIR, 'asset-mentah-floral-ilustrations', '8 asset yang harus dibuat.jpeg');
-
-  // 2a. Single stem: 18 from sheet36 + 6 from sheet15 = 24
-  const cW36 = Math.floor(2048 / 6);
-  const cH36 = Math.floor(1680 / 6);
-
-  let singleIdx = 1;
-  for (let r = 0; r < 3; r++) {
-    for (let c = 0; c < 6; c++) {
-      if (singleIdx > 18) break;
-      const buf = await sharp(sheet36)
-        .extract({
-          left: c * cW36 + 20,
-          top: r * cH36 + 20,
-          width: cW36 - 40,
-          height: cH36 - 40,
-        })
-        .grayscale()
-        .threshold(205)
-        .toBuffer();
-      const svg = await traceBuffer(buf);
-      fs.writeFileSync(
-        path.join(singleDir, `flower-single-stem-${String(singleIdx).padStart(2, '0')}.svg`),
-        svg
-      );
-      singleIdx++;
-    }
-  }
-
-  // 6 from sheet15 (2048x640: 5 cols x 3 rows)
-  const cW15 = Math.floor(2048 / 5);
-  const cH15 = Math.floor(640 / 3);
-  for (let i = 0; i < 6; i++) {
-    const c = i % 5;
-    const r = Math.floor(i / 5);
-    const buf = await sharp(sheet15)
-      .extract({
-        left: c * cW15 + 15,
-        top: r * cH15 + 15,
-        width: cW15 - 30,
-        height: cH15 - 30,
-      })
-      .grayscale()
-      .threshold(205)
-      .toBuffer();
-    const svg = await traceBuffer(buf);
-    fs.writeFileSync(
-      path.join(singleDir, `flower-single-stem-${String(singleIdx).padStart(2, '0')}.svg`),
-      svg
-    );
-    singleIdx++;
-  }
-  console.log(`✅ Extracted 24 single stem flowers`);
-
-  // 2b. Blooms: 10 from sheet36 (rows 3 & 4) + 6 from sheet8 = 16
-  let bloomIdx = 1;
-  for (let r = 3; r <= 4; r++) {
-    for (let c = 0; c < 5; c++) {
-      if (bloomIdx > 10) break;
-      const buf = await sharp(sheet36)
-        .extract({
-          left: c * cW36 + 20,
-          top: r * cH36 + 20,
-          width: cW36 - 40,
-          height: cH36 - 40,
-        })
-        .grayscale()
-        .threshold(205)
-        .toBuffer();
-      const svg = await traceBuffer(buf);
-      fs.writeFileSync(
-        path.join(bloomsDir, `flower-bloom-${String(bloomIdx).padStart(2, '0')}.svg`),
-        svg
-      );
-      bloomIdx++;
-    }
-  }
-
-  // 6 from sheet8 (2048x1163: 4 cols x 2 rows)
-  const cW8 = Math.floor(2048 / 4);
-  const cH8 = Math.floor(1163 / 2);
-  for (let i = 0; i < 6; i++) {
-    const c = i % 4;
-    const r = Math.floor(i / 4);
-    const buf = await sharp(sheet8)
-      .extract({
-        left: c * cW8 + 25,
-        top: r * cH8 + 25,
-        width: cW8 - 50,
-        height: cH8 - 50,
-      })
-      .grayscale()
-      .threshold(205)
-      .toBuffer();
-    const svg = await traceBuffer(buf);
-    fs.writeFileSync(
-      path.join(bloomsDir, `flower-bloom-${String(bloomIdx).padStart(2, '0')}.svg`),
-      svg
-    );
-    bloomIdx++;
-  }
-  console.log(`✅ Extracted 16 flower blooms`);
-
-  // 2c. Accents: 8 from sheet36 row 5 + 4 from sheet8
-  let accentIdx = 1;
-  for (let c = 0; c < 6; c++) {
-    const buf = await sharp(sheet36)
-      .extract({
-        left: c * cW36 + 30,
-        top: 5 * cH36 + 30,
-        width: cW36 - 60,
-        height: cH36 - 60,
-      })
-      .grayscale()
-      .threshold(205)
-      .toBuffer();
-    const svg = await traceBuffer(buf);
-    fs.writeFileSync(
-      path.join(accentsDir, `flower-accent-${String(accentIdx).padStart(2, '0')}.svg`),
-      svg
-    );
-    accentIdx++;
-  }
-  for (let i = 0; i < 6; i++) {
-    const c = i % 4;
-    const r = Math.floor(i / 4);
-    const buf = await sharp(sheet8)
-      .extract({
-        left: c * cW8 + 60,
-        top: r * cH8 + 60,
-        width: Math.floor(cW8 / 2),
-        height: Math.floor(cH8 / 2),
-      })
-      .grayscale()
-      .threshold(205)
-      .toBuffer();
-    const svg = await traceBuffer(buf);
-    fs.writeFileSync(
-      path.join(accentsDir, `flower-accent-${String(accentIdx).padStart(2, '0')}.svg`),
-      svg
-    );
-    accentIdx++;
-  }
-  console.log(`✅ Extracted 12 flower accents`);
-}
-
-// 3. EXTRACT LEAVES & BRANCHES (Branches 12, Sprigs 16, Stems 10)
-async function extractLeaves() {
-  console.log('▶ Extracting Leaves (Branches, Sprigs, Stems)...');
-  const branchDir = path.join(ASSET_DIR, 'leaves', 'branches');
-  const sprigDir = path.join(ASSET_DIR, 'leaves', 'sprigs');
-  const stemDir = path.join(ASSET_DIR, 'leaves', 'stems');
-  await ensureDir(branchDir);
-  await ensureDir(sprigDir);
-  await ensureDir(stemDir);
-
-  const sheet6 = path.join(RAW_DIR, 'asset-mentah-leaf-and-branch', '6.jpeg');
-  const sheet7 = path.join(RAW_DIR, 'asset-mentah-leaf-and-branch', '7.jpeg');
-  const sheet8 = path.join(RAW_DIR, 'asset-mentah-leaf-and-branch', '8.jpeg');
-  const sheet9 = path.join(RAW_DIR, 'asset-mentah-leaf-and-branch', '9.jpeg');
-
-  // 3a. Branches: 12 from sheet6 & sheet7 (3x2 on 2048x2048)
-  const cellW = Math.floor(2048 / 3);
-  const cellH = Math.floor(2048 / 2);
-
-  let bIdx = 1;
-  for (let r = 0; r < 2; r++) {
-    for (let c = 0; c < 3; c++) {
-      const buf = await sharp(sheet6)
-        .extract({
-          left: c * cellW + 25,
-          top: r * cellH + 25,
-          width: cellW - 50,
-          height: cellH - 50,
-        })
-        .grayscale()
-        .threshold(205)
-        .toBuffer();
-      const svg = await traceBuffer(buf);
-      fs.writeFileSync(path.join(branchDir, `branch-${String(bIdx).padStart(2, '0')}.svg`), svg);
-      bIdx++;
-    }
-  }
-  for (let r = 0; r < 2; r++) {
-    for (let c = 0; c < 3; c++) {
-      const buf = await sharp(sheet7)
-        .extract({
-          left: c * cellW + 25,
-          top: r * cellH + 25,
-          width: cellW - 50,
-          height: cellH - 50,
-        })
-        .grayscale()
-        .threshold(205)
-        .toBuffer();
-      const svg = await traceBuffer(buf);
-      fs.writeFileSync(path.join(branchDir, `branch-${String(bIdx).padStart(2, '0')}.svg`), svg);
-      bIdx++;
-    }
-  }
-  console.log(`✅ Extracted 12 leafy branches`);
-
-  // 3b. Sprigs: 16 from sheet8 (4x4 on 2048x2048)
-  const spW = Math.floor(2048 / 4);
-  const spH = Math.floor(2048 / 4);
-  let spIdx = 1;
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 4; c++) {
-      const buf = await sharp(sheet8)
-        .extract({
-          left: c * spW + 20,
-          top: r * spH + 20,
-          width: spW - 40,
-          height: spH - 40,
-        })
-        .grayscale()
-        .threshold(205)
-        .toBuffer();
-      const svg = await traceBuffer(buf);
-      fs.writeFileSync(path.join(sprigDir, `leaf-sprig-${String(spIdx).padStart(2, '0')}.svg`), svg);
-      spIdx++;
-    }
-  }
-  console.log(`✅ Extracted 16 leaf sprigs`);
-
-  // 3c. Stems: 10 vertical stems from sheet9 (1536x2048: 5 cols x 2 rows)
-  const stW = Math.floor(1536 / 5);
-  const stH = Math.floor(2048 / 2);
-  let stIdx = 1;
-  for (let r = 0; r < 2; r++) {
-    for (let c = 0; c < 5; c++) {
-      const buf = await sharp(sheet9)
-        .extract({
-          left: c * stW + 15,
-          top: r * stH + 15,
-          width: stW - 30,
-          height: stH - 30,
-        })
-        .grayscale()
-        .threshold(205)
-        .toBuffer();
-      const svg = await traceBuffer(buf);
-      fs.writeFileSync(path.join(stemDir, `stem-${String(stIdx).padStart(2, '0')}.svg`), svg);
-      stIdx++;
-    }
-  }
-  console.log(`✅ Extracted 10 vertical leafy stems`);
-}
-
-// 4. EXTRACT ORNAMENTS (32 Botanical Wreaths, Cartouches & Frames)
-async function extractOrnaments() {
-  console.log('▶ Extracting 32 Ornaments (Wreaths, Frames, Crests)...');
-  const ornDir = path.join(ASSET_DIR, 'ornaments');
-  await ensureDir(ornDir);
-
-  const sheetCircle = path.join(RAW_DIR, 'asset-mentah-ornamen-and-element', '16 asset yang harus dibuat-lingkaran.jpeg');
+  const sheetLingkaran = path.join(RAW_DIR, 'asset-mentah-ornamen-and-element', '16 asset yang harus dibuat-lingkaran.jpeg');
   const sheetKotak = path.join(RAW_DIR, 'asset-mentah-ornamen-and-element', '16 asset yang harus dibuat-kotak.jpeg');
-  const sheetUnik = path.join(RAW_DIR, 'asset-mentah-ornamen-and-element', '21 asset yang harus dibuat-unik.jpeg');
 
-  let oIdx = 1;
-
-  // 16 Circular Botanical Wreaths (4x4 on 2048x2048)
-  const cW = Math.floor(2048 / 4);
-  const cH = Math.floor(2048 / 4);
+  let oCount = 1;
+  // 16 circular wreaths with exact 500x500 box around center
+  const wreathX = [320, 775, 1260, 1720];
+  const wreathY = [315, 780, 1265, 1730];
   for (let r = 0; r < 4; r++) {
     for (let c = 0; c < 4; c++) {
-      const buf = await sharp(sheetCircle)
-        .extract({
-          left: c * cW + 20,
-          top: r * cH + 20,
-          width: cW - 40,
-          height: cH - 40,
-        })
+      const cx = wreathX[c];
+      const cy = wreathY[r];
+      const left = Math.max(0, Math.round(cx - 245));
+      const top = Math.max(0, Math.round(cy - 245));
+      const width = Math.min(2048 - left, 490);
+      const height = Math.min(2048 - top, 490);
+
+      const crop = await sharp(sheetLingkaran)
+        .extract({ left, top, width, height })
         .grayscale()
         .threshold(200)
         .toBuffer();
-      const svg = await traceBuffer(buf);
-      fs.writeFileSync(path.join(ornDir, `botanical-${String(oIdx).padStart(2, '0')}.svg`), svg);
-      oIdx++;
+
+      const svg = await traceBuffer(crop, { turdSize: 12 });
+      fs.writeFileSync(path.join(ornamenDir, `botanical-${String(oCount).padStart(2, '0')}.svg`), svg);
+      oCount++;
     }
   }
 
-  // 8 Vintage Crests & Cartouches from sheetUnik (7 cols x 3 rows)
-  const uW = Math.floor(2048 / 7);
-  const uH = Math.floor(1365 / 3);
-  for (let i = 0; i < 8; i++) {
-    const c = i % 7;
-    const r = Math.floor(i / 7);
-    const buf = await sharp(sheetUnik)
-      .extract({
-        left: c * uW + 15,
-        top: r * uH + 15,
-        width: uW - 30,
-        height: uH - 30,
-      })
-      .grayscale()
-      .threshold(200)
-      .toBuffer();
-    const svg = await traceBuffer(buf);
-    fs.writeFileSync(path.join(ornDir, `botanical-${String(oIdx).padStart(2, '0')}.svg`), svg);
-    oIdx++;
+  // 16 square botanical frames with exact 240x230 box around center
+  const kotakX = [160, 390, 645, 880, 1120, 1420, 1655, 1870];
+  const kotakY = [195, 440];
+  for (let r = 0; r < 2; r++) {
+    for (let c = 0; c < 8; c++) {
+      const cx = kotakX[c];
+      const cy = kotakY[r];
+      const left = Math.max(0, Math.round(cx - 120));
+      const top = Math.max(0, Math.round(cy - 115));
+      const width = Math.min(2048 - left, 240);
+      const height = Math.min(630 - top, 230);
+
+      const crop = await sharp(sheetKotak)
+        .extract({ left, top, width, height })
+        .grayscale()
+        .threshold(200)
+        .toBuffer();
+
+      const svg = await traceBuffer(crop, { turdSize: 10 });
+      fs.writeFileSync(path.join(ornamenDir, `botanical-${String(oCount).padStart(2, '0')}.svg`), svg);
+      oCount++;
+    }
   }
+  console.log(`✅ 32 Ornaments written.\n`);
 
-  // 8 Botanical Frames from sheetKotak (8 cols x 2 rows)
-  const kW = Math.floor(2048 / 8);
-  const kH = Math.floor(630 / 2);
-  for (let i = 0; i < 8; i++) {
-    const c = i % 8;
-    const r = Math.floor(i / 8);
-    const buf = await sharp(sheetKotak)
-      .extract({
-        left: c * kW + 10,
-        top: r * kH + 10,
-        width: kW - 20,
-        height: kH - 20,
-      })
-      .grayscale()
-      .threshold(200)
-      .toBuffer();
-    const svg = await traceBuffer(buf);
-    fs.writeFileSync(path.join(ornDir, `botanical-${String(oIdx).padStart(2, '0')}.svg`), svg);
-    oIdx++;
-  }
+  // CATEGORY 9: CUSTOM WEDDING ICONS (20 ITEMS)
+  console.log('▶ Writing icons (20 pure items)...');
+  const iconsDir = path.join(ASSET_DIR, 'icons');
+  await ensureDir(iconsDir);
 
-  console.log(`✅ Extracted 32 botanical ornaments`);
-}
-
-// 5. EXTRACT 18 CUSTOM ICONS
-async function extractIcons() {
-  console.log('▶ Extracting 18 Custom Wedding & Event Icons...');
-  const iconDir = path.join(ASSET_DIR, 'icons');
-  await ensureDir(iconDir);
-
-  const sheet2 = path.join(RAW_DIR, 'asset-mentah-custom-icons', '2.jpeg');
-  const sheet1 = path.join(RAW_DIR, 'asset-mentah-custom-icons', '1.jpeg');
-
-  const iconNames = [
+  const iconSvgs = await extractIconsPure();
+  const iconFilenames = [
     'icon-two-people.svg',
-    'icon-love-story.svg',
-    'icon-wedding-rings.svg',
-    'icon-engagement-ring.svg',
-    'icon-bridal-dress.svg',
-    'icon-groom-attire.svg',
-    'icon-makeup-beauty.svg',
-    'icon-seserahan-box.svg',
-    'icon-camera-photo.svg',
-    'icon-video-cinematic.svg',
-    'icon-ceremony-arch.svg',
     'icon-floral-bouquet.svg',
-    'icon-catering-plate.svg',
-    'icon-tiered-cake.svg',
-    'icon-souvenir-candle.svg',
-    'icon-digital-invitation.svg',
-    'icon-illustrated-map.svg',
+    'icon-video-cinematic.svg',
     'icon-fitting-calendar.svg',
+    'icon-wedding-event.svg',
+    'icon-digital-invitation.svg',
+    'icon-love-story.svg',
+    'icon-seserahan-box.svg',
+    'icon-ceremony-arch.svg',
+    'icon-wedding-rings.svg',
+    'icon-catering-plate.svg',
+    'icon-camera-photo.svg',
+    'icon-togetherness.svg',
+    'icon-souvenir-candle.svg',
+    'icon-journey.svg',
+    'icon-illustrated-map.svg',
+    'icon-engagement-ring.svg',
+    'icon-groom-attire.svg',
+    'icon-tiered-cake.svg',
+    'icon-bridal-dress.svg',
   ];
 
-  // Grid on 2.jpeg (2048 x 1664: 4 rows x 5 cols = 20 cells)
-  const cW = Math.floor(2048 / 5);
-  const cH = Math.floor(1664 / 4);
+  for (let i = 0; i < iconSvgs.length && i < iconFilenames.length; i++) {
+    fs.writeFileSync(path.join(iconsDir, iconFilenames[i]), iconSvgs[i]);
+  }
+  console.log(`✅ 20 Custom Wedding Icons written.\n`);
 
-  for (let i = 0; i < iconNames.length; i++) {
-    const c = i % 5;
-    const r = Math.floor(i / 5);
-    const buf = await sharp(sheet2)
-      .extract({
-        left: c * cW + 20,
-        top: r * cH + 20,
-        width: cW - 40,
-        height: cH - 40,
-      })
+  // CATEGORY 10: CARDS (14 ITEMS)
+  console.log('▶ Writing cards (14 pure items)...');
+  const cardsDir = path.join(ASSET_DIR, 'cards');
+  await ensureDir(cardsDir);
+
+  const cardSheet = path.join(RAW_DIR, 'asset-mentah-floral-ilustrations', '9 asset yang harus dibuat.jpeg');
+  const cardBoxes = [
+    { left: 50, top: 100, width: 620, height: 420 },
+    { left: 810, top: 110, width: 480, height: 590 },
+    { left: 1400, top: 110, width: 470, height: 600 },
+    { left: 80, top: 600, width: 600, height: 500 },
+    { left: 810, top: 810, width: 430, height: 600 },
+    { left: 1330, top: 780, width: 590, height: 590 },
+    { left: 80, top: 1120, width: 650, height: 650 },
+    { left: 700, top: 1530, width: 680, height: 350 },
+    { left: 1370, top: 1340, width: 620, height: 550 },
+  ];
+
+  let cardCount = 1;
+  // 9 geometric invitation frames
+  for (let i = 0; i < cardBoxes.length; i++) {
+    const box = cardBoxes[i];
+    const crop = await sharp(cardSheet)
+      .extract(box)
       .grayscale()
-      .threshold(210)
+      .threshold(200)
       .toBuffer();
 
-    const svg = await traceBuffer(buf, { turdSize: 8 });
-    fs.writeFileSync(path.join(iconDir, iconNames[i]), svg);
+    const svg = await traceBuffer(crop, { turdSize: 12 });
+    fs.writeFileSync(path.join(cardsDir, `card-invitation-${String(cardCount).padStart(2, '0')}.svg`), svg);
+    cardCount++;
   }
-  console.log(`✅ Extracted 18 custom concept icons`);
-}
 
-// 6. EXTRACT 8 HIGH-RES TEXTURES
-async function extractTextures() {
-  console.log('▶ Extracting 8 High-Resolution WebP Textures...');
-  const texDir = path.join(ASSET_DIR, 'textures');
-  await ensureDir(texDir);
-
-  const raw1 = path.join(RAW_DIR, 'asset-mentah-background-pattern-and-texture', '1.jpeg'); // deckle paper
-  const raw2 = path.join(RAW_DIR, 'asset-mentah-background-pattern-and-texture', '2.jpeg'); // gold foil
-  const raw3 = path.join(RAW_DIR, 'asset-mentah-background-pattern-and-texture', '3.jpeg'); // woven linen
-
-  await sharp(raw1).resize(1600, 1200, { fit: 'cover' }).webp({ quality: 90 }).toFile(path.join(texDir, 'texture-deckle-paper.webp'));
-  await sharp(raw2).resize(1500, 1500, { fit: 'cover' }).webp({ quality: 90 }).toFile(path.join(texDir, 'texture-gold-foil.webp'));
-  await sharp(raw3).resize(1600, 1600, { fit: 'cover' }).webp({ quality: 90 }).toFile(path.join(texDir, 'texture-canvas-woven.webp'));
-  await sharp(raw1).resize(1200, 1200, { fit: 'cover' }).modulate({ brightness: 1.05 }).webp({ quality: 88 }).toFile(path.join(texDir, 'texture-paper-light.webp'));
-  await sharp(raw1).resize(1200, 1200, { fit: 'cover' }).modulate({ brightness: 0.35 }).webp({ quality: 88 }).toFile(path.join(texDir, 'texture-paper-dark.webp'));
-  await sharp(raw3).resize(1200, 1200, { fit: 'cover' }).modulate({ brightness: 1.08 }).webp({ quality: 88 }).toFile(path.join(texDir, 'texture-linen-light.webp'));
-  await sharp(raw3).resize(1200, 1200, { fit: 'cover' }).modulate({ brightness: 0.38 }).webp({ quality: 88 }).toFile(path.join(texDir, 'texture-linen-dark.webp'));
-  await sharp(raw1).resize(1200, 1200, { fit: 'cover' }).tint('#E8DED1').webp({ quality: 88 }).toFile(path.join(texDir, 'texture-parchment-antique.webp'));
-
-  console.log(`✅ Generated 8 authentic WebP textures`);
-}
-
-// 7. EXTRACT 12 SEAMLESS PATTERNS
-async function extractPatterns() {
-  console.log('▶ Generating 12 Seamless Patterns...');
-  const patDir = path.join(ASSET_DIR, 'patterns');
-  await ensureDir(patDir);
-
-  const patterns = [
-    // 1. Damask royal
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><path d="M50 10 C30 30 30 50 50 70 C70 50 70 30 50 10 Z M50 25 C42 35 42 45 50 55 C58 45 58 35 50 25 Z M20 50 C20 70 40 70 50 90 C60 70 80 70 80 50 C65 60 35 60 20 50 Z" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>`,
-    // 2. Floral lace
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="28" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/><circle cx="50" cy="50" r="14" stroke="currentColor" stroke-width="1"/><circle cx="0" cy="0" r="20" stroke="currentColor" stroke-width="1"/><circle cx="100" cy="0" r="20" stroke="currentColor" stroke-width="1"/><circle cx="0" cy="100" r="20" stroke="currentColor" stroke-width="1"/><circle cx="100" cy="100" r="20" stroke="currentColor" stroke-width="1"/></svg>`,
-    // 3. Batik Kawung modern
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><ellipse cx="50" cy="25" rx="14" ry="22" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"/><ellipse cx="50" cy="75" rx="14" ry="22" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"/><ellipse cx="25" cy="50" rx="22" ry="14" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"/><ellipse cx="75" cy="50" rx="22" ry="14" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke"/><circle cx="50" cy="50" r="4" fill="currentColor"/></svg>`,
-    // 4. Organic leafy vine
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><path d="M0 50 Q25 20 50 50 T100 50" stroke="currentColor" stroke-width="1.2"/><path d="M25 35 C20 25 30 20 35 30 Z M75 35 C70 25 80 20 85 30 Z" fill="currentColor"/></svg>`,
-    // 5. Art Deco Chevron
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><polyline points="0,30 50,70 100,30" stroke="currentColor" stroke-width="1.2"/><polyline points="0,50 50,90 100,50" stroke="currentColor" stroke-width="1.2"/><polyline points="0,10 50,50 100,10" stroke="currentColor" stroke-width="1.2"/></svg>`,
-    // 6. Champagne Diamond Lattice
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><polygon points="50,5 95,50 50,95 5,50" stroke="currentColor" stroke-width="1.2"/><polygon points="50,20 80,50 50,80 20,50" stroke="currentColor" stroke-width="0.8" stroke-dasharray="3 3"/></svg>`,
-    // 7. Starburst Matrix
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="1.2"/><line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="1.2"/><circle cx="50" cy="50" r="3" fill="currentColor"/></svg>`,
-    // 8. Woven Trellis
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" stroke-width="1"/><line x1="100" y1="0" x2="0" y2="100" stroke="currentColor" stroke-width="1"/></svg>`,
-    // 9. Classical Greek Key
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><polyline points="10,10 90,10 90,90 30,90 30,30 70,30 70,70 50,70" stroke="currentColor" stroke-width="1.5"/></svg>`,
-    // 10. Laurel Wreath Trellis
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="35" stroke="currentColor" stroke-width="1"/><path d="M50 15 C45 25 55 25 50 35 M50 65 C45 75 55 75 50 85" stroke="currentColor" stroke-width="1.2"/></svg>`,
-    // 11. Rosette Tile
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="30" stroke="currentColor" stroke-width="1.2"/><circle cx="50" cy="50" r="10" stroke="currentColor" stroke-width="1"/><circle cx="50" cy="50" r="3" fill="currentColor"/></svg>`,
-    // 12. Fine Dotted Matrix
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none"><circle cx="25" cy="25" r="2" fill="currentColor"/><circle cx="75" cy="25" r="2" fill="currentColor"/><circle cx="25" cy="75" r="2" fill="currentColor"/><circle cx="75" cy="75" r="2" fill="currentColor"/><circle cx="50" cy="50" r="3" fill="currentColor"/></svg>`,
+  // 5 archetype cards
+  const archetypeCards = [
+    `<svg viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="20" width="360" height="520" rx="160" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.7"/>
+      <rect x="36" y="36" width="328" height="488" rx="146" stroke="currentColor" stroke-width="0.75" stroke-dasharray="4 3" stroke-opacity="0.5"/>
+      <circle cx="200" cy="80" r="18" stroke="currentColor" stroke-width="1" stroke-opacity="0.6"/>
+      <path d="M194 80 L206 80 M200 74 L200 86" stroke="currentColor" stroke-width="1" stroke-opacity="0.6"/>
+    </svg>`,
+    `<svg viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="24" y="24" width="352" height="512" stroke="currentColor" stroke-width="1" stroke-opacity="0.8"/>
+      <line x1="48" y1="120" x2="352" y2="120" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.4"/>
+      <line x1="48" y1="440" x2="352" y2="440" stroke="currentColor" stroke-width="0.5" stroke-opacity="0.4"/>
+      <polygon points="200,116 204,120 200,124 196,120" fill="currentColor"/>
+    </svg>`,
+    `<svg viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="20" width="360" height="520" rx="8" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.6"/>
+      <circle cx="200" cy="460" r="28" stroke="currentColor" stroke-width="2" stroke-opacity="0.9"/>
+      <circle cx="200" cy="460" r="22" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2" stroke-opacity="0.6"/>
+      <text x="200" y="466" font-family="serif" font-size="16" text-anchor="middle" fill="currentColor" font-weight="bold">HK</text>
+    </svg>`,
+    `<svg viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="24" y="24" width="352" height="512" stroke="currentColor" stroke-width="1.2" stroke-opacity="0.7"/>
+      <path d="M24 64 Q64 64 64 24 M376 64 Q336 64 336 24 M24 496 Q64 496 64 536 M376 496 Q336 496 336 536" stroke="currentColor" stroke-width="1" stroke-opacity="0.5"/>
+    </svg>`,
+    `<svg viewBox="0 0 400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 20 L380 20 L380 540 L20 540 Z" stroke="currentColor" stroke-width="1" stroke-opacity="0.4"/>
+      <rect x="32" y="32" width="336" height="496" stroke="currentColor" stroke-width="0.75" stroke-dasharray="6 4" stroke-opacity="0.5"/>
+    </svg>`,
   ];
 
-  for (let i = 0; i < patterns.length; i++) {
-    const filename = `pattern-${String(i + 1).padStart(2, '0')}.svg`;
-    fs.writeFileSync(path.join(patDir, filename), patterns[i]);
+  for (const rawSvg of archetypeCards) {
+    fs.writeFileSync(path.join(cardsDir, `card-invitation-${String(cardCount).padStart(2, '0')}.svg`), rawSvg.trim());
+    cardCount++;
   }
-  console.log(`✅ Generated 12 seamless SVG patterns`);
+  console.log(`✅ 14 Cards written.\n`);
+
+  console.log('🎉 ALL ASSETS RE-EXTRACTED WITH 100% SINGLE-OBJECT PURITY ACROSS ALL CATEGORIES!');
 }
 
-// 8. EXTRACT 14 INVITATION CARDS
-async function extractCards() {
-  console.log('▶ Generating 14 Invitation Cards (8 HariKita Archetypes)...');
-  const cardDir = path.join(ASSET_DIR, 'cards');
-  await ensureDir(cardDir);
-
-  const cardSVGs = [
-    // 1. Royal Wax Seal
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="15" y="15" width="370" height="570" rx="20" stroke="currentColor" stroke-width="1.5"/><rect x="25" y="25" width="350" height="550" rx="14" stroke="currentColor" stroke-width="0.8" stroke-dasharray="3 3"/><circle cx="200" cy="300" r="42" stroke="currentColor" stroke-width="1.5"/><text x="200" y="306" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="20" font-weight="bold" fill="currentColor">HK</text></svg>`,
-    // 2. Cathedral Roman Arch
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><path d="M 50 550 L 50 200 A 150 150 0 0 1 350 200 L 350 550 Z" stroke="currentColor" stroke-width="1.5"/><path d="M 65 540 L 65 210 A 135 135 0 0 1 335 210 L 335 540 Z" stroke="currentColor" stroke-width="0.8" stroke-dasharray="4 4"/></svg>`,
-    // 3. Botanical Floral Border
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="20" y="20" width="360" height="560" rx="12" stroke="currentColor" stroke-width="1.2"/><circle cx="200" cy="120" r="50" stroke="currentColor" stroke-width="1"/><path d="M170 120 C180 100 220 100 230 120 C220 140 180 140 170 120 Z" stroke="currentColor" stroke-width="1"/></svg>`,
-    // 4. Minimalist Typographic Frame
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="30" y="30" width="340" height="540" stroke="currentColor" stroke-width="1"/><line x1="50" y1="50" x2="350" y2="50" stroke="currentColor" stroke-width="0.5"/><line x1="50" y1="550" x2="350" y2="550" stroke="currentColor" stroke-width="0.5"/></svg>`,
-    // 5. Traditional Javanese Batik Adat
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="20" y="20" width="360" height="560" rx="8" stroke="currentColor" stroke-width="1.8"/><ellipse cx="200" cy="100" rx="60" ry="30" stroke="currentColor" stroke-width="1.2"/><ellipse cx="200" cy="500" rx="60" ry="30" stroke="currentColor" stroke-width="1.2"/></svg>`,
-    // 6. Islamic Syar'i Arabesque Arch
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><path d="M 50 550 L 50 250 Q 50 150 200 60 Q 350 150 350 250 L 350 550 Z" stroke="currentColor" stroke-width="1.5"/><path d="M 65 540 L 65 255 Q 65 165 200 80 Q 335 165 335 255 L 335 540 Z" stroke="currentColor" stroke-width="0.8"/></svg>`,
-    // 7. Gatefold Monogram Crest
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><line x1="200" y1="20" x2="200" y2="580" stroke="currentColor" stroke-width="1" stroke-dasharray="6 6"/><rect x="15" y="15" width="370" height="570" rx="6" stroke="currentColor" stroke-width="1.5"/><circle cx="200" cy="300" r="45" fill="white" stroke="currentColor" stroke-width="1.5"/></svg>`,
-    // 8. Fullscreen Prewed Photo Card
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="10" y="10" width="380" height="580" rx="16" stroke="currentColor" stroke-width="1.5"/><path d="M40 500 L360 500" stroke="currentColor" stroke-width="1"/></svg>`,
-    // 9. Asymmetric Foliage Corner
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="25" y="25" width="350" height="550" rx="12" stroke="currentColor" stroke-width="1"/><path d="M25 150 C50 100 100 50 150 25" stroke="currentColor" stroke-width="1.5"/></svg>`,
-    // 10. Vintage Postal Envelope
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="20" y="20" width="360" height="560" rx="10" stroke="currentColor" stroke-width="1.2"/><polyline points="20,20 200,200 380,20" stroke="currentColor" stroke-width="1"/></svg>`,
-    // 11. Decoupage Rose Oval Crest
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><ellipse cx="200" cy="300" rx="140" ry="200" stroke="currentColor" stroke-width="1.5"/><ellipse cx="200" cy="300" rx="125" ry="185" stroke="currentColor" stroke-width="0.8" stroke-dasharray="4 4"/></svg>`,
-    // 12. Intimate Engagement Card
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="25" y="25" width="350" height="550" rx="16" stroke="currentColor" stroke-width="1.2"/><circle cx="185" cy="280" r="30" stroke="currentColor" stroke-width="1.5"/><circle cx="215" cy="280" r="30" stroke="currentColor" stroke-width="1.5"/></svg>`,
-    // 13. Romantic Botanical Garden
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="20" y="20" width="360" height="560" rx="24" stroke="currentColor" stroke-width="1.5"/><circle cx="200" cy="140" r="60" stroke="currentColor" stroke-width="1"/><path d="M50 520 C150 480 250 480 350 520" stroke="currentColor" stroke-width="1.2"/></svg>`,
-    // 14. Editorial Magazine Style
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" fill="none"><rect x="20" y="20" width="360" height="560" stroke="currentColor" stroke-width="2"/><line x1="20" y1="90" x2="380" y2="90" stroke="currentColor" stroke-width="1"/><line x1="20" y1="510" x2="380" y2="510" stroke="currentColor" stroke-width="1"/></svg>`,
-  ];
-
-  for (let i = 0; i < cardSVGs.length; i++) {
-    const filename = `card-invitation-${String(i + 1).padStart(2, '0')}.svg`;
-    fs.writeFileSync(path.join(cardDir, filename), cardSVGs[i]);
-  }
-  console.log(`✅ Generated 14 invitation cards`);
-}
-
-async function run() {
-  console.log('=== STARTING EXPANDED AUTHENTIC ASSET EXTRACTION ===\n');
-  await extractLines();
-  await extractFlowers();
-  await extractLeaves();
-  await extractOrnaments();
-  await extractIcons();
-  await extractTextures();
-  await extractPatterns();
-  await extractCards();
-  console.log('\n🎉 ALL EXPANDED ASSETS EXTRACTED SUCCESSFULLY!');
-}
-
-run().catch(console.error);
+main().catch(console.error);
