@@ -38,14 +38,15 @@ export function ShowcaseHeader({
             <div className="hidden h-5 w-[1px] bg-hk-champagne/40 md:block" />
             <span className="hidden font-editorial text-sm font-medium italic text-hk-taupe md:inline">
               {activeHub === 'brand'
-                ? 'HariKita Platform & UI Foundation'
-                : 'Sistem Undangan Digital & Sandbox'}
+                ? 'HariKita Platform Visual System'
+                : 'Undangan Digital Visual System & Sandbox'}
             </span>
           </div>
 
           {/* Center: Dual-Hub Tab Switcher */}
           <div className="flex items-center justify-center rounded-full border border-hk-champagne/60 bg-hk-ivory p-1 shadow-inner w-full sm:w-auto">
             <button
+              title="HariKita Platform Visual System"
               onClick={() => onSelectHub('brand')}
               className={cn(
                 'flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
@@ -55,10 +56,11 @@ export function ShowcaseHeader({
               )}
             >
               <Palette className="h-3.5 w-3.5" />
-              <span>HariKita Core Brand</span>
+              <span>HariKita DS</span>
             </button>
 
             <button
+              title="Undangan Digital Visual System"
               onClick={() => onSelectHub('invitation')}
               className={cn(
                 'flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-full px-3 sm:px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
@@ -68,7 +70,7 @@ export function ShowcaseHeader({
               )}
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Undangan Digital</span>
+              <span>Undangan DS</span>
               <span className="hidden xs:inline rounded-full bg-hk-champagne/30 px-1.5 py-0.2 text-[9px] text-hk-charcoal font-bold">
                 Sandbox
               </span>

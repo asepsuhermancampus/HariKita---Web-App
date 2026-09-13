@@ -35,12 +35,12 @@ function ShowcaseContent() {
       <header className="border-b border-hk-champagne/30 bg-gradient-to-b from-white to-hk-ivory px-6 py-12 text-center">
         <div className="mx-auto max-w-4xl">
           <BadgePremium
-            label={activeHub === 'brand' ? 'HARIKITA PLATFORM CORE BRAND' : 'SISTEM UNDANGAN DIGITAL (SANDBOX)'}
+            label={activeHub === 'brand' ? 'HARIKITA PLATFORM VISUAL SYSTEM' : 'UNDANGAN DIGITAL VISUAL SYSTEM (SANDBOX)'}
             variant="pill"
             className="mb-4"
           />
           <h1 className="font-editorial text-4xl font-normal tracking-tight text-hk-charcoal md:text-6xl">
-            {activeHub === 'brand' ? 'HariKita Platform Visual System' : 'Sistem Desain Undangan Digital'}
+            {activeHub === 'brand' ? 'HariKita Platform Visual System' : 'Undangan Digital Visual System'}
           </h1>
           <p className="mt-3 font-editorial text-xl italic text-hk-taupe">
             {activeHub === 'brand'
