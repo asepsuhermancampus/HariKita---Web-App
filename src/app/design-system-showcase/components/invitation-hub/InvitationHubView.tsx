@@ -20,7 +20,7 @@ export function InvitationHubView() {
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-editorial text-2xl text-hk-charcoal">
-                  Wedding Invitation System (Sandbox Mode)
+                  Sistem Undangan Pernikahan Digital (Sandbox Mode)
                 </h3>
                 <span className="rounded-full bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 text-[10px] font-manrope font-bold text-emerald-800">
                   Zero Regression Active

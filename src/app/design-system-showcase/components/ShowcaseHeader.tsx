@@ -38,8 +38,8 @@ export function ShowcaseHeader({
             <div className="hidden h-5 w-[1px] bg-hk-champagne/40 md:block" />
             <span className="hidden font-editorial text-sm font-medium italic text-hk-taupe md:inline">
               {activeHub === 'brand'
-                ? 'Core Brand & UI Foundation'
-                : 'Wedding Invitation System & Sandbox'}
+                ? 'HariKita Platform & UI Foundation'
+                : 'Sistem Undangan Digital & Sandbox'}
             </span>
           </div>
 
@@ -55,7 +55,7 @@ export function ShowcaseHeader({
               )}
             >
               <Palette className="h-3.5 w-3.5" />
-              <span>Core Brand</span>
+              <span>HariKita Core Brand</span>
             </button>
 
             <button
@@ -68,7 +68,7 @@ export function ShowcaseHeader({
               )}
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Wedding System</span>
+              <span>Undangan Digital</span>
               <span className="hidden xs:inline rounded-full bg-hk-champagne/30 px-1.5 py-0.2 text-[9px] text-hk-charcoal font-bold">
                 Sandbox
               </span>
@@ -83,7 +83,7 @@ export function ShowcaseHeader({
                   href="#palette"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  Palet
+                  Palet Warna
                 </a>
                 <a
                   href="#typography"
@@ -95,19 +95,19 @@ export function ShowcaseHeader({
                   href="#assets"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  Aset ({brandAssetCount})
+                  Aset HariKita ({brandAssetCount})
                 </a>
                 <a
                   href="#components"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  Komponen UI
+                  Komponen UI Platform
                 </a>
                 <a
                   href="#mobile"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  Mobile Simulator
+                  Simulator Platform
                 </a>
               </>
             ) : (
@@ -116,25 +116,25 @@ export function ShowcaseHeader({
                   href="#archetypes"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  8 Arketipe
+                  8 Arketipe Undangan
                 </a>
                 <a
                   href="#invitation-assets"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  243 Aset Fine-Line
+                  243 Aset Undangan
                 </a>
                 <a
                   href="#invitation-components"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  Playground Komponen
+                  Playground Undangan
                 </a>
                 <a
                   href="#sandbox-mobile"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  Simulator 375px
+                  Simulator Undangan (375px)
                 </a>
               </>
             )}

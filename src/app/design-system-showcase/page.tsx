@@ -35,22 +35,22 @@ function ShowcaseContent() {
       <header className="border-b border-hk-champagne/30 bg-gradient-to-b from-white to-hk-ivory px-6 py-12 text-center">
         <div className="mx-auto max-w-4xl">
           <BadgePremium
-            label={activeHub === 'brand' ? 'OFFICIAL BRAND SYSTEM' : 'WEDDING INVITATION SANDBOX'}
+            label={activeHub === 'brand' ? 'HARIKITA PLATFORM CORE BRAND' : 'SISTEM UNDANGAN DIGITAL (SANDBOX)'}
             variant="pill"
             className="mb-4"
           />
           <h1 className="font-editorial text-4xl font-normal tracking-tight text-hk-charcoal md:text-6xl">
-            {activeHub === 'brand' ? 'HariKita Visual Language' : 'Wedding Invitation Design System'}
+            {activeHub === 'brand' ? 'HariKita Platform Visual System' : 'Sistem Desain Undangan Digital'}
           </h1>
           <p className="mt-3 font-editorial text-xl italic text-hk-taupe">
             {activeHub === 'brand'
               ? '"Rangkai Hari Bahagiamu, Menyelaraskan Restu & Impian."'
-              : 'Bespoke Individuality (Anti Cookie-Cutter): 8 Arketipe, 243 Aset Fine-Line & 120+ Varian'}
+              : 'Koleksi Tema & Arketipe Undangan Pernikahan (8 Arketipe, 243 Aset Fine-Line)'}
           </p>
           <p className="mx-auto mt-3 max-w-2xl font-manrope text-sm leading-relaxed text-hk-charcoal/80">
             {activeHub === 'brand'
-              ? 'Sistem visual komprehensif berstandar editorial luxury untuk platform lamaran & pernikahan hyperlocal Kabupaten Kebumen. Berbasis 5 palet warna resmi, tipografi Cormorant Garamond & Manrope, 134 aset fine-line SVG, dan komponen modular.'
-              : 'Sandbox eksplorasi dan laboratorium visual untuk konten template undangan digital HariKita. Menguji varian geometri kartu, ornamen SVG, generator QRIS dinamis, dan efek depth-of-field secara terisolasi tanpa mengubah template produksi.'}
+              ? 'Acuan identitas visual resmi untuk aplikasi dan web platform HariKita (Katalog 11 Kategori Vendor Kebumen, Keranjang Mix & Match, Escrow Invoicing, dan Tracking Fitting) berbasis 5 palet warna resmi, tipografi editorial, 134 aset SVG, dan komponen modular.'
+              : 'Sandbox eksplorasi dan laboratorium visual untuk konten produk undangan pernikahan digital HariKita. Menguji varian arketipe, 243 ornamen fine-line SVG undangan, galeri min. 7 foto, generator QRIS dinamis, dan efek kedalaman optik secara terisolasi tanpa memodifikasi template produksi.'}
           </p>
         </div>
       </header>
