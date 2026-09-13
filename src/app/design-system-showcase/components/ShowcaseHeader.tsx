@@ -33,7 +33,7 @@ export function ShowcaseHeader({
       <header className="sticky top-0 z-40 border-b border-hk-champagne/40 bg-white/95 px-6 py-3.5 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
           {/* Logo & Hub Title */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 shrink-0">
             <HariKitaLogo variant="horizontal" size="sm" asLink={false} />
             <div className="hidden h-5 w-[1px] bg-hk-champagne/40 md:block" />
             <span className="hidden font-editorial text-sm font-medium italic text-hk-taupe md:inline">
@@ -44,18 +44,18 @@ export function ShowcaseHeader({
           </div>
 
           {/* Center: Dual-Hub Tab Switcher */}
-          <div className="flex items-center justify-center rounded-full border border-hk-champagne/60 bg-hk-ivory p-1 shadow-inner w-full sm:w-auto">
+          <div className="flex shrink-0 items-center justify-center rounded-full border border-hk-champagne/60 bg-hk-ivory p-1 shadow-inner">
             <button
               title="HariKita Platform Visual System"
               onClick={() => onSelectHub('brand')}
               className={cn(
-                'flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
+                'flex h-8 items-center justify-center gap-1.5 rounded-full px-4 text-xs font-manrope font-semibold whitespace-nowrap transition-all duration-200',
                 activeHub === 'brand'
                   ? 'bg-hk-taupe text-white shadow-sm'
                   : 'text-hk-charcoal/70 hover:text-hk-charcoal'
               )}
             >
-              <Palette className="h-3.5 w-3.5" />
+              <Palette className="h-3.5 w-3.5 shrink-0" />
               <span>HariKita DS</span>
             </button>
 
@@ -63,17 +63,14 @@ export function ShowcaseHeader({
               title="Undangan Digital Visual System"
               onClick={() => onSelectHub('invitation')}
               className={cn(
-                'flex flex-1 sm:flex-initial items-center justify-center gap-1.5 rounded-full px-3 sm:px-4 py-1.5 text-xs font-manrope font-semibold transition-all duration-200',
+                'flex h-8 items-center justify-center gap-1.5 rounded-full px-4 text-xs font-manrope font-semibold whitespace-nowrap transition-all duration-200',
                 activeHub === 'invitation'
                   ? 'bg-hk-taupe text-white shadow-sm'
                   : 'text-hk-charcoal/70 hover:text-hk-charcoal'
               )}
             >
-              <Sparkles className="h-3.5 w-3.5" />
+              <Sparkles className="h-3.5 w-3.5 shrink-0" />
               <span>Undangan DS</span>
-              <span className="hidden xs:inline rounded-full bg-hk-champagne/30 px-1.5 py-0.2 text-[9px] text-hk-charcoal font-bold">
-                Sandbox
-              </span>
             </button>
           </div>
 
