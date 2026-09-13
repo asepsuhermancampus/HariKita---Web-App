@@ -3,10 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev_runner.js",
+    "dev:next": "next dev",
+    "prebuild": "node scripts/generate_asset_manifest.js && node scripts/verify_assets_complete.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "assets:manifest": "node scripts/generate_asset_manifest.js && node scripts/verify_assets_complete.js",
+    "assets:verify": "node scripts/verify_assets_complete.js",
+    "assets:watch": "node scripts/watch_assets.js",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio"

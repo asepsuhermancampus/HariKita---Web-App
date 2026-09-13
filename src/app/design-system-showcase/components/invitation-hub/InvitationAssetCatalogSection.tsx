@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Grid, Search, ZoomIn, Copy, Check, FileCode, SlidersHorizontal } from 'lucide-react';
-import { getHariKitaAssets } from '@/lib/harikita-assets';
+import { getHariKitaAssets, getHariKitaAssetSummary } from '@/lib/harikita-assets';
 import { HariKitaAsset } from '@/types/harikita-asset';
 import { SvgAssetViewer } from '../brand-hub/CoreAssetsSection';
 import { AssetZoomModal } from './AssetZoomModal';
@@ -25,6 +25,8 @@ export function InvitationAssetCatalogSection() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const allAssets = getHariKitaAssets();
+  const assetSummary = useMemo(() => getHariKitaAssetSummary(), []);
+
 
   const colorClassMap: Record<string, string> = {
     taupe: 'text-hk-taupe',
@@ -88,8 +90,11 @@ export function InvitationAssetCatalogSection() {
             </span>
           </div>
           <h2 className="mt-1 font-editorial text-3xl font-normal text-hk-charcoal">
-            Katalog 243 Aset Vektor Fine-Line ({filteredAssets.length} Ditampilkan)
+            Katalog {assetSummary.total} Aset Desain ({filteredAssets.length} Ditampilkan)
           </h2>
+          <p className="mt-1 font-manrope text-xs text-hk-charcoal/70">
+            Terdiri dari {assetSummary.vectorCount} ornamen vektor fine-line SVG dan {assetSummary.textureCount} tekstur permukaan autentik.
+          </p>
         </div>
 
         {/* Live Color Stroke Swapper */}
@@ -128,13 +133,13 @@ export function InvitationAssetCatalogSection() {
         {/* Category Pill Buttons */}
         <div className="flex flex-wrap gap-1.5">
           {[
-            { id: 'all', label: 'Semua Aset' },
-            { id: 'cards', label: 'Cards & Frames (01–14)' },
+            { id: 'all', label: `Semua (${assetSummary.total})` },
+            { id: 'cards', label: 'Cards & Frames' },
             { id: 'botanical', label: 'Botanical Ornaments' },
             { id: 'lines', label: 'Dividers & Lines' },
             { id: 'badges', label: 'Badges & Seals' },
             { id: 'icons', label: 'Wedding Icons' },
-            { id: 'textures', label: 'Textures & Linen' },
+            { id: 'textures', label: `Textures (${assetSummary.textureCount})` },
           ].map((grp) => (
             <button
               key={grp.id}

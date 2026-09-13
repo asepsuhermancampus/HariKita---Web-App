@@ -4,7 +4,7 @@ import React, { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { HariKitaLogo } from '@/components/brand/HariKitaLogo';
 import { BadgePremium } from '@/components/harikita/ui';
-import { getHariKitaAssets } from '@/lib/harikita-assets';
+import { getHariKitaAssets, getHariKitaAssetSummary } from '@/lib/harikita-assets';
 import { ShowcaseHeader, ShowcaseHubType } from './components/ShowcaseHeader';
 import { BrandHubView } from './components/brand-hub/BrandHubView';
 import { InvitationHubView } from './components/invitation-hub/InvitationHubView';
@@ -17,6 +17,7 @@ function ShowcaseContent() {
   const activeHub: ShowcaseHubType = hubParam === 'invitation' ? 'invitation' : 'brand';
 
   const allAssets = getHariKitaAssets();
+  const assetSummary = React.useMemo(() => getHariKitaAssetSummary(), []);
 
   const handleSelectHub = (hub: ShowcaseHubType) => {
     router.push(`/design-system-showcase?hub=${hub}`, { scroll: false });
@@ -45,12 +46,12 @@ function ShowcaseContent() {
           <p className="mt-3 font-editorial text-xl italic text-hk-taupe">
             {activeHub === 'brand'
               ? '"Rangkai Hari Bahagiamu, Menyelaraskan Restu & Impian."'
-              : 'Koleksi Tema & Arketipe Undangan Pernikahan (8 Arketipe, 243 Aset Fine-Line)'}
+              : `Koleksi Tema & Arketipe Undangan Pernikahan (8 Arketipe, ${assetSummary.total} Aset Desain)`}
           </p>
           <p className="mx-auto mt-3 max-w-2xl font-manrope text-sm leading-relaxed text-hk-charcoal/80">
             {activeHub === 'brand'
-              ? 'Acuan identitas visual resmi untuk aplikasi dan web platform HariKita (Katalog 11 Kategori Vendor Kebumen, Keranjang Mix & Match, Escrow Invoicing, dan Tracking Fitting) berbasis 5 palet warna resmi, tipografi editorial, 134 aset SVG, dan komponen modular.'
-              : 'Sandbox eksplorasi dan laboratorium visual untuk konten produk undangan pernikahan digital HariKita. Menguji varian arketipe, 243 ornamen fine-line SVG undangan, galeri min. 7 foto, generator QRIS dinamis, dan efek kedalaman optik secara terisolasi tanpa memodifikasi template produksi.'}
+              ? `Acuan identitas visual resmi untuk aplikasi dan web platform HariKita (Katalog 11 Kategori Vendor Kebumen, Keranjang Mix & Match, Escrow Invoicing, dan Tracking Fitting) berbasis 5 palet warna resmi, tipografi editorial, ${assetSummary.vectorCount} aset vektor SVG, dan komponen modular.`
+              : `Sandbox eksplorasi dan laboratorium visual untuk konten produk undangan pernikahan digital HariKita. Menguji varian arketipe, ${assetSummary.vectorCount} ornamen fine-line SVG undangan, ${assetSummary.textureCount} tekstur permukaan, galeri min. 7 foto, generator QRIS dinamis, dan efek kedalaman optik secara terisolasi tanpa memodifikasi template produksi.`}
           </p>
         </div>
       </header>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Calendar, Clock, MapPin, BookmarkPlus } from 'lucide-react';
-import { SANDBOX_SCHEDULE_DATA } from '../../../../data/mock-invitation-sandbox';
+import { SANDBOX_SCHEDULE_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 
 interface StudioEventScheduleProps {
   themeColor: string;

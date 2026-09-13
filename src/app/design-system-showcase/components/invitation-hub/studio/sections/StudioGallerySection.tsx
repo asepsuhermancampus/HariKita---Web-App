@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Camera, Image as ImageIcon } from 'lucide-react';
-import { SANDBOX_GALLERY_PHOTOS } from '../../../../data/mock-invitation-sandbox';
+import { SANDBOX_GALLERY_PHOTOS } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 
 interface StudioGallerySectionProps {
   galleryVariant: string;
@@ -37,11 +37,11 @@ export function StudioGallerySection({ galleryVariant, themeColor }: StudioGalle
           >
             <img
               src={photo.src}
-              alt={photo.alt}
+              alt={photo.title}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
-              <span className="font-manrope text-[9px] text-white/90 truncate">{photo.caption}</span>
+              <span className="font-manrope text-[9px] text-white/90 truncate">{photo.subtitle || photo.title}</span>
             </div>
           </div>
         ))}

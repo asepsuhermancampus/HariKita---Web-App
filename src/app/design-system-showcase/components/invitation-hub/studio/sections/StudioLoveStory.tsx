@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Heart, Calendar } from 'lucide-react';
-import { SANDBOX_STORIES_DATA } from '../../../../data/mock-invitation-sandbox';
+import { SANDBOX_STORIES_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 
 interface StudioLoveStoryProps {
   themeColor: string;

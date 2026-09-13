@@ -23,7 +23,7 @@ import {
   VisualEffectId,
   MicroAnimationId,
 } from '@/types/invitation-studio';
-import { SANDBOX_STUDIO_DEFAULTS } from '../../../data/mock-invitation-sandbox';
+import { SANDBOX_STUDIO_DEFAULTS } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 import { StudioColorPalettePicker } from './StudioColorPalettePicker';
 import { StudioPlacementPicker } from './StudioPlacementPicker';
 import { StudioEffectsController } from './StudioEffectsController';

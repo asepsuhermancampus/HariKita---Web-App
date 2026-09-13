@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { MessageSquare, Send, Check, Heart, Users } from 'lucide-react';
-import { SANDBOX_GUESTBOOK_WISHES } from '../../../../data/mock-invitation-sandbox';
+import { SANDBOX_GUESTBOOK_WISHES } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 
 interface StudioGuestbookRsvpProps {
   themeColor: string;

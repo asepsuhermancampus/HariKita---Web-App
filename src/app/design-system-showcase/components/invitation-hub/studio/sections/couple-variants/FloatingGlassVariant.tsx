@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { Instagram, Sparkles } from 'lucide-react';
-import { SANDBOX_COUPLE_DATA } from '../../../../data/mock-invitation-sandbox';
-import { DynamicSvgRenderer } from '../DynamicSvgRenderer';
+import { SANDBOX_COUPLE_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 
 interface VariantProps {
   themeColor: string;

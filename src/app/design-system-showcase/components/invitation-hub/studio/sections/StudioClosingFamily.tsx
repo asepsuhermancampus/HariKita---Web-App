@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Lock, Heart } from 'lucide-react';
-import { SANDBOX_COUPLE_DATA } from '../../../../data/mock-invitation-sandbox';
+import { SANDBOX_COUPLE_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 
 interface StudioClosingFamilyProps {
   onCloseInvitation: () => void;

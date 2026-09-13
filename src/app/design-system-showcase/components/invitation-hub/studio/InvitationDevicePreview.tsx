@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { InvitationStudioConfig } from '@/types/invitation-studio';
-import { SANDBOX_VENUE_LOCATION_DATA } from '../../../../data/mock-invitation-sandbox';
+import { SANDBOX_VENUE_LOCATION_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 import { VisualEffectsLayer } from './VisualEffectsLayer';
 import { StudioGatekeeperCover } from './sections/StudioGatekeeperCover';
 import { StudioMuqaddimah } from './sections/StudioMuqaddimah';

@@ -83,4 +83,9 @@ function generateManifest() {
   console.log(`✅ Generated manifest with ${catalog.length} items at src/data/harikita-assets.json`);
 }
 
-generateManifest();
+if (require.main === module) {
+  generateManifest();
+}
+
+module.exports = { generateManifest };
+

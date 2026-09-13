@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Gift, Building2, Copy, Check, MapPin, Heart } from 'lucide-react';
-import { SANDBOX_GIFT_DATA } from '../../../../data/mock-invitation-sandbox';
+import { SANDBOX_GIFT_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 import { cn } from '@/lib/utils';
 
 interface StudioBankGiftSectionProps {

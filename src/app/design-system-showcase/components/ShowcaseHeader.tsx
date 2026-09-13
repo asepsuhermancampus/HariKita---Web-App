@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Sparkles, Palette, Layers, Grid, Smartphone, Info } from 'lucide-react';
 import { HariKitaLogo } from '@/components/brand/HariKitaLogo';
+import { getHariKitaAssetSummary } from '@/lib/harikita-assets';
 import { cn } from '@/lib/utils';
 
 export type ShowcaseHubType = 'brand' | 'invitation';
@@ -19,6 +20,8 @@ export function ShowcaseHeader({
   onSelectHub,
   brandAssetCount,
 }: ShowcaseHeaderProps) {
+  const assetSummary = React.useMemo(() => getHariKitaAssetSummary(), []);
+
   return (
     <>
       {/* Reference Notice Banner */}
@@ -119,7 +122,7 @@ export function ShowcaseHeader({
                   href="#invitation-assets"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >
-                  243 Aset Undangan
+                  {assetSummary.total} Aset Undangan
                 </a>
                 <a
                   href="#invitation-components"
