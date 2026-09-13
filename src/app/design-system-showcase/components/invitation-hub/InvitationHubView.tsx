@@ -2,12 +2,14 @@
 
 import React from 'react';
 import { Sparkles, ShieldCheck, Layers } from 'lucide-react';
+import { getHariKitaAssetSummary } from '@/lib/harikita-assets';
 import { ArchetypesMatrixSection } from './ArchetypesMatrixSection';
 import { InvitationAssetCatalogSection } from './InvitationAssetCatalogSection';
-import { InvitationPlaygroundSection } from './InvitationPlaygroundSection';
-import { InvitationMobileFrameSection } from './InvitationMobileFrameSection';
+import { InvitationStudioBuilder } from './studio/InvitationStudioBuilder';
 
 export function InvitationHubView() {
+  const assetSummary = React.useMemo(() => getHariKitaAssetSummary(), []);
+
   return (
     <div className="space-y-24">
       {/* Sandbox Guarantees Banner */}
@@ -20,14 +22,14 @@ export function InvitationHubView() {
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-editorial text-2xl text-hk-charcoal">
-                  Undangan Digital Visual System (Sandbox Mode)
+                  Undangan Digital Visual System &amp; Custom Studio
                 </h3>
                 <span className="rounded-full bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 text-[10px] font-manrope font-bold text-emerald-800">
                   Zero Regression Active
                 </span>
               </div>
               <p className="mt-1 font-manrope text-xs leading-relaxed text-hk-charcoal/75 max-w-3xl">
-                Laboratorium visual terisolasi: eksplorasi 8 arketipe, 243 aset fine-line, 8 varian galeri, generator QRIS dinamis, dan buku tamu kedalaman optik (Focus-Blur) menggunakan data dummy tanpa memodifikasi template produksi yang sedang aktif.
+                Laboratorium visual terpadu: racik undangan kustom di panel kiri (12 warna, 10 gaya posisi aset bersistem guardrails, 8 varian mempelai, 15 efek optik &amp; 15 animasi mikro), dan uji secara langsung pada simulator smartphone sticky multi-device di sebelah kanan.
               </p>
             </div>
           </div>
@@ -39,17 +41,14 @@ export function InvitationHubView() {
         </div>
       </div>
 
-      {/* 1. Archetypes Matrix Section */}
+      {/* 1. Flagship Centerpiece: Split-Screen Custom Invitation Studio */}
+      <InvitationStudioBuilder />
+
+      {/* 2. Archetypes Matrix Reference Section */}
       <ArchetypesMatrixSection />
 
-      {/* 2. Vector Assets Catalog Section */}
+      {/* 3. Comprehensive 254 Vector & Texture Assets Catalog */}
       <InvitationAssetCatalogSection />
-
-      {/* 3. Interactive Components Playground */}
-      <InvitationPlaygroundSection />
-
-      {/* 4. Full Mobile Viewport Simulator */}
-      <InvitationMobileFrameSection />
     </div>
   );
 }
