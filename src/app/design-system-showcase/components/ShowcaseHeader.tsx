@@ -31,15 +31,13 @@ export function ShowcaseHeader({
 
       {/* Main Sticky Topbar */}
       <header className="sticky top-0 z-40 border-b border-hk-champagne/40 bg-white/95 px-6 py-3.5 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          {/* Logo & Hub Title */}
-          <div className="flex items-center gap-4 shrink-0">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-center">
+          {/* Logo & Static Reference Title */}
+          <div className="flex items-center gap-4 shrink-0 md:flex-1">
             <HariKitaLogo variant="horizontal" size="sm" asLink={false} />
             <div className="hidden h-5 w-[1px] bg-hk-champagne/40 md:block" />
-            <span className="hidden font-editorial text-sm font-medium italic text-hk-taupe md:inline">
-              {activeHub === 'brand'
-                ? 'HariKita Platform Visual System'
-                : 'Undangan Digital Visual System & Sandbox'}
+            <span className="hidden font-editorial text-sm font-medium italic text-hk-taupe md:inline whitespace-nowrap">
+              Design System Reference
             </span>
           </div>
 
@@ -75,7 +73,7 @@ export function ShowcaseHeader({
           </div>
 
           {/* Right: Dynamic Sub-Navigation Anchor Links (Horizontal Scroll on Mobile) */}
-          <nav className="flex items-center gap-1.5 text-xs font-manrope font-semibold overflow-x-auto no-scrollbar w-full md:w-auto py-1 whitespace-nowrap -mx-2 px-2 md:mx-0 md:px-0">
+          <nav className="flex items-center gap-1.5 text-xs font-manrope font-semibold overflow-x-auto no-scrollbar w-full md:w-auto py-1 whitespace-nowrap -mx-2 px-2 md:mx-0 md:px-0 md:flex-1 md:justify-end">
             {activeHub === 'brand' ? (
               <>
                 <a
