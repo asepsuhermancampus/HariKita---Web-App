@@ -398,3 +398,55 @@ export const SANDBOX_GUESTBOOK_WISHES = [
     isVip: false,
   },
 ];
+
+import { VenueLocationData, InvitationStudioConfig } from '@/types/invitation-studio';
+
+export const SANDBOX_VENUE_LOCATION_DATA: VenueLocationData = {
+  venueName: 'Gedung Pertemuan Graha Kebumen',
+  hallName: 'Grand Ballroom Sasana Sabda Tama',
+  address: 'Jl. Pemuda No. 45, Panjer, Kebumen',
+  district: 'Kecamatan Kebumen',
+  city: 'Kabupaten Kebumen',
+  province: 'Jawa Tengah',
+  postalCode: '54312',
+  googleMapsUrl: 'https://maps.google.com/?q=Gedung+Graha+Kebumen',
+  wazeUrl: 'https://waze.com/ul?q=Gedung+Graha+Kebumen',
+  qrPayload: 'https://maps.google.com/?q=Gedung+Graha+Kebumen&ll=-7.6698,109.6521',
+  latitude: -7.6698,
+  longitude: 109.6521,
+  parkingNotes: 'Tersedia area parkir kendaraan VIP di sayap timur dan parkir bus rombongan di sayap barat.',
+};
+
+export const SANDBOX_STUDIO_DEFAULTS: InvitationStudioConfig = {
+  themeColor: '#88735B', // HariKita Taupe default
+  coupleVariant: 'twin-arches',
+  placementStyle: 'royal-symmetrical',
+  galleryVariant: 'editorial-masonry',
+  activeFrame: 'iphone-15-pro',
+  animationMood: 'graceful',
+  activeEffects: [
+    'specular-gold-shimmer',
+    'frosted-glassmorphism',
+    'inner-gilded-rim-light',
+    'cotton-paper-texture',
+    'floating-petals',
+  ],
+  activeAnimations: [
+    'svg-path-stroke-draw',
+    'botanical-sway',
+    'narrative-reveal',
+    'gatefold-wax-open',
+    'heartbeat-pulse',
+    'morphing-copy-btn',
+  ],
+  slotAssets: {
+    corner: 'corner-flourish-01',
+    monogram: 'badge-crest-01',
+    divider: 'line-divider-01',
+    coupleSurround: 'leaves-branch-01',
+    iconMarker: 'icon-ring-01',
+    tailpiece: 'ornament-tail-01',
+  },
+  isGatekeeperOpened: false,
+};
+
