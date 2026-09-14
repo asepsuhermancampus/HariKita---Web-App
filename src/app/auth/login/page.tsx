@@ -28,17 +28,22 @@ export default function AuthLoginPage() {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  const DEMO_ACCOUNTS = {
+    client: { phone: "081987654321", pin: "123456", label: "Pengantin (Bima & Citra)" },
+    vendor: { phone: "081300000001", pin: "123456", label: "Vendor (Menganti Studio)" },
+    admin: { phone: "081234567890", pin: "123456", label: "Super Admin HariKita" },
+  };
+
+  const executeLogin = (loginPhone: string, loginPin: string) => {
     setError("");
     startTransition(async () => {
       const formData = new FormData();
-      formData.set("phone", phone);
-      formData.set("pin", pin);
-      formData.set("callbackUrl", callbackUrl);
+      formData.set("phone", loginPhone);
+      formData.set("pin", loginPin);
+      if (callbackUrl) formData.set("callbackUrl", callbackUrl);
       const result = await loginAction(formData);
       if (result.success && result.redirectTo) {
-        router.push(result.redirectTo);
+        window.location.href = result.redirectTo;
       } else {
         setError(
           result.error || "Login gagal. Periksa nomor HP dan PIN Anda."
@@ -47,19 +52,25 @@ export default function AuthLoginPage() {
     });
   };
 
-  const handleQuickDemo = (role: "client" | "vendor" | "admin") => {
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    executeLogin(phone, pin);
+  };
+
+  const handleSelectRole = (role: "client" | "vendor" | "admin") => {
     setSelectedRole(role);
     setError("");
-    if (role === "client") {
-      setPhone("081987654321");
-      setPin("123456");
-    } else if (role === "vendor") {
-      setPhone("081300000001");
-      setPin("123456");
-    } else {
-      setPhone("081234567890");
-      setPin("123456");
-    }
+    const demo = DEMO_ACCOUNTS[role];
+    setPhone(demo.phone);
+    setPin(demo.pin);
+  };
+
+  const handleDirectLogin = (role: "client" | "vendor" | "admin") => {
+    setSelectedRole(role);
+    const demo = DEMO_ACCOUNTS[role];
+    setPhone(demo.phone);
+    setPin(demo.pin);
+    executeLogin(demo.phone, demo.pin);
   };
 
   return (
@@ -106,7 +117,7 @@ export default function AuthLoginPage() {
                   <button
                     key={role}
                     type="button"
-                    onClick={() => setSelectedRole(role)}
+                    onClick={() => handleSelectRole(role)}
                     className={`py-2 px-2 rounded-xl text-xs font-semibold flex flex-col items-center gap-1 border transition-all ${
                       selectedRole === role
                         ? "bg-[#4A2E35] text-white border-[#4A2E35] shadow"
@@ -192,26 +203,38 @@ export default function AuthLoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Credentials */}
-          <div className="pt-2 border-t border-[#FAF8F5] space-y-2 text-[11px] text-[#6B5E62]">
-            <div className="text-center font-medium">
-              Uji Coba Akses Cepat (Demo Sandbox):
+          {/* Quick Demo Sandbox */}
+          <div className="pt-3 border-t border-[#FAF8F5] space-y-2.5 text-[11px] text-[#6B5E62]">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-[#4A2E35]">
+                Uji Coba Akses Cepat (1-Klik Masuk):
+              </span>
+              <span className="text-[10px] text-[#C5A880] font-mono">PIN: 123456</span>
             </div>
-            <div className="flex justify-center gap-2">
-              {(["client", "vendor", "admin"] as const).map((role) => (
-                <button
-                  key={role}
-                  type="button"
-                  onClick={() => handleQuickDemo(role)}
-                  className="px-2.5 py-1 rounded-lg bg-[#FAF8F5] border border-[#E5D7C7] hover:border-[#C5A880] text-[#4A2E35]"
-                >
-                  Isi {role === "client" ? "Klien" : role === "vendor" ? "Vendor" : "Admin"}
-                </button>
-              ))}
+            <div className="grid grid-cols-3 gap-2">
+              {(["client", "vendor", "admin"] as const).map((role) => {
+                const label =
+                  role === "client"
+                    ? "Pengantin"
+                    : role === "vendor"
+                    ? "Vendor"
+                    : "Admin";
+                return (
+                  <button
+                    key={role}
+                    type="button"
+                    disabled={isPending}
+                    onClick={() => handleDirectLogin(role)}
+                    className="py-2 px-1 rounded-xl bg-[#FAF8F5] border border-[#E5D7C7] hover:border-[#C5A880] hover:bg-white text-[#4A2E35] font-semibold text-[11px] transition-all flex flex-col items-center gap-0.5 shadow-sm active:scale-95 disabled:opacity-50"
+                  >
+                    <span>Masuk {label}</span>
+                    <span className="text-[9px] text-[#6B5E62]/70 font-normal">
+                      {role === "client" ? "Bima & Citra" : role === "vendor" ? "Menganti" : "Super Admin"}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-            <p className="text-center text-[10px] text-[#6B5E62]/70">
-              PIN demo: <span className="font-mono font-semibold">123456</span>
-            </p>
           </div>
 
           {/* Register Link */}
