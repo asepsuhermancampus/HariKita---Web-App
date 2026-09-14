@@ -12,6 +12,7 @@ model User {
   name          String
   phone         String          @unique
   email         String?         @unique
+  pin           String?                            // bcrypt hash PIN 6-digit untuk autentikasi
   role          String          @default("CLIENT") // "CLIENT", "VENDOR", "ADMIN"
   vendorProfile VendorProfile?
   orders        Order[]
