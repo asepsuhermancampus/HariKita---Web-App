@@ -1,56 +1,68 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ALL_INVITATION_TEMPLATES, MASTER_ARCHETYPES } from "@/lib/templates/registry";
 import { Sparkles, Eye, CheckCircle2, Search } from "lucide-react";
-import { InvitationPreviewModal } from "@/components/invitation/InvitationPreviewModal";
+
+const InvitationPreviewModal = dynamic(
+  () =>
+    import("@/components/invitation/InvitationPreviewModal").then(
+      (mod) => mod.InvitationPreviewModal
+    ),
+  { ssr: false }
+);
+
+const CATEGORIES = [
+  "All",
+  "Botanical",
+  "Javanese",
+  "Islamic",
+  "Minimalist",
+  "Rose Gold",
+  "Rustic",
+  "Celestial",
+  "Cute",
+];
+
+const normalize = (str: string) => str.toLowerCase().replace(/[-\s]/g, "");
 
 export default function UndanganCatalogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [previewModal, setPreviewModal] = useState<{ themeId: string; themeTitle: string } | null>(null);
 
-  const categories = [
-    "All",
-    "Botanical",
-    "Javanese",
-    "Islamic",
-    "Minimalist",
-    "Rose Gold",
-    "Rustic",
-    "Celestial",
-    "Cute",
-  ];
+  const categories = CATEGORIES;
 
-  const normalize = (str: string) => str.toLowerCase().replace(/[-\s]/g, "");
+  const filteredThemes = useMemo(() => {
+    return ALL_INVITATION_TEMPLATES.filter((theme) => {
+      const selNorm = normalize(selectedCategory);
+      const catNorm = normalize(theme.category || "");
+      const archNorm = normalize(theme.archetypeId || "");
 
-  const filteredThemes = ALL_INVITATION_TEMPLATES.filter((theme) => {
-    const selNorm = normalize(selectedCategory);
-    const catNorm = normalize(theme.category || "");
-    const archNorm = normalize(theme.archetypeId || "");
+      const matchesCategory =
+        selectedCategory === "All" ||
+        catNorm.includes(selNorm) ||
+        archNorm.includes(selNorm) ||
+        (selNorm === "rosegold" && (archNorm.includes("rose") || archNorm.includes("royal") || catNorm.includes("royal") || catNorm.includes("gold"))) ||
+        (selNorm === "cute" && (archNorm.includes("cute") || archNorm.includes("animated") || archNorm.includes("special"))) ||
+        (selNorm === "islamic" && (archNorm.includes("islamic") || archNorm.includes("syari"))) ||
+        (selNorm === "javanese" && (archNorm.includes("javanese") || archNorm.includes("traditional") || archNorm.includes("cultural"))) ||
+        (selNorm === "botanical" && (archNorm.includes("botanical") || archNorm.includes("floral")));
 
-    const matchesCategory =
-      selectedCategory === "All" ||
-      catNorm.includes(selNorm) ||
-      archNorm.includes(selNorm) ||
-      (selNorm === "rosegold" && (archNorm.includes("rose") || archNorm.includes("royal") || catNorm.includes("royal") || catNorm.includes("gold"))) ||
-      (selNorm === "cute" && (archNorm.includes("cute") || archNorm.includes("animated") || archNorm.includes("special"))) ||
-      (selNorm === "islamic" && (archNorm.includes("islamic") || archNorm.includes("syari"))) ||
-      (selNorm === "javanese" && (archNorm.includes("javanese") || archNorm.includes("traditional") || archNorm.includes("cultural"))) ||
-      (selNorm === "botanical" && (archNorm.includes("botanical") || archNorm.includes("floral")));
+      const queryNorm = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !queryNorm ||
+        theme.title.toLowerCase().includes(queryNorm) ||
+        theme.sourceOrigin.toLowerCase().includes(queryNorm) ||
+        theme.category.toLowerCase().includes(queryNorm) ||
+        theme.archetypeId.toLowerCase().includes(queryNorm);
 
-    const queryNorm = searchQuery.toLowerCase().trim();
-    const matchesSearch =
-      !queryNorm ||
-      theme.title.toLowerCase().includes(queryNorm) ||
-      theme.sourceOrigin.toLowerCase().includes(queryNorm) ||
-      theme.category.toLowerCase().includes(queryNorm) ||
-      theme.archetypeId.toLowerCase().includes(queryNorm);
-
-    return matchesCategory && matchesSearch;
-  });
+      return matchesCategory && matchesSearch;
+    });
+  }, [selectedCategory, searchQuery]);
 
   return (
     <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
@@ -152,7 +164,7 @@ export default function UndanganCatalogPage() {
       </div>
 
       {/* Theme Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 contain-content-auto">
         {filteredThemes.map((theme) => (
           <div
             key={theme.id}
@@ -165,6 +177,8 @@ export default function UndanganCatalogPage() {
                   src={theme.previewImageUrl}
                   alt={theme.title}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  loading="lazy"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-3 left-3">

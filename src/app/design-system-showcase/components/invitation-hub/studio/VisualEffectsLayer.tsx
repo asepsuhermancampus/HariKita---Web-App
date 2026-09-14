@@ -79,75 +79,79 @@ export function VisualEffectsLayer({
   return (
     <div
       className={cn(
-        'relative min-h-full w-full overflow-hidden transition-colors',
+        'relative min-h-full w-full transition-colors',
         hasPathDraw && 'animate-hk-path-draw',
         hasBotanicalSway && '[&_.hk-sway]:animate-hk-botanical-sway',
         className
       )}
     >
-      {/* 1. Cotton Paper Texture Overlay */}
-      {hasPaperTexture && (
-        <div
-          className="pointer-events-none absolute inset-0 z-10 opacity-[0.05] mix-blend-multiply"
-          style={{
-            backgroundImage:
-              'radial-gradient(#4A2E35 1px, transparent 1px), radial-gradient(#C5A880 1px, transparent 1px)',
-            backgroundSize: '16px 16px',
-            backgroundPosition: '0 0, 8px 8px',
-          }}
-        />
-      )}
-
-      {/* 2. Radial Vignette Focus Depth */}
-      {hasVignette && (
-        <div
-          className="pointer-events-none absolute inset-0 z-20"
-          style={{
-            background: 'radial-gradient(circle at 50% 50%, transparent 65%, rgba(43,43,43,0.08) 100%)',
-          }}
-        />
-      )}
-
-      {/* 3. Ambient Floating Petals (Falling Particles) */}
-      {hasFloatingPetals && (
-        <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden">
-          {[
-            { left: '15%', delay: '0s', dur: '8s', size: '10px' },
-            { left: '45%', delay: '2.5s', dur: '9.5s', size: '12px' },
-            { left: '75%', delay: '4s', dur: '7.5s', size: '8px' },
-            { left: '30%', delay: '5.5s', dur: '10s', size: '11px' },
-            { left: '85%', delay: '1s', dur: '8.5s', size: '9px' },
-          ].map((petal, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-white/70 shadow-2xs backdrop-blur-xs"
-              style={{
-                top: '-20px',
-                left: petal.left,
-                width: petal.size,
-                height: petal.size,
-                animation: `hk-falling-petal ${petal.dur} linear infinite`,
-                animationDelay: petal.delay,
-              }}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* 4. Specular Gold Shimmer Light Sweep */}
-      {hasShimmer && (
-        <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+      {/* Background Atmosphere Overlays (Isolated with pointer-events-none & overflow-hidden) */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
+        {/* 1. Cotton Paper Texture Overlay */}
+        {hasPaperTexture && (
           <div
-            className="absolute -inset-full w-[200%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            className="absolute inset-0 opacity-[0.05] mix-blend-multiply"
             style={{
-              animation: 'hk-gold-shimmer 7s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+              backgroundImage:
+                'radial-gradient(#4A2E35 1px, transparent 1px), radial-gradient(#C5A880 1px, transparent 1px)',
+              backgroundSize: '16px 16px',
+              backgroundPosition: '0 0, 8px 8px',
             }}
           />
-        </div>
-      )}
+        )}
 
-      {/* Content Stream */}
-      <div className="relative z-0">{children}</div>
+        {/* 2. Radial Vignette Focus Depth */}
+        {hasVignette && (
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, transparent 65%, rgba(43,43,43,0.08) 100%)',
+            }}
+          />
+        )}
+
+        {/* 3. Ambient Floating Petals (Falling Particles) */}
+        {hasFloatingPetals && (
+          <div className="absolute inset-0 overflow-hidden">
+            {[
+              { left: '15%', delay: '0s', dur: '8s', size: '10px' },
+              { left: '45%', delay: '2.5s', dur: '9.5s', size: '12px' },
+              { left: '75%', delay: '4s', dur: '7.5s', size: '8px' },
+              { left: '30%', delay: '5.5s', dur: '10s', size: '11px' },
+              { left: '85%', delay: '1s', dur: '8.5s', size: '9px' },
+            ].map((petal, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full bg-white/70 shadow-2xs backdrop-blur-xs"
+                style={{
+                  top: '-20px',
+                  left: petal.left,
+                  width: petal.size,
+                  height: petal.size,
+                  animation: `hk-falling-petal ${petal.dur} linear infinite`,
+                  animationDelay: petal.delay,
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* 4. Specular Gold Shimmer Light Sweep */}
+        {hasShimmer && (
+          <div className="absolute inset-0 overflow-hidden">
+            <div
+              className="absolute -inset-full w-[200%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              style={{
+                animation: 'hk-gold-shimmer 7s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Content Stream (Allows natural scroll expansion) */}
+      <div className="relative z-0 min-h-full">{children}</div>
     </div>
   );
 }
+

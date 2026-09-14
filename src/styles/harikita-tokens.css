@@ -1,13 +1,23 @@
 /* HariKita Official Brand Design System Tokens */
-/* Reference: HariKita-DesignSystem-Asset.png & New-Refactor-Requirement */
+/* Reference: HariKita-DesignSystem-Asset.png, AGENTS.md & Brand Identity */
 
-:root {
-  /* Official 5-Color Palette */
-  --color-charcoal: #2B2B2B;      /* RGB: 43, 43, 43 */
-  --color-taupe: #88735B;         /* RGB: 136, 115, 91 */
-  --color-champagne: #C9A88A;     /* RGB: 201, 168, 138 */
-  --color-soft-beige: #E8DED1;    /* RGB: 232, 222, 209 */
-  --color-ivory: #F8F6F1;         /* RGB: 248, 246, 241 */
+:root, [data-theme="harikita"] {
+  /* Official Brand Palette */
+  --color-charcoal: #2B2B2B;      /* Deep Plum Charcoal Text */
+  --color-taupe: #88735B;         /* Muted Taupe */
+  --color-champagne: #C9A88A;     /* Gilded Champagne Gold */
+  --color-soft-beige: #E8DED1;    /* Soft Beige Accent */
+  --color-ivory: #F8F6F1;         /* Ivory Surface */
+  --color-canvas: #FAF8F5;        /* Cashmere Alabaster Base Canvas */
+  --color-canvas-subtle: #F3EDE6; /* Champagne Surface Muted */
+
+  /* Plum & Gold Semantic Aliases */
+  --color-plum: #4A2E35;
+  --color-plum-light: #6B5E62;
+  --color-plum-dark: #2A181D;
+  --color-gold: #C5A880;
+  --color-gold-light: #E3CAA5;
+  --color-gold-dark: #A3865E;
 
   /* HK Namespace Aliases */
   --hk-charcoal: var(--color-charcoal);
@@ -15,10 +25,13 @@
   --hk-champagne: var(--color-champagne);
   --hk-soft-beige: var(--color-soft-beige);
   --hk-ivory: var(--color-ivory);
-  --hk-canvas: var(--color-ivory);
+  --hk-canvas: var(--color-canvas);
+  --hk-plum: var(--color-plum);
+  --hk-plum-light: var(--color-plum-light);
 
   /* Typography Scales */
   --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-serif-luxury: 'Playfair Display', Georgia, serif;
   --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
 }
 
@@ -28,6 +41,7 @@
 .bg-hk-champagne { background-color: var(--color-champagne); }
 .bg-hk-soft-beige { background-color: var(--color-soft-beige); }
 .bg-hk-ivory { background-color: var(--color-ivory); }
+.bg-hk-canvas { background-color: var(--color-canvas); }
 
 /* Text Utility Classes */
 .text-hk-charcoal { color: var(--color-charcoal); }
@@ -35,6 +49,8 @@
 .text-hk-champagne { color: var(--color-champagne); }
 .text-hk-soft-beige { color: var(--color-soft-beige); }
 .text-hk-ivory { color: var(--color-ivory); }
+.text-hk-plum { color: var(--color-plum); }
+.text-hk-plum-light { color: var(--color-plum-light); }
 
 /* Border Utility Classes */
 .border-hk-charcoal { border-color: var(--color-charcoal); }
@@ -45,4 +61,5 @@
 
 /* Typography Utility Classes */
 .font-editorial { font-family: var(--font-display); }
+.font-serif-luxury { font-family: var(--font-serif-luxury); }
 .font-manrope { font-family: var(--font-body); }

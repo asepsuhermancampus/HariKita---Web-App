@@ -3,19 +3,40 @@
 import React from 'react';
 import { SANDBOX_COUPLE_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 import { Instagram } from 'lucide-react';
+import { LiveContentData } from '@/types/invitation-studio';
+import { DynamicTintIcon } from '../../DynamicTintIcon';
+import { resolveAssetUrl } from '../../asset-resolver';
 
 interface VariantProps {
   themeColor: string;
   ornamentId?: string;
+  content?: LiveContentData;
 }
 
-export function MihrabArabesqueVariant({ themeColor }: VariantProps) {
+export function MihrabArabesqueVariant({ themeColor, ornamentId, content }: VariantProps) {
   const { groom, bride, quote } = SANDBOX_COUPLE_DATA;
+
+  const groomFullName = content?.groomName || groom.fullName;
+  const groomParentsText = content?.groomParents || `${groom.fatherName} & ${groom.motherName}`;
+  const brideFullName = content?.brideName || bride.fullName;
+  const brideParentsText = content?.brideParents || `${bride.fatherName} & ${bride.motherName}`;
+  const activeQuote = content?.quoteText || quote.text;
 
   return (
     <div className="space-y-6 px-3 py-2 text-hk-charcoal">
       {/* Islamic Basmalah Calligraphy Header */}
       <div className="text-center space-y-1">
+        {ornamentId && (
+          <div className="flex justify-center mb-1">
+            <DynamicTintIcon
+              src={resolveAssetUrl(ornamentId)}
+              color={themeColor}
+              size={32}
+              alt="Arabesque Crest"
+              className="opacity-80"
+            />
+          </div>
+        )}
         <div className="font-editorial text-2xl tracking-wide text-hk-charcoal" style={{ color: themeColor }}>
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
         </div>
@@ -29,15 +50,15 @@ export function MihrabArabesqueVariant({ themeColor }: VariantProps) {
         {/* Groom Card */}
         <div className="rounded-2xl border border-hk-champagne/60 bg-white p-4 shadow-xs text-center">
           <div className="mx-auto h-48 w-36 overflow-hidden rounded-t-[72px] border-2 border-[#2C4A3E]/30 bg-hk-ivory p-1">
-            <img src={groom.photo} alt={groom.fullName} className="h-full w-full rounded-t-[68px] object-cover" />
+            <img src={groom.photo} alt={groomFullName} className="h-full w-full rounded-t-[68px] object-cover" />
           </div>
-          <h4 className="mt-3 font-editorial text-xl font-medium">{groom.fullName}</h4>
+          <h4 className="mt-3 font-editorial text-xl font-medium">{groomFullName}</h4>
           <span className="inline-block font-manrope text-[10px] font-bold uppercase tracking-wider text-hk-taupe mt-0.5">
             ({groom.nickName})
           </span>
           <p className="font-manrope text-xs text-hk-charcoal/70 mt-1 leading-relaxed">
             Putra pertama dari <br />
-            <strong>{groom.fatherName}</strong> &amp; <strong>{groom.motherName}</strong>
+            <strong>{groomParentsText}</strong>
           </p>
           <span className="mt-2 inline-flex items-center gap-1 font-manrope text-[10px] text-hk-taupe">
             <Instagram className="h-3 w-3" /> {groom.instagram}
@@ -57,15 +78,15 @@ export function MihrabArabesqueVariant({ themeColor }: VariantProps) {
         {/* Bride Card */}
         <div className="rounded-2xl border border-hk-champagne/60 bg-white p-4 shadow-xs text-center">
           <div className="mx-auto h-48 w-36 overflow-hidden rounded-t-[72px] border-2 border-[#2C4A3E]/30 bg-hk-ivory p-1">
-            <img src={bride.photo} alt={bride.fullName} className="h-full w-full rounded-t-[68px] object-cover" />
+            <img src={bride.photo} alt={brideFullName} className="h-full w-full rounded-t-[68px] object-cover" />
           </div>
-          <h4 className="mt-3 font-editorial text-xl font-medium">{bride.fullName}</h4>
+          <h4 className="mt-3 font-editorial text-xl font-medium">{brideFullName}</h4>
           <span className="inline-block font-manrope text-[10px] font-bold uppercase tracking-wider text-hk-taupe mt-0.5">
             ({bride.nickName})
           </span>
           <p className="font-manrope text-xs text-hk-charcoal/70 mt-1 leading-relaxed">
             Putri kedua dari <br />
-            <strong>{bride.fatherName}</strong> &amp; <strong>{bride.motherName}</strong>
+            <strong>{brideParentsText}</strong>
           </p>
           <span className="mt-2 inline-flex items-center gap-1 font-manrope text-[10px] text-hk-taupe">
             <Instagram className="h-3 w-3" /> {bride.instagram}
@@ -76,7 +97,7 @@ export function MihrabArabesqueVariant({ themeColor }: VariantProps) {
       {/* Syar'i Ayat Footer */}
       <div className="rounded-xl border border-hk-champagne/40 bg-hk-ivory/60 p-3 text-center">
         <p className="font-editorial text-xs italic text-hk-charcoal/80 leading-relaxed">
-          "{quote.text}"
+          "{activeQuote}"
         </p>
         <span className="block mt-1 font-manrope text-[10px] font-bold uppercase tracking-wider text-hk-taupe">
           (QS. Ar-Rum: 21)

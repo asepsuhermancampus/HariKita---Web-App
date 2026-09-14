@@ -3,18 +3,40 @@
 import React from 'react';
 import { SANDBOX_COUPLE_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 import { Instagram } from 'lucide-react';
+import { LiveContentData } from '@/types/invitation-studio';
+import { DynamicTintIcon } from '../../DynamicTintIcon';
+import { resolveAssetUrl } from '../../asset-resolver';
 
 interface VariantProps {
   themeColor: string;
   ornamentId?: string;
+  content?: LiveContentData;
 }
 
-export function TwinArchesFloralVariant({ themeColor }: VariantProps) {
+export function TwinArchesFloralVariant({ themeColor, ornamentId, content }: VariantProps) {
   const { groom, bride, quote } = SANDBOX_COUPLE_DATA;
+
+  const groomFullName = content?.groomName || groom.fullName;
+  const groomParentsText = content?.groomParents || `${groom.fatherName} & ${groom.motherName}`;
+  const brideFullName = content?.brideName || bride.fullName;
+  const brideParentsText = content?.brideParents || `${bride.fatherName} & ${bride.motherName}`;
+  const activeQuote = content?.quoteText || quote.text;
 
   return (
     <div className="space-y-6 px-3 py-2">
       <div className="text-center">
+        {/* Dynamic Botanical Flourish Header */}
+        {ornamentId && (
+          <div className="flex justify-center mb-1">
+            <DynamicTintIcon
+              src={resolveAssetUrl(ornamentId)}
+              color={themeColor}
+              size={36}
+              alt="Floral Flourish"
+              className="opacity-90"
+            />
+          </div>
+        )}
         <span
           className="font-editorial text-xs italic tracking-widest"
           style={{ color: themeColor }}
@@ -33,7 +55,7 @@ export function TwinArchesFloralVariant({ themeColor }: VariantProps) {
           <div className="relative h-60 w-44 overflow-hidden rounded-t-[90px] border-2 border-hk-champagne/80 bg-white p-1 shadow-sm">
             <img
               src={groom.photo}
-              alt={groom.fullName}
+              alt={groomFullName}
               className="h-full w-full rounded-t-[84px] object-cover"
             />
             {/* Bottom arch badge */}
@@ -44,10 +66,10 @@ export function TwinArchesFloralVariant({ themeColor }: VariantProps) {
               The Groom
             </div>
           </div>
-          <h4 className="mt-3 font-editorial text-xl font-medium text-hk-charcoal">{groom.fullName}</h4>
+          <h4 className="mt-3 font-editorial text-xl font-medium text-hk-charcoal">{groomFullName}</h4>
           <p className="mt-1 font-manrope text-[11px] text-hk-charcoal/70 leading-relaxed max-w-[200px]">
             Putra pertama dari <br />
-            <strong>{groom.fatherName}</strong> &amp; <strong>{groom.motherName}</strong>
+            <strong>{groomParentsText}</strong>
           </p>
           <a
             href={`https://instagram.com/${groom.instagram.replace('@', '')}`}
@@ -65,7 +87,7 @@ export function TwinArchesFloralVariant({ themeColor }: VariantProps) {
           <div className="relative h-60 w-44 overflow-hidden rounded-t-[90px] border-2 border-hk-champagne/80 bg-white p-1 shadow-sm">
             <img
               src={bride.photo}
-              alt={bride.fullName}
+              alt={brideFullName}
               className="h-full w-full rounded-t-[84px] object-cover"
             />
             {/* Bottom arch badge */}
@@ -76,10 +98,10 @@ export function TwinArchesFloralVariant({ themeColor }: VariantProps) {
               The Bride
             </div>
           </div>
-          <h4 className="mt-3 font-editorial text-xl font-medium text-hk-charcoal">{bride.fullName}</h4>
+          <h4 className="mt-3 font-editorial text-xl font-medium text-hk-charcoal">{brideFullName}</h4>
           <p className="mt-1 font-manrope text-[11px] text-hk-charcoal/70 leading-relaxed max-w-[200px]">
             Putri kedua dari <br />
-            <strong>{bride.fatherName}</strong> &amp; <strong>{bride.motherName}</strong>
+            <strong>{brideParentsText}</strong>
           </p>
           <a
             href={`https://instagram.com/${bride.instagram.replace('@', '')}`}
@@ -95,7 +117,7 @@ export function TwinArchesFloralVariant({ themeColor }: VariantProps) {
 
       {/* Quote Banner */}
       <div className="border-t border-hk-champagne/40 pt-4 text-center">
-        <p className="font-editorial text-xs italic text-hk-charcoal/80">"{quote.text}"</p>
+        <p className="font-editorial text-xs italic text-hk-charcoal/80">"{activeQuote}"</p>
         <span className="block mt-1 font-manrope text-[9px] font-bold uppercase tracking-widest text-hk-taupe">
           {quote.verse}
         </span>

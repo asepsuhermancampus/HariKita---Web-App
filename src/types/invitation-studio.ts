@@ -80,6 +80,40 @@ export interface SlotAssetMapping {
   tailpiece?: string;
 }
 
+export type SectionId =
+  | 'muqaddimah'
+  | 'couple'
+  | 'story'
+  | 'schedule'
+  | 'location'
+  | 'gallery'
+  | 'gift'
+  | 'rsvp'
+  | 'dresscode'
+  | 'closing';
+
+export interface SectionOrderItem {
+  id: SectionId;
+  label: string;
+  enabled: boolean;
+  order: number;
+}
+
+export interface LiveContentData {
+  groomName: string;
+  groomParents: string;
+  brideName: string;
+  brideParents: string;
+  weddingDate: string;
+  venueName: string;
+  venueAddress: string;
+  locationMapsUrl: string;
+  quoteText: string;
+  bankName: string;
+  bankAccount: string;
+  bankHolder: string;
+}
+
 export interface InvitationStudioConfig {
   themeColor: string;
   coupleVariant: CoupleCardVariantId;
@@ -91,6 +125,14 @@ export interface InvitationStudioConfig {
   activeAnimations: MicroAnimationId[];
   slotAssets: SlotAssetMapping;
   isGatekeeperOpened: boolean;
+
+  // Enhanced Capabilities (Phase 2 Assembly)
+  sections?: SectionOrderItem[];
+  content?: LiveContentData;
+  iconTintColor?: string;
+  typographyHeading?: string;
+  audioUrl?: string;
+  isMusicPlaying?: boolean;
 }
 
 export interface VenueLocationData {
@@ -108,3 +150,4 @@ export interface VenueLocationData {
   longitude: number;
   parkingNotes: string;
 }
+

@@ -32,7 +32,7 @@
 }
 
 body {
-  background-color: var(--color-ivory);
+  background-color: var(--color-canvas);
   color: var(--color-charcoal);
   font-family: 'Manrope', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
@@ -104,6 +104,18 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #C5A880;
+}
+
+/* Tri-Vendor No-Scrollbar Utility (Hidden visual scrollbar, full scrolling capability) */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge Legacy */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge, Opera */
+  width: 0;
+  height: 0;
 }
 
 /* Vinyl rotation animation */
@@ -191,5 +203,11 @@ body {
 
 .animate-hk-pulse-slow {
   animation: hk-heartbeat-pulse 3.5s ease-in-out infinite;
+}
+
+/* Native CSS Content Visibility & Layout Containment for High-Performance Rendering */
+.contain-content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 480px;
 }
 

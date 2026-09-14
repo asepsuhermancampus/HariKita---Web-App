@@ -5,13 +5,16 @@ import { MapPin, Navigation, Compass, ExternalLink, QrCode, Copy, Check, Car } f
 import { VenueLocationData } from '@/types/invitation-studio';
 import { cn } from '@/lib/utils';
 
+import { DynamicTintIcon } from '../DynamicTintIcon';
+import { resolveAssetUrl } from '../asset-resolver';
+
 interface StudioLocationCardProps {
   venue: VenueLocationData;
   themeColor: string;
   ornamentId?: string;
 }
 
-export function StudioLocationCard({ venue, themeColor }: StudioLocationCardProps) {
+export function StudioLocationCard({ venue, themeColor, ornamentId }: StudioLocationCardProps) {
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
 
   const handleCopyMapUrl = () => {
@@ -24,6 +27,17 @@ export function StudioLocationCard({ venue, themeColor }: StudioLocationCardProp
     <div className="space-y-6 px-3 py-2 text-hk-charcoal">
       {/* Header */}
       <div className="text-center">
+        {ornamentId && (
+          <div className="flex justify-center mb-1">
+            <DynamicTintIcon
+              src={resolveAssetUrl(ornamentId)}
+              color={themeColor}
+              size={24}
+              alt="Marker Accent"
+              className="opacity-80"
+            />
+          </div>
+        )}
         <span
           className="font-manrope text-[10px] font-bold uppercase tracking-widest"
           style={{ color: themeColor }}

@@ -2,8 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { cartStore } from "@/lib/cart-store";
 import { formatRupiah } from "@/lib/utils";
 import { ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
+import { useAvailability, availabilityStore } from "@/lib/availability-store";
 import {
   Sparkles,
   Check,
@@ -21,6 +24,7 @@ import {
   Gift,
   Camera,
   Scissors,
+  AlertTriangle,
   Palette,
   Heart,
   Cake,
@@ -182,7 +186,8 @@ export default function MixMatchBuilderPage() {
     }
   }, []);
 
-  // State: checkout modal (Lazy registration)
+  const router = useRouter();
+
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
   const [clientForm, setClientForm] = useState({
@@ -193,32 +198,31 @@ export default function MixMatchBuilderPage() {
     notes: "",
   });
 
+  // Reactive Availability Matrix
+  const availabilityState = useAvailability();
+  const selectedVendors = KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).map((s) => s.vendor);
+  const matrixResult = availabilityStore.checkMatrix(clientForm.eventDate, selectedVendors);
+
   // Calculate live total
   const calculateTotal = () => {
     let total = 0;
-    KEBUMEN_SERVICES.forEach((service) => {
-      const selected = selectedItems[service.id];
-      if (selected) {
-        if (service.unitType === "pax") {
-          const pax = selected.count || service.defaultUnit || 100;
-          total += pax * (service.unitPrice || 45000);
-        } else if (service.unitType === "baki") {
-          const baki = selected.count || service.defaultUnit || 7;
-          total += baki * (service.unitPrice || 150000);
-        } else if (service.unitType === "pcs") {
-          const pcs = selected.count || service.defaultUnit || 100;
-          total += pcs * (service.unitPrice || 15000);
-        } else {
-          total += service.basePrice;
-        }
+    Object.entries(selectedItems).forEach(([serviceId, itemState]) => {
+      const service = KEBUMEN_SERVICES.find((s) => s.id === serviceId);
+      if (!service) return;
+
+      if (service.unitType && service.unitPrice) {
+        const units = itemState.count || service.defaultUnit || 1;
+        total += service.basePrice + units * service.unitPrice;
+      } else {
+        total += service.basePrice;
       }
     });
     return total;
   };
 
   const totalAmount = calculateTotal();
-  const dpAmount = totalAmount * 0.3; // 30%
-  const settlementAmount = totalAmount * 0.7; // 70%
+  const dpAmount = Math.round(totalAmount * 0.3);
+  const settlementAmount = totalAmount - dpAmount;
 
   const toggleItem = (id: string, defaultCount: number = 1) => {
     setSelectedItems((prev) => {
@@ -239,9 +243,48 @@ export default function MixMatchBuilderPage() {
     }));
   };
 
+  const syncToCart = () => {
+    cartStore.clearCart();
+    KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).forEach((item) => {
+      const current = selectedItems[item.id];
+      const unitPrice =
+        item.unitType && item.unitPrice
+          ? item.basePrice + (current?.count || item.defaultUnit || 1) * item.unitPrice
+          : item.basePrice;
+
+      cartStore.addItem({
+        categoryId: item.category.toLowerCase().replace(/[^a-z0-9]/g, "_"),
+        categoryTitle: item.category,
+        vendorId: `vendor_${item.id}`,
+        vendorName: item.vendor,
+        district: "Kebumen Kota",
+        packageId: item.id,
+        packageName: item.name,
+        unitPrice,
+        quantity: 1,
+        callTime: "08:00 WIB",
+        notes: item.description,
+      });
+    });
+
+    if (clientForm.name || clientForm.phone) {
+      cartStore.setCustomerInfo(clientForm.name, clientForm.phone);
+    }
+    if (clientForm.eventDate) {
+      cartStore.setEventDate(clientForm.eventDate);
+    }
+    if (clientForm.venueAddress) {
+      cartStore.setEventLocation(clientForm.venueAddress);
+    }
+  };
+
   const handleCheckoutSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    syncToCart();
     setIsOrderSubmitted(true);
+    setTimeout(() => {
+      router.push("/checkout");
+    }, 600);
   };
 
   return (
@@ -297,11 +340,20 @@ export default function MixMatchBuilderPage() {
                     </div>
 
                     <div className="space-y-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-gold-dark bg-gold/15 px-2 py-0.5 rounded-full">
                           {service.category}
                         </span>
                         <span className="text-xs text-plum-light font-medium">• {service.vendor}</span>
+                        {availabilityStore.checkMatrix(clientForm.eventDate, [service.vendor]).isAllAvailable ? (
+                          <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                            ✓ Siap Hadir
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-semibold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
+                            Jadwal Terisi
+                          </span>
+                        )}
                       </div>
                       <h3 className="font-serif-luxury text-lg font-bold text-plum">
                         {service.name}
@@ -420,6 +472,42 @@ export default function MixMatchBuilderPage() {
               <h3 className="font-serif-luxury text-2xl font-bold text-plum">
                 Paket Impian Hari H
               </h3>
+            </div>
+
+            {/* Multi-Vendor Availability Matrix Box */}
+            <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-gold/30 space-y-2.5 text-xs">
+              <div className="flex items-center justify-between gap-2">
+                <label className="font-bold text-plum flex items-center gap-1.5 shrink-0">
+                  <Calendar className="w-3.5 h-3.5 text-gold-dark" />
+                  <span>Tanggal Acara:</span>
+                </label>
+                <input
+                  type="date"
+                  value={clientForm.eventDate}
+                  onChange={(e) => setClientForm((prev) => ({ ...prev, eventDate: e.target.value }))}
+                  className="p-1.5 rounded-lg border border-gold/40 text-xs font-mono font-bold text-plum bg-white focus:outline-none focus:border-gold w-36"
+                />
+              </div>
+
+              {selectedVendors.length > 0 && (
+                matrixResult.isAllAvailable ? (
+                  <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-[11px] flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block">Matriks Ketersediaan 100% Bebas:</strong>
+                      Seluruh {matrixResult.totalChecked} vendor terpilih siap hadir di Kebumen pada tanggal ini.
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-[11px] flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block">Bentrok Jadwal Terdeteksi ({matrixResult.conflicts.length} Vendor):</strong>
+                      {matrixResult.conflicts.map((c) => `${c.vendorName} (${c.reason})`).join(", ")}.
+                    </div>
+                  </div>
+                )
+              )}
             </div>
 
             {/* Selected Breakdown */}

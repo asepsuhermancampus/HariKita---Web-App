@@ -15,10 +15,27 @@ model User {
   pin           String?                            // bcrypt hash PIN 6-digit untuk autentikasi
   role          String          @default("CLIENT") // "CLIENT", "VENDOR", "ADMIN"
   vendorProfile VendorProfile?
+  clientProfile ClientProfile?
   orders        Order[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 }
+
+model ClientProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  partnerName     String?   // Nama mempelai pasangan (contoh: "Citra Kirana")
+  eventDate       DateTime? // Tanggal hari H acara
+  eventLocation   String?   // Venue / Gedung / Alamat di Kebumen
+  district        String?   @default("Kebumen") // Kecamatan di Kebumen (Kebumen, Gombong, Ayah, dll)
+  themePreference String?   // Preferensi tema/adat (contoh: "Jawa Klasik Modern", "Minimalist Floral")
+  notes           String?   // Catatan khusus impian calon pengantin
+  avatarUrl       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
 
 model VendorProfile {
   id             String           @id @default(cuid())

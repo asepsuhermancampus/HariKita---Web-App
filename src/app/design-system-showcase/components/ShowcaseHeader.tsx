@@ -113,6 +113,12 @@ export function ShowcaseHeader({
             ) : (
               <>
                 <a
+                  href="#studio-kustom"
+                  className="rounded-full px-3 py-1 text-hk-charcoal font-bold bg-hk-soft-beige/60 transition-colors hover:bg-hk-soft-beige shrink-0"
+                >
+                  🛠️ Studio Kustom
+                </a>
+                <a
                   href="#archetypes"
                   className="rounded-full px-3 py-1 text-hk-charcoal transition-colors hover:bg-hk-soft-beige/50 shrink-0"
                 >

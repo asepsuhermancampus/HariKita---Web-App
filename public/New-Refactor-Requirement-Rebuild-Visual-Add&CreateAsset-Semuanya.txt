@@ -1,0 +1,1755 @@
+# HARI KITA — COMPLETE BRAND ASSET LIBRARY & UI DESIGN SYSTEM
+
+ROLE
+
+You are a Senior Brand Identity Designer, Visual Asset Designer, SVG Asset Architect, UI/UX Designer, Design System Architect, and Frontend Engineer.
+
+Your task is to build a complete, production-ready visual asset library and UI design system for "HariKita".
+
+IMPORTANT:
+The user already owns the HariKita Logo System.
+
+DO NOT recreate, redesign, replace, reinterpret, or generate a new logo.
+
+The existing HariKita logo must remain the source of truth.
+
+The scope of this task contains EXACTLY 13 categories.
+
+DO NOT create or include a Website UI Preview category.
+
+The website UI itself may only be used as a consumer of the design system and assets where necessary, but do not create a separate Website UI Preview category or mockup.
+
+The user will manually download the generated visual/image assets.
+
+Therefore, your responsibility is to:
+
+1. Define the complete asset system.
+2. Create the exact folder structure.
+3. Create the exact filenames.
+4. Create design tokens.
+5. Create documentation.
+6. Create reusable UI components where applicable.
+7. Prepare the project to consume the manually downloaded assets.
+8. Create asset manifests/inventories.
+9. Create previews/showcase components where appropriate.
+10. Never invent a replacement logo.
+11. Never randomly rename assets.
+12. Never stop after creating only a few examples.
+
+==================================================
+01. BRAND FOUNDATION
+==================================================
+
+Brand:
+
+HariKita
+
+Meaning:
+
+"Your Day / Our Day" — two individual journeys becoming one shared story.
+
+Category:
+
+Wedding & Events
+Pre-Wedding
+Wedding Services
+Digital Invitation
+Event Organizer
+
+Primary tagline:
+
+"Your Day. Our Story."
+
+Optional supporting message:
+
+"Every story deserves a day to remember."
+
+Brand personality:
+
+- Minimal
+- Luxury
+- Romantic
+- Editorial
+- Warm
+- Modern
+- Timeless
+- Premium
+- Elegant
+- Emotional
+- Sophisticated
+- Calm
+
+The brand should feel like a premium contemporary wedding/lifestyle technology brand.
+
+It must NOT look like a generic traditional wedding organizer.
+
+==================================================
+02. DESIGN PRINCIPLES
+==================================================
+
+Core design philosophy:
+
+LESS DECORATION, MORE IDENTITY.
+
+The visual system must prioritize:
+
+- whitespace
+- typography
+- elegant proportions
+- subtle botanical details
+- fine-line illustrations
+- warm neutral colors
+- restrained ornamentation
+- editorial composition
+- premium simplicity
+
+Avoid:
+
+- generic wedding clipart
+- excessive flowers
+- excessive gold
+- bride/groom illustrations
+- wedding rings as primary identity
+- crowns
+- heart-shaped clichés
+- overly decorative calligraphy
+- excessive gradients
+- excessive shadows
+- excessive 3D effects
+- glossy metallic effects
+- overly ornamental frames
+- crowded compositions
+
+Flowers, leaves and ornaments are supporting visual language.
+
+They must never overpower the HariKita identity.
+
+==================================================
+03. COLOR PALETTE
+==================================================
+
+Use these exact brand colors.
+
+CHARCOAL
+
+HEX:
+#2B2B2B
+
+RGB:
+43, 43, 43
+
+Usage:
+- Primary text
+- Primary logo color
+- Dark UI
+- Dark backgrounds
+- Strong headings
+
+TAUPE
+
+HEX:
+#88735B
+
+RGB:
+136, 115, 91
+
+Usage:
+- Secondary text
+- Secondary buttons
+- Botanical accents
+- Decorative elements
+
+CHAMPAGNE
+
+HEX:
+#C9A88A
+
+RGB:
+201, 168, 138
+
+Usage:
+- Premium accent
+- Borders
+- Highlights
+- Decorative lines
+- Small visual emphasis
+
+SOFT BEIGE
+
+HEX:
+#E8DED1
+
+RGB:
+232, 222, 209
+
+Usage:
+- Secondary backgrounds
+- Cards
+- Soft surfaces
+- UI backgrounds
+
+IVORY
+
+HEX:
+#F8F6F1
+
+RGB:
+248, 246, 241
+
+Usage:
+- Primary website background
+- Invitation background
+- Main canvas
+
+IMPORTANT:
+
+Do NOT use bright yellow gold as the primary brand color.
+
+Do NOT use #D4AF37 as the primary brand color.
+
+Avoid strong metallic gold gradients.
+
+The visual direction should be champagne/taupe rather than traditional yellow-gold wedding branding.
+
+--------------------------------------------------
+COLOR TARGET OUTPUT
+--------------------------------------------------
+
+Create:
+
+/docs/brand/colors.md
+
+/src/styles/harikita-colors.css
+
+/src/styles/harikita-tokens.css
+
+/config/harikita-colors.json
+
+If the project uses Tailwind CSS, integrate the colors into the existing Tailwind configuration without unnecessarily replacing the existing architecture.
+
+Required CSS variables:
+
+--hk-charcoal: #2B2B2B;
+--hk-taupe: #88735B;
+--hk-champagne: #C9A88A;
+--hk-soft-beige: #E8DED1;
+--hk-ivory: #F8F6F1;
+
+Do not scatter raw color values throughout components.
+
+==================================================
+04. TYPOGRAPHY
+==================================================
+
+PRIMARY DISPLAY FONT:
+
+Cormorant Garamond
+
+Recommended weights:
+
+400
+500
+600
+
+Use for:
+
+- Hero headings
+- H1
+- H2
+- H3
+- Editorial titles
+- Invitation headings
+- Taglines
+- Large emotional statements
+- Premium display typography
+
+SECONDARY UI FONT:
+
+Manrope
+
+Recommended weights:
+
+400
+500
+600
+700
+
+Use for:
+
+- Body text
+- Navigation
+- Buttons
+- Forms
+- Labels
+- Metadata
+- Card descriptions
+- Badges
+- UI controls
+- Inputs
+- Service descriptions
+
+| Element      | Font               |       Weight | Size Desktop | Size Mobile | Line Height |
+| ------------ | ------------------ | -----------: | -----------: | ----------: | ----------: |
+| Hero Display | Cormorant Garamond |          500 |      64–72px |     42–48px |   0.95–1.05 |
+| H1           | Cormorant Garamond |          500 |      52–60px |     38–44px |        1.05 |
+| H2           | Cormorant Garamond |          500 |      40–48px |     32–36px |         1.1 |
+| H3           | Cormorant Garamond |          500 |      28–32px |     24–28px |        1.15 |
+| H4           | Cormorant Garamond |          500 |      22–26px |     20–24px |         1.2 |
+| Tagline      | Cormorant Garamond | 400 / Italic |      18–24px |     16–20px |         1.3 |
+| Body Large   | Manrope            |          400 |      16–18px |     15–16px |         1.6 |
+| Body         | Manrope            |          400 |      14–16px |     14–15px |         1.6 |
+| Body Small   | Manrope            |          400 |      13–14px |     12–13px |         1.5 |
+| Navigation   | Manrope            |          500 |      13–14px |        13px |         1.4 |
+| Button       | Manrope            |          600 |      13–14px |     13–14px |           1 |
+| Eyebrow      | Manrope            |          600 |      10–12px |     10–11px |         1.3 |
+| Caption      | Manrope            |          400 |      11–13px |     11–12px |         1.4 |
+| Metadata     | Manrope            |          500 |      11–13px |     11–12px |         1.4 |
+
+
+--------------------------------------------------
+TYPOGRAPHY HIERARCHY
+--------------------------------------------------
+
+Logo:
+
+Existing HariKita logo.
+
+Do not recreate.
+
+H1:
+
+Cormorant Garamond
+500
+48–72px desktop
+
+H2:
+
+Cormorant Garamond
+500
+36–48px
+
+H3:
+
+Cormorant Garamond
+500
+24–32px
+
+Tagline:
+
+Cormorant Garamond
+400
+18–24px
+
+Body:
+
+Manrope
+400
+14–16px
+
+Navigation:
+
+Manrope
+500
+13–14px
+
+Button:
+
+Manrope
+600
+13–14px
+
+Eyebrow:
+
+Manrope
+600
+10–12px
+
+Metadata:
+
+Manrope
+400–500
+11–13px
+
+--------------------------------------------------
+TYPOGRAPHY TARGET OUTPUT
+--------------------------------------------------
+
+Create:
+
+/docs/brand/typography.md
+
+/src/styles/harikita-typography.css
+
+/src/styles/harikita-tokens.css
+
+Create a typography showcase component:
+
+TypographyShowcase
+
+It must demonstrate:
+
+- Display
+- H1
+- H2
+- H3
+- Body
+- Caption
+- Navigation
+- Button
+- Label
+- Tagline
+
+Do not use decorative script fonts.
+
+==================================================
+05. ORNAMENTS & ELEMENTS
+==================================================
+
+TOTAL:
+
+42 visual assets.
+
+This category contains:
+
+A. Floral & Botanical Ornaments
+12 assets
+
+B. Decorative Lines
+12 assets
+
+C. Corner Elements
+8 assets
+
+D. Abstract Symbols
+10 assets
+
+--------------------------------------------------
+A. FLORAL & BOTANICAL ORNAMENTS
+--------------------------------------------------
+
+Create/download target assets:
+
+botanical-01.svg
+botanical-02.svg
+botanical-03.svg
+botanical-04.svg
+botanical-05.svg
+botanical-06.svg
+botanical-07.svg
+botanical-08.svg
+botanical-09.svg
+botanical-10.svg
+botanical-11.svg
+botanical-12.svg
+
+Style:
+
+- fine-line
+- elegant
+- minimal
+- botanical
+- organic
+- premium
+- monochrome-compatible
+- recolorable
+
+--------------------------------------------------
+B. DECORATIVE LINES
+--------------------------------------------------
+
+Create/download:
+
+divider-simple.svg
+divider-double.svg
+divider-diamond.svg
+divider-floral.svg
+divider-wave.svg
+divider-curved.svg
+divider-knot.svg
+divider-arch.svg
+line-short.svg
+line-long.svg
+line-dotted.svg
+line-vertical.svg
+
+--------------------------------------------------
+C. CORNER ELEMENTS
+--------------------------------------------------
+
+Create/download:
+
+corner-top-left.svg
+corner-top-right.svg
+corner-bottom-left.svg
+corner-bottom-right.svg
+corner-floral-left.svg
+corner-floral-right.svg
+corner-minimal-left.svg
+corner-minimal-right.svg
+
+--------------------------------------------------
+D. ABSTRACT SYMBOLS
+--------------------------------------------------
+
+Create/download:
+
+abstract-loop.svg
+abstract-organic-curve.svg
+abstract-half-sun.svg
+abstract-two-dots.svg
+abstract-sparkle.svg
+abstract-diamond.svg
+abstract-petal.svg
+abstract-ribbon.svg
+abstract-soft-circle.svg
+abstract-arch.svg
+
+The abstract language should subtly communicate:
+
+- connection
+- togetherness
+- two people
+- shared journey
+- new beginning
+- continuity
+
+Do not turn these into another logo.
+
+--------------------------------------------------
+ORNAMENT TARGET OUTPUT
+--------------------------------------------------
+
+Create:
+
+/public/assets/harikita/ornaments/floral-botanical/
+
+/public/assets/harikita/ornaments/decorative-lines/
+
+/public/assets/harikita/ornaments/corners/
+
+/public/assets/harikita/ornaments/abstract/
+
+/docs/assets/ornaments.md
+
+/data/harikita-ornaments.json
+
+==================================================
+06. FLORAL ILLUSTRATIONS
+==================================================
+
+TOTAL:
+
+24 visual assets.
+
+--------------------------------------------------
+SINGLE STEM FLOWERS
+--------------------------------------------------
+
+12 assets:
+
+flower-single-stem-01.svg
+flower-single-stem-02.svg
+flower-single-stem-03.svg
+flower-single-stem-04.svg
+flower-single-stem-05.svg
+flower-single-stem-06.svg
+flower-single-stem-07.svg
+flower-single-stem-08.svg
+flower-single-stem-09.svg
+flower-single-stem-10.svg
+flower-single-stem-11.svg
+flower-single-stem-12.svg
+
+--------------------------------------------------
+FLOWER BLOOMS
+--------------------------------------------------
+
+6 assets:
+
+flower-bloom-01.svg
+flower-bloom-02.svg
+flower-bloom-03.svg
+flower-bloom-04.svg
+flower-bloom-05.svg
+flower-bloom-06.svg
+
+--------------------------------------------------
+SMALL FLORAL ACCENTS
+--------------------------------------------------
+
+6 assets:
+
+flower-accent-01.svg
+flower-accent-02.svg
+flower-accent-03.svg
+flower-accent-04.svg
+flower-accent-05.svg
+flower-accent-06.svg
+
+IMPORTANT:
+
+Every flower must have a genuinely different silhouette.
+
+Do not duplicate the same flower and only change the filename.
+
+Visual style:
+
+- botanical line drawing
+- fine-line
+- elegant
+- minimal
+- organic
+- delicate
+- editorial
+- wedding premium
+- no photorealism
+- no 3D
+- no metallic rendering
+
+--------------------------------------------------
+FLORAL TARGET OUTPUT
+--------------------------------------------------
+
+/public/assets/harikita/floral/
+
+/docs/assets/floral-illustrations.md
+
+/data/harikita-floral.json
+
+==================================================
+07. LEAF & BRANCH
+==================================================
+
+TOTAL:
+
+16 visual assets.
+
+--------------------------------------------------
+LEAF SPRIGS
+--------------------------------------------------
+
+8 assets:
+
+leaf-sprig-01.svg
+leaf-sprig-02.svg
+leaf-sprig-03.svg
+leaf-sprig-04.svg
+leaf-sprig-05.svg
+leaf-sprig-06.svg
+leaf-sprig-07.svg
+leaf-sprig-08.svg
+
+--------------------------------------------------
+LEAF BRANCHES
+--------------------------------------------------
+
+4 assets:
+
+leaf-branch-01.svg
+leaf-branch-02.svg
+leaf-branch-03.svg
+leaf-branch-04.svg
+
+--------------------------------------------------
+LEAF STEMS
+--------------------------------------------------
+
+4 assets:
+
+leaf-stem-01.svg
+leaf-stem-02.svg
+leaf-stem-03.svg
+leaf-stem-04.svg
+
+Requirements:
+
+- unique silhouettes
+- consistent stroke language
+- delicate linework
+- recolorable
+- scalable
+- suitable for hero
+- suitable for card
+- suitable for invitation
+- suitable for footer
+- suitable for decorative corner
+
+--------------------------------------------------
+LEAF TARGET OUTPUT
+--------------------------------------------------
+
+/public/assets/harikita/leaves/
+
+/docs/assets/leaves.md
+
+/data/harikita-leaves.json
+
+==================================================
+08. FLORAL COMPOSITIONS
+==================================================
+
+TOTAL:
+
+8 visual assets.
+
+Create:
+
+floral-corner-composition-01.svg
+floral-corner-composition-02.svg
+
+floral-half-wreath-01.svg
+floral-half-wreath-02.svg
+
+floral-frame-01.svg
+floral-frame-02.svg
+
+floral-asymmetric-01.svg
+floral-asymmetric-02.svg
+
+These are COMPLETE compositions.
+
+They are different from individual flowers.
+
+Use multiple flowers, leaves and branches.
+
+Composition style:
+
+- asymmetric where appropriate
+- premium
+- elegant
+- editorial
+- lots of whitespace
+- not overly dense
+
+--------------------------------------------------
+COMPOSITION TARGET OUTPUT
+--------------------------------------------------
+
+/public/assets/harikita/compositions/
+
+/docs/assets/floral-compositions.md
+
+/data/harikita-compositions.json
+
+==================================================
+09. BACKGROUND PATTERN & TEXTURE
+==================================================
+
+TOTAL:
+
+12 visual assets.
+
+--------------------------------------------------
+ORGANIC WAVE
+--------------------------------------------------
+
+pattern-organic-wave-01.svg
+pattern-organic-wave-02.svg
+
+--------------------------------------------------
+BOTANICAL
+--------------------------------------------------
+
+pattern-botanical-01.svg
+pattern-botanical-02.svg
+
+--------------------------------------------------
+SPARKLE / DOT
+--------------------------------------------------
+
+pattern-sparkle-01.svg
+pattern-dots-01.svg
+
+--------------------------------------------------
+ARCH / GEOMETRIC
+--------------------------------------------------
+
+pattern-arch-01.svg
+pattern-geometric-01.svg
+
+--------------------------------------------------
+PAPER TEXTURE
+--------------------------------------------------
+
+texture-paper-light-01.webp
+texture-paper-light-02.webp
+
+texture-paper-dark-01.webp
+texture-paper-dark-02.webp
+
+Requirements:
+
+SVG patterns:
+- lightweight
+- tileable
+- seamless
+- subtle
+
+Textures:
+- optimized
+- subtle
+- low contrast
+- no giant unnecessary file sizes
+
+Never make the background overpower typography.
+
+--------------------------------------------------
+PATTERN TARGET OUTPUT
+--------------------------------------------------
+
+/public/assets/harikita/patterns/
+
+/public/assets/harikita/textures/
+
+/docs/assets/background-patterns.md
+
+/data/harikita-patterns.json
+
+==================================================
+10. CUSTOM ICONS
+==================================================
+
+TOTAL:
+
+6 custom icons.
+
+Create:
+
+icon-two-people.svg
+icon-love-story.svg
+icon-wedding-event.svg
+icon-invitation.svg
+icon-togetherness.svg
+icon-journey.svg
+
+Visual language:
+
+- minimal
+- fine-line
+- premium
+- consistent stroke
+- simple enough for 24–48px display
+
+These icons should communicate concepts rather than literal detailed illustrations.
+
+For standard UI icons, DO NOT create custom SVGs unnecessarily.
+
+Use the existing icon library if available.
+
+Examples:
+
+- Search
+- Menu
+- X
+- Heart
+- Calendar
+- Arrow
+- Mail
+- Phone
+- Map pin
+- Chevron
+
+--------------------------------------------------
+ICON TARGET OUTPUT
+--------------------------------------------------
+
+/public/assets/harikita/icons/custom/
+
+/docs/assets/custom-icons.md
+
+/data/harikita-icons.json
+
+==================================================
+11. UI DECORATIVE ASSETS
+==================================================
+
+TOTAL:
+
+12 assets.
+
+Create:
+
+badge-premium.svg
+
+badge-new.svg
+
+card-corner-floral.svg
+
+card-corner-minimal.svg
+
+stamp-harikita.svg
+
+wax-seal-harikita.svg
+
+frame-arch.svg
+
+frame-organic.svg
+
+frame-rounded.svg
+
+mask-arch.svg
+
+quote-mark.svg
+
+section-label-line.svg
+
+IMPORTANT:
+
+stamp-harikita.svg and wax-seal-harikita.svg may use the EXISTING HariKita logo.
+
+Do not redesign the logo.
+
+Use the logo as an embedded/referenced design element only if technically appropriate.
+
+--------------------------------------------------
+UI DECORATIVE TARGET OUTPUT
+--------------------------------------------------
+
+/public/assets/harikita/ui/
+
+/public/assets/harikita/ui/badges/
+
+/public/assets/harikita/ui/frames/
+
+/public/assets/harikita/ui/decorative/
+
+/docs/assets/ui-decorative-assets.md
+
+/data/harikita-ui-assets.json
+
+==================================================
+12. INVITATION / CARD DESIGN ELEMENTS
+==================================================
+
+TOTAL:
+
+8 reusable invitation/card designs.
+
+Create:
+
+01-invitation-cover
+02-invitation-inner
+03-save-the-date
+04-thank-you-card
+05-wedding-details
+06-rsvp-card
+07-quote-message-card
+08-invitation-back-cover
+
+These are NOT merely screenshots.
+
+They must be treated as reusable visual templates/components.
+
+Use:
+
+- existing HariKita logo
+- Cormorant Garamond
+- Manrope
+- Ivory
+- Charcoal
+- Taupe
+- Champagne
+- Soft Beige
+- floral assets
+- leaf assets
+- decorative lines
+- premium whitespace
+
+Avoid excessive decoration.
+
+Each card should have its own composition but remain part of the same HariKita family.
+
+--------------------------------------------------
+INVITATION TARGET OUTPUT
+--------------------------------------------------
+
+/public/assets/harikita/invitations/
+
+/src/components/harikita/invitation/
+
+/src/components/harikita/cards/
+
+/docs/assets/invitation-elements.md
+
+/data/harikita-invitations.json
+
+Create reusable components where the existing framework allows it.
+
+==================================================
+13. MOBILE / APP UI PREVIEW
+==================================================
+
+Create a REAL responsive mobile UI implementation.
+
+This is NOT a static screenshot.
+
+Create reusable mobile components.
+
+Required:
+
+- mobile header
+- mobile navigation
+- mobile hero
+- mobile invitation preview
+- mobile service card
+- mobile CTA
+- mobile invitation card
+- mobile image frame
+- mobile button
+- mobile app icon
+- mobile favicon usage
+
+Use the existing HariKita logo.
+
+Typography:
+
+Cormorant Garamond:
+- display/headings
+
+Manrope:
+- body/UI
+
+Colors:
+
+#2B2B2B
+#88735B
+#C9A88A
+#E8DED1
+#F8F6F1
+
+The mobile UI should feel:
+
+- premium
+- calm
+- elegant
+- spacious
+- modern
+- easy to navigate
+
+Do not create a separate website UI preview category.
+
+This mobile UI is part of the design system implementation.
+
+--------------------------------------------------
+MOBILE TARGET OUTPUT
+--------------------------------------------------
+
+Create/adapt:
+
+/src/components/harikita/mobile/
+
+/src/components/harikita/mobile/MobileHeader.*
+
+/src/components/harikita/mobile/MobileHero.*
+
+/src/components/harikita/mobile/MobileInvitationCard.*
+
+/src/components/harikita/mobile/MobileServiceCard.*
+
+/src/components/harikita/mobile/MobileCTA.*
+
+/docs/ui/mobile.md
+
+==================================================
+14. BUTTON & UI ELEMENTS
+==================================================
+
+Create reusable components.
+
+TARGET:
+
+15 component variants.
+
+--------------------------------------------------
+BUTTONS
+--------------------------------------------------
+
+1. Primary button
+2. Secondary button
+3. Outline button
+4. Ghost button
+5. Small button
+6. Medium button
+7. Large button
+8. Icon button
+9. Arrow button
+
+Examples:
+
+"Jelajahi Layanan →"
+
+"Lihat Detail"
+
+"Mulai Sekarang →"
+
+Buttons must use:
+
+Manrope
+600 weight
+
+Use:
+
+Charcoal
+Taupe
+Champagne
+Ivory
+Soft Beige
+
+according to context.
+
+--------------------------------------------------
+FORM / UI
+--------------------------------------------------
+
+10. Input
+11. Select
+12. Premium badge
+13. New badge
+14. Toggle
+15. Pagination / carousel control
+
+All components must be:
+
+- reusable
+- accessible
+- keyboard-friendly
+- responsive
+- consistent
+- token-based
+
+Do not create separate hardcoded components for every page.
+
+--------------------------------------------------
+BUTTON TARGET OUTPUT
+--------------------------------------------------
+
+Create/adapt:
+
+/src/components/harikita/ui/Button.*
+
+/src/components/harikita/ui/Badge.*
+
+/src/components/harikita/ui/Input.*
+
+/src/components/harikita/ui/Select.*
+
+/src/components/harikita/ui/Toggle.*
+
+/src/components/harikita/ui/Pagination.*
+
+/src/components/harikita/ui/IconButton.*
+
+/src/components/harikita/ui/ArrowButton.*
+
+/docs/ui/buttons.md
+
+==================================================
+15. SOCIAL MEDIA AVATAR
+==================================================
+
+IMPORTANT:
+
+The Social Media Avatar must use the EXISTING HariKita LOGO supplied by the user.
+
+DO NOT generate a new logo.
+
+DO NOT redraw the H/K mark.
+
+DO NOT change the wordmark.
+
+DO NOT modify the logo proportions.
+
+Use the existing HariKita logo as the central identity.
+
+Create:
+
+1. Light avatar
+2. Light alternate avatar
+3. Dark avatar
+4. Dark alternate avatar
+5. Champagne avatar
+6. Monochrome avatar
+
+Target filenames:
+
+social-avatar-light.svg
+
+social-avatar-light-alt.svg
+
+social-avatar-dark.svg
+
+social-avatar-dark-alt.svg
+
+social-avatar-champagne.svg
+
+social-avatar-monochrome.svg
+
+Requirements:
+
+- square
+- social media safe area
+- sufficient padding
+- excellent small-size readability
+- consistent background
+- correct contrast
+
+Recommended backgrounds:
+
+Light:
+#F8F6F1
+
+Dark:
+#2B2B2B
+
+Champagne:
+#C9A88A
+
+Monochrome:
+#2B2B2B / #F8F6F1 depending on variant
+
+--------------------------------------------------
+SOCIAL AVATAR TARGET OUTPUT
+--------------------------------------------------
+
+/public/assets/harikita/social/avatar/
+
+/docs/assets/social-avatar.md
+
+/data/harikita-social-avatar.json
+
+IMPORTANT:
+
+The agent must use the user's existing logo asset as the source.
+
+If the exact logo file cannot be found in the project, do NOT invent one.
+
+Instead, report:
+
+"Existing HariKita logo asset not found. Please provide the correct logo file."
+
+==================================================
+16. COMPLETE FOLDER STRUCTURE
+==================================================
+
+Use the existing project architecture if it already has a suitable structure.
+
+Otherwise create:
+
+public/
+└── assets/
+    └── harikita/
+        ├── floral/
+        ├── leaves/
+        ├── ornaments/
+        │   ├── floral-botanical/
+        │   ├── decorative-lines/
+        │   ├── corners/
+        │   └── abstract/
+        ├── compositions/
+        ├── patterns/
+        ├── textures/
+        ├── icons/
+        │   └── custom/
+        ├── ui/
+        │   ├── badges/
+        │   ├── frames/
+        │   └── decorative/
+        ├── invitations/
+        └── social/
+            └── avatar/
+
+src/
+└── components/
+    └── harikita/
+        ├── mobile/
+        ├── invitation/
+        ├── cards/
+        └── ui/
+
+docs/
+├── brand/
+│   ├── colors.md
+│   └── typography.md
+├── assets/
+│   ├── ornaments.md
+│   ├── floral-illustrations.md
+│   ├── leaves.md
+│   ├── floral-compositions.md
+│   ├── background-patterns.md
+│   ├── custom-icons.md
+│   ├── ui-decorative-assets.md
+│   ├── invitation-elements.md
+│   └── social-avatar.md
+└── ui/
+    ├── mobile.md
+    └── buttons.md
+
+data/
+├── harikita-colors.json
+├── harikita-ornaments.json
+├── harikita-floral.json
+├── harikita-leaves.json
+├── harikita-compositions.json
+├── harikita-patterns.json
+├── harikita-icons.json
+├── harikita-ui-assets.json
+├── harikita-invitations.json
+└── harikita-social-avatar.json
+
+==================================================
+17. ASSET NAMING STANDARD
+==================================================
+
+Use lowercase kebab-case.
+
+GOOD:
+
+flower-single-stem-01.svg
+
+leaf-branch-01.svg
+
+divider-floral.svg
+
+pattern-organic-wave-01.svg
+
+social-avatar-champagne.svg
+
+BAD:
+
+Flower1.svg
+
+FlowerFinal.svg
+
+FlowerFinalNew.svg
+
+FlowerFinalNew2.svg
+
+Asset names must remain stable.
+
+Do not rename assets randomly.
+
+==================================================
+18. SVG REQUIREMENTS
+==================================================
+
+For every SVG asset:
+
+- valid SVG/XML
+- correct viewBox
+- scalable
+- no embedded raster image
+- no unnecessary filters
+- no unnecessary masks
+- no unnecessary clip paths
+- optimized paths
+- minimal anchor points
+- consistent stroke width
+- responsive
+- recolorable where appropriate
+- currentColor support where appropriate
+
+Line illustrations should preferably use:
+
+stroke="currentColor"
+
+Filled elements should allow controlled color customization.
+
+Do not permanently lock every illustration to a single gold color.
+
+The frontend should be able to apply:
+
+color:
+var(--hk-champagne);
+
+or:
+
+color:
+var(--hk-taupe);
+
+where appropriate.
+
+==================================================
+19. ASSET METADATA
+==================================================
+
+For every asset create metadata.
+
+Example:
+
+{
+  "name": "flower-single-stem-01",
+  "category": "floral",
+  "type": "single-stem",
+  "format": "svg",
+  "recommendedUsage": [
+    "hero",
+    "card",
+    "invitation"
+  ],
+  "recolorable": true,
+  "darkBackground": true
+}
+
+Every category must have its own JSON inventory.
+
+==================================================
+20. MANUAL IMAGE DOWNLOAD WORKFLOW
+==================================================
+
+IMPORTANT:
+
+The user will manually download generated images/assets.
+
+Do NOT assume that image generation has happened inside the coding environment.
+
+Do NOT create fake asset files pretending to be the final generated assets.
+
+Instead:
+
+1. Create the required directory.
+2. Create the exact filename specification.
+3. Create metadata.
+4. Create documentation.
+5. Create an asset checklist.
+6. Create references/placeholders only where necessary.
+7. Ensure components expect the correct asset paths.
+8. Tell the user exactly where each manually downloaded asset must be placed.
+
+Create:
+
+/docs/assets/MANUAL-ASSET-DOWNLOAD-CHECKLIST.md
+
+This document must list every asset.
+
+Example:
+
+[ ] flower-single-stem-01.svg
+[ ] flower-single-stem-02.svg
+[ ] flower-single-stem-03.svg
+
+etc.
+
+Do not mark an asset as completed until it actually exists.
+
+==================================================
+21. ASSET COUNT VALIDATION
+==================================================
+
+Expected visual asset target:
+
+Color Palette:
+5 colors
+
+Typography:
+2 font families
+
+Ornaments & Elements:
+42
+
+Floral Illustrations:
+24
+
+Leaf & Branch:
+16
+
+Floral Compositions:
+8
+
+Background Pattern & Texture:
+12
+
+Custom Icons:
+6
+
+UI Decorative Assets:
+12
+
+Invitation/Card Design Elements:
+8
+
+Mobile/App:
+implemented as reusable UI components
+
+Button & UI:
+15 variants
+
+Social Media Avatar:
+6
+
+The visual asset target is approximately 136 production visual assets when excluding the existing Logo System and treating UI implementations separately.
+
+Do NOT artificially inflate the count by duplicating assets.
+
+==================================================
+22. ASSET SHOWCASE / INVENTORY
+==================================================
+
+Create an internal asset showcase if the project architecture supports it.
+
+The showcase should display:
+
+- color palette
+- typography
+- ornaments
+- floral illustrations
+- leaves
+- compositions
+- patterns
+- textures
+- custom icons
+- UI decorative assets
+- invitation cards
+- buttons
+- mobile UI components
+- social media avatars
+
+Each asset preview should show:
+
+- preview
+- filename
+- category
+- intended usage
+- color behavior
+
+This is an asset library showcase, NOT the Website UI Preview requested previously.
+
+==================================================
+23. ACCESSIBILITY
+==================================================
+
+Ensure:
+
+- sufficient text contrast
+- keyboard accessibility
+- visible focus states
+- semantic HTML
+- accessible buttons
+- accessible forms
+- meaningful alt text for meaningful images
+- decorative SVGs use appropriate accessibility behavior
+
+Decorative assets should not unnecessarily be announced by screen readers.
+
+==================================================
+24. PERFORMANCE
+==================================================
+
+Optimize for web.
+
+Prioritize:
+
+- SVG
+- WebP
+- lightweight assets
+- lazy loading where appropriate
+- no unnecessary huge PNGs
+- no duplicate assets
+- no unnecessary dependencies
+
+Do not use a 2MB image for a tiny decorative ornament.
+
+==================================================
+25. DESIGN CONSISTENCY
+==================================================
+
+All assets must look as if they belong to one visual family.
+
+Maintain consistency in:
+
+- stroke width
+- line quality
+- corner radius
+- visual density
+- proportions
+- color usage
+- typography
+- whitespace
+- visual hierarchy
+
+Do not make one floral asset extremely detailed while another is cartoon-like.
+
+Do not mix:
+
+- watercolor
+- 3D
+- realistic photography
+- cartoon
+- thick clipart
+
+with the fine-line editorial HariKita system.
+
+==================================================
+26. WHAT NOT TO CREATE
+==================================================
+
+DO NOT create:
+
+- new HariKita logos
+- alternate H/K concepts
+- random logo marks
+- generic bride/groom logos
+- wedding ring logos
+- crown logos
+- excessive floral wreath logos
+- Website UI Preview category
+- unnecessary standard icons
+- random stock illustrations
+- duplicate flowers
+- duplicate leaves
+- duplicate ornaments
+- fake completed asset files
+
+==================================================
+27. IMPLEMENTATION RULE
+==================================================
+
+Before changing code:
+
+1. Inspect the project.
+2. Identify framework.
+3. Identify package manager.
+4. Identify Tailwind/CSS system.
+5. Identify existing components.
+6. Identify existing assets.
+7. Identify existing HariKita logo.
+8. Identify existing icon library.
+9. Identify existing invitation components.
+10. Reuse architecture where possible.
+
+Do not rewrite the entire project.
+
+Do not break existing functionality.
+
+Do not introduce unnecessary dependencies.
+
+==================================================
+28. FINAL VALIDATION
+==================================================
+
+Before declaring the task complete:
+
+Check:
+
+[ ] Color tokens exist
+
+[ ] Typography tokens exist
+
+[ ] Cormorant Garamond configured
+
+[ ] Manrope configured
+
+[ ] 42 ornament targets documented
+
+[ ] 24 floral targets documented
+
+[ ] 16 leaf/branch targets documented
+
+[ ] 8 composition targets documented
+
+[ ] 12 pattern/texture targets documented
+
+[ ] 6 custom icon targets documented
+
+[ ] 12 UI decorative targets documented
+
+[ ] 8 invitation/card targets documented
+
+[ ] Mobile components implemented
+
+[ ] 15 button/UI variants implemented
+
+[ ] 6 social avatar targets documented
+
+[ ] Existing HariKita logo reused
+
+[ ] No new logo invented
+
+[ ] No Website UI Preview category created
+
+[ ] Folder structure created
+
+[ ] Asset manifest created
+
+[ ] Manual asset download checklist created
+
+[ ] Documentation created
+
+[ ] No broken imports
+
+[ ] No unnecessary dependencies
+
+[ ] Responsive mobile components work
+
+[ ] Accessibility reviewed
+
+[ ] SVG requirements documented
+
+[ ] Asset naming is consistent
+
+[ ] No duplicate assets
+
+==================================================
+29. FINAL REPORT
+==================================================
+
+At the end provide a concise report containing:
+
+1. Existing project architecture discovered.
+2. Existing HariKita logo location.
+3. Design token files created.
+4. Typography files created.
+5. Asset directories created.
+6. Number of asset targets per category.
+7. Components created.
+8. Documentation created.
+9. Assets that still need to be manually downloaded.
+10. Exact folder where each manual asset must be placed.
+11. Any technical limitations.
+12. Any assets that could not be located.
+13. Any existing project files that were intentionally preserved.
+
+IMPORTANT FINAL INSTRUCTION:
+
+Do not merely describe what should be done.
+
+Actually implement the design system, component structure, documentation, metadata, asset folders, and all code that can be implemented without the manually downloaded image files.
+
+The user will manually download the visual assets and place them according to the exact filename and folder structure you define.
+
+The final HariKita design language must feel:
+
+MINIMAL
+LUXURY
+ROMANTIC
+EDITORIAL
+WARM
+MODERN
+TIMELESS
+PREMIUM
+
+The design should communicate:
+
+TWO JOURNEYS
+ONE STORY
+ONE DAY
+
+WITHOUT relying on generic wedding clichés.
+
+LESS DECORATION.
+MORE IDENTITY.
+
+
+Workflow :
+Generate/download asset
+        ↓
+rename sesuai specification
+        ↓
+masukkan ke folder yang sudah dibuat agent
+        ↓
+agent mendeteksi asset
+        ↓
+asset masuk ke UI/component
+        ↓
+check showcase
+        ↓
+final optimization

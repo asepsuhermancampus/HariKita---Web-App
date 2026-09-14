@@ -11,35 +11,39 @@ import { JavaneseGununganVariant } from './couple-variants/JavaneseGununganVaria
 import { RoyalMedallionVariant } from './couple-variants/RoyalMedallionVariant';
 import { PolaroidScrapbookVariant } from './couple-variants/PolaroidScrapbookVariant';
 
+import { LiveContentData } from '@/types/invitation-studio';
+
 export interface StudioCoupleSectionProps {
   variant: CoupleCardVariantId;
   themeColor: string;
   ornamentId?: string;
+  content?: LiveContentData;
 }
 
 export function StudioCoupleSection({
   variant,
   themeColor,
   ornamentId,
+  content,
 }: StudioCoupleSectionProps) {
   switch (variant) {
     case 'floating-glass':
-      return <FloatingGlassVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <FloatingGlassVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
     case 'editorial-serif':
-      return <EditorialSerifVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <EditorialSerifVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
     case 'fullscreen-prewed':
-      return <FullscreenPrewedVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <FullscreenPrewedVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
     case 'twin-arches':
-      return <TwinArchesFloralVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <TwinArchesFloralVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
     case 'mihrab-arabesque':
-      return <MihrabArabesqueVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <MihrabArabesqueVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
     case 'javanese-gunungan':
-      return <JavaneseGununganVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <JavaneseGununganVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
     case 'royal-medallion':
-      return <RoyalMedallionVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <RoyalMedallionVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
     case 'polaroid-scrapbook':
-      return <PolaroidScrapbookVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <PolaroidScrapbookVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
     default:
-      return <TwinArchesFloralVariant themeColor={themeColor} ornamentId={ornamentId} />;
+      return <TwinArchesFloralVariant themeColor={themeColor} ornamentId={ornamentId} content={content} />;
   }
 }

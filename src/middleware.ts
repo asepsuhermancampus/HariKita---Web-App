@@ -33,7 +33,7 @@ function parseSession(cookieValue: string | undefined): SessionPayload | null {
 function getDashboardPath(role: string): string {
   if (role === "ADMIN") return "/admin";
   if (role === "VENDOR") return "/vendor";
-  return "/client";
+  return "/client/profil";
 }
 
 export function middleware(request: NextRequest) {
@@ -112,7 +112,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // ── 5. Proteksi /client/* → hanya CLIENT atau ADMIN ──
+  // ── 5. Alias redirect: /client/profile → /client/profil ──
+  if (pathname === "/client/profile") {
+    return NextResponse.redirect(new URL("/client/profil", request.url));
+  }
+
+  // ── 6. Proteksi /client/* → hanya CLIENT atau ADMIN ──
   if (pathname.startsWith("/client")) {
     if (!session) {
       const url = new URL("/auth/login", request.url);

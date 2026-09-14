@@ -5,12 +5,15 @@ import { Gift, Building2, Copy, Check, MapPin, Heart } from 'lucide-react';
 import { SANDBOX_GIFT_DATA } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
 import { cn } from '@/lib/utils';
 
+import { DynamicTintIcon } from '../DynamicTintIcon';
+import { resolveAssetUrl } from '../asset-resolver';
+
 interface StudioBankGiftSectionProps {
   themeColor: string;
   ornamentId?: string;
 }
 
-export function StudioBankGiftSection({ themeColor }: StudioBankGiftSectionProps) {
+export function StudioBankGiftSection({ themeColor, ornamentId }: StudioBankGiftSectionProps) {
   const [copiedAccount, setCopiedAccount] = useState<string | null>(null);
   const [copiedAddress, setCopiedAddress] = useState<boolean>(false);
 
@@ -34,6 +37,17 @@ export function StudioBankGiftSection({ themeColor }: StudioBankGiftSectionProps
     <div className="space-y-6 px-3 py-2 text-hk-charcoal">
       {/* Header */}
       <div className="text-center space-y-1">
+        {ornamentId && (
+          <div className="flex justify-center mb-1">
+            <DynamicTintIcon
+              src={resolveAssetUrl(ornamentId)}
+              color={themeColor}
+              size={24}
+              alt="Gift Ornament"
+              className="opacity-85"
+            />
+          </div>
+        )}
         <div className="inline-flex items-center gap-1.5 rounded-full bg-hk-soft-beige px-3 py-0.5 text-[10px] font-manrope font-bold uppercase tracking-widest text-hk-taupe">
           <Gift className="h-3 w-3" style={{ color: themeColor }} />
           <span>Tanda Kasih &amp; Doa Restu</span>

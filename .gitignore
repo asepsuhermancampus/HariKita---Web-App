@@ -38,3 +38,12 @@ dev.db-journal
 
 # superpowers sdd scratch
 .superpowers/
+
+# temporary scratch and local assets
+scratch/
+public/refactor_dir_sementara/
+public/logo-previews/
+public/HariKita-Design*.png
+public/preview-*.html
+references/kadio-assets/harvested/
+

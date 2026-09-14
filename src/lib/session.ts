@@ -63,6 +63,6 @@ export function getDashboardPath(role: string): string {
       return "/vendor";
     case "CLIENT":
     default:
-      return "/client";
+      return "/client/profil";
   }
 }
