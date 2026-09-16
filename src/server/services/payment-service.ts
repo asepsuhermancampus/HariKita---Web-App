@@ -19,6 +19,7 @@ import {
   type PayoutTranche,
 } from "./ledger-service";
 import { getStartOfDayWIB, diffCalendarDaysWIB, getEndOfDayWIB } from "@/lib/date-utils";
+import { generateOperationalArtifacts } from "./order-lifecycle";
 
 /**
  * HariKita - PaymentService
@@ -190,6 +191,9 @@ export async function processPaymentSuccess(
     });
 
     await bookReservedSlots(activeItemIds, tx);
+
+    // Hasilkan sesi fisik (fitting/test food) & rundown hari H (idempotent).
+    await generateOperationalArtifacts(order.id, tx);
 
     await recordJournal(
       {

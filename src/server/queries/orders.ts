@@ -407,3 +407,101 @@ export async function getAdminCalendarEvents(): Promise<AdminCalendarEventDTO[]>
     };
   });
 }
+
+// ── Sesi Fisik & Rundown (untuk /client/jadwal) ────────────────────────────────
+
+export interface PhysicalSessionDTO {
+  id: string;
+  type: string;
+  title: string;
+  vendor: string;
+  category: string;
+  scheduledDate: string;
+  status: string;
+  notes: string;
+  location: string;
+}
+
+export interface RundownRowDTO {
+  id: string;
+  timeSlot: string;
+  activity: string;
+  picName: string | null;
+  location: string | null;
+}
+
+/** Mengambil sesi fisik milik order klien yang login. */
+export async function getClientPhysicalSessions(): Promise<PhysicalSessionDTO[]> {
+  const session = await getSession();
+  if (!session) return [];
+
+  const sessions = await prisma.physicalSession.findMany({
+    where: { order: { userId: session.userId } },
+    include: { order: { include: { items: true } } },
+    orderBy: { scheduledDate: "asc" },
+  });
+
+  return sessions.map((s) => ({
+    id: s.id,
+    type: s.type,
+    title: s.notes || s.type,
+    vendor: s.order.items[0]?.vendorNameSnapshot ?? "Mitra Vendor",
+    category: s.order.items[0]?.categorySlug ?? "Layanan",
+    scheduledDate: s.scheduledDate.toISOString().split("T")[0],
+    status: s.status,
+    notes: s.notes ?? "",
+    location: s.location,
+  }));
+}
+
+/** Mengambil rundown hari H milik order klien yang login. */
+export async function getClientRundown(): Promise<RundownRowDTO[]> {
+  const session = await getSession();
+  if (!session) return [];
+
+  const rows = await prisma.eventRundown.findMany({
+    where: { order: { userId: session.userId } },
+    orderBy: { sortOrder: "asc" },
+  });
+
+  return rows.map((r) => ({
+    id: r.id,
+    timeSlot: r.timeSlot,
+    activity: r.activity,
+    picName: r.picName,
+    location: r.location,
+  }));
+}
+
+/** View-model koordinasi (order + item + rundown) untuk /hub-koordinasi. */
+export async function getCoordinationData(bookingId?: string) {
+  const session = await getSession();
+  if (!session) return null;
+
+  const order = bookingId
+    ? await prisma.order.findFirst({
+        where: {
+          OR: [{ orderNumber: bookingId }, { id: bookingId }],
+        },
+        include: { items: true, rundowns: { orderBy: { sortOrder: "asc" } } },
+      })
+    : await prisma.order.findFirst({
+        where: { userId: session.userId },
+        include: { items: true, rundowns: { orderBy: { sortOrder: "asc" } } },
+        orderBy: { createdAt: "desc" },
+      });
+
+  if (!order) return null;
+  if (order.userId !== session.userId && session.role !== "ADMIN") return null;
+
+  return {
+    order: toViewModel({ ...order, items: order.items }),
+    rundown: order.rundowns.map((r) => ({
+      id: r.id,
+      timeSlot: r.timeSlot,
+      activity: r.activity,
+      picName: r.picName,
+      location: r.location,
+    })),
+  };
+}
