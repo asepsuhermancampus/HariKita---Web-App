@@ -20,6 +20,7 @@ import {
 import { useCart } from "@/lib/cart-store";
 import { orderStore } from "@/lib/order-store";
 import { notificationStore } from "@/lib/notification-store";
+import { simulatePaymentSuccessAction } from "@/server/actions/payment";
 
 interface PageProps {
   params: Promise<{ bookingId: string }>;
@@ -42,6 +43,7 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
   const [timeLeft, setTimeLeft] = useState(900); // 15 menit
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [isSimulatingSuccess, setIsSimulatingSuccess] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"qris" | "transfer">("qris");
 
   useEffect(() => {
@@ -63,10 +65,25 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const handleSimulatePayment = () => {
+  const handleSimulatePayment = async () => {
     setIsSimulatingSuccess(true);
-    
-    // 1. Simpan pesanan secara permanen ke Order Store (Anti-Hilang saat refresh)
+    setPaymentError(null);
+
+    // 1. Persist pembayaran ke database via Server Action (PaymentService + ledger).
+    //    `bookingId` kini adalah orderId asli dari database (dibuat di /checkout).
+    const remote = await simulatePaymentSuccessAction({ orderId: bookingId });
+
+    if (!remote.success) {
+      // Bila order tidak ditemukan (mis. URL lama), tetap izinkan penyimpanan lokal
+      // sebagai fallback demo, tetapi tandai agar tidak diklaim sebagai pembayaran resmi.
+      console.warn("[pembayaran] server action gagal:", remote.message);
+      setPaymentError(
+        remote.message ||
+          "Pembayaran tersimpan secara lokal (demo). Order database tidak ditemukan untuk ID ini."
+      );
+    }
+
+    // 2. Simpan pesanan ke Order Store lokal (cache UI untuk halaman invoice).
     const newOrder = orderStore.createOrder({
       bookingId,
       customerName: customerName || "Calon Pengantin HariKita",
@@ -136,7 +153,7 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
       subtotal: subtotal > 0 ? subtotal : 15850000,
     });
 
-    // 2. Dispatch notifikasi ganda ke masing-masing vendor yang terlibat
+    // 3. Dispatch notifikasi ganda ke masing-masing vendor yang terlibat.
     notificationStore.dispatchFromOrder(newOrder);
 
     setTimeout(() => {
@@ -302,6 +319,12 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
 
           {/* Action Buttons */}
           <div className="pt-2 space-y-2">
+            {paymentError && (
+              <div role="alert" className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-700" />
+                <span>{paymentError}</span>
+              </div>
+            )}
             <button
               onClick={handleSimulatePayment}
               disabled={isSimulatingSuccess}

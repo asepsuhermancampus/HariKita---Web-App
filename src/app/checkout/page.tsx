@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { KEBUMEN_DISTRICTS } from "@/data/multi-vendor-catalog";
+import { createOrderWithAutoHoldAction } from "@/server/actions/order";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -24,17 +25,18 @@ export default function CheckoutPage() {
     items,
     subtotal,
     dpAmount,
-    finalAmount,
     eventDate,
     eventLocation,
     customerName,
     customerWhatsApp,
     paymentType,
+    notes,
     setEventDate,
     setEventLocation,
     setCustomerInfo,
     setPaymentType,
     removeItem,
+    clearCart,
   } = useCart();
 
   const [name, setName] = useState(customerName || "");
@@ -43,27 +45,49 @@ export default function CheckoutPage() {
   const [district, setDistrict] = useState(eventLocation || "Kebumen Kota");
   const [payOption, setPayOption] = useState<"dp_30" | "full_100">(paymentType || "dp_30");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleCheckoutSubmit = (e: React.FormEvent) => {
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !whatsapp) {
       alert("Mohon lengkapi Nama Lengkap dan Nomor WhatsApp Anda.");
       return;
     }
+    if (items.length === 0) {
+      alert("Keranjang racikan masih kosong.");
+      return;
+    }
 
     setIsSubmitting(true);
+    setSubmitError(null);
     setCustomerInfo(name, whatsapp);
     setEventDate(selectedDate);
     setEventLocation(district);
     setPaymentType(payOption);
 
-    // Generate unique official booking ID
-    const bookingId = `HKB-2026-${Math.floor(100 + Math.random() * 900)}`;
+    // Persist order ke database via Server Action (harga dihitung server).
+    const result = await createOrderWithAutoHoldAction({
+      eventDate: selectedDate,
+      clientName: name,
+      clientPhone: whatsapp,
+      city: "Kebumen",
+      notes: notes,
+      items: items.map((it) => ({
+        catalogVendorId: it.vendorId,
+        catalogPackageId: it.packageId,
+        quantity: it.quantity,
+      })),
+    });
 
-    // Redirect to dynamic QRIS payment gateway
-    setTimeout(() => {
-      router.push(`/pembayaran/${bookingId}`);
-    }, 600);
+    if (!result.success) {
+      setSubmitError(result.message || "Gagal membuat pesanan. Silakan coba lagi.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    clearCart();
+    // Redirect ke halaman pembayaran dengan orderId asli dari database.
+    router.push(`/pembayaran/${result.data.orderId}`);
   };
 
   const amountToPay = payOption === "dp_30" ? dpAmount : subtotal;
@@ -207,6 +231,12 @@ export default function CheckoutPage() {
             </div>
 
             <div className="pt-4">
+              {submitError && (
+                <div role="alert" className="mb-3 flex items-start gap-2 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-manrope text-red-800">
+                  <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
+                  <span>{submitError}</span>
+                </div>
+              )}
               <button
                 type="submit"
                 disabled={isSubmitting || items.length === 0}
@@ -215,7 +245,7 @@ export default function CheckoutPage() {
                 <Lock className="w-4 h-4" />
                 <span>
                   {isSubmitting
-                    ? "Menyiapkan QRIS Pembayaran..."
+                    ? "Memproses & mengunci jadwal vendor..."
                     : `Bayar Sekarang via QRIS (Rp ${amountToPay.toLocaleString("id-ID")})`}
                 </span>
                 <ArrowRight className="w-4 h-4" />
