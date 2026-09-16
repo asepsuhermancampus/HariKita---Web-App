@@ -32,7 +32,7 @@ function parseSession(cookieValue: string | undefined): SessionPayload | null {
 
 function getDashboardPath(role: string): string {
   if (role === "ADMIN") return "/admin";
-  if (role === "VENDOR") return "/vendor";
+  if (role === "VENDOR") return "/vendor/profil";
   return "/client/profil";
 }
 
@@ -40,6 +40,14 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const rawCookie = request.cookies.get(COOKIE_NAME)?.value;
   const session = parseSession(rawCookie);
+
+  // ── 0. Alias redirects: /vendor/profile → /vendor/profil & /client/profile → /client/profil ──
+  if (pathname === "/vendor/profile") {
+    return NextResponse.redirect(new URL("/vendor/profil", request.url));
+  }
+  if (pathname === "/client/profile") {
+    return NextResponse.redirect(new URL("/client/profil", request.url));
+  }
 
   // ── 1. Jika sudah login dan mencoba akses /auth/* → redirect ke dashboard ──
   if (pathname.startsWith("/auth/")) {
@@ -68,11 +76,13 @@ export function middleware(request: NextRequest) {
 
   // ── 3. Proteksi /vendor/* → hanya VENDOR atau ADMIN ──
   //    Kecualikan /vendor/[slug] (profil publik toko)
-  //    Slug yang PROTECTED: inbox, portofolio, paket, kalender, dompet
+  //    Slug yang PROTECTED: profil, profile, inbox, portofolio, paket, kalender, dompet
   //    Slug lainnya (nama toko) = profil publik, bebas diakses
   if (pathname.startsWith("/vendor/")) {
-    const segment = pathname.split("/")[2]; // "inbox", "studio-xyz", dll.
+    const segment = pathname.split("/")[2]; // "profil", "inbox", "studio-xyz", dll.
     const PROTECTED_VENDOR_SEGMENTS = new Set([
+      "profil",
+      "profile",
       "inbox",
       "portofolio",
       "paket",
@@ -110,11 +120,6 @@ export function middleware(request: NextRequest) {
       );
     }
     return NextResponse.next();
-  }
-
-  // ── 5. Alias redirect: /client/profile → /client/profil ──
-  if (pathname === "/client/profile") {
-    return NextResponse.redirect(new URL("/client/profil", request.url));
   }
 
   // ── 6. Proteksi /client/* → hanya CLIENT atau ADMIN ──

@@ -36,6 +36,9 @@ next-env.d.ts
 # prisma sqlite temporary
 dev.db-journal
 
+# prisma local db backups
+prisma/dev.db.backup*
+
 # superpowers sdd scratch
 .superpowers/
 

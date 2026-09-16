@@ -60,7 +60,7 @@ export function getDashboardPath(role: string): string {
     case "ADMIN":
       return "/admin";
     case "VENDOR":
-      return "/vendor";
+      return "/vendor/profil";
     case "CLIENT":
     default:
       return "/client/profil";
