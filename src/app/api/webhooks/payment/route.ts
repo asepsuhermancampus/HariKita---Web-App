@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { persistWebhookEvent, processWebhookEvent } from "@/server/services/payment-webhook-service";
 import { getGatewayAdapter } from "@/server/payments/registry";
 import type { GatewayProvider } from "@/server/payments/types";
+import { checkRateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
 
 /**
  * HariKita - Payment Webhook Route Handler
@@ -32,6 +33,16 @@ export const dynamic = "force-dynamic";
 const VALID_PROVIDERS: GatewayProvider[] = ["midtrans", "xendit", "simulated_qris"];
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  // Rate limit dasar (60 permintaan / menit per IP). Process-local; lihat catatan.
+  const ip = clientIpFromHeaders(request.headers);
+  const rl = checkRateLimit({ key: `webhook:${ip}`, limit: 60, windowMs: 60_000 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, error: "RATE_LIMITED" },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    );
+  }
+
   const url = new URL(request.url);
   const providerParam = url.searchParams.get("provider");
   const provider: GatewayProvider =

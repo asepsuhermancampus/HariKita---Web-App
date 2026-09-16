@@ -6,6 +6,7 @@ import { expireOrdersSweep } from "@/server/services/order-service";
 import { sweepExpiredHolds } from "@/server/services/availability-service";
 import { sweepUnprocessedEvents } from "@/server/services/payment-webhook-service";
 import { checkPayoutEligibility, executePayoutForOrder } from "@/server/services/payout-service";
+import { checkRateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
 
 /**
  * HariKita - Scheduled Sweeper Endpoint
@@ -28,11 +29,18 @@ import { checkPayoutEligibility, executePayoutForOrder } from "@/server/services
 export const dynamic = "force-dynamic";
 
 function authorize(request: NextRequest): boolean {
-  const secret = process.env.HARIKITA_CRON_SECRET;
+  // Terima HARIKITA_CRON_SECRET atau CRON_SECRET (konvensi Vercel Cron).
+  const secret = process.env.HARIKITA_CRON_SECRET ?? process.env.CRON_SECRET;
   if (!secret) return false;
 
   const url = new URL(request.url);
-  const provided = url.searchParams.get("secret") ?? request.headers.get("x-cron-secret") ?? "";
+
+  // Terima 3 konvensi: query `?secret=`, header `x-cron-secret`, atau
+  // Authorization Bearer (Vercel Cron mengirim ini otomatis bila CRON_SECRET diset).
+  const bearer = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+  const provided =
+    url.searchParams.get("secret") ?? request.headers.get("x-cron-secret") ?? bearer ?? "";
+
   if (provided.length !== secret.length) return false;
 
   let diff = 0;
@@ -85,6 +93,16 @@ async function runSweep(): Promise<Record<string, unknown>> {
 }
 
 async function handle(request: NextRequest): Promise<NextResponse> {
+  // Rate limit ringan (10 pemanggilan / menit per IP) — mencegah brute-force secret.
+  const ip = clientIpFromHeaders(request.headers);
+  const rl = checkRateLimit({ key: `cron:${ip}`, limit: 10, windowMs: 60_000 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, error: "RATE_LIMITED" },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    );
+  }
+
   if (!authorize(request)) {
     return NextResponse.json(
       { success: false, error: "UNAUTHORIZED_CRON" },
