@@ -40,6 +40,47 @@ export interface OrderDetailDTO extends OrderSummaryDTO {
   }>;
 }
 
+/**
+ * View-model pesanan yang selaras dengan bentuk yang diharapkan halaman portal
+ * (order-store legacy), sehingga UI tidak perlu dirombak.
+ */
+export interface OrderViewModel {
+  id: string;
+  bookingId: string;
+  customerName: string;
+  customerWhatsApp: string;
+  eventDate: string;
+  eventLocation: string;
+  district: string;
+  paymentStatus: "UNPAID" | "DP_PAID" | "FULLY_PAID";
+  paymentType: "dp_30" | "full_100";
+  status: string;
+  notes: string;
+  financials: {
+    subtotal: number;
+    platformFee: number;
+    totalAmount: number;
+    dpAmount: number;
+    pelunasanAmount: number;
+  };
+  items: Array<{
+    id: string;
+    vendorName: string;
+    categoryTitle: string;
+    categoryId: string;
+    packageName: string;
+    unitPrice: number;
+    quantity: number;
+    status: string;
+  }>;
+  escrowStatus: {
+    dpReleased: boolean;
+    settlementReleased: boolean;
+  };
+  createdAt: string;
+}
+
+
 function toSummary(order: {
   id: string;
   orderNumber: string;
@@ -61,6 +102,129 @@ function toSummary(order: {
     itemCount: order._count?.items ?? order.items?.length ?? 0,
     createdAt: order.createdAt.toISOString(),
   };
+}
+
+/** Derive paymentStatus (UNPAID/DP_PAID/FULLY_PAID) dari status order. */
+function derivePaymentStatus(status: string): "UNPAID" | "DP_PAID" | "FULLY_PAID" {
+  if (["FULLY_PAID", "COMPLETED"].includes(status)) return "FULLY_PAID";
+  if (["DP_PAID", "IN_PROGRESS", "WAITING_SETTLEMENT", "DISPUTED", "REFUND_PENDING", "REFUNDED"].includes(status)) {
+    return "DP_PAID";
+  }
+  return "UNPAID";
+}
+
+/** Memetakan order Prisma (dengan items) ke OrderViewModel untuk portal. */
+function toViewModel(order: {
+  id: string;
+  orderNumber: string;
+  clientName: string;
+  clientPhone: string;
+  eventDate: Date;
+  city: string;
+  totalAmount: number;
+  status: string;
+  notes: string | null;
+  createdAt: Date;
+  items: Array<{
+    id: string;
+    vendorNameSnapshot: string;
+    categorySlug: string;
+    packageName: string;
+    unitPrice: number;
+    quantity: number;
+    subtotal: number;
+    status: string;
+  }>;
+}): OrderViewModel {
+  const dpAmount = Math.floor((order.totalAmount * 30) / 100);
+  const pelunasanAmount = order.totalAmount - dpAmount;
+  const paymentStatus = derivePaymentStatus(order.status);
+  return {
+    id: order.id,
+    bookingId: order.orderNumber,
+    customerName: order.clientName,
+    customerWhatsApp: order.clientPhone,
+    eventDate: order.eventDate.toISOString().split("T")[0],
+    eventLocation: order.city,
+    district: order.city,
+    paymentStatus,
+    paymentType: "dp_30",
+    status: order.status,
+    notes: order.notes ?? "",
+    financials: {
+      subtotal: order.totalAmount,
+      platformFee: Math.round(order.totalAmount * 0.1),
+      totalAmount: order.totalAmount,
+      dpAmount,
+      pelunasanAmount,
+    },
+    items: order.items.map((i) => ({
+      id: i.id,
+      vendorName: i.vendorNameSnapshot,
+      categoryTitle: i.categorySlug,
+      categoryId: i.categorySlug,
+      packageName: i.packageName,
+      unitPrice: i.unitPrice,
+      quantity: i.quantity,
+      status: i.status,
+    })),
+    escrowStatus: {
+      dpReleased: ["IN_PROGRESS", "WAITING_SETTLEMENT", "FULLY_PAID", "COMPLETED"].includes(order.status),
+      settlementReleased: ["COMPLETED"].includes(order.status),
+    },
+    createdAt: order.createdAt.toISOString(),
+  };
+}
+
+/** Daftar order milik klien (view-model untuk portal). */
+export async function getClientOrderViewModels(): Promise<OrderViewModel[]> {
+  const session = await getSession();
+  if (!session) return [];
+
+  const orders = await prisma.order.findMany({
+    where: { userId: session.userId },
+    include: { items: true },
+    orderBy: { createdAt: "desc" },
+  });
+  return orders.map(toViewModel);
+}
+
+/** Detail order klien menurut orderNumber ATAU id (view-model). */
+export async function getClientOrderViewModelByBooking(
+  bookingId: string
+): Promise<OrderViewModel | null> {
+  const session = await getSession();
+  if (!session) return null;
+
+  const order = await prisma.order.findFirst({
+    where: { OR: [{ orderNumber: bookingId }, { id: bookingId }] },
+    include: { items: true },
+  });
+  if (!order) return null;
+  if (order.userId !== session.userId && session.role !== "ADMIN") return null;
+  return toViewModel(order);
+}
+
+/** Semua order sebagai view-model (khusus admin). */
+export async function getAdminOrderViewModels(): Promise<OrderViewModel[]> {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN") return [];
+
+  const orders = await prisma.order.findMany({
+    include: { items: true },
+    orderBy: { createdAt: "desc" },
+    take: 100,
+  });
+  return orders.map(toViewModel);
+}
+
+/** Ringkasan saldo escrow dari ledger (total credit CLIENT_ESCROW yang tertahan). */
+export async function getEscrowBalance(): Promise<number> {
+  const entries = await prisma.ledgerEntry.findMany({
+    where: { accountId: "2010_CLIENT_ESCROW" },
+  });
+  // Saldo escrow = Σ credit - Σ debit pada akun CLIENT_ESCROW.
+  return entries.reduce((acc, e) => acc + e.credit - e.debit, 0);
 }
 
 /** Daftar order milik klien yang login. */
@@ -194,4 +358,52 @@ export async function getAdminMasterCalendar() {
     district: o.city,
     vendorCount: o.items.length,
   }));
+}
+
+/** DTO event kalender master admin (untuk UI master calendar). */
+export interface AdminCalendarEventDTO {
+  id: string;
+  date: string;
+  client: string;
+  venue: string;
+  district: string;
+  vendorsCount: number;
+  totalAmount: number;
+  vendors: { name: string; role: string; callTime: string }[];
+  status: "TERKUNCI_DP" | "LUNAS_ESCROW" | "SELESAI";
+}
+
+/** Mengambil event kalender master dari DB (admin-only) untuk UI master calendar. */
+export async function getAdminCalendarEvents(): Promise<AdminCalendarEventDTO[]> {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN") return [];
+
+  const orders = await prisma.order.findMany({
+    where: { status: { notIn: ["CANCELLED", "EXPIRED"] } },
+    include: { items: true },
+    orderBy: { eventDate: "asc" },
+    take: 200,
+  });
+
+  return orders.map((o) => {
+    let status: AdminCalendarEventDTO["status"] = "TERKUNCI_DP";
+    if (o.status === "COMPLETED") status = "SELESAI";
+    else if (o.status === "FULLY_PAID") status = "LUNAS_ESCROW";
+
+    return {
+      id: o.orderNumber,
+      date: o.eventDate.toISOString().split("T")[0],
+      client: o.clientName,
+      venue: o.city,
+      district: o.city,
+      vendorsCount: o.items.length,
+      totalAmount: o.totalAmount,
+      vendors: o.items.map((i) => ({
+        name: i.vendorNameSnapshot || i.serviceName,
+        role: i.categorySlug,
+        callTime: "08:00 WIB",
+      })),
+      status,
+    };
+  });
 }
