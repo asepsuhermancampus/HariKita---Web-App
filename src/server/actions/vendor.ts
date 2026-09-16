@@ -3,11 +3,9 @@
 import { withTransactionRetry } from "@/lib/transaction-retry";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import {
-  setBlackoutDate,
-  removeBlackoutDate,
-} from "@/server/services/availability-service";
+import { setBlackoutDate, removeBlackoutDate } from "@/server/services/availability-service";
 import { DomainError } from "@/server/services/errors";
+import { detectOffPlatformContact } from "@/lib/content-guard";
 import { runAction, revalidate, type ActionResult } from "./_shared";
 
 /**
@@ -189,3 +187,109 @@ export async function deletePackageAction(input: {
     return { id: input.id };
   });
 }
+
+// ── PORTFOLIO CMS ─────────────────────────────────────────────────────────────
+
+export interface PortfolioInput {
+  id?: string;
+  title: string;
+  locationTag?: string;
+  categoryTag?: string;
+  styleTags?: string[];
+  caption?: string;
+  imageUrl: string;
+}
+
+function validatePortfolio(input: PortfolioInput): void {
+  if (!input.title?.trim()) {
+    throw new DomainError("ITEM_PACKAGE_MISMATCH", "Judul portofolio wajib diisi.");
+  }
+  if (!input.imageUrl?.trim()) {
+    throw new DomainError("ITEM_PACKAGE_MISMATCH", "URL gambar portofolio wajib diisi.");
+  }
+  // Anti-disintermediation: saring kontak/medsos dari caption.
+  if (input.caption) {
+    const guard = detectOffPlatformContact(input.caption);
+    if (guard.isViolation) {
+      throw new DomainError(
+        "ITEM_PACKAGE_MISMATCH",
+        "Caption mengandung kontak/medsos di luar platform. Harap hapus nomor/link."
+      );
+    }
+  }
+}
+
+/** Membuat portofolio baru milik vendor yang login. */
+export async function createPortfolioAction(
+  input: PortfolioInput
+): Promise<ActionResult<{ id: string }>> {
+  return runAction(async () => {
+    const vendorId = await requireVendorId();
+    validatePortfolio(input);
+
+    const created = await prisma.vendorPortfolio.create({
+      data: {
+        vendorId,
+        title: input.title.trim(),
+        locationTag: input.locationTag?.trim() || null,
+        categoryTag: input.categoryTag?.trim() || null,
+        styleTags: input.styleTags ? JSON.stringify(input.styleTags) : null,
+        caption: input.caption?.trim() || null,
+        imageUrl: input.imageUrl.trim(),
+      },
+    });
+
+    revalidate(["/vendor/portofolio", "/vendor"]);
+    return { id: created.id };
+  });
+}
+
+/** Memperbarui portofolio milik vendor (anti-IDOR). */
+export async function updatePortfolioAction(
+  input: PortfolioInput & { id: string }
+): Promise<ActionResult<{ id: string }>> {
+  return runAction(async () => {
+    const vendorId = await requireVendorId();
+    validatePortfolio(input);
+
+    const existing = await prisma.vendorPortfolio.findUnique({ where: { id: input.id } });
+    if (!existing || existing.vendorId !== vendorId) {
+      throw new DomainError("ITEM_PACKAGE_MISMATCH", "Portofolio tidak ditemukan atau bukan milik Anda.");
+    }
+
+    await prisma.vendorPortfolio.update({
+      where: { id: input.id },
+      data: {
+        title: input.title.trim(),
+        locationTag: input.locationTag?.trim() || null,
+        categoryTag: input.categoryTag?.trim() || null,
+        styleTags: input.styleTags ? JSON.stringify(input.styleTags) : null,
+        caption: input.caption?.trim() || null,
+        imageUrl: input.imageUrl.trim(),
+      },
+    });
+
+    revalidate(["/vendor/portofolio", "/vendor"]);
+    return { id: input.id };
+  });
+}
+
+/** Menghapus portofolio milik vendor (anti-IDOR). */
+export async function deletePortfolioAction(input: {
+  id: string;
+}): Promise<ActionResult<{ id: string }>> {
+  return runAction(async () => {
+    const vendorId = await requireVendorId();
+
+    const existing = await prisma.vendorPortfolio.findUnique({ where: { id: input.id } });
+    if (!existing || existing.vendorId !== vendorId) {
+      throw new DomainError("ITEM_PACKAGE_MISMATCH", "Portofolio tidak ditemukan atau bukan milik Anda.");
+    }
+
+    await prisma.vendorPortfolio.delete({ where: { id: input.id } });
+    revalidate(["/vendor/portofolio", "/vendor"]);
+    return { id: input.id };
+  });
+}
+
+

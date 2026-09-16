@@ -71,8 +71,27 @@ model VendorProfile {
   blackoutDates  BlackoutDate[]
   availabilities VendorAvailability[]
   orderItems     OrderItem[]
+  portfolios     VendorPortfolio[]
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
+}
+
+model VendorPortfolio {
+  id           String        @id @default(cuid())
+  vendorId     String
+  vendor       VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  title        String
+  locationTag  String?
+  categoryTag  String?
+  styleTags    String?       // JSON stringified array
+  caption      String?
+  imageUrl     String
+  likes        Int           @default(0)
+  isPublished  Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([vendorId, createdAt])
 }
 
 model BlackoutDate {

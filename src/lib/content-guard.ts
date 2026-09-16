@@ -77,9 +77,15 @@ export function sanitizeContent(content: string): GuardResult {
   const rawMatches = content.match(PHONE_REGEX_RAW) || [];
   const keywordMatches = content.match(CONTACT_KEYWORDS_REGEX) || [];
 
+  // Normalisasi leetspeak, lalu deteksi digit-run PER-TOKEN (dipisah whitespace)
+  // agar kata biasa seperti "Menganti" tidak digabung menjadi deretan angka palsu.
   const normalized = normalizeLeetspeak(content);
-  const normalizedDigits = normalized.replace(/[^\d]/g, "");
-  const digitMatches = normalizedDigits.match(DIGIT_STREAM_REGEX) || [];
+  const digitMatches: string[] = [];
+  for (const token of normalized.split(/\s+/)) {
+    const digitsOnly = token.replace(/[^\d]/g, "");
+    const m = digitsOnly.match(DIGIT_STREAM_REGEX);
+    if (m) digitMatches.push(...m);
+  }
 
   const allMatches = Array.from(
     new Set([...rawMatches, ...keywordMatches, ...digitMatches])
