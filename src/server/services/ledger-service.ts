@@ -343,5 +343,146 @@ function isUniqueConstraintOn(error: unknown, field: string): boolean {
   return false;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// PAYOUT EXACT-ONCE (Phase 1D v9 §8)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type PayoutTranche = "DP_DISBURSEMENT" | "SETTLEMENT_PAYOUT";
+
+/** Akun COA (kode kanonik Phase 1A). */
+export const LEDGER_ACCOUNTS = {
+  CASH_GATEWAY: "1010_CASH_GATEWAY",
+  CLIENT_ESCROW: "2010_CLIENT_ESCROW",
+  VENDOR_PAYABLE: "2020_VENDOR_PAYABLE",
+  PLATFORM_FEE: "4010_PLATFORM_FEE",
+  REFUND_PAYABLE: "2030_REFUND_PAYABLE",
+} as const;
+
+/**
+ * Membentuk journalNumber deterministik untuk payout, sehingga `journalNumber @unique`
+ * menjadi penjaga exact-once (dua pemanggil concurrent → P2002 → no-op idempotent).
+ */
+export function payoutJournalNumber(orderId: string, tranche: PayoutTranche): string {
+  return `PAYOUT-${orderId}-${tranche}`;
+}
+
+/** Menghitung split tranche integer dengan Largest Remainder Method. */
+export function splitTranches(totalAmount: number): {
+  dpAmount: number;
+  settlementAmount: number;
+} {
+  if (!Number.isInteger(totalAmount) || totalAmount < 0) {
+    throw new LedgerServiceError(
+      "INVALID_AMOUNT",
+      `Total amount harus integer >= 0 (diberikan: ${totalAmount}).`
+    );
+  }
+  const dpAmount = Math.floor((totalAmount * 30) / 100);
+  return { dpAmount, settlementAmount: totalAmount - dpAmount };
+}
+
+export interface ExecutePayoutInput {
+  orderId: string;
+  tranche: PayoutTranche;
+  amount: number;
+  /** Deskripsi jurnal; opsional. */
+  description?: string;
+}
+
+export interface PayoutResult {
+  journalId: string;
+  journalNumber: string;
+  /** true bila payout dibuat pada pemanggilan ini; false bila sudah ada (no-op). */
+  created: boolean;
+}
+
+/**
+ * Menjalankan payout exact-once untuk sebuah tranche pada order.
+ *
+ * Idempotency: `journalNumber = "PAYOUT-{orderId}-{tranche}"` unik. Bila jurnal payout
+ * untuk tranche ini SUDAH ADA → no-op dan kembalikan `created: false`. Bila dua
+ * pemanggil concurrent mencoba membuat → salah satu mendapat P2002 → reread → no-op.
+ *
+ * Pihak pemanggil (PaymentService scheduler) bertanggung jawab atas 5 financial
+ * eligibility guards (source journal ada, installment PAID, tidak di-reverse,
+ * belum pernah payout, tidak dispute).
+ *
+ * Jurnal payout: DR CLIENT_ESCROW / CR VENDOR_PAYABLE (netral, sesuai COA Phase 1A).
+ */
+export async function executePayout(
+  input: ExecutePayoutInput,
+  tx?: LedgerTx
+): Promise<PayoutResult> {
+  const db = tx ?? prisma;
+  const journalNumber = payoutJournalNumber(input.orderId, input.tranche);
+
+  // Pre-check idempotency.
+  const existing = await db.ledgerJournal.findUnique({ where: { journalNumber } });
+  if (existing) {
+    return { journalId: existing.id, journalNumber, created: false };
+  }
+
+  if (input.amount <= 0 || !Number.isInteger(input.amount)) {
+    throw new LedgerServiceError(
+      "INVALID_PAYOUT_AMOUNT",
+      `Nominal payout harus integer > 0 (diberikan: ${input.amount}).`
+    );
+  }
+
+  try {
+    const created = await db.ledgerJournal.create({
+      data: {
+        journalNumber,
+        type: input.tranche,
+        description: input.description ?? `Payout ${input.tranche} untuk order ${input.orderId}`,
+        orderId: input.orderId,
+        entries: {
+          create: [
+            { accountId: LEDGER_ACCOUNTS.CLIENT_ESCROW, debit: input.amount, credit: 0 },
+            { accountId: LEDGER_ACCOUNTS.VENDOR_PAYABLE, debit: 0, credit: input.amount },
+          ],
+        },
+      },
+    });
+    return { journalId: created.id, journalNumber, created: true };
+  } catch (error) {
+    // Concurrent duplicate → idempotent reread.
+    if (isUniqueConstraintOn(error, "journalNumber")) {
+      const raced = await db.ledgerJournal.findUnique({ where: { journalNumber } });
+      if (raced) {
+        return { journalId: raced.id, journalNumber, created: false };
+      }
+    }
+    throw error;
+  }
+}
+
+/**
+ * Menghitung total dana escrow yang SUDAH dicairkan (disbursed) untuk sebuah order,
+ * berdasarkan jurnal payout deterministik yang ada. Dipakai untuk guard
+ * "No Automatic Refund After Payout" (Phase 1D v9 §7).
+ */
+export async function getDisbursedPayoutTotal(
+  orderId: string,
+  tx?: LedgerTx
+): Promise<number> {
+  const db = tx ?? prisma;
+  const payoutJournals = await db.ledgerJournal.findMany({
+    where: {
+      orderId,
+      type: { in: ["DP_DISBURSEMENT", "SETTLEMENT_PAYOUT"] },
+    },
+    include: { entries: true },
+  });
+  // Total payout = jumlah credit ke VENDOR_PAYABLE (atau debit dari CLIENT_ESCROW).
+  let total = 0;
+  for (const j of payoutJournals) {
+    for (const e of j.entries) {
+      if (e.accountId === LEDGER_ACCOUNTS.VENDOR_PAYABLE) total += e.credit;
+    }
+  }
+  return total;
+}
+
 // Re-export validator types untuk kenyamanan konsumen service.
 export { LedgerValidationError } from "./ledger-validator";

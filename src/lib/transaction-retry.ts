@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 /**
@@ -38,6 +38,11 @@ export interface TransactionRetryOptions {
    * benar-benar menunggu). Default memakai `setTimeout`.
    */
   sleep?: (ms: number) => Promise<void>;
+  /**
+   * Client Prisma yang dipakai untuk transaksi. Default client global (`prisma`).
+   * Dapat di-override pada pengujian atau konteks multi-tenant.
+   */
+  client?: Pick<PrismaClient, "$transaction">;
 }
 
 type TxClient = Prisma.TransactionClient;
@@ -108,6 +113,7 @@ export async function withTransactionRetry<T>(
     maxDelayMs = 500,
     random = Math.random,
     sleep = defaultSleep,
+    client = prisma,
   } = options;
 
   if (!Number.isInteger(maxRetries) || maxRetries < 0) {
@@ -119,7 +125,7 @@ export async function withTransactionRetry<T>(
 
   for (let attempt = 1; attempt <= totalAttempts; attempt++) {
     try {
-      return await prisma.$transaction(callback, {
+      return await client.$transaction(callback, {
         isolationLevel,
         maxWait,
         timeout,
