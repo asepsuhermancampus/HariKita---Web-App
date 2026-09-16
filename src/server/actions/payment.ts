@@ -10,6 +10,8 @@ import {
 import type { PayoutTranche } from "@/server/services/ledger-service";
 import { persistWebhookEvent, processWebhookEvent } from "@/server/services/payment-webhook-service";
 import { DomainError } from "@/server/services/errors";
+import { getGatewayAdapter, getDefaultProvider } from "@/server/payments/registry";
+import type { GatewayProvider } from "@/server/payments/types";
 import { runAction, requireSession, revalidate, type ActionResult } from "./_shared";
 
 /**
@@ -179,5 +181,98 @@ export async function listMyOrdersAction(): Promise<
       take: 50,
     });
     return orders;
+  });
+}
+
+/**
+ * Membuat charge di payment gateway untuk sebuah order (attempt + external call).
+ *
+ * PENTING (Phase 1D §3.2): panggilan jaringan gateway dilakukan DI LUAR transaksi
+ * database — attempt dibuat dahulu dalam TX, kemudian charge dipanggil, lalu
+ * referensi transaksi disimpan. Tidak ada network call di dalam `withTransactionRetry`.
+ */
+export async function createChargeAction(input: {
+  orderId: string;
+  provider?: GatewayProvider;
+}): Promise<
+  ActionResult<{
+    attemptId: string;
+    providerTransactionId: string;
+    amount: number;
+    paymentUrl?: string;
+    qrString?: string;
+  }>
+> {
+  return runAction(async () => {
+    const session = await requireSession();
+    const provider = input.provider ?? getDefaultProvider();
+
+    // 1. TX 1: buat/lock attempt untuk installment PENDING.
+    const attemptInfo = await withTransactionRetry(async (tx) => {
+      const order = await tx.order.findUnique({
+        where: { id: input.orderId },
+        include: { installments: true },
+      });
+      if (!order) {
+        throw new DomainError("ORDER_NOT_FOUND", `Order "${input.orderId}" tidak ditemukan.`);
+      }
+      if (order.userId && order.userId !== session.userId && session.role !== "ADMIN") {
+        throw new DomainError("UNAUTHORIZED_ORDER_ACCESS", "Order bukan milik sesi ini.");
+      }
+
+      const pending =
+        order.installments.find((i) => i.type === "DP_30" && i.status === "PENDING") ??
+        order.installments.find((i) => i.type === "SETTLEMENT_70" && i.status === "PENDING");
+      if (!pending) {
+        throw new DomainError("INSTALLMENT_ALREADY_PAID", "Tidak ada tagihan aktif untuk pesanan ini.");
+      }
+
+      const attempt = await createPaymentAttempt(
+        {
+          installmentId: pending.id,
+          provider,
+          clientGeneratedRef: `charge-${Date.now()}`,
+        },
+        tx
+      );
+
+      return {
+        attemptId: attempt.attemptId,
+        installmentId: pending.id,
+        amount: pending.amount,
+        clientName: order.clientName,
+        clientPhone: order.clientPhone,
+        orderNumber: order.orderNumber,
+      };
+    });
+
+    // 2. External call ke gateway (DI LUAR transaksi DB).
+    const adapter = getGatewayAdapter(provider);
+    const charge = await adapter.createCharge({
+      attemptId: attemptInfo.attemptId,
+      installmentId: attemptInfo.installmentId,
+      orderId: input.orderId,
+      amount: attemptInfo.amount,
+      clientName: attemptInfo.clientName,
+      clientPhone: attemptInfo.clientPhone,
+      description: `HariKita ${attemptInfo.orderNumber} - ${input.orderId}`,
+    });
+
+    // 3. TX 2: simpan referensi transaksi gateway ke attempt.
+    await prisma.paymentAttempt.update({
+      where: { id: attemptInfo.attemptId },
+      data: {
+        providerTransactionId: charge.providerTransactionId,
+        status: "PENDING",
+      },
+    });
+
+    return {
+      attemptId: attemptInfo.attemptId,
+      providerTransactionId: charge.providerTransactionId,
+      amount: attemptInfo.amount,
+      paymentUrl: charge.paymentUrl,
+      qrString: charge.qrString,
+    };
   });
 }
