@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { loginAction } from "@/server/actions/auth";
 
-export default function AuthLoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "";
@@ -257,5 +257,19 @@ export default function AuthLoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#FAF8F5] text-[#6B5E62] text-sm">
+          Memuat halaman masuk…
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
