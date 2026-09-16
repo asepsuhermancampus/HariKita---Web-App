@@ -36,6 +36,28 @@ const config: Config = {
         serif: ["Playfair Display", "Cinzel", "Georgia", "serif"],
         sans: ["Manrope", "Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
       },
+      borderRadius: {
+        "hk-sm": "var(--hk-radius-sm)",
+        "hk-md": "var(--hk-radius-md)",
+        "hk-lg": "var(--hk-radius-lg)",
+        "hk-xl": "var(--hk-radius-xl)",
+      },
+      boxShadow: {
+        "hk-xs": "var(--hk-shadow-xs)",
+        "hk-sm": "var(--hk-shadow-sm)",
+        "hk-md": "var(--hk-shadow-md)",
+        "hk-lg": "var(--hk-shadow-lg)",
+      },
+      transitionTimingFunction: {
+        "hk-standard": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "hk-emphasized": "cubic-bezier(0.25, 1, 0.5, 1)",
+      },
+      zIndex: {
+        "hk-sticky": "40",
+        "hk-overlay": "50",
+        "hk-modal": "60",
+        "hk-toast": "70",
+      },
     },
   },
   plugins: [require("daisyui")],

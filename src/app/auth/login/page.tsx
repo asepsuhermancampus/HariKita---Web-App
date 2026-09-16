@@ -96,10 +96,10 @@ function LoginForm() {
         <div className="bg-white rounded-2xl border border-[#C5A880]/30 shadow-sm p-6 sm:p-8 space-y-6">
           {/* Role Switcher */}
           <div className="space-y-2">
-            <label className="block text-xs font-semibold text-[#4A2E35]">
+            <span className="block text-xs font-semibold text-[#4A2E35]" id="role-group-label">
               Pilih Peran Akun:
-            </label>
-            <div className="grid grid-cols-3 gap-2">
+            </span>
+            <div className="grid grid-cols-3 gap-2" role="group" aria-labelledby="role-group-label">
               {(["client", "vendor", "admin"] as const).map((role) => {
                 const Icon =
                   role === "client"
@@ -118,7 +118,8 @@ function LoginForm() {
                     key={role}
                     type="button"
                     onClick={() => handleSelectRole(role)}
-                    className={`py-2 px-2 rounded-xl text-xs font-semibold flex flex-col items-center gap-1 border transition-all ${
+                    aria-pressed={selectedRole === role}
+                    className={`focus-ring py-2 px-2 rounded-xl text-xs font-semibold flex flex-col items-center gap-1 border transition-all ${
                       selectedRole === role
                         ? "bg-[#4A2E35] text-white border-[#4A2E35] shadow"
                         : "bg-[#FAF8F5] text-[#6B5E62] border-[#E5D7C7] hover:border-[#C5A880]"
@@ -133,16 +134,24 @@ function LoginForm() {
           </div>
 
           {/* Error Message */}
-          {error && (
-            <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
-              {error}
-            </div>
-          )}
+          <div aria-live="assertive" aria-atomic="true">
+            {error && (
+              <div
+                role="alert"
+                className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2"
+              >
+                {error}
+              </div>
+            )}
+          </div>
 
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
             <div>
-              <label className="block text-[#4A2E35] font-semibold mb-1">
+              <label
+                htmlFor="login-phone"
+                className="block text-[#4A2E35] font-semibold mb-1"
+              >
                 Nomor HP / WhatsApp:
               </label>
               <input
@@ -152,12 +161,18 @@ function LoginForm() {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Contoh: 08129982001"
                 required
-                className="w-full p-3 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880] text-xs"
+                autoComplete="tel"
+                inputMode="tel"
+                aria-invalid={error ? true : undefined}
+                className="focus-ring w-full p-3 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880] text-xs"
               />
             </div>
 
             <div>
-              <label className="block text-[#4A2E35] font-semibold mb-1">
+              <label
+                htmlFor="login-pin"
+                className="block text-[#4A2E35] font-semibold mb-1"
+              >
                 PIN 6-Digit:
               </label>
               <div className="relative">
@@ -171,17 +186,22 @@ function LoginForm() {
                   placeholder="••••••"
                   maxLength={6}
                   required
-                  className="w-full p-3 pr-10 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880] text-xs tracking-widest"
+                  autoComplete="current-password"
+                  inputMode="numeric"
+                  aria-invalid={error ? true : undefined}
+                  className="focus-ring w-full p-3 pr-10 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880] text-xs tracking-widest"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPin(!showPin)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B5E62]"
+                  aria-label={showPin ? "Sembunyikan PIN" : "Tampilkan PIN"}
+                  aria-pressed={showPin}
+                  className="focus-ring absolute right-3 top-1/2 -translate-y-1/2 text-[#6B5E62] rounded p-1"
                 >
                   {showPin ? (
-                    <EyeOff className="w-4 h-4" />
+                    <EyeOff className="w-4 h-4" aria-hidden="true" />
                   ) : (
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-4 h-4" aria-hidden="true" />
                   )}
                 </button>
               </div>
@@ -190,14 +210,18 @@ function LoginForm() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#4A2E35] to-[#6B5E62] text-white font-semibold text-xs hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
+              aria-busy={isPending}
+              className="focus-ring w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#4A2E35] to-[#6B5E62] text-white font-semibold text-xs hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 min-h-[44px]"
             >
               {isPending ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <>
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                  <span>Memproses…</span>
+                </>
               ) : (
                 <>
                   <span>Masuk ke Dashboard</span>
-                  <ArrowRight className="w-4 h-4 text-[#C5A880]" />
+                  <ArrowRight className="w-4 h-4 text-[#C5A880]" aria-hidden="true" />
                 </>
               )}
             </button>
@@ -225,7 +249,7 @@ function LoginForm() {
                     type="button"
                     disabled={isPending}
                     onClick={() => handleDirectLogin(role)}
-                    className="py-2 px-1 rounded-xl bg-[#FAF8F5] border border-[#E5D7C7] hover:border-[#C5A880] hover:bg-white text-[#4A2E35] font-semibold text-[11px] transition-all flex flex-col items-center gap-0.5 shadow-sm active:scale-95 disabled:opacity-50"
+                    className="focus-ring py-2 px-1 rounded-xl bg-[#FAF8F5] border border-[#E5D7C7] hover:border-[#C5A880] hover:bg-white text-[#4A2E35] font-semibold text-[11px] transition-all flex flex-col items-center gap-0.5 shadow-sm active:scale-95 disabled:opacity-50 min-h-[44px]"
                   >
                     <span>Masuk {label}</span>
                     <span className="text-[9px] text-[#6B5E62]/70 font-normal">

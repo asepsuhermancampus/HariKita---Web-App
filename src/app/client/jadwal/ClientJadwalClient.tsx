@@ -12,6 +12,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useOrders } from "@/lib/order-store";
+import { Modal } from "@/components/harikita/ui";
 import type { PhysicalSessionDTO, RundownRowDTO } from "@/server/queries/orders";
 
 interface PhysicalSession {
@@ -467,71 +468,62 @@ export function ClientJadwalClient({
       )}
 
       {/* Reschedule Modal */}
-      {rescheduleModal.isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 border border-hk-champagne/60 shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b border-hk-champagne/30 pb-3">
-              <h3 className="font-editorial text-2xl font-normal text-hk-charcoal">
-                Ajukan Reschedule Sesi Fisik
-              </h3>
-              <button
-                onClick={() => setRescheduleModal({ isOpen: false, sessionId: "", newDate: "", reason: "" })}
-                className="text-hk-charcoal/60 hover:text-hk-charcoal text-sm p-1"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmitReschedule} className="space-y-4 text-xs font-manrope">
-              <div>
-                <label className="block text-hk-charcoal font-semibold mb-1">
-                  Pilih Tanggal Baru:
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={rescheduleModal.newDate}
-                  onChange={(e) =>
-                    setRescheduleModal((prev) => ({ ...prev, newDate: e.target.value }))
-                  }
-                  className="w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe focus-visible:ring-2 focus-visible:ring-hk-charcoal bg-hk-ivory/50"
-                />
-              </div>
-
-              <div>
-                <label className="block text-hk-charcoal font-semibold mb-1">
-                  Alasan Perubahan Jadwal:
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="Contoh: Menyesuaikan jam kerja atau jadwal cuti keluarga..."
-                  value={rescheduleModal.reason}
-                  onChange={(e) =>
-                    setRescheduleModal((prev) => ({ ...prev, reason: e.target.value }))
-                  }
-                  className="w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe focus-visible:ring-2 focus-visible:ring-hk-charcoal bg-hk-ivory/50"
-                />
-              </div>
-
-              <div className="pt-2 flex justify-end gap-2 border-t border-hk-champagne/30">
-                <button
-                  type="button"
-                  onClick={() => setRescheduleModal({ isOpen: false, sessionId: "", newDate: "", reason: "" })}
-                  className="px-4 py-2 rounded-full border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-soft-beige/40 cursor-pointer"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-full bg-hk-taupe text-white font-semibold hover:bg-[#78644e] transition-colors shadow-xs cursor-pointer"
-                >
-                  Kirimkan Pengajuan
-                </button>
-              </div>
-            </form>
+      <Modal
+        isOpen={rescheduleModal.isOpen}
+        onClose={() => setRescheduleModal({ isOpen: false, sessionId: "", newDate: "", reason: "" })}
+        title="Ajukan Reschedule Sesi Fisik"
+        size="md"
+      >
+        <form onSubmit={handleSubmitReschedule} className="space-y-4 text-xs font-manrope">
+          <div>
+            <label htmlFor="reschedule-date" className="block text-hk-charcoal font-semibold mb-1">
+              Pilih Tanggal Baru:
+            </label>
+            <input
+              id="reschedule-date"
+              type="date"
+              required
+              value={rescheduleModal.newDate}
+              onChange={(e) =>
+                setRescheduleModal((prev) => ({ ...prev, newDate: e.target.value }))
+              }
+              className="focus-ring w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe bg-hk-ivory/50"
+            />
           </div>
-        </div>
-      )}
+
+          <div>
+            <label htmlFor="reschedule-reason" className="block text-hk-charcoal font-semibold mb-1">
+              Alasan Perubahan Jadwal:
+            </label>
+            <textarea
+              id="reschedule-reason"
+              rows={3}
+              placeholder="Contoh: Menyesuaikan jam kerja atau jadwal cuti keluarga..."
+              value={rescheduleModal.reason}
+              onChange={(e) =>
+                setRescheduleModal((prev) => ({ ...prev, reason: e.target.value }))
+              }
+              className="focus-ring w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe bg-hk-ivory/50"
+            />
+          </div>
+
+          <div className="pt-2 flex justify-end gap-2 border-t border-hk-champagne/30">
+            <button
+              type="button"
+              onClick={() => setRescheduleModal({ isOpen: false, sessionId: "", newDate: "", reason: "" })}
+              className="focus-ring px-4 py-2 rounded-full border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-soft-beige/40 cursor-pointer min-h-[44px]"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              className="focus-ring px-5 py-2 rounded-full bg-hk-taupe text-white font-semibold hover:bg-[#78644e] transition-colors shadow-xs cursor-pointer min-h-[44px]"
+            >
+              Kirimkan Pengajuan
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

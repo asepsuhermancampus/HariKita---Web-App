@@ -130,10 +130,11 @@ export default function AdminVerifikasiPage() {
 
         {/* Filter Tabs & Search */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-[#C5A880]/30 shadow-sm">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2" role="group" aria-label="Filter status verifikasi vendor">
             <button
               onClick={() => setActiveFilter("PENDING")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              aria-pressed={activeFilter === "PENDING"}
+              className={`focus-ring px-3 py-1.5 rounded-xl text-xs font-semibold transition-all min-h-[36px] ${
                 activeFilter === "PENDING"
                   ? "bg-[#4A2E35] text-white"
                   : "text-[#6B5E62] hover:text-[#4A2E35]"
@@ -143,7 +144,8 @@ export default function AdminVerifikasiPage() {
             </button>
             <button
               onClick={() => setActiveFilter("APPROVED")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              aria-pressed={activeFilter === "APPROVED"}
+              className={`focus-ring px-3 py-1.5 rounded-xl text-xs font-semibold transition-all min-h-[36px] ${
                 activeFilter === "APPROVED"
                   ? "bg-[#4A2E35] text-white"
                   : "text-[#6B5E62] hover:text-[#4A2E35]"
@@ -153,7 +155,8 @@ export default function AdminVerifikasiPage() {
             </button>
             <button
               onClick={() => setActiveFilter("ALL")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+              aria-pressed={activeFilter === "ALL"}
+              className={`focus-ring px-3 py-1.5 rounded-xl text-xs font-semibold transition-all min-h-[36px] ${
                 activeFilter === "ALL"
                   ? "bg-[#4A2E35] text-white"
                   : "text-[#6B5E62] hover:text-[#4A2E35]"
@@ -164,13 +167,15 @@ export default function AdminVerifikasiPage() {
           </div>
 
           <div className="relative w-full sm:w-60">
-            <Search className="w-3.5 h-3.5 text-[#6B5E62] absolute left-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-[#6B5E62] absolute left-3 top-2.5" aria-hidden="true" />
+            <label htmlFor="vendor-search" className="sr-only">Cari nama vendor atau kecamatan</label>
             <input
-              type="text"
+              id="vendor-search"
+              type="search"
               placeholder="Cari nama vendor / kecamatan..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
+              className="focus-ring w-full pl-8 pr-3 py-1.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
             />
           </div>
         </div>
@@ -269,15 +274,15 @@ export default function AdminVerifikasiPage() {
                       <>
                         <button
                           onClick={() => handleReject(v.id)}
-                          className="px-3.5 py-2 rounded-xl border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold transition-colors"
+                          className="focus-ring px-3.5 py-2 rounded-xl border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold transition-colors min-h-[44px]"
                         >
                           Tolak &amp; Minta Revisi
                         </button>
                         <button
                           onClick={() => handleApprove(v.id)}
-                          className="px-4 py-2 rounded-xl bg-[#4A2E35] text-white hover:bg-[#6B5E62] text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors"
+                          className="focus-ring px-4 py-2 rounded-xl bg-[#4A2E35] text-white hover:bg-[#6B5E62] text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors min-h-[44px]"
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A880]" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" />
                           Setujui &amp; Terbitkan ke Katalog
                         </button>
                       </>

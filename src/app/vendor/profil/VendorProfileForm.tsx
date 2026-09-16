@@ -133,8 +133,8 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
     <form onSubmit={handleSubmit} className="space-y-8 font-manrope">
       {/* Feedback Alerts */}
       {successMessage && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+        <div role="status" aria-live="polite" className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
           <div>
             <h4 className="font-bold text-xs">Pembaruan Berhasil</h4>
             <p className="text-xs text-emerald-700 mt-0.5">{successMessage}</p>
@@ -143,8 +143,8 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
       )}
 
       {errorMessage && (
-        <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
-          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+        <div role="alert" className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
           <div>
             <h4 className="font-bold text-xs">Peringatan</h4>
             <p className="text-xs text-red-700 mt-0.5">{errorMessage}</p>
@@ -195,10 +195,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Nama Bisnis / Studio */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-business" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Nama Bisnis / Studio <span className="text-red-500">*</span>
             </label>
             <input
+              id="vpf-business"
               type="text"
               name="businessName"
               value={formData.businessName}
@@ -220,10 +221,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
 
           {/* Kategori Layanan */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-category" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Kategori Layanan Utama <span className="text-red-500">*</span>
             </label>
             <select
+              id="vpf-category"
               name="category"
               value={formData.category}
               onChange={handleChange}
@@ -239,10 +241,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
 
           {/* PIC / Penanggung Jawab */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-pic" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Nama Pemilik / PIC Vendor
             </label>
             <input
+              id="vpf-pic"
               type="text"
               name="picName"
               value={formData.picName}
@@ -276,10 +279,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
 
           {/* Email Penagihan */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-email" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Email Resmi Studio (Untuk Laporan Invoice &amp; SLA)
             </label>
             <input
+              id="vpf-email"
               type="email"
               name="email"
               value={formData.email}
@@ -319,10 +323,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Kecamatan */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-district" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Wilayah Kecamatan (Kabupaten Kebumen)
             </label>
             <select
+              id="vpf-district"
               name="district"
               value={formData.district}
               onChange={handleChange}
@@ -351,10 +356,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
 
           {/* Alamat Lengkap Studio */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-address" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Alamat Lengkap Studio / Butik / Workshop <span className="text-red-500">*</span>
             </label>
             <textarea
+              id="vpf-address"
               name="address"
               rows={2}
               value={formData.address}
@@ -395,10 +401,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Bank */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-bank-name" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Nama Bank
             </label>
             <select
+              id="vpf-bank-name"
               name="bankName"
               value={formData.bankName}
               onChange={handleChange}
@@ -414,10 +421,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
 
           {/* Nomor Rekening */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-bank-account" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Nomor Rekening
             </label>
             <input
+              id="vpf-bank-account"
               type="text"
               name="bankAccount"
               value={formData.bankAccount}
@@ -429,10 +437,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
 
           {/* Atas Nama Rekening */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-bank-holder" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Atas Nama (Sesuai Buku Tabungan)
             </label>
             <input
+              id="vpf-bank-holder"
               type="text"
               name="bankHolder"
               value={formData.bankHolder}
@@ -463,10 +472,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
         <div className="space-y-5">
           {/* Deskripsi */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-description" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Deskripsi Studio &amp; Pengalaman Layanan
             </label>
             <textarea
+              id="vpf-description"
               name="description"
               rows={3}
               value={formData.description}
@@ -478,10 +488,11 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
 
           {/* SLA Commitment */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+            <label htmlFor="vpf-sla" className="block text-xs font-bold text-hk-charcoal mb-1.5">
               Pernyataan Jaminan SLA &amp; Pergantian Kru Cadangan
             </label>
             <textarea
+              id="vpf-sla"
               name="slaGuarantees"
               rows={2}
               value={formData.slaGuarantees}
@@ -494,12 +505,13 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
           {/* Social Media Handles */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+              <label htmlFor="vpf-ig" className="block text-xs font-bold text-hk-charcoal mb-1.5">
                 Username Instagram (Tanpa @)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-hk-charcoal/50 text-xs">@</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-hk-charcoal/50 text-xs" aria-hidden="true">@</span>
                 <input
+                  id="vpf-ig"
                   type="text"
                   name="igHandle"
                   value={formData.igHandle}
@@ -511,12 +523,13 @@ export function VendorProfileForm({ initialData }: VendorProfileFormProps) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-hk-charcoal mb-1.5">
+              <label htmlFor="vpf-tiktok" className="block text-xs font-bold text-hk-charcoal mb-1.5">
                 Username TikTok (Tanpa @)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-hk-charcoal/50 text-xs">@</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-hk-charcoal/50 text-xs" aria-hidden="true">@</span>
                 <input
+                  id="vpf-tiktok"
                   type="text"
                   name="tiktokHandle"
                   value={formData.tiktokHandle}

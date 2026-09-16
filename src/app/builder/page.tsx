@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cartStore } from "@/lib/cart-store";
 import { formatRupiah } from "@/lib/utils";
 import { ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
 import { useAvailability, availabilityStore } from "@/lib/availability-store";
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import {
   Sparkles,
   Check,
@@ -190,6 +191,16 @@ export default function MixMatchBuilderPage() {
 
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
+  const checkoutDialogRef = useRef<HTMLDivElement>(null);
+  const checkoutInitialFocusRef = useRef<HTMLButtonElement>(null);
+
+  // Focus trap + Escape untuk modal checkout (Phase 7 a11y).
+  useFocusTrap(
+    checkoutDialogRef,
+    isCheckoutOpen,
+    () => setIsCheckoutOpen(false),
+    checkoutInitialFocusRef
+  );
   const [clientForm, setClientForm] = useState({
     name: "",
     phone: "",
@@ -384,17 +395,19 @@ export default function MixMatchBuilderPage() {
                     {/* Unit Slider for Pax Catering */}
                     {service.unitType === "pax" && (
                       <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <span className="font-bold text-plum">Jumlah Tamu (Pax):</span>
+                        <label htmlFor={`pax-${service.id}`} className="font-bold text-plum">Jumlah Tamu (Pax):</label>
                         <input
+                          id={`pax-${service.id}`}
                           type="range"
                           min="50"
                           max="500"
                           step="25"
                           value={currentItem?.count || 100}
                           onChange={(e) => updateCount(service.id, parseInt(e.target.value, 10))}
-                          className="range range-xs range-primary w-40"
+                          aria-valuetext={`${currentItem?.count || 100} pax`}
+                          className="range range-xs range-primary w-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum"
                         />
-                        <span className="font-mono font-bold text-plum bg-gold/15 px-2.5 py-1 rounded-lg">
+                        <span className="font-mono font-bold text-plum bg-gold/15 px-2.5 py-1 rounded-lg" aria-hidden="true">
                           {currentItem?.count || 100} Pax
                         </span>
                       </div>
@@ -574,12 +587,20 @@ export default function MixMatchBuilderPage() {
 
       {/* LAZY REGISTRATION CHECKOUT MODAL */}
       {isCheckoutOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl border border-gold/40 space-y-6 animate-fadeIn">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="builder-checkout-title"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+        >
+          <div
+            ref={checkoutDialogRef}
+            className="w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl border border-gold/40 space-y-6 animate-fadeIn max-h-[90vh] overflow-y-auto"
+          >
             {isOrderSubmitted ? (
               <div className="text-center space-y-4 py-4">
-                <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" />
-                <h3 className="font-serif-luxury text-2xl font-bold text-plum">
+                <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" aria-hidden="true" />
+                <h3 id="builder-checkout-title" className="font-serif-luxury text-2xl font-bold text-plum">
                   Pesanan Berhasil Diajukan!
                 </h3>
                 <p className="text-xs text-plum-light leading-relaxed">
@@ -609,7 +630,7 @@ export default function MixMatchBuilderPage() {
                   <span className="text-[10px] uppercase tracking-wider text-gold-dark font-bold">
                     Pemesanan Praktis (Lazy Registration)
                   </span>
-                  <h3 className="font-serif-luxury text-2xl font-bold text-plum">
+                  <h3 id="builder-checkout-title" className="font-serif-luxury text-2xl font-bold text-plum">
                     Lengkapi Kontak Acara
                   </h3>
                   <p className="text-xs text-plum-light">
@@ -619,43 +640,50 @@ export default function MixMatchBuilderPage() {
 
                 <div className="space-y-3 pt-2">
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-plum">Nama Calon Pengantin / Keluarga</label>
+                    <label htmlFor="builder-name" className="text-xs font-bold text-plum">Nama Calon Pengantin / Keluarga</label>
                     <input
+                      id="builder-name"
                       type="text"
                       required
                       placeholder="Contoh: Bima & Citra"
+                      autoComplete="name"
                       value={clientForm.name}
                       onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
-                      className="input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-plum">Nomor WhatsApp Aktif</label>
+                    <label htmlFor="builder-phone" className="text-xs font-bold text-plum">Nomor WhatsApp Aktif</label>
                     <input
+                      id="builder-phone"
                       type="tel"
                       required
                       placeholder="0812xxxxxxx"
+                      autoComplete="tel"
+                      inputMode="tel"
                       value={clientForm.phone}
                       onChange={(e) => setClientForm({ ...clientForm, phone: e.target.value })}
-                      className="input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-plum">Tanggal Acara</label>
+                      <label htmlFor="builder-event-date" className="text-xs font-bold text-plum">Tanggal Acara</label>
                       <input
+                        id="builder-event-date"
                         type="date"
                         required
                         value={clientForm.eventDate}
                         onChange={(e) => setClientForm({ ...clientForm, eventDate: e.target.value })}
-                        className="input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum text-xs"
+                        className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum text-xs"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-plum">Kota Pelaksanaan</label>
+                      <label htmlFor="builder-city" className="text-xs font-bold text-plum">Kota Pelaksanaan</label>
                       <input
+                        id="builder-city"
                         type="text"
                         disabled
                         value="Kabupaten Kebumen"
@@ -665,14 +693,15 @@ export default function MixMatchBuilderPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-plum">Lokasi Acara (Gedung / Kediaman)</label>
+                    <label htmlFor="builder-venue" className="text-xs font-bold text-plum">Lokasi Acara (Gedung / Kediaman)</label>
                     <input
+                      id="builder-venue"
                       type="text"
                       required
                       placeholder="Contoh: Gedung Setda Kebumen"
                       value={clientForm.venueAddress}
                       onChange={(e) => setClientForm({ ...clientForm, venueAddress: e.target.value })}
-                      className="input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
                     />
                   </div>
                 </div>
@@ -689,15 +718,16 @@ export default function MixMatchBuilderPage() {
 
                 <div className="flex items-center justify-end gap-3 pt-2">
                   <button
+                    ref={checkoutInitialFocusRef}
                     type="button"
                     onClick={() => setIsCheckoutOpen(false)}
-                    className="btn btn-sm btn-ghost text-plum rounded-full"
+                    className="focus-ring btn btn-sm btn-ghost text-plum rounded-full min-h-[44px]"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-sm"
+                    className="focus-ring btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-sm min-h-[44px]"
                   >
                     Konfirmasi Booking Tanggal
                   </button>

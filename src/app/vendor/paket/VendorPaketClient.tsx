@@ -14,9 +14,9 @@ import {
   Clock,
   Sparkles,
   AlertCircle,
-  X,
 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
+import { Modal } from "@/components/harikita/ui";
 import {
   createPackageAction,
   updatePackageAction,
@@ -266,82 +266,79 @@ export function VendorPaketClient({
       </div>
 
       {/* Form Modal */}
-      {isFormOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 border border-[#C5A880]/60 shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b border-[#FAF8F5] pb-3">
-              <h3 className="font-serif text-xl font-bold text-[#4A2E35]">
-                {editingId ? "Edit Paket Layanan" : "Tambah Paket Baru"}
-              </h3>
-              <button onClick={() => setIsFormOpen(false)} className="text-[#6B5E62] hover:text-[#4A2E35] p-1">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-3 text-xs">
-              <div>
-                <label className="block text-[#4A2E35] font-semibold mb-1">Nama Paket:</label>
-                <input
-                  type="text"
-                  required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
-                />
-              </div>
-              <div>
-                <label className="block text-[#4A2E35] font-semibold mb-1">Kategori:</label>
-                <input
-                  type="text"
-                  required
-                  value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  placeholder="Contoh: Busana Pengantin & Fitting"
-                  className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
-                />
-              </div>
-              <div>
-                <label className="block text-[#4A2E35] font-semibold mb-1">Harga Dasar (Rp):</label>
-                <input
-                  type="number"
-                  required
-                  min={1}
-                  value={form.basePrice}
-                  onChange={(e) => setForm({ ...form, basePrice: parseInt(e.target.value || "0", 10) })}
-                  className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
-                />
-              </div>
-              <div>
-                <label className="block text-[#4A2E35] font-semibold mb-1">Deskripsi:</label>
-                <textarea
-                  required
-                  rows={3}
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2 border-t border-[#FAF8F5]">
-                <button
-                  type="button"
-                  onClick={() => setIsFormOpen(false)}
-                  className="px-4 py-2 rounded-full border border-[#E5D7C7] text-[#4A2E35] hover:bg-[#FAF8F5]"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={isPending}
-                  className="px-5 py-2 rounded-full bg-[#4A2E35] text-white font-semibold hover:bg-[#6B5E62] transition-colors shadow-sm disabled:opacity-50"
-                >
-                  {isPending ? "Menyimpan..." : "Simpan Paket"}
-                </button>
-              </div>
-            </form>
+      <Modal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        title={editingId ? "Edit Paket Layanan" : "Tambah Paket Baru"}
+        size="md"
+      >
+        <form onSubmit={handleSubmit} className="space-y-3 text-xs">
+          <div>
+            <label htmlFor="pkg-name" className="block text-[#4A2E35] font-semibold mb-1">Nama Paket:</label>
+            <input
+              id="pkg-name"
+              type="text"
+              required
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="focus-ring w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
+            />
           </div>
-        </div>
-      )}
+          <div>
+            <label htmlFor="pkg-category" className="block text-[#4A2E35] font-semibold mb-1">Kategori:</label>
+            <input
+              id="pkg-category"
+              type="text"
+              required
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              placeholder="Contoh: Busana Pengantin & Fitting"
+              className="focus-ring w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
+            />
+          </div>
+          <div>
+            <label htmlFor="pkg-price" className="block text-[#4A2E35] font-semibold mb-1">Harga Dasar (Rp):</label>
+            <input
+              id="pkg-price"
+              type="number"
+              required
+              min={1}
+              value={form.basePrice}
+              onChange={(e) => setForm({ ...form, basePrice: parseInt(e.target.value || "0", 10) })}
+              className="focus-ring w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
+            />
+          </div>
+          <div>
+            <label htmlFor="pkg-desc" className="block text-[#4A2E35] font-semibold mb-1">Deskripsi:</label>
+            <textarea
+              id="pkg-desc"
+              required
+              rows={3}
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              className="focus-ring w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 pt-2 border-t border-[#FAF8F5]">
+            <button
+              type="button"
+              onClick={() => setIsFormOpen(false)}
+              className="focus-ring px-4 py-2 rounded-full border border-[#E5D7C7] text-[#4A2E35] hover:bg-[#FAF8F5] min-h-[44px]"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              disabled={isPending}
+              aria-busy={isPending}
+              className="focus-ring px-5 py-2 rounded-full bg-[#4A2E35] text-white font-semibold hover:bg-[#6B5E62] transition-colors shadow-sm disabled:opacity-50 min-h-[44px]"
+            >
+              {isPending ? "Menyimpan..." : "Simpan Paket"}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

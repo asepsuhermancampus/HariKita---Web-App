@@ -119,8 +119,8 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
     <form onSubmit={handleSubmit} className="space-y-8 font-manrope">
       {/* Feedback Alerts */}
       {successMessage && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+        <div role="status" aria-live="polite" className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
           <div>
             <h4 className="font-bold text-xs font-manrope">Pembaruan Berhasil</h4>
             <p className="text-xs text-emerald-700 mt-0.5 font-manrope">{successMessage}</p>
@@ -129,8 +129,8 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
       )}
 
       {errorMessage && (
-        <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
-          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+        <div role="alert" className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 flex items-start gap-3 shadow-xs animate-in fade-in duration-200">
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
           <div>
             <h4 className="font-bold text-xs font-manrope">Peringatan</h4>
             <p className="text-xs text-red-700 mt-0.5 font-manrope">{errorMessage}</p>
@@ -182,11 +182,12 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Nama Lengkap */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
+            <label htmlFor="cpf-name" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Nama Lengkap Klien <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
+                id="cpf-name"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -231,11 +232,12 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
 
           {/* Email */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
+            <label htmlFor="cpf-email" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Alamat Email (Opsional)
             </label>
             <div className="relative">
               <input
+                id="cpf-email"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -279,10 +281,11 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Nama Pasangan */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
+            <label htmlFor="cpf-partner" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Nama Pasangan Mempelai
             </label>
             <input
+              id="cpf-partner"
               type="text"
               name="partnerName"
               value={formData.partnerName}
@@ -306,10 +309,11 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
 
           {/* Tanggal Hari H Acara */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
+            <label htmlFor="cpf-event-date" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Tanggal Pelaksanaan Acara
             </label>
             <input
+              id="cpf-event-date"
               type="date"
               name="eventDate"
               value={formData.eventDate}
@@ -332,10 +336,11 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
 
           {/* Lokasi / Gedung / Rumah */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
+            <label htmlFor="cpf-event-location" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Lokasi / Gedung / Kediaman
             </label>
             <input
+              id="cpf-event-location"
               type="text"
               name="eventLocation"
               value={formData.eventLocation}
@@ -356,10 +361,11 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
 
           {/* Kecamatan di Kebumen */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
+            <label htmlFor="cpf-district" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Wilayah Kecamatan (Kabupaten Kebumen)
             </label>
             <select
+              id="cpf-district"
               name="district"
               value={formData.district}
               onChange={handleChange}
@@ -397,10 +403,11 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
         <div className="space-y-5">
           {/* Preferensi Tema Adat / Gaya */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
+            <label htmlFor="cpf-theme" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Preferensi Gaya Busana &amp; Dekorasi
             </label>
             <select
+              id="cpf-theme"
               name="themePreference"
               value={formData.themePreference}
               onChange={handleChange}
@@ -420,10 +427,11 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
 
           {/* Catatan Khusus */}
           <div>
-            <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
+            <label htmlFor="cpf-notes" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Catatan Impian / Permintaan Khusus ke Vendor
             </label>
             <textarea
+              id="cpf-notes"
               name="notes"
               rows={4}
               value={formData.notes}

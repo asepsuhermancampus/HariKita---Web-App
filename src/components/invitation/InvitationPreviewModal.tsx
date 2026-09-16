@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { X, ExternalLink, Smartphone } from "lucide-react";
 import { getThemeById } from "@/lib/templates/registry";
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 
 interface InvitationPreviewModalProps {
   isOpen: boolean;
@@ -18,6 +19,8 @@ export const InvitationPreviewModal: React.FC<InvitationPreviewModalProps> = ({
   onClose,
 }) => {
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
   const demoUrl = `/undangan/demo?theme=${themeId}&to=Bapak+Joko+dan+Keluarga&sesi=s1`;
 
   const theme = themeId ? getThemeById(themeId) : null;
@@ -33,24 +36,17 @@ export const InvitationPreviewModal: React.FC<InvitationPreviewModalProps> = ({
     }
   }, [isOpen, themeId]);
 
-  // Close on Escape key
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    },
-    [onClose]
-  );
+  // Focus trap + Escape + body scroll lock (Phase 7 a11y).
+  useFocusTrap(dialogRef, isOpen, onClose, initialFocusRef);
 
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
     }
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "unset";
     };
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -69,6 +65,7 @@ export const InvitationPreviewModal: React.FC<InvitationPreviewModalProps> = ({
 
       {/* Modal Panel - phone frame styled with theme cardBg and border */}
       <div
+        ref={dialogRef}
         className="relative z-10 flex flex-col w-full h-[100dvh] sm:h-[88vh] sm:max-h-[820px] sm:w-[414px] sm:rounded-3xl shadow-2xl overflow-hidden border-0 sm:border-4 transition-colors duration-300"
         style={{
           backgroundColor: cardBg,
@@ -97,9 +94,10 @@ export const InvitationPreviewModal: React.FC<InvitationPreviewModalProps> = ({
             </a>
             {/* Close button */}
             <button
+              ref={initialFocusRef}
               id="btn-close-preview-modal"
               onClick={onClose}
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 transition-colors text-white"
+              className="focus-ring flex items-center justify-center w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 transition-colors text-white"
               aria-label="Tutup preview"
             >
               <X className="w-4 h-4" />

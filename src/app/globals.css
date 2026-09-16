@@ -118,6 +118,19 @@ body {
   height: 0;
 }
 
+/* Alias: beberapa komponen memakai `scrollbar-none` (Tailwind-esque).
+   Tanpa definisi ini scrollbar akan tampil sehingga merusak desain. */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 /* Vinyl rotation animation */
 @keyframes spinSlow {
   from {
@@ -209,5 +222,98 @@ body {
 .contain-content-auto {
   content-visibility: auto;
   contain-intrinsic-size: 0 480px;
+}
+
+/* ── Phase 7: Accessibility & Polish Utilities ──────────────────────── */
+
+/* Screen-reader-only (hidden visually, available to assistive tech) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip link — visible only when focused via keyboard */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--hk-space-4);
+  z-index: var(--hk-z-toast);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--hk-radius-full);
+  background: var(--color-charcoal);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  box-shadow: var(--hk-shadow-lg);
+  transition: top var(--hk-duration-base) var(--hk-ease-standard);
+}
+
+.skip-link:focus {
+  top: var(--hk-space-4);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-champagne), var(--hk-shadow-lg);
+}
+
+/* Consistent, high-contrast focus ring for interactive elements */
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: var(--hk-focus-ring-width) solid var(--hk-focus-ring-color);
+  outline-offset: var(--hk-focus-ring-offset);
+  border-radius: var(--hk-radius-sm);
+}
+
+/* Global keyboard-focus fallback for native interactive elements that
+   lack a bespoke Tailwind ring, so focus is never invisible. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: var(--hk-focus-ring-width) solid var(--hk-focus-ring-color);
+  outline-offset: var(--hk-focus-ring-offset);
+}
+
+/* Skeleton shimmer for loading placeholders */
+@keyframes hk-skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.hk-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(232, 222, 209, 0.55) 0%,
+    rgba(248, 246, 241, 0.9) 50%,
+    rgba(232, 222, 209, 0.55) 100%
+  );
+  background-size: 200% 100%;
+  animation: hk-skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hk-skeleton {
+    animation: none;
+    background: rgba(232, 222, 209, 0.6);
+  }
+}
+
+/* Touch-friendly minimum target (44px) — opt-in helper */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
 }
 

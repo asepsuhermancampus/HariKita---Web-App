@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Download, Share2, PlusSquare, X, Smartphone } from "lucide-react";
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -15,6 +16,10 @@ export function InstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
   const [isIos, setIsIos] = useState(false);
   const [showIosGuide, setShowIosGuide] = useState(false);
+  const iosDialogRef = useRef<HTMLDivElement>(null);
+  const iosInitialFocusRef = useRef<HTMLButtonElement>(null);
+
+  useFocusTrap(iosDialogRef, showIosGuide, () => setShowIosGuide(false), iosInitialFocusRef);
 
   useEffect(() => {
     // 1. Cek apakah sudah berjalan dalam mode standalone / PWA terpasang
@@ -140,10 +145,10 @@ export function InstallPrompt() {
             {/* Tombol Tutup */}
             <button
               onClick={handleDismiss}
-              className="text-[#6B5E62] hover:text-[#4A2E35] p-1 rounded-lg hover:bg-[#F3EDE6] transition-colors"
+              className="focus-ring text-[#6B5E62] hover:text-[#4A2E35] p-1.5 rounded-lg hover:bg-[#F3EDE6] transition-colors"
               aria-label="Tutup notifikasi pasang aplikasi"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
 
@@ -151,15 +156,15 @@ export function InstallPrompt() {
           <div className="mt-3.5 flex items-center gap-2 pt-2 border-t border-[#C5A880]/20">
             <button
               onClick={handleDismiss}
-              className="flex-1 py-2 text-xs font-medium text-[#6B5E62] hover:text-[#4A2E35] rounded-xl transition-colors text-center"
+              className="focus-ring flex-1 py-2 text-xs font-medium text-[#6B5E62] hover:text-[#4A2E35] rounded-xl transition-colors text-center min-h-[44px]"
             >
               Nanti Saja
             </button>
             <button
               onClick={handleInstallClick}
-              className="flex-1 py-2 px-3 text-xs font-semibold bg-[#C5A880] hover:bg-[#B39366] text-white rounded-xl shadow-sm transition-all flex items-center justify-center gap-1.5 min-h-[38px] active:scale-95"
+              className="focus-ring flex-1 py-2 px-3 text-xs font-semibold bg-[#C5A880] hover:bg-[#B39366] text-white rounded-xl shadow-sm transition-all flex items-center justify-center gap-1.5 min-h-[44px] active:scale-95"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3.5 h-3.5" aria-hidden="true" />
               <span>{isIos ? "Cara Pasang" : "Pasang Sekarang"}</span>
             </button>
           </div>
@@ -169,25 +174,31 @@ export function InstallPrompt() {
       {/* Modal Panduan Khusus iOS Safari */}
       {showIosGuide && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="ios-install-title"
           className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-4 animate-in fade-in"
           onClick={() => setShowIosGuide(false)}
         >
           <div
+            ref={iosDialogRef}
             className="bg-[#FAF8F5] border border-[#C5A880]/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-[#4A2E35] space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-[#C5A880]/20 pb-3">
               <div className="flex items-center gap-2">
-                <Smartphone className="w-5 h-5 text-[#C5A880]" />
-                <h3 className="font-serif-luxury font-bold text-base">
+                <Smartphone className="w-5 h-5 text-[#C5A880]" aria-hidden="true" />
+                <h3 id="ios-install-title" className="font-serif-luxury font-bold text-base">
                   Pasang di iPhone / iPad
                 </h3>
               </div>
               <button
+                ref={iosInitialFocusRef}
                 onClick={() => setShowIosGuide(false)}
-                className="text-[#6B5E62] hover:text-[#4A2E35] p-1 rounded-full hover:bg-[#F3EDE6]"
+                aria-label="Tutup panduan pemasangan"
+                className="focus-ring text-[#6B5E62] hover:text-[#4A2E35] p-1 rounded-full hover:bg-[#F3EDE6]"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
 
@@ -228,7 +239,7 @@ export function InstallPrompt() {
                 setShowIosGuide(false);
                 handleDismiss();
               }}
-              className="w-full py-2.5 bg-[#C5A880] hover:bg-[#B39366] text-white text-xs font-semibold rounded-xl transition-colors"
+              className="focus-ring w-full py-2.5 bg-[#C5A880] hover:bg-[#B39366] text-white text-xs font-semibold rounded-xl transition-colors min-h-[44px]"
             >
               Saya Mengerti
             </button>

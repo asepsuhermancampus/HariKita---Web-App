@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import {
   X,
   Printer,
@@ -37,15 +38,10 @@ interface InvoiceModalProps {
 }
 
 export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
+
+  useFocusTrap(dialogRef, isOpen && !!invoice, onClose, initialFocusRef);
 
   if (!isOpen || !invoice) return null;
 
@@ -64,7 +60,10 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
       aria-labelledby="invoice-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-hk-charcoal/80 backdrop-blur-sm print:p-0 print:bg-white"
     >
-      <div className="relative w-full max-w-3xl rounded-3xl bg-white border border-hk-champagne/60 shadow-2xl overflow-hidden my-6 print:border-none print:shadow-none print:rounded-none">
+      <div
+        ref={dialogRef}
+        className="relative w-full max-w-3xl rounded-3xl bg-white border border-hk-champagne/60 shadow-2xl overflow-hidden my-6 print:border-none print:shadow-none print:rounded-none"
+      >
         {/* Modal Toolbar (hidden in print) */}
         <div className="p-4 bg-hk-charcoal text-white flex items-center justify-between print:hidden">
           <div className="flex items-center gap-2">
@@ -77,15 +76,16 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-hk-taupe text-white text-xs font-manrope font-bold hover:bg-white hover:text-hk-charcoal transition-all shadow-xs"
+              className="focus-ring flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-hk-taupe text-white text-xs font-manrope font-bold hover:bg-white hover:text-hk-charcoal transition-all shadow-xs min-h-[36px]"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Cetak / Simpan PDF</span>
             </button>
             <button
+              ref={initialFocusRef}
               onClick={onClose}
               aria-label="Tutup invoice"
-              className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all"
+              className="focus-ring w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all"
             >
               <X className="w-4 h-4" />
             </button>

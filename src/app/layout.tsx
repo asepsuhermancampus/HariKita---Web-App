@@ -64,8 +64,11 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col antialiased selection:bg-gold/30 selection:text-plum">
         <PwaRegister />
+        <a href="#main-content" className="skip-link">
+          Lewati ke konten utama
+        </a>
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1">{children}</main>
         <Footer />
         <InstallPrompt />
       </body>

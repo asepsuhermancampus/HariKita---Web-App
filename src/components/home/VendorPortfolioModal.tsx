@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import {
   X,
   MapPin,
@@ -40,23 +41,23 @@ export function VendorPortfolioModal({
   onClose,
   vendor,
 }: VendorPortfolioModalProps) {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
 
+  // Focus trap + Escape + return focus (Phase 7 a11y).
+  useFocusTrap(dialogRef, isOpen && !!vendor, onClose, initialFocusRef);
+
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "";
     }
 
     return () => {
       document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen || !vendor) return null;
 
@@ -79,12 +80,16 @@ export function VendorPortfolioModal({
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-2xl rounded-3xl bg-white border border-hk-champagne/60 shadow-2xl overflow-hidden z-10 my-8 transition-all">
+      <div
+        ref={dialogRef}
+        className="relative w-full max-w-2xl rounded-3xl bg-white border border-hk-champagne/60 shadow-2xl overflow-hidden z-10 my-8 transition-all"
+      >
         {/* Close Button */}
         <button
+          ref={initialFocusRef}
           onClick={onClose}
           aria-label="Tutup pratinjau"
-          className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/90 border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-taupe hover:text-white flex items-center justify-center transition-all shadow-xs"
+          className="focus-ring absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/90 border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-taupe hover:text-white flex items-center justify-center transition-all shadow-xs"
         >
           <X className="w-4 h-4" />
         </button>

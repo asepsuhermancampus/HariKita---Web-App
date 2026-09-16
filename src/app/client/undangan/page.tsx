@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Filter,
 } from "lucide-react";
+import { Modal } from "@/components/harikita/ui";
 
 interface Guest {
   id: string;
@@ -220,9 +221,11 @@ export default function ClientUndanganPage() {
       {/* Search & Filter Bar */}
       <div className="bg-white p-4 rounded-3xl border border-hk-champagne/40 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3 font-manrope">
         <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 text-hk-charcoal/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-hk-charcoal/60 absolute left-3.5 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <label htmlFor="guest-search" className="sr-only">Cari nama tamu atau kategori</label>
           <input
-            type="text"
+            id="guest-search"
+            type="search"
             placeholder="Cari nama tamu atau kategori..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -231,9 +234,10 @@ export default function ClientUndanganPage() {
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-3.5 h-3.5 text-hk-taupe" />
-          <span className="text-xs text-hk-charcoal/70">Filter RSVP:</span>
+          <Filter className="w-3.5 h-3.5 text-hk-taupe" aria-hidden="true" />
+          <label htmlFor="rsvp-filter" className="text-xs text-hk-charcoal/70">Filter RSVP:</label>
           <select
+            id="rsvp-filter"
             value={rsvpFilter}
             onChange={(e) => setRsvpFilter(e.target.value)}
             className="text-xs py-2 px-3 rounded-full border border-hk-champagne/60 bg-hk-ivory/50 text-hk-charcoal focus:outline-none focus:border-hk-taupe focus-visible:ring-2 focus-visible:ring-hk-charcoal"
@@ -310,17 +314,17 @@ export default function ClientUndanganPage() {
                     <td className="p-3.5 text-right space-x-1.5">
                       <button
                         onClick={() => handleCopyLink(guest)}
-                        className="px-3 py-1.5 rounded-full bg-white border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-soft-beige/40 text-[11px] font-medium inline-flex items-center gap-1 shadow-2xs cursor-pointer"
-                        title="Salin tautan unik undangan"
+                        aria-label={`Salin tautan unik undangan untuk ${guest.name}`}
+                        className="focus-ring px-3 py-1.5 rounded-full bg-white border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-soft-beige/40 text-[11px] font-medium inline-flex items-center gap-1 shadow-2xs cursor-pointer min-h-[36px]"
                       >
                         {copiedIndex === guest.id ? (
                           <>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
                             <span>Disalin!</span>
                           </>
                         ) : (
                           <>
-                            <Copy className="w-3.5 h-3.5 text-hk-taupe" />
+                            <Copy className="w-3.5 h-3.5 text-hk-taupe" aria-hidden="true" />
                             <span>Salin URL</span>
                           </>
                         )}
@@ -330,19 +334,19 @@ export default function ClientUndanganPage() {
                         href={`https://wa.me/?text=${getWhatsAppMessage(guest)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 text-[11px] font-medium inline-flex items-center gap-1 shadow-2xs"
-                        title="Kirim undangan via WhatsApp"
+                        aria-label={`Kirim undangan WhatsApp untuk ${guest.name}`}
+                        className="focus-ring px-3 py-1.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 text-[11px] font-medium inline-flex items-center gap-1 shadow-2xs min-h-[36px]"
                       >
-                        <MessageCircle className="w-3.5 h-3.5" />
+                        <MessageCircle className="w-3.5 h-3.5" aria-hidden="true" />
                         <span className="hidden sm:inline">Kirim WA</span>
                       </a>
 
                       <button
                         onClick={() => handleDeleteGuest(guest.id)}
-                        className="p-1.5 rounded-full text-red-600 hover:bg-red-50 text-[11px] transition-colors inline-flex items-center cursor-pointer"
-                        title="Hapus tamu ini"
+                        aria-label={`Hapus tamu ${guest.name}`}
+                        className="focus-ring p-2 rounded-full text-red-600 hover:bg-red-50 text-[11px] transition-colors inline-flex items-center cursor-pointer"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </td>
                   </tr>
@@ -354,102 +358,95 @@ export default function ClientUndanganPage() {
       </div>
 
       {/* Modal Tambah Tamu Baru */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 border border-hk-champagne/60 shadow-2xl space-y-4">
-            <div className="flex justify-between items-center border-b border-hk-champagne/30 pb-3">
-              <h3 className="font-editorial text-2xl font-normal text-hk-charcoal">
-                Tambah Tamu Undangan Baru
-              </h3>
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="text-hk-charcoal/60 hover:text-hk-charcoal text-sm p-1 cursor-pointer"
+      <Modal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Tambah Tamu Undangan Baru"
+        size="md"
+      >
+        <form onSubmit={handleAddGuest} className="space-y-4 text-xs font-manrope">
+          <div>
+            <label htmlFor="guest-name" className="block text-hk-charcoal font-semibold mb-1">
+              Nama Tamu / Keluarga:
+            </label>
+            <input
+              id="guest-name"
+              type="text"
+              required
+              placeholder="Contoh: Bpk. Bambang Pamungkas & Istri"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              className="focus-ring w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe bg-hk-ivory/50"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="guest-category" className="block text-hk-charcoal font-semibold mb-1">
+                Kategori Tamu:
+              </label>
+              <select
+                id="guest-category"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="focus-ring w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe bg-hk-ivory/50"
               >
-                ✕
-              </button>
+                <option value="Keluarga Inti">Keluarga Inti</option>
+                <option value="Keluarga Besar">Keluarga Besar</option>
+                <option value="Sahabat">Sahabat</option>
+                <option value="Rekan Kerja">Rekan Kerja</option>
+                <option value="Tokoh Masyarakat">Tokoh Masyarakat</option>
+              </select>
             </div>
 
-            <form onSubmit={handleAddGuest} className="space-y-4 text-xs font-manrope">
-              <div>
-                <label className="block text-hk-charcoal font-semibold mb-1">
-                  Nama Tamu / Keluarga:
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Contoh: Bpk. Bambang Pamungkas & Istri"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe focus-visible:ring-2 focus-visible:ring-hk-charcoal bg-hk-ivory/50"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-hk-charcoal font-semibold mb-1">
-                    Kategori Tamu:
-                  </label>
-                  <select
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe focus-visible:ring-2 focus-visible:ring-hk-charcoal bg-hk-ivory/50"
-                  >
-                    <option value="Keluarga Inti">Keluarga Inti</option>
-                    <option value="Keluarga Besar">Keluarga Besar</option>
-                    <option value="Sahabat">Sahabat</option>
-                    <option value="Rekan Kerja">Rekan Kerja</option>
-                    <option value="Tokoh Masyarakat">Tokoh Masyarakat</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-hk-charcoal font-semibold mb-1">
-                    Estimasi Pax:
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={20}
-                    value={newPax}
-                    onChange={(e) => setNewPax(parseInt(e.target.value, 10))}
-                    className="w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe focus-visible:ring-2 focus-visible:ring-hk-charcoal bg-hk-ivory/50"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-hk-charcoal font-semibold mb-1">
-                  Sesi Acara Undangan:
-                </label>
-                <select
-                  value={newSession}
-                  onChange={(e) => setNewSession(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe focus-visible:ring-2 focus-visible:ring-hk-charcoal bg-hk-ivory/50"
-                >
-                  <option value="s1">Sesi 1: Akad &amp; Resepsi Pagi (08:00 - 11:30 WIB)</option>
-                  <option value="s2">Sesi 2: Resepsi Sore &amp; Ramah Tamah (13:00 - 16:30 WIB)</option>
-                </select>
-              </div>
-
-              <div className="pt-2 flex justify-end gap-2 border-t border-hk-champagne/30">
-                <button
-                  type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-full border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-soft-beige/40 cursor-pointer"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-full bg-hk-taupe text-white font-semibold hover:bg-[#78644e] transition-colors shadow-xs cursor-pointer"
-                >
-                  Tambahkan ke Daftar
-                </button>
-              </div>
-            </form>
+            <div>
+              <label htmlFor="guest-pax" className="block text-hk-charcoal font-semibold mb-1">
+                Estimasi Pax:
+              </label>
+              <input
+                id="guest-pax"
+                type="number"
+                min={1}
+                max={20}
+                value={newPax}
+                onChange={(e) => setNewPax(parseInt(e.target.value, 10))}
+                className="focus-ring w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe bg-hk-ivory/50"
+              />
+            </div>
           </div>
-        </div>
-      )}
+
+          <div>
+            <label htmlFor="guest-session" className="block text-hk-charcoal font-semibold mb-1">
+              Sesi Acara Undangan:
+            </label>
+            <select
+              id="guest-session"
+              value={newSession}
+              onChange={(e) => setNewSession(e.target.value)}
+              className="focus-ring w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe bg-hk-ivory/50"
+            >
+              <option value="s1">Sesi 1: Akad &amp; Resepsi Pagi (08:00 - 11:30 WIB)</option>
+              <option value="s2">Sesi 2: Resepsi Sore &amp; Ramah Tamah (13:00 - 16:30 WIB)</option>
+            </select>
+          </div>
+
+          <div className="pt-2 flex justify-end gap-2 border-t border-hk-champagne/30">
+            <button
+              type="button"
+              onClick={() => setShowAddModal(false)}
+              className="focus-ring px-4 py-2 rounded-full border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-soft-beige/40 cursor-pointer min-h-[44px]"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              className="focus-ring px-5 py-2 rounded-full bg-hk-taupe text-white font-semibold hover:bg-[#78644e] transition-colors shadow-xs cursor-pointer min-h-[44px]"
+            >
+              Tambahkan ke Daftar
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

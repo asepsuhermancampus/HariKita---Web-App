@@ -114,29 +114,45 @@ export const RsvpGuestbookForm: React.FC<RsvpGuestbookFormProps> = ({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {errorMessage && (
-                <div className="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs border border-rose-200">
-                  {errorMessage}
-                </div>
-              )}
+              <div aria-live="assertive" aria-atomic="true">
+                {errorMessage && (
+                  <div
+                    role="alert"
+                    className="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs border border-rose-200"
+                  >
+                    {errorMessage}
+                  </div>
+                )}
+              </div>
 
               {/* Name input */}
               <div className="space-y-1">
-                <label className="text-xs font-bold text-plum">Nama Lengkap</label>
+                <label htmlFor="rsvp-name" className="text-xs font-bold text-plum">
+                  Nama Lengkap
+                </label>
                 <input
+                  id="rsvp-name"
                   type="text"
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="Contoh: Bapak Joko & Keluarga"
-                  className="input input-sm w-full bg-[#FAF8F5] border border-gold/30 focus:border-gold rounded-xl text-plum"
+                  autoComplete="name"
+                  aria-invalid={errorMessage ? true : undefined}
+                  className="input input-sm w-full bg-[#FAF8F5] border border-gold/30 focus:border-gold rounded-xl text-plum focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum"
                   required
                 />
               </div>
 
               {/* Attendance Selection */}
               <div className="space-y-1">
-                <label className="text-xs font-bold text-plum">Konfirmasi Kehadiran</label>
-                <div className="grid grid-cols-3 gap-2">
+                <span className="text-xs font-bold text-plum" id="rsvp-attendance-label">
+                  Konfirmasi Kehadiran
+                </span>
+                <div
+                  className="grid grid-cols-3 gap-2"
+                  role="group"
+                  aria-labelledby="rsvp-attendance-label"
+                >
                   {[
                     { id: "hadir", label: "Hadir" },
                     { id: "tidak_hadir", label: "Tidak Hadir" },
@@ -146,7 +162,8 @@ export const RsvpGuestbookForm: React.FC<RsvpGuestbookFormProps> = ({
                       key={item.id}
                       type="button"
                       onClick={() => setAttendance(item.id)}
-                      className={`py-2 px-2 rounded-xl text-xs font-semibold border transition-all ${
+                      aria-pressed={attendance === item.id}
+                      className={`focus-ring py-2 px-2 rounded-xl text-xs font-semibold border transition-all min-h-[44px] ${
                         attendance === item.id
                           ? "gold-gradient-bg text-plum-dark border-gold shadow-sm font-bold"
                           : "bg-[#FAF8F5] border-gold/20 text-plum-light hover:bg-gold/10"
@@ -161,17 +178,22 @@ export const RsvpGuestbookForm: React.FC<RsvpGuestbookFormProps> = ({
               {/* Number of Pax */}
               {attendance === "hadir" && (
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-plum flex items-center justify-between">
+                  <label
+                    htmlFor="rsvp-pax"
+                    className="text-xs font-bold text-plum flex items-center justify-between"
+                  >
                     <span>Jumlah Tamu yang Hadir</span>
                     <span className="text-gold-dark font-mono font-bold">{paxCount} Orang</span>
                   </label>
                   <input
+                    id="rsvp-pax"
                     type="range"
                     min="1"
                     max="5"
                     value={paxCount}
                     onChange={(e) => setPaxCount(parseInt(e.target.value, 10))}
-                    className="range range-xs range-primary"
+                    aria-valuetext={`${paxCount} orang`}
+                    className="range range-xs range-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum"
                   />
                   <div className="w-full flex justify-between text-[10px] text-plum-light/70 px-1">
                     <span>1</span>
@@ -185,13 +207,17 @@ export const RsvpGuestbookForm: React.FC<RsvpGuestbookFormProps> = ({
 
               {/* Wishes Message */}
               <div className="space-y-1">
-                <label className="text-xs font-bold text-plum">Ucapan & Doa Restu</label>
+                <label htmlFor="rsvp-message" className="text-xs font-bold text-plum">
+                  Ucapan &amp; Doa Restu
+                </label>
                 <textarea
+                  id="rsvp-message"
                   rows={3}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Tuliskan doa restu untuk kedua mempelai..."
-                  className="textarea textarea-sm w-full bg-[#FAF8F5] border border-gold/30 focus:border-gold rounded-xl text-plum"
+                  aria-invalid={errorMessage ? true : undefined}
+                  className="textarea textarea-sm w-full bg-[#FAF8F5] border border-gold/30 focus:border-gold rounded-xl text-plum focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum"
                   required
                 />
               </div>
@@ -199,14 +225,15 @@ export const RsvpGuestbookForm: React.FC<RsvpGuestbookFormProps> = ({
               <button
                 type="submit"
                 disabled={isPending}
-                className="btn btn-sm w-full gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-md hover:brightness-105"
+                aria-busy={isPending}
+                className="btn btn-sm w-full gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-md hover:brightness-105 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum focus-visible:ring-offset-2"
               >
                 {isPending ? (
-                  <span className="loading loading-spinner loading-xs" />
+                  <span className="loading loading-spinner loading-xs" aria-label="Mengirim..." />
                 ) : (
                   <>
-                    <Send className="w-3.5 h-3.5 mr-1" />
-                    <span>Kirim Konfirmasi & Ucapan</span>
+                    <Send className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                    <span>Kirim Konfirmasi &amp; Ucapan</span>
                   </>
                 )}
               </button>

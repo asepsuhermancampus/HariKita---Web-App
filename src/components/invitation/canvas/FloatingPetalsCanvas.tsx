@@ -40,6 +40,13 @@ export const FloatingPetalsCanvas: React.FC<FloatingPetalsCanvasProps> = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Hormati preferensi pengguna yang sensitif gerakan (Phase 7 a11y):
+    // lewati animasi partikel sepenuhnya.
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
     let animationFrameId: number;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);

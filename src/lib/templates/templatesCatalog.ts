@@ -722,7 +722,7 @@ export const TEMPLATES_CATALOG: TemplateThemePreset[] = [
   },
 
   // ==========================================
-  // 5. ROSE GOLD (8 Presets)
+  // 5. ROSE GOLD (15 Presets — expanded collection)
   // ==========================================
   {
     id: "rose-gold",

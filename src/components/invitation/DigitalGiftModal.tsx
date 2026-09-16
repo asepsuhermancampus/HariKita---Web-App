@@ -74,7 +74,8 @@ export const DigitalGiftModal: React.FC<DigitalGiftModalProps> = ({
 
               <button
                 onClick={() => copyToClipboard(item.number, item.number)}
-                className="btn btn-xs w-full gold-gradient-bg text-plum-dark font-bold border-none rounded-full gap-2"
+                aria-label={`Salin nomor rekening Bank ${item.bank} a.n. ${item.holder}`}
+                className="btn btn-xs w-full gold-gradient-bg text-plum-dark font-bold border-none rounded-full gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum focus-visible:ring-offset-2"
               >
                 {copiedBank === item.number ? (
                   <>
@@ -88,6 +89,9 @@ export const DigitalGiftModal: React.FC<DigitalGiftModalProps> = ({
                   </>
                 )}
               </button>
+              <span role="status" aria-live="polite" className="sr-only">
+                {copiedBank === item.number ? `Nomor rekening Bank ${item.bank} tersalin` : ""}
+              </span>
             </div>
           ))}
         </div>
@@ -104,7 +108,7 @@ export const DigitalGiftModal: React.FC<DigitalGiftModalProps> = ({
             </p>
             <button
               onClick={copyAddress}
-              className="btn btn-xs border border-gold/40 text-plum font-bold rounded-full gap-2 hover:bg-gold/15"
+              className="btn btn-xs border border-gold/40 text-plum font-bold rounded-full gap-2 hover:bg-gold/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum focus-visible:ring-offset-2"
             >
               {copiedAddress ? (
                 <>
@@ -118,6 +122,9 @@ export const DigitalGiftModal: React.FC<DigitalGiftModalProps> = ({
                 </>
               )}
             </button>
+            <span role="status" aria-live="polite" className="sr-only">
+              {copiedAddress ? "Alamat pengiriman kado tersalin" : ""}
+            </span>
           </div>
         )}
       </div>
