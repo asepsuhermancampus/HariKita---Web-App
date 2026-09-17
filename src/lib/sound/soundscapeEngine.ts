@@ -3,11 +3,15 @@
 // Zero-latency, 0 KB external audio asset dependencies, works completely offline
 // ============================================================================
 
+import { getPalette, type SfxPalette, type SfxPaletteId } from "./audioCatalog";
+
 class SoundscapeEngine {
   private ctx: AudioContext | null = null;
   private muted: boolean = true;
   private volume: number = 0.4;
   private listeners: Set<(muted: boolean) => void> = new Set();
+  private paletteId: SfxPaletteId = "romantic-harp";
+  private palette: SfxPalette = getPalette("romantic-harp")!;
 
   constructor() {
     this.muted = true;
@@ -57,6 +61,18 @@ class SoundscapeEngine {
     return () => this.listeners.delete(fn);
   }
 
+  // Ganti palette SFX yang aktif (romantic-harp | royal-gamelan | modern-pop | gentle-nature)
+  public setPalette(id: SfxPaletteId): void {
+    const next = getPalette(id);
+    if (!next) return; // abaikan id tak dikenal, pertahankan palette sebelumnya
+    this.paletteId = id;
+    this.palette = next;
+  }
+
+  public getPaletteId(): SfxPaletteId {
+    return this.paletteId;
+  }
+
   // 1. Cover Card Open Sound (Paper friction / wax seal break + harmonic harp chord)
   public playCoverOpen(): void {
     if (this.muted) return;
@@ -94,22 +110,20 @@ class SoundscapeEngine {
       // Noise buffer fallback
     }
 
-    // B. Romantic harp glissando chord (C5, E5, G5, B5, C6)
-    const notes = [523.25, 659.25, 783.99, 987.77, 1046.5];
+    // B. Chord glissando mengikuti palette aktif
+    const notes = this.palette.chord.intervals.map((semitones) =>
+      this.palette.chord.base * Math.pow(2, semitones / 12),
+    );
     notes.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-
-      osc.type = "sine";
+      osc.type = this.palette.chord.waveform;
       osc.frequency.setValueAtTime(freq, now + idx * 0.04);
-
       gain.gain.setValueAtTime(0.001, now + idx * 0.04);
       gain.gain.linearRampToValueAtTime(this.volume * 0.25, now + idx * 0.04 + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.04 + 0.8);
-
       osc.connect(gain);
       gain.connect(ctx.destination);
-
       osc.start(now + idx * 0.04);
       osc.stop(now + idx * 0.04 + 0.85);
     });
@@ -125,18 +139,20 @@ class SoundscapeEngine {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(2400, now);
-    osc.frequency.exponentialRampToValueAtTime(600, now + 0.025);
-
+    osc.type = this.palette.tick.waveform;
+    osc.frequency.setValueAtTime(this.palette.tick.freqA, now);
+    osc.frequency.exponentialRampToValueAtTime(
+      this.palette.tick.freqB,
+      now + this.palette.tick.decayMs / 1000,
+    );
     gain.gain.setValueAtTime(this.volume * 0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + this.palette.tick.decayMs / 1000);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.03);
+    osc.stop(now + this.palette.tick.decayMs / 1000 + 0.005);
   }
 
   // 3. Gentle Crystal Chime (Section entered, modal open)
@@ -146,17 +162,17 @@ class SoundscapeEngine {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const freqs = [880, 1318.51, 1760]; // A5, E6, A6
+    const freqs = this.palette.chime.freqs;
 
     freqs.forEach((f, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
-      osc.type = "sine";
+      osc.type = this.palette.chime.waveform;
       osc.frequency.setValueAtTime(f, now + i * 0.03);
 
       gain.gain.setValueAtTime(this.volume * 0.2, now + i * 0.03);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.03 + 0.6);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.03 + this.palette.chime.decayMs / 1000);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -241,18 +257,16 @@ class SoundscapeEngine {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const partials = [
-      { freq: 580, gain: 0.3 },
-      { freq: 920, gain: 0.2 },
-      { freq: 1350, gain: 0.15 },
-      { freq: 1820, gain: 0.08 },
-    ];
+    const partials = this.palette.chord.intervals.map((semitones, i) => ({
+      freq: this.palette.chord.base * Math.pow(2, semitones / 12),
+      gain: [0.3, 0.2, 0.15, 0.08, 0.05][i] ?? 0.05,
+    }));
 
     partials.forEach((p) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
-      osc.type = "sine";
+      osc.type = this.palette.chord.waveform;
       osc.frequency.setValueAtTime(p.freq, now);
 
       gain.gain.setValueAtTime(this.volume * p.gain, now);
