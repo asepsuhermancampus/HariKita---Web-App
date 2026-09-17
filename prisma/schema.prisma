@@ -59,6 +59,10 @@ model VendorProfile {
   walletBalance  Int                  @default(0) // Integer Rupiah
   isVerified     Boolean              @default(true)
 
+  // Status Kurasi/Verifikasi Vendor
+  verificationStatus String           @default("APPROVED") // "PENDING", "APPROVED", "REJECTED"
+  verificationNote   String?          // Catatan revisi/penolakan Super Admin
+
   // Statistik & Multi-Tier Analytics
   viewsGuest     Int                  @default(142) // Dilihat pengunjung belum memiliki akun
   viewsAuth      Int                  @default(58)  // Dilihat klien terdaftar (memiliki akun)
