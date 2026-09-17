@@ -14,6 +14,7 @@ import {
   Star,
 } from "lucide-react";
 import { approveVendorAction, rejectVendorAction } from "@/server/actions/admin";
+import { Modal } from "@/components/harikita/ui";
 import type { VendorVerificationDTO } from "@/server/queries/admin";
 
 /**
@@ -27,6 +28,9 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
   const [message, setMessage] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<"PENDING" | "APPROVED" | "REJECTED" | "ALL">("PENDING");
   const [searchQuery, setSearchQuery] = useState("");
+  // Modal penolakan aksesibel (menggantikan window.prompt yang tidak accessible).
+  const [rejectTarget, setRejectTarget] = useState<VendorVerificationDTO | null>(null);
+  const [rejectNote, setRejectNote] = useState("");
 
   const vendors = dbVendors;
 
@@ -39,16 +43,29 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
     });
   };
 
-  const handleReject = (id: string) => {
-    const note =
-      typeof window !== "undefined"
-        ? window.prompt("Alasan revisi/penolakan (opsional):") ?? "Berkas belum lengkap."
-        : "Berkas belum lengkap.";
+  const openRejectModal = (vendor: VendorVerificationDTO) => {
+    setMessage(null);
+    setRejectNote(vendor.verificationNote ?? "");
+    setRejectTarget(vendor);
+  };
+
+  const closeRejectModal = () => {
+    setRejectTarget(null);
+    setRejectNote("");
+  };
+
+  const confirmReject = () => {
+    if (!rejectTarget) return;
+    const id = rejectTarget.id;
+    const note = rejectNote.trim() || "Berkas belum lengkap.";
     setMessage(null);
     startTransition(async () => {
       const res = await rejectVendorAction({ vendorId: id, note });
       if (!res.success) setMessage(res.message || "Gagal menolak vendor.");
-      else router.refresh();
+      else {
+        closeRejectModal();
+        router.refresh();
+      }
     });
   };
 
@@ -95,7 +112,7 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
                 key={f}
                 onClick={() => setActiveFilter(f)}
                 aria-pressed={activeFilter === f}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`focus-ring px-3 py-1.5 rounded-xl text-xs font-semibold transition-all min-h-[36px] ${
                   activeFilter === f ? "bg-[#4A2E35] text-white" : "text-[#6B5E62] hover:text-[#4A2E35]"
                 }`}
               >
@@ -111,21 +128,27 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
           </div>
           <div className="relative w-full sm:w-60">
             <Search className="w-3.5 h-3.5 text-[#6B5E62] absolute left-3 top-2.5" aria-hidden="true" />
+            <label htmlFor="vendor-verify-search" className="sr-only">
+              Cari nama vendor atau kecamatan
+            </label>
             <input
+              id="vendor-verify-search"
               type="search"
               placeholder="Cari nama / kecamatan..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
+              className="focus-ring w-full pl-8 pr-3 py-1.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
             />
           </div>
         </div>
 
-        {message && (
-          <div role="alert" className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
-            <AlertCircle className="w-4 h-4" /> <span>{message}</span>
-          </div>
-        )}
+        <div aria-live="polite" aria-atomic="true">
+          {message && (
+            <div role="alert" className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+              <AlertCircle className="w-4 h-4" aria-hidden="true" /> <span>{message}</span>
+            </div>
+          )}
+        </div>
 
         {/* List */}
         <div className="space-y-4">
@@ -155,7 +178,7 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
                           : "bg-amber-50 text-amber-800 border border-amber-200"
                       }`}
                     >
-                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
                       {isApproved ? "Terverifikasi" : isRejected ? "Ditolak / Revisi" : "Menunggu Pemeriksaan"}
                     </span>
                   </div>
@@ -165,11 +188,11 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
                       <h3 className="font-serif text-lg font-bold text-[#4A2E35]">{v.businessName}</h3>
                       <div className="text-[#C5A880] font-semibold">Kategori: {v.category}</div>
                       <div className="flex items-center gap-1.5 text-[#6B5E62]">
-                        <MapPin className="w-3.5 h-3.5 text-[#C5A880]" />
+                        <MapPin className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" />
                         <span>Kecamatan {v.district}, Kebumen</span>
                       </div>
                       <div className="flex items-start gap-1.5 text-[#6B5E62] pt-1">
-                        <Building className="w-3.5 h-3.5 text-[#C5A880] mt-0.5" />
+                        <Building className="w-3.5 h-3.5 text-[#C5A880] mt-0.5" aria-hidden="true" />
                         <span>Alamat: {v.address}</span>
                       </div>
                     </div>
@@ -177,7 +200,7 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
                     <div className="space-y-1.5 text-[#6B5E62] p-3 rounded-xl bg-[#FAF8F5] border border-[#E5D7C7]">
                       <div>PIC: <strong className="text-[#4A2E35]">{v.picName ?? "-"}</strong></div>
                       <div className="flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 text-[#C5A880]" />
+                        <Star className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" />
                         <span>{v.rating.toFixed(1)} ({v.reviewCount} ulasan)</span>
                       </div>
                       {v.igHandle && <div>IG: <strong className="text-[#4A2E35]">{v.igHandle}</strong></div>}
@@ -192,19 +215,20 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
                       <button
                         onClick={() => handleApprove(v.id)}
                         disabled={isPending}
-                        className="px-4 py-2 rounded-xl bg-[#4A2E35] text-white hover:bg-[#6B5E62] text-xs font-semibold flex items-center gap-1.5 shadow-sm disabled:opacity-50"
+                        aria-busy={isPending}
+                        className="focus-ring px-4 py-2 rounded-xl bg-[#4A2E35] text-white hover:bg-[#6B5E62] text-xs font-semibold flex items-center gap-1.5 shadow-sm disabled:opacity-50 min-h-[44px]"
                       >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A880]" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" />
                         Setujui &amp; Terbitkan
                       </button>
                     )}
                     {!isRejected && (
                       <button
-                        onClick={() => handleReject(v.id)}
+                        onClick={() => openRejectModal(v)}
                         disabled={isPending}
-                        className="px-3.5 py-2 rounded-xl border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50"
+                        className="focus-ring px-3.5 py-2 rounded-xl border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50 min-h-[44px]"
                       >
-                        <XCircle className="w-3.5 h-3.5" /> Tolak / Minta Revisi
+                        <XCircle className="w-3.5 h-3.5" aria-hidden="true" /> Tolak / Minta Revisi
                       </button>
                     )}
                   </div>
@@ -214,6 +238,62 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
           )}
         </div>
       </div>
+
+      {/* Modal Tolak / Minta Revisi (aksesibel, menggantikan window.prompt) */}
+      <Modal
+        isOpen={!!rejectTarget}
+        onClose={closeRejectModal}
+        title="Tolak / Minta Revisi Mitra"
+        size="md"
+        footer={
+          <>
+            <button
+              type="button"
+              onClick={closeRejectModal}
+              disabled={isPending}
+              className="focus-ring inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#E5D7C7] px-5 py-2 text-xs font-semibold text-[#4A2E35] transition-colors hover:bg-[#FAF8F5] disabled:opacity-50"
+            >
+              Batal
+            </button>
+            <button
+              type="button"
+              onClick={confirmReject}
+              disabled={isPending}
+              aria-busy={isPending}
+              className="focus-ring inline-flex min-h-[44px] items-center justify-center rounded-full bg-red-700 px-5 py-2 text-xs font-semibold text-white transition-colors hover:bg-red-800 disabled:opacity-50"
+            >
+              {isPending ? "Memproses..." : "Kirim Penolakan"}
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-3 font-manrope text-xs text-[#4A2E35]">
+          {rejectTarget && (
+            <p>
+              Anda akan menolak / meminta revisi vendor{" "}
+              <strong>{rejectTarget.businessName}</strong>. Sertakan catatan agar mitra dapat
+              memperbaiki berkasnya.
+            </p>
+          )}
+          <div className="space-y-1">
+            <label htmlFor="reject-note" className="block font-semibold">
+              Catatan Revisi / Alasan Penolakan
+            </label>
+            <textarea
+              id="reject-note"
+              rows={3}
+              value={rejectNote}
+              onChange={(e) => setRejectNote(e.target.value)}
+              placeholder="Contoh: Foto portofolio belum lengkap dan NIK KTP tidak terbaca."
+              className="focus-ring w-full p-2.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
+              autoFocus
+            />
+            <p className="text-[10px] text-[#6B5E62]">
+              Kosongkan untuk memakai catatan bawaan "Berkas belum lengkap."
+            </p>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -45,12 +45,16 @@ export function AdminAuditKontenClient({ dbFindings }: { dbFindings: ContentAudi
         {/* Search */}
         <div className="relative bg-white p-3 rounded-2xl border border-[#C5A880]/30 shadow-sm">
           <Search className="w-3.5 h-3.5 text-[#6B5E62] absolute left-6 top-5" aria-hidden="true" />
+          <label htmlFor="audit-search" className="sr-only">
+            Cari nama vendor atau tipe pelanggaran
+          </label>
           <input
+            id="audit-search"
             type="search"
             placeholder="Cari nama vendor / tipe pelanggaran..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
+            className="focus-ring w-full pl-8 pr-3 py-2 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
           />
         </div>
 
@@ -58,7 +62,7 @@ export function AdminAuditKontenClient({ dbFindings }: { dbFindings: ContentAudi
         <div className="space-y-3">
           {findings.length === 0 ? (
             <div className="p-8 rounded-2xl bg-white border border-[#C5A880]/30 text-center text-[#6B5E62] text-xs">
-              <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+              <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-2" aria-hidden="true" />
               Tidak ada temuan kebocoran kontak pada konten yang tersimpan.
             </div>
           ) : (
@@ -67,7 +71,7 @@ export function AdminAuditKontenClient({ dbFindings }: { dbFindings: ContentAudi
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#FAF8F5]">
                   <div className="flex items-center gap-2.5">
                     <span className="w-8 h-8 rounded-lg bg-red-100 text-red-800 flex items-center justify-center">
-                      <ShieldAlert className="w-4 h-4" />
+                      <ShieldAlert className="w-4 h-4" aria-hidden="true" />
                     </span>
                     <div>
                       <strong className="text-[#4A2E35] text-sm block">{f.owner}</strong>
@@ -75,7 +79,7 @@ export function AdminAuditKontenClient({ dbFindings }: { dbFindings: ContentAudi
                     </div>
                   </div>
                   <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full bg-red-50 text-red-800 border border-red-200 font-semibold">
-                    <AlertTriangle className="w-3 h-3" /> Terdeteksi
+                    <AlertTriangle className="w-3 h-3" aria-hidden="true" /> Terdeteksi
                   </span>
                 </div>
                 <div className="text-xs text-[#6B5E62] leading-relaxed">
@@ -83,7 +87,7 @@ export function AdminAuditKontenClient({ dbFindings }: { dbFindings: ContentAudi
                   &ldquo;{f.snippet}&rdquo;
                 </div>
                 <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-                  <Lock className="w-3 h-3 text-red-600" />
+                  <Lock className="w-3 h-3 text-red-600" aria-hidden="true" />
                   <span className="text-[#6B5E62]">Kata kunci tersensor:</span>
                   {f.matches.slice(0, 5).map((m, i) => (
                     <span key={i} className="px-2 py-0.5 rounded bg-red-50 text-red-800 border border-red-200 font-mono">

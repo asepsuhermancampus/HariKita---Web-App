@@ -79,25 +79,30 @@ export function AdminDisputeClient({ dbDisputes }: { dbDisputes: DisputeAdminDTO
         {/* Filter */}
         <div className="flex flex-wrap items-center gap-2 bg-white p-3 rounded-2xl border border-[#C5A880]/30 shadow-sm">
           <Filter className="w-4 h-4 text-[#C5A880]" aria-hidden="true" />
-          {(["OPEN", "UNDER_REVIEW", "RESOLVED", "REJECTED", "ALL"] as const).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              aria-pressed={filter === f}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                filter === f ? "bg-[#4A2E35] text-white" : "text-[#6B5E62] hover:text-[#4A2E35]"
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          <span className="sr-only" id="dispute-filter-label">Filter status sengketa</span>
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-labelledby="dispute-filter-label">
+            {(["OPEN", "UNDER_REVIEW", "RESOLVED", "REJECTED", "ALL"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                aria-pressed={filter === f}
+                className={`focus-ring px-3 py-1.5 rounded-xl text-xs font-semibold transition-all min-h-[36px] ${
+                  filter === f ? "bg-[#4A2E35] text-white" : "text-[#6B5E62] hover:text-[#4A2E35]"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {message && (
-          <div role="alert" className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
-            <AlertTriangle className="w-4 h-4" /> <span>{message}</span>
-          </div>
-        )}
+        <div aria-live="polite" aria-atomic="true">
+          {message && (
+            <div role="alert" className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-800">
+              <AlertTriangle className="w-4 h-4" aria-hidden="true" /> <span>{message}</span>
+            </div>
+          )}
+        </div>
 
         {/* List */}
         <div className="space-y-4">
@@ -128,7 +133,7 @@ export function AdminDisputeClient({ dbDisputes }: { dbDisputes: DisputeAdminDTO
                           : "bg-red-50 text-red-800 border border-red-200"
                       }`}
                     >
-                      <ShieldAlert className="w-3.5 h-3.5" />
+                      <ShieldAlert className="w-3.5 h-3.5" aria-hidden="true" />
                       {d.status}
                     </span>
                   </div>
@@ -162,19 +167,24 @@ export function AdminDisputeClient({ dbDisputes }: { dbDisputes: DisputeAdminDTO
 
                   {!isFinal && (
                     <div className="space-y-3 pt-2 border-t border-[#FAF8F5]">
+                      <label htmlFor={`resolution-${d.id}`} className="sr-only">
+                        Catatan resolusi untuk order {d.orderNumber}
+                      </label>
                       <textarea
+                        id={`resolution-${d.id}`}
                         rows={2}
                         value={resolutionInput[d.id] ?? ""}
                         onChange={(e) => setResolutionInput((p) => ({ ...p, [d.id]: e.target.value }))}
                         placeholder="Catatan resolusi (wajib sebelum memutuskan)..."
-                        className="w-full p-2.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
+                        className="focus-ring w-full p-2.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
                       />
                       <div className="flex flex-wrap justify-end gap-2">
                         {d.status === "OPEN" && (
                           <button
                             onClick={() => handleReview(d.id)}
                             disabled={isPending}
-                            className="px-3.5 py-2 rounded-xl border border-blue-200 text-blue-700 hover:bg-blue-50 text-xs font-semibold disabled:opacity-50"
+                            aria-busy={isPending}
+                            className="focus-ring px-3.5 py-2 rounded-xl border border-blue-200 text-blue-700 hover:bg-blue-50 text-xs font-semibold disabled:opacity-50 min-h-[44px]"
                           >
                             Tinjau
                           </button>
@@ -182,16 +192,18 @@ export function AdminDisputeClient({ dbDisputes }: { dbDisputes: DisputeAdminDTO
                         <button
                           onClick={() => handleResolve(d.id, false)}
                           disabled={isPending}
-                          className="px-3.5 py-2 rounded-xl border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50"
+                          aria-busy={isPending}
+                          className="focus-ring px-3.5 py-2 rounded-xl border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50 min-h-[44px]"
                         >
-                          <XCircle className="w-3.5 h-3.5" /> Tolak (kembali operasional)
+                          <XCircle className="w-3.5 h-3.5" aria-hidden="true" /> Tolak (kembali operasional)
                         </button>
                         <button
                           onClick={() => handleResolve(d.id, true)}
                           disabled={isPending}
-                          className="px-4 py-2 rounded-xl bg-[#4A2E35] text-white hover:bg-[#6B5E62] text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50"
+                          aria-busy={isPending}
+                          className="focus-ring px-4 py-2 rounded-xl bg-[#4A2E35] text-white hover:bg-[#6B5E62] text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50 min-h-[44px]"
                         >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A880]" /> Setujui (arahkan refund)
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" /> Setujui (arahkan refund)
                         </button>
                       </div>
                     </div>
@@ -199,17 +211,17 @@ export function AdminDisputeClient({ dbDisputes }: { dbDisputes: DisputeAdminDTO
 
                   {isFinal && (
                     <div className="text-xs text-[#6B5E62] flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-[#C5A880]" />
-                      Sengketa selesai — {d.status}.
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-1.5 text-[11px] text-[#6B5E62]">
-                    <MessageCircle className="w-3.5 h-3.5 text-[#C5A880]" />
-                    <Link href={`/admin/escrow`} className="hover:underline">
-                      Buka Otorisasi Escrow
-                    </Link>
+                    <Clock className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" />
+                    Sengketa selesai — {d.status}.
                   </div>
+                )}
+
+                <div className="flex items-center gap-1.5 text-[11px] text-[#6B5E62]">
+                  <MessageCircle className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" />
+                  <Link href={`/admin/escrow`} className="focus-ring rounded hover:underline">
+                    Buka Otorisasi Escrow
+                  </Link>
+                </div>
                 </div>
               );
             })

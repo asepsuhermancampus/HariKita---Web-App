@@ -86,41 +86,47 @@ export default function SuperAdminPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-gold/20 pb-2">
+      <div role="tablist" aria-label="Navigasi panel admin" className="flex flex-wrap items-center gap-2 border-b border-gold/20 pb-2">
         <button
+          role="tab"
+          aria-selected={activeTab === "funnel"}
           onClick={() => setActiveTab("funnel")}
-          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${
+          className={`focus-ring px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 min-h-[44px] ${
             activeTab === "funnel"
               ? "gold-gradient-bg text-plum-dark shadow-sm"
               : "text-plum-light hover:bg-gold/10"
           }`}
         >
-          <BarChart3 className="w-4 h-4" />
+          <BarChart3 className="w-4 h-4" aria-hidden="true" />
           <span>Master 10-Tahapan Funnel Konversi</span>
         </button>
 
         <button
+          role="tab"
+          aria-selected={activeTab === "calendar"}
           onClick={() => setActiveTab("calendar")}
-          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${
+          className={`focus-ring px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 min-h-[44px] ${
             activeTab === "calendar"
               ? "gold-gradient-bg text-plum-dark shadow-sm"
               : "text-plum-light hover:bg-gold/10"
           }`}
         >
-          <Calendar className="w-4 h-4" />
+          <Calendar className="w-4 h-4" aria-hidden="true" />
           <span>Master Kalender Multi-Vendor Se-Kebumen</span>
         </button>
 
         <button
+          role="tab"
+          aria-selected={activeTab === "escrow"}
           onClick={() => setActiveTab("escrow")}
-          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${
+          className={`focus-ring px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 min-h-[44px] ${
             activeTab === "escrow"
               ? "gold-gradient-bg text-plum-dark shadow-sm"
               : "text-plum-light hover:bg-gold/10"
           }`}
         >
-          <CheckCircle2 className="w-4 h-4" />
-          <span>Kliring & Settlement Rekening Bersama</span>
+          <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+          <span>Kliring &amp; Settlement Rekening Bersama</span>
         </button>
       </div>
 
