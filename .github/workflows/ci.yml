@@ -20,6 +20,7 @@ jobs:
       # Skema produksi = PostgreSQL; validate butuh URL berformat postgres.
       # Test memakai SQLite temporer (schema.sqlite.prisma) — tidak butuh koneksi nyata.
       DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/harikita?schema=public"
+      DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/harikita?schema=public"
       HARIKITA_PAYMENT_PROVIDER: "simulated_qris"
       HARIKITA_CRON_SECRET: "ci-cron-secret"
       NEXT_TELEMETRY_DISABLED: "1"
