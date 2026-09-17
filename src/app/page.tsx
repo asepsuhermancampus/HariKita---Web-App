@@ -27,7 +27,6 @@ import {
 } from "lucide-react";
 import {
   DecorativeDivider,
-  WaxSealBadge,
 } from "@/components/harikita/ui";
 import dynamic from "next/dynamic";
 import type { VendorPortfolioData } from "@/components/home/VendorPortfolioModal";
@@ -772,7 +771,7 @@ export default function HomePage() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
-                <span>Multi-Sesi URL (?sesi=s1, s2)</span>
+                <span>Pembagian Sesi Tamu (Akad &amp; Resepsi)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
@@ -807,9 +806,6 @@ export default function HomePage() {
 
           {/* Interactive Card Preview */}
           <div className="lg:col-span-6 relative">
-            {/* Wax Seal Overlay Badge */}
-            <WaxSealBadge size="lg" className="absolute -top-4 -right-4 z-20 shadow-md hidden sm:inline-flex" />
-
             <div className="relative mx-auto w-full max-w-md h-[470px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white transition-all duration-300">
               <Image
                 src={currentArchetype.image}
