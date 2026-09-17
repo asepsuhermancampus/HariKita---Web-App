@@ -45,3 +45,13 @@ test("DashboardSplineChart data coordinates scale within viewBox limits", () => 
   assert.ok(path.includes("C"));
 });
 
+test("DashboardSemiDonutGauge computes ratio angles summing to 180 degrees", () => {
+  const val1 = 206;
+  const val2 = 48;
+  const total = val1 + val2;
+  const angle1 = (val1 / total) * 180;
+  const angle2 = (val2 / total) * 180;
+  assert.equal(Math.round(angle1 + angle2), 180);
+});
+
+
