@@ -29,6 +29,9 @@
   --color-plum-light: #6B5E62;
   --color-plum-dark: #1F1F1F;
   --color-rose-sand: #C9A88A;
+
+  /* Brand Default Ring Color (Warm Taupe Brown instead of Tailwind default blue) */
+  --tw-ring-color: rgb(136 115 91 / 0.35);
 }
 
 body {

@@ -11,12 +11,12 @@ const config: Config = {
     extend: {
       colors: {
         hk: {
-          canvas: "var(--hk-canvas)",
-          ivory: "var(--hk-ivory)",
-          "soft-beige": "var(--hk-soft-beige)",
-          charcoal: "var(--hk-charcoal)",
-          taupe: "var(--hk-taupe)",
-          champagne: "var(--hk-champagne)",
+          canvas: "#FAF8F5",
+          ivory: "#F8F6F1",
+          "soft-beige": "#E8DED1",
+          charcoal: "#2B2B2B",
+          taupe: "#88735B",
+          champagne: "#C9A88A",
         },
         canvas: "#FAF8F5",
         "canvas-subtle": "#F3EDE6",
