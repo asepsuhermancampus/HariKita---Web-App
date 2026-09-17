@@ -167,25 +167,72 @@ const KEBUMEN_SERVICES: ServiceItem[] = [
   },
 ];
 
+// Mapping categoryId katalog (mis. "prewed") → service ID (KEBUMEN_SERVICES).
+const categoryToServiceMap: Record<string, string> = {
+  prewed: "prewed-1",
+  busana: "busana-1",
+  mua: "mua-1",
+  seserahan: "seserahan-1",
+  foto: "foto-1",
+  dekor: "dekor-1",
+  katering: "katering-1",
+  cake: "cake-1",
+  souvenir: "souvenir-1",
+  undangan: "undangan-1",
+  denah: "denah-1",
+};
+
+// Mapping vendor catalog ID (mis. "v_prewed_01") → service ID (KEBUMEN_SERVICES).
+const vendorToServiceMap: Record<string, string> = {
+  "v_prewed_01": "prewed-1",    // Menganti Cinematic & Studio
+  "v_prewed_02": "prewed-1",    // Lensa Walet Studio & Outdoor
+  "v_busana_01": "busana-1",    // Griya Busana Rarasati
+  "v_mua_01": "mua-1",          // Alula MUA & Hijab Styling
+  "v_seserahan_01": "seserahan-1", // Hantaran Lestari Kebumen
+  "v_foto_01": "foto-1",        // Pradana Cinema & Story
+  "v_dekor_01": "dekor-1",      // Asmara Flora & Pelaminan
+  "v_katering_01": "katering-1", // Dapur Rasa Boga Kebumen
+  "v_cake_01": "cake-1",        // L'Aura Patisserie & Cakes
+  "v_souvenir_01": "souvenir-1", // Kriya Anyam Gombong
+  "v_undangan_01": "undangan-1", // HariKita Digital & Print
+  "v_denah_01": "denah-1",      // Denah Kita Kartun Estetik
+};
+
 export default function MixMatchBuilderPage() {
-  // State: selected items map
-  const [selectedItems, setSelectedItems] = useState<{ [id: string]: { count?: number } }>({
-    "busana-1": { count: 1 },
-    "mua-1": { count: 1 },
-    "katering-1": { count: 100 },
-    "undangan-1": { count: 1 },
-  });
+  // State: selected items map (awal kosong — diisi hanya bila akses via tombol "Pilih Layanan").
+  const [selectedItems, setSelectedItems] = useState<{ [id: string]: { count?: number } }>({});
 
   // State: selected theme for digital invitation
-  const [selectedThemeId, setSelectedThemeId] = useState("autumnelle");
+  const [selectedThemeId, setSelectedThemeId] = useState("");
 
+  // Baca parameter URL: auto-pilih layanan vendor (dari tombol "Pilih Layanan") & tema undangan.
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const themeFromUrl = params.get("selectedTheme");
-      if (themeFromUrl && ALL_INVITATION_TEMPLATES.some((t) => t.id === themeFromUrl)) {
-        setSelectedThemeId(themeFromUrl);
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+
+    // 1) Auto-pilih layanan bila akses via /builder?cat=<categoryId|vendorId> atau /builder?vendor=<vendorId>.
+    //    - `vendor` = ID vendor katalog (mis. "v_prewed_01")
+    //    - `cat`    = ID kategori (mis. "prewed") ATAU ID vendor (fallback kompatibilitas)
+    const vendorParam = params.get("vendor");
+    const catParam = params.get("cat");
+
+    const serviceId =
+      (vendorParam && vendorToServiceMap[vendorParam]) ||
+      (catParam && (categoryToServiceMap[catParam] || vendorToServiceMap[catParam])) ||
+      null;
+
+    if (serviceId) {
+      const service = KEBUMEN_SERVICES.find((s) => s.id === serviceId);
+      if (service) {
+        setSelectedItems({ [serviceId]: { count: service.defaultUnit || 1 } });
       }
+    }
+
+    // 2) Set tema undangan bila datang dari halaman undangan (/builder?selectedTheme=<themeId>).
+    const themeFromUrl = params.get("selectedTheme");
+    if (themeFromUrl && ALL_INVITATION_TEMPLATES.some((t) => t.id === themeFromUrl)) {
+      setSelectedThemeId(themeFromUrl);
     }
   }, []);
 
@@ -484,6 +531,9 @@ export default function MixMatchBuilderPage() {
                           onChange={(e) => setSelectedThemeId(e.target.value)}
                           className="select select-xs bg-[#FAF8F5] border-gold/30 text-plum font-semibold rounded-lg max-w-[200px]"
                         >
+                          <option value="" disabled>
+                            -- Pilih desain undangan --
+                          </option>
                           {ALL_INVITATION_TEMPLATES.map((t) => (
                             <option key={t.id} value={t.id}>
                               {t.title} ({t.category})
@@ -491,7 +541,7 @@ export default function MixMatchBuilderPage() {
                           ))}
                         </select>
                         <Link
-                          href={`/undangan/demo?theme=${selectedThemeId}`}
+                          href={`/undangan/demo?theme=${selectedThemeId || "autumnelle"}`}
                           target="_blank"
                           className="text-[11px] text-gold-dark hover:underline font-bold"
                         >
