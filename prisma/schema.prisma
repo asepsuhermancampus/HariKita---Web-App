@@ -464,6 +464,8 @@ model DigitalInvitation {
   liveStreamUrl String?
   igFilterUrl   String?
   musicUrl      String?
+  backsoundTrackId String?  // NEW — catalog track id (CC0 backsound)
+  sfxPaletteId     String?  // NEW — SfxPalette.id
   storyTimeline String?    // JSON string array
   bankAccounts  String?    // JSON string array
   giftAddress   String?
