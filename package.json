@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "node scripts/dev_runner.js",
     "dev:next": "next dev",
+    "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true}); console.log('.next cache dibersihkan')\"",
+    "dev:clean": "npm run clean && npm run dev",
     "prebuild": "node scripts/generate_asset_manifest.js && node scripts/verify_assets_complete.js",
     "build": "next build",
     "start": "next start",

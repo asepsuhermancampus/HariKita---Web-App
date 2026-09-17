@@ -19,7 +19,6 @@ const PUBLIC_STATIC_ROUTES: Array<{
   { path: "/undangan", changeFrequency: "weekly", priority: 0.9 },
   { path: "/builder", changeFrequency: "monthly", priority: 0.8 },
   { path: "/help", changeFrequency: "monthly", priority: 0.6 },
-  { path: "/help/faq", changeFrequency: "monthly", priority: 0.6 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.6 },
   { path: "/legal/privacy", changeFrequency: "yearly", priority: 0.4 },
   { path: "/legal/terms", changeFrequency: "yearly", priority: 0.4 },
