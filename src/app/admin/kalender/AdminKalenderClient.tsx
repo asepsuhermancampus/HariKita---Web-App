@@ -201,10 +201,10 @@ export function AdminMasterKalenderPage({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="text-xs text-[#6B5E62] flex items-center gap-1 mb-1">
-              <Link href="/admin" className="hover:text-[#4A2E35]">
+              <Link href="/admin" className="focus-ring rounded hover:text-[#4A2E35]">
                 Super Admin
               </Link>
-              <span>/</span>
+              <span aria-hidden="true">/</span>
               <span className="text-[#4A2E35] font-medium">Master Kalender Kebumen</span>
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A2E35]">
@@ -218,9 +218,9 @@ export function AdminMasterKalenderPage({
           <div className="flex items-center gap-2">
             <Link
               href="/hub-koordinasi"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4A2E35] text-white text-xs font-semibold hover:bg-[#6B5E62] transition-colors shadow-sm"
+              className="focus-ring inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4A2E35] text-white text-xs font-semibold hover:bg-[#6B5E62] transition-colors shadow-sm min-h-[44px]"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#C5A880]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" />
               Buka Visual Radar 9Router
             </Link>
           </div>
@@ -256,7 +256,7 @@ export function AdminMasterKalenderPage({
               {formatRupiah(totalEscrowManaged)}
             </div>
             <span className="text-[10px] text-emerald-600 flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3" /> Rekening Bersama Aman
+              <ShieldCheck className="w-3 h-3" aria-hidden="true" /> Rekening Bersama Aman
             </span>
           </div>
         </div>
@@ -264,12 +264,13 @@ export function AdminMasterKalenderPage({
         {/* Filter by District & Search */}
         <div className="bg-white p-4 rounded-2xl border border-[#C5A880]/30 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Filter className="w-4 h-4 text-[#C5A880]" />
-            <span className="text-xs font-semibold text-[#4A2E35]">Wilayah:</span>
+            <Filter className="w-4 h-4 text-[#C5A880]" aria-hidden="true" />
+            <label htmlFor="district-filter" className="text-xs font-semibold text-[#4A2E35]">Wilayah:</label>
             <select
+              id="district-filter"
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="text-xs p-2 rounded-xl border border-[#E5D7C7] bg-[#FAF8F5] text-[#4A2E35] focus:outline-none focus:border-[#C5A880]"
+              className="focus-ring text-xs p-2 rounded-xl border border-[#E5D7C7] bg-[#FAF8F5] text-[#4A2E35] focus:outline-none focus:border-[#C5A880]"
             >
               <option value="all">Semua 26 Kecamatan di Kebumen</option>
               {ALL_26_KEBUMEN_DISTRICTS.map((d) => (
@@ -281,13 +282,15 @@ export function AdminMasterKalenderPage({
           </div>
 
           <div className="relative w-full sm:w-64">
-            <Search className="w-3.5 h-3.5 text-[#6B5E62] absolute left-3 top-3" />
+            <Search className="w-3.5 h-3.5 text-[#6B5E62] absolute left-3 top-3" aria-hidden="true" />
+            <label htmlFor="calendar-search" className="sr-only">Cari pengantin atau venue</label>
             <input
-              type="text"
+              id="calendar-search"
+              type="search"
               placeholder="Cari pengantin atau venue..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
+              className="focus-ring w-full pl-8 pr-3 py-1.5 rounded-xl border border-[#E5D7C7] text-xs focus:outline-none focus:border-[#C5A880]"
             />
           </div>
         </div>
@@ -319,7 +322,7 @@ export function AdminMasterKalenderPage({
                         </h3>
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-[#6B5E62] mt-0.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
+                        <MapPin className="w-3.5 h-3.5 text-[#C5A880] shrink-0" aria-hidden="true" />
                         <span>
                           {ev.venue} • Kecamatan <strong>{ev.district}</strong>
                         </span>
