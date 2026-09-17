@@ -46,18 +46,27 @@
 | Payment gateway adapter layer | ✅ Selesai (belum ada kredensial live) |
 | Dokumentasi | `docs/HANDOVER_PHASE2_PRODUCTION.md` |
 
+### Status Phase Lanjutan (Oleh CodeBuddy)
+| Phase | Judul | Status |
+|---|---|---|
+| 10a | CI/CD, health, security headers, rate limiting | ✅ COMPLETE (`phase-10a(ci)`) |
+| 3 | Vendor Self-Service (portofolio + inbox DB) | ✅ COMPLETE (`phase-03(vendor)`) |
+| 4 | Notifikasi WhatsApp/email (outbox) | ✅ COMPLETE (`phase-04(notif)`) |
+| 6 | Hub Koordinasi dari DB | ✅ COMPLETE (`phase-06(hub)`) |
+| 5 | Builder + Availability Matrix | ⬜ Rekonsiliasi (agent bangun UI; action sudah ada) |
+| 7 | Design System / UI Polish / A11y | ✅ COMPLETE (`phase-07(ui)` — agent lain) |
+| 8 | SEO / Legal / Marketing | ✅ COMPLETE (`phase-08(seo)` — agent lain) |
+| 9 | Admin Panel + Dispute | ⬜ Rekonsiliasi |
+| 10b | Deploy live + kredensial | ⏳ Menunggu keputusan user |
+
 ### Masih mock murni (belum DB)
-- `/builder`
-- `/vendor/[slug]`
-- `/vendor/portofolio`
-- `/vendor/inbox`
-- `/hub-koordinasi`
+- `/builder`  → Phase 5 (rekonsiliasi)
+- `/vendor/[slug]`  → sengaja tetap katalog statis (lihat PHASE-03 doc)
+- `/hub-koordinasi`  → daftar acara kini dari DB; diagram constellation masih demo
 
 ### Belum ada
-- Notifikasi WhatsApp/email + persistence
-- SEO, legal pages, marketing
-- Admin (verifikasi/audit/dispute center)
-- CI/CD, monitoring, deploy produksi
+- Admin (verifikasi/audit/dispute center) (Phase 9 — rekonsiliasi)
+- Deploy produksi live + kredensial (Phase 10b — menunggu keputusan user)
 
 ---
 
