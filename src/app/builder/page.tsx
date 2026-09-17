@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import { cartStore } from "@/lib/cart-store";
 import { formatRupiah } from "@/lib/utils";
 import { ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
-import { useAvailability, availabilityStore } from "@/lib/availability-store";
+import { availabilityStore } from "@/lib/availability-store";
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
+import { checkAvailabilityMatrixAction, type MatrixResult } from "@/server/actions/availability-matrix";
+import { MULTI_VENDOR_CATALOG } from "@/data/multi-vendor-catalog";
 import {
   Sparkles,
   Check,
@@ -209,10 +211,50 @@ export default function MixMatchBuilderPage() {
     notes: "",
   });
 
-  // Reactive Availability Matrix
-  const availabilityState = useAvailability();
+  // Reactive Availability Matrix (DB-backed, dengan fallback mock).
   const selectedVendors = KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).map((s) => s.vendor);
-  const matrixResult = availabilityStore.checkMatrix(clientForm.eventDate, selectedVendors);
+  const mockMatrixResult = availabilityStore.checkMatrix(clientForm.eventDate, selectedVendors);
+
+  // Peta nama vendor → ID katalog (untuk resolve ke DB).
+  const catalogIdByVendorName = React.useMemo(() => {
+    const map: Record<string, { catalogVendorId: string; catalogPackageId: string }> = {};
+    for (const v of MULTI_VENDOR_CATALOG) {
+      map[v.name] = { catalogVendorId: v.id, catalogPackageId: v.packages[0]?.id ?? "" };
+    }
+    return map;
+  }, []);
+
+  const [dbMatrix, setDbMatrix] = React.useState<MatrixResult | null>(null);
+  const [matrixPending, setMatrixPending] = React.useState(false);
+
+  // Query ketersediaan nyata ketika tanggal/kategori berubah.
+  React.useEffect(() => {
+    const items = KEBUMEN_SERVICES.filter((s) => selectedItems[s.id])
+      .map((s) => catalogIdByVendorName[s.vendor])
+      .filter((x): x is { catalogVendorId: string; catalogPackageId: string } => Boolean(x?.catalogPackageId));
+
+    if (!clientForm.eventDate || items.length === 0) {
+      setDbMatrix(null);
+      return;
+    }
+
+    let cancelled = false;
+    setMatrixPending(true);
+    checkAvailabilityMatrixAction({ eventDate: clientForm.eventDate, vendors: items })
+      .then((res) => {
+        if (!cancelled && res.success) setDbMatrix(res.data);
+      })
+      .finally(() => {
+        if (!cancelled) setMatrixPending(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientForm.eventDate, selectedVendors.join(",")]);
+
+  // Gunakan hasil DB bila ada; jika tidak, fallback ke mock.
+  const matrixResult = dbMatrix ?? mockMatrixResult;
 
   // Calculate live total
   const calculateTotal = () => {
