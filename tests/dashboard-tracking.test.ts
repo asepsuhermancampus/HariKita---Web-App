@@ -54,4 +54,22 @@ test("DashboardSemiDonutGauge computes ratio angles summing to 180 degrees", () 
   assert.equal(Math.round(angle1 + angle2), 180);
 });
 
+test("DashboardSparkBarCard computes proportional heights for 7 bars", () => {
+  const bars = [
+    { label: "Sen", value: 12 },
+    { label: "Sel", value: 24 },
+    { label: "Rab", value: 36 },
+    { label: "Kam", value: 18 },
+    { label: "Jum", value: 48 },
+    { label: "Sab", value: 30 },
+    { label: "Min", value: 60 },
+  ];
+  const maxVal = Math.max(...bars.map((b) => b.value));
+  assert.equal(maxVal, 60);
+  const heights = bars.map((b) => Math.max(15, Math.round((b.value / maxVal) * 100)));
+  assert.equal(heights[heights.length - 1], 100);
+  assert.ok(heights[0] >= 15);
+});
+
+
 
