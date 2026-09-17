@@ -896,18 +896,18 @@ export default function HomePage() {
                 <button
                   key={step}
                   onClick={() => setActiveEscrowStep(step)}
-                  className={`relative z-10 flex flex-col items-center gap-1.5 group cursor-pointer`}
+                  className={`relative z-10 flex flex-col items-center gap-1.5 group cursor-pointer focus:outline-none`}
                 >
                   <div
                     className={`w-12 h-12 rounded-full flex items-center justify-center font-editorial text-xl font-bold transition-all shadow-md ${
                       isCurrent
-                        ? "bg-hk-taupe text-white ring-4 ring-hk-champagne/40 scale-110"
+                        ? "bg-hk-taupe text-white ring-4 ring-hk-taupe/30 border-2 border-hk-taupe scale-110"
                         : isPassed
-                        ? "bg-hk-charcoal text-white"
+                        ? "bg-hk-charcoal text-white ring-2 ring-hk-champagne/30"
                         : "bg-white text-hk-charcoal border-2 border-hk-champagne/60 group-hover:border-hk-taupe"
                     }`}
                   >
-                    {isPassed && !isCurrent ? <Check className="w-5 h-5 text-emerald-400" /> : step}
+                    {isPassed && !isCurrent ? <Check className="w-5 h-5 text-hk-champagne" /> : step}
                   </div>
                   <span
                     className={`text-[11px] font-manrope font-bold hidden sm:block ${
@@ -930,26 +930,28 @@ export default function HomePage() {
               <div
                 key={s.step}
                 onClick={() => setActiveEscrowStep(s.step)}
-                className={`p-7 rounded-3xl bg-white border cursor-pointer transition-all flex flex-col justify-between ${
+                className={`p-7 rounded-3xl bg-white cursor-pointer transition-all flex flex-col justify-between ${
                   isSelected
-                    ? "border-hk-taupe shadow-xl ring-2 ring-hk-champagne/30 -translate-y-1"
-                    : "border-hk-champagne/50 shadow-xs hover:border-hk-taupe/60 hover:shadow-md"
+                    ? "border-2 border-hk-taupe shadow-xl ring-4 ring-hk-taupe/20 -translate-y-1"
+                    : "border border-hk-champagne/50 shadow-xs hover:border-hk-taupe/60 hover:shadow-md"
                 }`}
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div
-                      className={`w-11 h-11 rounded-2xl flex items-center justify-center font-editorial text-xl font-bold shadow-2xs ${
-                        s.step === 1
-                          ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                          : s.step === 2
-                          ? "bg-hk-ivory text-hk-taupe border border-hk-champagne/60"
-                          : "bg-amber-50 text-amber-800 border border-amber-200"
+                      className={`w-11 h-11 rounded-2xl flex items-center justify-center font-editorial text-xl font-bold shadow-2xs transition-all ${
+                        isSelected
+                          ? "bg-hk-taupe text-white border-2 border-hk-taupe ring-2 ring-hk-taupe/30"
+                          : "bg-hk-ivory text-hk-taupe border border-hk-champagne/60"
                       }`}
                     >
                       {s.step}
                     </div>
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-manrope font-bold uppercase tracking-wider border ${s.badgeColor}`}>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-manrope font-bold uppercase tracking-wider border transition-all ${
+                      isSelected
+                        ? "bg-hk-taupe/10 text-hk-taupe border-hk-taupe/40 font-extrabold"
+                        : "bg-hk-ivory text-hk-charcoal/70 border-hk-champagne/50"
+                    }`}>
                       {s.timing}
                     </span>
                   </div>
