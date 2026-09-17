@@ -329,7 +329,22 @@ export default function MixMatchBuilderPage() {
   };
 
   const syncToCart = () => {
-    cartStore.clearCart();
+    // Upsert: jangan clearCart — pertahankan kategori lain yang mungkin
+    // dikumpulkan dari halaman /vendor/kategori/* tetapi belum diubah di builder.
+    const builderServiceIds = new Set(
+      KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).map((s) => s.id)
+    );
+
+    // Hapus dulu item cart yang kategorinya sedang di-drive builder,
+    // agar tidak ada duplikat kategori; kategori lain tetap utuh.
+    for (const item of cartStore.getSnapshot().items) {
+      const serviceId =
+        categoryToServiceMap[item.categoryId] || vendorToServiceMap[item.vendorId];
+      if (serviceId && builderServiceIds.has(serviceId)) {
+        cartStore.removeItem(item.id);
+      }
+    }
+
     KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).forEach((item) => {
       const current = selectedItems[item.id];
       const unitPrice =
@@ -337,13 +352,26 @@ export default function MixMatchBuilderPage() {
           ? item.basePrice + (current?.count || item.defaultUnit || 1) * item.unitPrice
           : item.basePrice;
 
+      // Resolve ID katalog asli (v_*) dari nama vendor; fallback ke nama
+      // ter-slug bila tidak ditemukan, supaya tidak pernah menulis "vendor_<id>".
+      const catalog = catalogIdByVendorName[item.vendor];
+      const vendorId =
+        catalog?.catalogVendorId || item.vendor.toLowerCase().replace(/[^a-z0-9]/g, "-");
+
+      // ServiceItem tidak punya field `categoryId`; turunkan dari peta
+      // CATEGORY_TO_SERVICE agar konsisten dengan kunci cart yang dipakai
+      // selectionsFromCartItems.
+      const categoryId =
+        Object.entries(categoryToServiceMap).find(([, sid]) => sid === item.id)?.[0] ??
+        item.category.toLowerCase().replace(/[^a-z0-9]/g, "_");
+
       cartStore.addItem({
-        categoryId: item.category.toLowerCase().replace(/[^a-z0-9]/g, "_"),
+        categoryId,
         categoryTitle: item.category,
-        vendorId: `vendor_${item.id}`,
+        vendorId,
         vendorName: item.vendor,
         district: "Kebumen Kota",
-        packageId: item.id,
+        packageId: catalog?.catalogPackageId || item.id,
         packageName: item.name,
         unitPrice,
         quantity: 1,
