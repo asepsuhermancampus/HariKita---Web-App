@@ -56,7 +56,7 @@
 | 5 | Builder + Availability Matrix | ⬜ Rekonsiliasi (agent bangun UI; action sudah ada) |
 | 7 | Design System / UI Polish / A11y | ✅ COMPLETE (`phase-07(ui)` — agent lain) |
 | 8 | SEO / Legal / Marketing | ✅ COMPLETE (`phase-08(seo)` — agent lain) |
-| 9 | Admin Panel + Dispute | ⬜ Rekonsiliasi |
+| 9 | Admin Panel + Dispute | ✅ COMPLETE (`phase-09(admin)`) |
 | 10b | Deploy live + kredensial | ⏳ Menunggu keputusan user |
 
 ### Masih mock murni (belum DB)
@@ -65,7 +65,7 @@
 - `/hub-koordinasi`  → daftar acara kini dari DB; diagram constellation masih demo
 
 ### Belum ada
-- Admin (verifikasi/audit/dispute center) (Phase 9 — rekonsiliasi)
+- Phase 5 (builder/availability — rekonsiliasi)
 - Deploy produksi live + kredensial (Phase 10b — menunggu keputusan user)
 
 ---
