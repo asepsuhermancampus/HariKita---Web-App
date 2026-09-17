@@ -20,7 +20,6 @@ import {
   Mail,
   Map,
   Phone,
-  Eye,
   CalendarCheck,
   Check,
   Layers,
@@ -28,17 +27,8 @@ import {
 import {
   DecorativeDivider,
 } from "@/components/harikita/ui";
-import dynamic from "next/dynamic";
 import type { VendorPortfolioData } from "@/components/home/VendorPortfolioModal";
 import { FloatingConcierge } from "@/components/layout/FloatingConcierge";
-
-const VendorPortfolioModal = dynamic(
-  () =>
-    import("@/components/home/VendorPortfolioModal").then(
-      (mod) => mod.VendorPortfolioModal
-    ),
-  { ssr: false }
-);
 
 type EventPhase = "all" | "prewed_attire" | "main_event" | "details";
 
@@ -483,8 +473,6 @@ const CATEGORIES: (VendorPortfolioData & {
 
 export default function HomePage() {
   const [activePhase, setActivePhase] = useState<EventPhase>("all");
-  const [selectedVendor, setSelectedVendor] = useState<VendorPortfolioData | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeArchetype, setActiveArchetype] = useState<"motion" | "adat" | "botanical" | "syari">("motion");
   const [activeEscrowStep, setActiveEscrowStep] = useState<number>(1);
 
@@ -496,11 +484,6 @@ export default function HomePage() {
 
   const currentArchetype = ARCHETYPES[activeArchetype];
   const escrowSteps = ESCROW_STEPS;
-
-  const handleOpenModal = (item: VendorPortfolioData) => {
-    setSelectedVendor(item);
-    setIsModalOpen(true);
-  };
 
   return (
     <div className="space-y-16 pb-20 overflow-x-hidden">
@@ -684,23 +667,12 @@ export default function HomePage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    {/* Quick Portfolio Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleOpenModal(item)}
-                      className="rounded-full border border-hk-champagne/60 bg-white px-3 py-1.5 text-xs font-manrope font-semibold text-hk-charcoal hover:bg-hk-ivory transition-all shadow-2xs flex items-center gap-1"
-                      title="Lihat foto portofolio vendor"
-                    >
-                      <Eye className="w-3.5 h-3.5 text-hk-taupe" />
-                      <span className="hidden sm:inline">Portofolio</span>
-                    </button>
-
-                    {/* Direct Builder Selection */}
                     <Link
-                      href={`/builder?cat=${item.id}`}
-                      className="rounded-full border border-hk-champagne/60 bg-hk-taupe text-white px-3.5 py-1.5 text-xs font-manrope font-semibold hover:bg-hk-charcoal transition-all shadow-2xs"
+                      href={`/vendor/kategori/${item.id}`}
+                      className="rounded-full border border-hk-champagne/60 bg-hk-taupe text-white px-3.5 py-1.5 text-xs font-manrope font-semibold hover:bg-hk-charcoal transition-all shadow-2xs inline-flex items-center gap-1"
                     >
-                      Pilih Layanan
+                      <span>Lihat Layanan</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>
@@ -1040,13 +1012,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Vendor Portfolio Modal */}
-      <VendorPortfolioModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        vendor={selectedVendor}
-      />
 
       {/* Floating WhatsApp Concierge Pill */}
       <FloatingConcierge phoneNumber="6281234567890" />
