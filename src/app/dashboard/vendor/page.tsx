@@ -65,7 +65,7 @@ export default function VendorPortalPage() {
             {vendorInfo.name}
           </h1>
           <p className="text-xs text-plum-light mt-1">
-            Kategori: <strong className="text-plum">{vendorInfo.category}</strong> ΓÇó Lokasi: {vendorInfo.city} ΓÇó Rating: Γ¡É {vendorInfo.rating} ({vendorInfo.ordersCompleted} Acara Sukses)
+            Kategori: <strong className="text-plum">{vendorInfo.category}</strong> • Lokasi: {vendorInfo.city} • Rating: ⭐ {vendorInfo.rating} ({vendorInfo.ordersCompleted} Acara Sukses)
           </p>
         </div>
 
@@ -223,7 +223,7 @@ export default function VendorPortalPage() {
               </div>
             </div>
             <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-900 text-[11px] font-semibold border border-emerald-200">
-              ≡ƒöÑ Kategori Terpopuler di Kebumen bulan ini!
+              🔥 Kategori Terpopuler di Kebumen bulan ini!
             </div>
           </div>
         </div>
