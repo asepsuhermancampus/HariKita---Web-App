@@ -41,6 +41,9 @@ dev.db-journal
 # prisma local db backups
 prisma/dev.db.backup*
 
+# generated sqlite prisma client (dev/test only)
+/generated/
+
 # superpowers sdd scratch
 .superpowers/
 

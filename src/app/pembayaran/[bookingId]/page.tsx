@@ -20,7 +20,48 @@ import {
 import { useCart } from "@/lib/cart-store";
 import { orderStore } from "@/lib/order-store";
 import { notificationStore } from "@/lib/notification-store";
-import { simulatePaymentSuccessAction } from "@/server/actions/payment";
+import { simulatePaymentSuccessAction, createChargeAction } from "@/server/actions/payment";
+
+declare global {
+  interface Window {
+    snap?: {
+      pay: (
+        token: string,
+        options?: {
+          onSuccess?: (result: unknown) => void;
+          onPending?: (result: unknown) => void;
+          onError?: (result: unknown) => void;
+          onClose?: () => void;
+        }
+      ) => void;
+    };
+  }
+}
+
+const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? "";
+const MIDTRANS_IS_PRODUCTION = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === "true";
+
+function loadSnapScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (typeof window === "undefined") return resolve();
+    if (window.snap) return resolve();
+    const src = MIDTRANS_IS_PRODUCTION
+      ? "https://app.midtrans.com/snap/snap.js"
+      : "https://app.sandbox.midtrans.com/snap/snap.js";
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${src}"]`);
+    if (existing) {
+      existing.addEventListener("load", () => resolve());
+      existing.addEventListener("error", () => reject(new Error("snap_load_error")));
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = src;
+    script.setAttribute("data-client-key", MIDTRANS_CLIENT_KEY);
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("snap_load_error"));
+    document.body.appendChild(script);
+  });
+}
 
 interface PageProps {
   params: Promise<{ bookingId: string }>;
@@ -43,6 +84,7 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
   const [timeLeft, setTimeLeft] = useState(900); // 15 menit
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [isSimulatingSuccess, setIsSimulatingSuccess] = useState(false);
+  const [isSnapLoading, setIsSnapLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"qris" | "transfer">("qris");
 
@@ -63,6 +105,58 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 2000);
+  };
+
+  /**
+   * Memulai pembayaran via Midtrans Snap (QRIS semua e-wallet/bank + transfer bank).
+   * 1. Server Action membuat attempt + transaksi Snap (token/redirect_url).
+   * 2. Bila snap.js tersedia → popup; jika tidak → redirect ke redirect_url.
+   */
+  const handleMidtransSnap = async () => {
+    setIsSnapLoading(true);
+    setPaymentError(null);
+
+    const charge = await createChargeAction({ orderId: bookingId });
+    if (!charge.success) {
+      setPaymentError(charge.message || "Gagal memulai transaksi Midtrans.");
+      setIsSnapLoading(false);
+      return;
+    }
+
+    const token = charge.data.providerTransactionId;
+    const redirectUrl = charge.data.paymentUrl;
+
+    try {
+      await loadSnapScript();
+      if (window.snap && token && !token.startsWith("SIM-")) {
+        window.snap.pay(token, {
+          onSuccess: () => router.push(`/pesanan/${bookingId}/invoice`),
+          onPending: () => {
+            setPaymentError("Pembayaran tertunda. Selesaikan sesuai instruksi, lalu cek status.");
+            setIsSnapLoading(false);
+          },
+          onError: () => {
+            setPaymentError("Pembayaran gagal di gateway. Silakan coba lagi.");
+            setIsSnapLoading(false);
+          },
+          onClose: () => {
+            setPaymentError("Jendela pembayaran ditutup sebelum selesai.");
+            setIsSnapLoading(false);
+          },
+        });
+        return;
+      }
+    } catch {
+      // snap.js gagal dimuat → lanjut ke fallback redirect / simulasi.
+    }
+
+    if (redirectUrl && !redirectUrl.startsWith("/")) {
+      window.location.href = redirectUrl;
+      return;
+    }
+
+    setIsSnapLoading(false);
+    await handleSimulatePayment();
   };
 
   const handleSimulatePayment = async () => {
@@ -325,19 +419,43 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
                 <span>{paymentError}</span>
               </div>
             )}
+
+            {/* Tombol utama: Midtrans (QRIS semua e-wallet/bank + transfer bank) */}
             <button
-              onClick={handleSimulatePayment}
-              disabled={isSimulatingSuccess}
+              onClick={handleMidtransSnap}
+              disabled={isSnapLoading || isSimulatingSuccess}
               className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#4A2E35] to-[#6B5E62] text-white font-medium text-sm hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
             >
-              {isSimulatingSuccess ? (
+              {isSnapLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Memverifikasi Pembayaran...
+                  Menyiapkan pembayaran aman…
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="w-4 h-4 text-[#C5A880]" />
+                  <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
+                  Bayar via Midtrans (QRIS &amp; Transfer Bank)
+                </>
+              )}
+            </button>
+            <div className="text-center text-[11px] text-[#6B5E62]">
+              Didukung QRIS (GoPay, OVO, DANA, ShopeePay, semua m-banking) &amp; Virtual Account/Transfer bank.
+            </div>
+
+            {/* Fallback demo/sandbox (provider simulated) */}
+            <button
+              onClick={handleSimulatePayment}
+              disabled={isSimulatingSuccess || isSnapLoading}
+              className="w-full py-2.5 px-4 rounded-xl bg-white border border-[#C5A880]/60 text-[#4A2E35] font-medium text-xs hover:bg-[#FAF8F5] transition-all flex items-center justify-center gap-2 shadow-2xs disabled:opacity-50"
+            >
+              {isSimulatingSuccess ? (
+                <>
+                  <div className="w-3.5 h-3.5 border-2 border-[#4A2E35] border-t-transparent rounded-full animate-spin"></div>
+                  Memverifikasi Pembayaran…
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#C5A880]" />
                   Simulasikan Pembayaran Berhasil (Uji Coba Sandbox)
                 </>
               )}

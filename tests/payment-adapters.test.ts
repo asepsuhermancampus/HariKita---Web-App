@@ -9,6 +9,7 @@ import { createHash, createHmac } from "node:crypto";
 
 import { createSimulatedAdapter } from "../src/server/payments/simulated-adapter";
 import { createMidtransAdapter } from "../src/server/payments/midtrans-adapter";
+import { createMidtransSnapAdapter } from "../src/server/payments/midtrans-snap-adapter";
 import { createXenditAdapter } from "../src/server/payments/xendit-adapter";
 import { getGatewayAdapter, getDefaultProvider } from "../src/server/payments/registry";
 
@@ -159,4 +160,49 @@ test("getDefaultProvider falls back to simulated_qris", () => {
   assert.equal(getDefaultProvider(), "simulated_qris");
   process.env.HARIKITA_PAYMENT_PROVIDER = "midtrans";
   assert.equal(getDefaultProvider(), "midtrans");
+});
+
+// ── Midtrans Snap adapter ────────────────────────────────────────────────────
+test("midtrans-snap: valid SHA512 signature verified and normalized", async () => {
+  process.env.MIDTRANS_SERVER_KEY = "SB-Mid-server-snap";
+  const adapter = createMidtransSnapAdapter();
+  const orderId = "attempt_snap1";
+  const statusCode = "200";
+  const grossAmount = "1000000.00";
+  const signature = createHash("sha512")
+    .update(`${orderId}${statusCode}${grossAmount}SB-Mid-server-snap`)
+    .digest("hex");
+
+  const res = await adapter.verifyWebhook(
+    headers({}),
+    JSON.stringify({
+      transaction_id: "snap-txn-1",
+      order_id: orderId,
+      status_code: statusCode,
+      gross_amount: grossAmount,
+      signature_key: signature,
+      transaction_status: "settlement",
+      fraud_status: "accept",
+    })
+  );
+  assert.equal(res.ok, true);
+  assert.equal(res.event?.paid, true);
+  assert.equal(res.event?.attemptId, orderId);
+  assert.equal(res.event?.amount, 1_000_000);
+});
+
+test("midtrans-snap: invalid signature rejected", async () => {
+  process.env.MIDTRANS_SERVER_KEY = "SB-Mid-server-snap";
+  const adapter = createMidtransSnapAdapter();
+  const res = await adapter.verifyWebhook(
+    headers({}),
+    JSON.stringify({
+      order_id: "x",
+      status_code: "200",
+      gross_amount: "1000.00",
+      signature_key: "bad",
+      transaction_status: "settlement",
+    })
+  );
+  assert.equal(res.ok, false);
 });

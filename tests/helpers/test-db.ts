@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient as SqlitePrismaClient } from "../../generated/sqlite-client";
+import type { PrismaClient } from "@prisma/client";
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -7,6 +8,15 @@ import path from "node:path";
 /**
  * Test helper: menyediakan PrismaClient yang terisolasi pada salinan SQLite
  * temporer sehingga database pengembangan (`prisma/dev.db`) tidak tersentuh.
+ *
+ * CATATAN ARSITEKTUR (dual-provider):
+ *  - Produksi memakai PostgreSQL (lihat prisma/schema.prisma).
+ *  - Dev lokal & test memakai SQLite (prisma/schema.sqlite.prisma, client
+ *    terpisah di generated/sqlite-client).
+ *  - Instance runtime di sini adalah client SQLite, namun di-*cast* ke tipe
+ *    `PrismaClient` dari `@prisma/client` agar service layer (yang bertipe
+ *    PostgreSQL) dapat menerimanya saat pengujian. Aman karena perilaku query
+ *    identik; hanya engine provider yang berbeda.
  */
 
 export interface TestDb {
@@ -24,11 +34,17 @@ export async function createTestDb(): Promise<TestDb> {
   if (fs.existsSync(sourceDb)) {
     fs.copyFileSync(sourceDb, dbPath);
   } else {
-    const tempSchema = path.join(tempDir, "schema.prisma");
-    const schemaSource = fs.readFileSync(path.join(projectRoot, "prisma", "schema.prisma"), "utf-8");
+    const tempSchema = path.join(tempDir, "schema.sqlite.prisma");
+    const schemaSource = fs.readFileSync(
+      path.join(projectRoot, "prisma", "schema.sqlite.prisma"),
+      "utf-8"
+    );
     fs.writeFileSync(
       tempSchema,
-      schemaSource.replace('url      = "file:./dev.db"', `url      = "file:${dbPath.replace(/\\/g, "/")}"`)
+      schemaSource.replace(
+        'url      = env("DATABASE_URL")',
+        `url      = "file:${dbPath.replace(/\\/g, "/")}"`
+      )
     );
     execFileSync("npx", ["prisma", "db", "push", "--schema", tempSchema, "--skip-generate"], {
       cwd: projectRoot,
@@ -37,14 +53,15 @@ export async function createTestDb(): Promise<TestDb> {
     });
   }
 
-  const prisma = new PrismaClient({
+  const sqliteClient = new SqlitePrismaClient({
     datasources: { db: { url: `file:${dbPath.replace(/\\/g, "/")}` } },
   });
+  const prisma = sqliteClient as unknown as PrismaClient;
 
   return {
     prisma,
     cleanup: async () => {
-      await prisma.$disconnect();
+      await sqliteClient.$disconnect();
       if (fs.existsSync(tempDir)) fs.rmSync(tempDir, { recursive: true, force: true });
     },
   };

@@ -12,14 +12,19 @@
     "typecheck": "tsc --noEmit",
     "validate": "prisma validate",
     "generate": "prisma generate",
+    "generate:sqlite": "prisma generate --schema prisma/schema.sqlite.prisma",
     "test": "tsx --test tests/*.test.ts",
     "verify": "npm run typecheck && npm run validate && npm run test",
     "assets:manifest": "node scripts/generate_asset_manifest.js && node scripts/verify_assets_complete.js",
     "assets:verify": "node scripts/verify_assets_complete.js",
     "assets:watch": "node scripts/watch_assets.js",
     "db:push": "prisma db push",
+    "db:push:sqlite": "prisma db push --schema prisma/schema.sqlite.prisma",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate && prisma generate --schema prisma/schema.sqlite.prisma"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

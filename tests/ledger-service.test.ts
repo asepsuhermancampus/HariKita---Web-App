@@ -1,10 +1,7 @@
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
-import { PrismaClient } from "@prisma/client";
+import { createTestDb, type TestDb } from "./helpers/test-db";
+import type { PrismaClient } from "@prisma/client";
 
 /**
  * LedgerService — DB integration test.
@@ -15,55 +12,20 @@ import { PrismaClient } from "@prisma/client";
  *  - reversal dilarang untuk jurnal REVERSAL.
  *  - append-only: tidak ada method update/delete untuk ledger.
  *
- * Isolasi: seluruh operasi dijalankan pada file SQLite temporer (salinan skema
- * dari `prisma/dev.db`) sehingga database pengembangan tidak tersentuh.
+ * Isolasi: memakai helper createTestDb (SQLite temporer) sehingga database
+ * pengembangan tidak tersentuh.
  */
 
-const projectRoot = path.resolve(__dirname, "..");
-const sourceDb = path.join(projectRoot, "prisma", "dev.db");
-
-let tempDir: string;
-let tempDbPath: string;
+let ctx: TestDb;
 let prisma: PrismaClient;
 
 before(async () => {
-  tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "harikita-ledger-"));
-  tempDbPath = path.join(tempDir, "test-ledger.db");
-
-  if (fs.existsSync(sourceDb)) {
-    // Reuse the migrated schema by copying the existing SQLite file.
-    fs.copyFileSync(sourceDb, tempDbPath);
-  } else {
-    // Fallback: generate the schema into the temp DB via prisma db push.
-    const tempSchema = path.join(tempDir, "schema.prisma");
-    const schemaSource = fs.readFileSync(
-      path.join(projectRoot, "prisma", "schema.prisma"),
-      "utf-8"
-    );
-    fs.writeFileSync(
-      tempSchema,
-      schemaSource.replace(
-        'url      = "file:./dev.db"',
-        `url      = "file:${tempDbPath.replace(/\\/g, "/")}"`
-      )
-    );
-    execFileSync("npx", ["prisma", "db", "push", "--schema", tempSchema, "--skip-generate"], {
-      cwd: projectRoot,
-      stdio: "ignore",
-      shell: true,
-    });
-  }
-
-  prisma = new PrismaClient({
-    datasources: { db: { url: `file:${tempDbPath}` } },
-  });
+  ctx = await createTestDb();
+  prisma = ctx.prisma;
 });
 
 after(async () => {
-  if (prisma) await prisma.$disconnect();
-  if (tempDir && fs.existsSync(tempDir)) {
-    fs.rmSync(tempDir, { recursive: true, force: true });
-  }
+  await ctx.cleanup();
 });
 
 // Import the service AFTER env is ready (service reads global prisma otherwise,

@@ -17,8 +17,9 @@ jobs:
     timeout-minutes: 20
 
     env:
-      # Database uji: SQLite lokal (file dibuat saat runtime; tanpa secret).
-      DATABASE_URL: "file:./dev.db"
+      # Skema produksi = PostgreSQL; validate butuh URL berformat postgres.
+      # Test memakai SQLite temporer (schema.sqlite.prisma) — tidak butuh koneksi nyata.
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/harikita?schema=public"
       HARIKITA_PAYMENT_PROVIDER: "simulated_qris"
       HARIKITA_CRON_SECRET: "ci-cron-secret"
       NEXT_TELEMETRY_DISABLED: "1"
@@ -36,14 +37,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Prisma generate
+      - name: Prisma generate (PostgreSQL client)
         run: npx prisma generate
+
+      - name: Prisma generate (SQLite client — tests)
+        run: npx prisma generate --schema prisma/schema.sqlite.prisma
 
       - name: Prisma validate
         run: npx prisma validate
 
       - name: Push schema to test DB (SQLite)
-        run: npx prisma db push --skip-generate
+        run: npx prisma db push --schema prisma/schema.sqlite.prisma --skip-generate
 
       - name: Typecheck
         run: npm run typecheck

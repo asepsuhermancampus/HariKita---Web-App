@@ -10,7 +10,7 @@ import {
 import type { PayoutTranche } from "@/server/services/ledger-service";
 import { persistWebhookEvent, processWebhookEvent } from "@/server/services/payment-webhook-service";
 import { DomainError } from "@/server/services/errors";
-import { getGatewayAdapter, getDefaultProvider } from "@/server/payments/registry";
+import { getCheckoutAdapter, getDefaultProvider } from "@/server/payments/registry";
 import type { GatewayProvider } from "@/server/payments/types";
 import { runAction, requireSession, revalidate, type ActionResult } from "./_shared";
 
@@ -247,7 +247,7 @@ export async function createChargeAction(input: {
     });
 
     // 2. External call ke gateway (DI LUAR transaksi DB).
-    const adapter = getGatewayAdapter(provider);
+    const adapter = getCheckoutAdapter(provider);
     const charge = await adapter.createCharge({
       attemptId: attemptInfo.attemptId,
       installmentId: attemptInfo.installmentId,

@@ -1,12 +1,18 @@
-// ── HariKita - Skema PostgreSQL (SUMBER KEBENARAN PRODUKSI) ──────────────────
-// Digunakan untuk Supabase / Vercel. Untuk dev lokal & test (SQLite), lihat
-// prisma/schema.sqlite.prisma.
+// ── HariKita - Skema SQLite (DEV LOKAL & TEST) ───────────────────────────────
+// Salinan dari schema.prisma untuk provider SQLite. Menghasilkan client
+// terpisah di `generated/sqlite-client` agar tidak bentrok dengan client
+// PostgreSQL utama. JANGAN tambahkan model di sini tanpa menyelaraskan
+// schema.prisma (PostgreSQL) — schema.prisma adalah sumber kebenaran produksi.
+//
+// Generate: npx prisma generate --schema prisma/schema.sqlite.prisma
+// Push dev:  npx prisma db push --schema prisma/schema.sqlite.prisma
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/sqlite-client"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
