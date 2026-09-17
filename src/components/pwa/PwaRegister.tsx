@@ -29,6 +29,10 @@ export function PwaRegister() {
         navigator.serviceWorker
           .register("/sw.js")
           .then((reg) => {
+            // Paksa cek versi baru setiap kali halaman dimuat, agar perbaikan
+            // (mis. bug routing/cache) cepat tersebar & SW lama tidak nyangkut.
+            reg.update().catch(() => {});
+
             reg.onupdatefound = () => {
               const installingWorker = reg.installing;
               if (installingWorker) {
