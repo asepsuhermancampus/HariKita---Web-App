@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { soundscape } from "@/lib/sound/soundscapeEngine";
+import React, { useState } from "react";
 import { DedicatedTemplateProps } from "@/lib/templates/types";
 import { CoverCardEngine } from "@/components/invitation/cover/CoverCardEngine";
 import {
   InvitationDesktopLayout,
   InvitationBottomDock,
-  RotatingVinylPlayer,
   ETicketBoardingPass,
+  InvitationAudioPlayer,
 } from "@/components/invitation/shell";
+import { resolveThemeAudio } from "@/lib/sound/themeAudioMap";
 
 // 8 Bespoke Layout Engines
 import {
@@ -29,13 +29,7 @@ import { TulivelleTemplate } from "./themes/tulivelle";
 
 export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) => {
   const [isCoverOpened, setIsCoverOpened] = useState(false);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isTicketOpen, setIsTicketOpen] = useState(false);
-
-  // Ensure SFX audio is completely silenced and disabled per user specification
-  useEffect(() => {
-    soundscape.setMuted(true);
-  }, []);
 
   // Scroll-lock: prevent background content scrolling while cover is visible.
   // IMPORTANT: We only lock overflow — we do NOT set touchAction:none because
@@ -61,9 +55,13 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
   const archetypeId = props.theme?.archetypeId || "botanical";
   const themeId = props.theme?.id;
 
+  const audioPreset = React.useMemo(
+    () => resolveThemeAudio(archetypeId, props.theme?.sectionConfig?.sfxTheme),
+    [archetypeId, props.theme?.sectionConfig?.sfxTheme],
+  );
+
   const handleOpenCover = () => {
     setIsCoverOpened(true);
-    setIsMusicPlaying(true);
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
@@ -71,7 +69,6 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
 
   const handleCloseCover = () => {
     setIsCoverOpened(false);
-    setIsMusicPlaying(false);
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
@@ -157,16 +154,14 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
         {/* 3. Floating Peripherals (Rendered when cover is open) */}
         {isCoverOpened && (
           <>
-            {/* Spinning Vinyl Audio Player — hidden until custom activation feature is built */}
-            {false && (
-              <RotatingVinylPlayer
-                audioUrl={props.musicUrl}
-                isPlaying={isMusicPlaying}
-                onTogglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
-                albumCoverUrl={props.bride.photo}
-                songTitle={`${props.bride.name} & ${props.groom.name} Nuptial`}
-              />
-            )}
+            {/* Backsound + SFX controller — reads catalog track + palette */}
+            <InvitationAudioPlayer
+              trackId={audioPreset.defaultTrackId}
+              paletteId={audioPreset.sfxPaletteId}
+              started={isCoverOpened}
+              musicUrlOverride={props.musicUrl}
+              themeColors={props.theme?.colors}
+            />
 
             {/* E-Ticket Boarding Pass Trigger & Modal */}
             <ETicketBoardingPass
