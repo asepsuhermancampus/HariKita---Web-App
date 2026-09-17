@@ -4,6 +4,12 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cartStore } from "@/lib/cart-store";
+import {
+  mergeSelections,
+  selectionsFromCartItems,
+  CATEGORY_TO_SERVICE as categoryToServiceMap,
+  VENDOR_TO_SERVICE as vendorToServiceMap,
+} from "@/lib/builder-selection";
 import { formatRupiah } from "@/lib/utils";
 import { ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
 import { availabilityStore } from "@/lib/availability-store";
@@ -167,36 +173,8 @@ const KEBUMEN_SERVICES: ServiceItem[] = [
   },
 ];
 
-// Mapping categoryId katalog (mis. "prewed") → service ID (KEBUMEN_SERVICES).
-const categoryToServiceMap: Record<string, string> = {
-  prewed: "prewed-1",
-  busana: "busana-1",
-  mua: "mua-1",
-  seserahan: "seserahan-1",
-  foto: "foto-1",
-  dekor: "dekor-1",
-  katering: "katering-1",
-  cake: "cake-1",
-  souvenir: "souvenir-1",
-  undangan: "undangan-1",
-  denah: "denah-1",
-};
-
-// Mapping vendor catalog ID (mis. "v_prewed_01") → service ID (KEBUMEN_SERVICES).
-const vendorToServiceMap: Record<string, string> = {
-  "v_prewed_01": "prewed-1",    // Menganti Cinematic & Studio
-  "v_prewed_02": "prewed-1",    // Lensa Walet Studio & Outdoor
-  "v_busana_01": "busana-1",    // Griya Busana Rarasati
-  "v_mua_01": "mua-1",          // Alula MUA & Hijab Styling
-  "v_seserahan_01": "seserahan-1", // Hantaran Lestari Kebumen
-  "v_foto_01": "foto-1",        // Pradana Cinema & Story
-  "v_dekor_01": "dekor-1",      // Asmara Flora & Pelaminan
-  "v_katering_01": "katering-1", // Dapur Rasa Boga Kebumen
-  "v_cake_01": "cake-1",        // L'Aura Patisserie & Cakes
-  "v_souvenir_01": "souvenir-1", // Kriya Anyam Gombong
-  "v_undangan_01": "undangan-1", // HariKita Digital & Print
-  "v_denah_01": "denah-1",      // Denah Kita Kartun Estetik
-};
+// Mapping categoryId/vendorId katalog → service ID kini diimpor dari
+// "@/lib/builder-selection" (categoryToServiceMap, vendorToServiceMap).
 
 export default function MixMatchBuilderPage() {
   // State: selected items map (awal kosong — diisi hanya bila akses via tombol "Pilih Layanan").
@@ -205,31 +183,33 @@ export default function MixMatchBuilderPage() {
   // State: selected theme for digital invitation
   const [selectedThemeId, setSelectedThemeId] = useState("");
 
-  // Baca parameter URL: auto-pilih layanan vendor (dari tombol "Pilih Layanan") & tema undangan.
+  // Baca URL param (auto-pilih layanan/tema) DAN hydrate dari cartStore,
+  // lalu MERGE agar pilihan dari halaman /vendor/kategori/* tidak hilang.
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const params = new URLSearchParams(window.location.search);
+    // 1) Hydrate dari cartStore (vendor yang dikumpulkan lintas halaman).
+    const hydrated = selectionsFromCartItems(cartStore.getSnapshot().items);
 
-    // 1) Auto-pilih layanan bila akses via /builder?cat=<categoryId|vendorId> atau /builder?vendor=<vendorId>.
-    //    - `vendor` = ID vendor katalog (mis. "v_prewed_01")
-    //    - `cat`    = ID kategori (mis. "prewed") ATAU ID vendor (fallback kompatibilitas)
+    // 2) Auto-pilih dari URL param.
+    const params = new URLSearchParams(window.location.search);
     const vendorParam = params.get("vendor");
     const catParam = params.get("cat");
-
     const serviceId =
       (vendorParam && vendorToServiceMap[vendorParam]) ||
       (catParam && (categoryToServiceMap[catParam] || vendorToServiceMap[catParam])) ||
       null;
 
+    const fromUrl: { [id: string]: { count?: number } } = {};
     if (serviceId) {
       const service = KEBUMEN_SERVICES.find((s) => s.id === serviceId);
-      if (service) {
-        setSelectedItems({ [serviceId]: { count: service.defaultUnit || 1 } });
-      }
+      if (service) fromUrl[serviceId] = { count: service.defaultUnit || 1 };
     }
 
-    // 2) Set tema undangan bila datang dari halaman undangan (/builder?selectedTheme=<themeId>).
+    // 3) Merge: URL param menang atas hidrasi (bila bentrok), sisanya dipertahankan.
+    setSelectedItems((prev) => mergeSelections(mergeSelections(prev, hydrated), fromUrl));
+
+    // 4) Tema undangan dari URL.
     const themeFromUrl = params.get("selectedTheme");
     if (themeFromUrl && ALL_INVITATION_TEMPLATES.some((t) => t.id === themeFromUrl)) {
       setSelectedThemeId(themeFromUrl);
