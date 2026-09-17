@@ -6,6 +6,7 @@ import { expireOrdersSweep } from "@/server/services/order-service";
 import { sweepExpiredHolds } from "@/server/services/availability-service";
 import { sweepUnprocessedEvents } from "@/server/services/payment-webhook-service";
 import { checkPayoutEligibility, executePayoutForOrder } from "@/server/services/payout-service";
+import { flushPendingNotifications } from "@/server/services/notification-service";
 import { checkRateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
 
 /**
@@ -56,6 +57,9 @@ async function runSweep(): Promise<Record<string, unknown>> {
   const releasedHolds = await withTransactionRetry((tx) => sweepExpiredHolds(tx));
   const webhookSweep = await sweepUnprocessedEvents();
 
+  // 3b. Kirim notifikasi PENDING dari outbox.
+  const notifications = await flushPendingNotifications();
+
   // 4. Payout sweep: evaluasi seluruh order aktif untuk kedua tranche.
   const activeOrders = await prisma.order.findMany({
     where: { status: { notIn: ["CANCELLED", "EXPIRED", "REFUNDED"] } },
@@ -87,6 +91,7 @@ async function runSweep(): Promise<Record<string, unknown>> {
     expiredOrders: expiredOrderIds.length,
     releasedHolds,
     webhookSweep,
+    notifications,
     payoutsExecuted: payoutResults.length,
     payouts: payoutResults,
   };

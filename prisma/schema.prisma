@@ -483,3 +483,24 @@ model AnalyticsTelemetry {
   metadata  String?  // JSON string
   timestamp DateTime @default(now())
 }
+
+model Notification {
+  id            String    @id @default(cuid())
+  channel       String    // "WHATSAPP", "EMAIL", "IN_APP"
+  status        String    @default("PENDING") // "PENDING", "SENT", "FAILED"
+  templateKey   String    // mis. "ORDER_CREATED_VENDOR", "DP_PAID_CLIENT"
+  recipientType String    // "CLIENT", "VENDOR", "ADMIN"
+  recipientName String?
+  recipientRef  String?   // nomor HP atau email
+  orderId       String?
+  payload       String?   // JSON string konteks (nama, tanggal, nominal)
+  body          String    // isi pesan final
+  attempts      Int       @default(0)
+  lastError     String?
+  sentAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([status, createdAt])
+  @@index([orderId])
+}

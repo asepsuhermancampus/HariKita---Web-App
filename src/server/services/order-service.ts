@@ -6,6 +6,10 @@ import {
   verifyAndPromoteSlot,
   releaseReservedSlot,
 } from "./availability-service";
+import {
+  notifyOrderCreatedToVendor,
+  notifyVendorDecisionToClient,
+} from "./notification-templates";
 
 /**
  * HariKita - OrderService
@@ -203,6 +207,9 @@ export async function createOrder(
     itemIds.push(orderItem.id);
   }
 
+  // Tulis notifikasi ke outbox vendor (dikirim oleh scheduler, di luar tx).
+  await notifyOrderCreatedToVendor(order.id, tx);
+
   return {
     orderId: order.id,
     orderNumber: order.orderNumber,
@@ -302,6 +309,16 @@ export async function processVendorDecision(
   }
 
   const nextOrderStatus = await evaluateOrderAggregate(orderItem.orderId, tx);
+
+  // Notifikasi keputusan ke klien (outbox; dikirim scheduler).
+  await notifyVendorDecisionToClient(
+    orderItem.orderId,
+    orderItem.vendor.businessName,
+    orderItem.packageName,
+    input.command === "ACCEPT",
+    tx
+  );
+
   return { orderStatus: nextOrderStatus, itemStatus: input.command === "ACCEPT" ? "ACCEPTED" : "REJECTED" };
 }
 

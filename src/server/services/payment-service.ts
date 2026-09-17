@@ -20,6 +20,7 @@ import {
 } from "./ledger-service";
 import { getStartOfDayWIB, diffCalendarDaysWIB, getEndOfDayWIB } from "@/lib/date-utils";
 import { generateOperationalArtifacts } from "./order-lifecycle";
+import { notifyDpPaid } from "./notification-templates";
 
 /**
  * HariKita - PaymentService
@@ -209,6 +210,9 @@ export async function processPaymentSuccess(
       },
       tx
     );
+
+    // Notifikasi DP terbayar (outbox; dikirim scheduler).
+    await notifyDpPaid(order.id, installment.amount, tx);
 
     return { outcome: "PROCESSED", installmentType: "DP_30", orderStatus: "IN_PROGRESS" };
   }
