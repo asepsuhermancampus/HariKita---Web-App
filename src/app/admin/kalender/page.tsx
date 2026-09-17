@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Master Multi-Vendor Calendar Admin — Server Component.
- * Sumber: database (admin-only). Basline/mock tetap dipertahankan di klien.
+ * Sumber tunggal: database (admin-only). Tidak ada data demo/baseline.
  */
 export default async function Page() {
   const dbEvents = await getAdminCalendarEvents();

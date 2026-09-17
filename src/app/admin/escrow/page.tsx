@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Otorisasi Escrow Admin — Server Component.
- * Sumber: database (admin-only). Bila kosong, klien jatuh ke mock store.
+ * Sumber tunggal: database (admin-only). Tidak ada fallback mock.
  */
 export default async function AdminEscrowPage() {
   const [dbOrders, escrowBalance] = await Promise.all([

@@ -3,18 +3,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import {
-  Calendar,
   MapPin,
-  Clock,
   Filter,
-  Users,
-  Building,
-  CheckCircle2,
   Sparkles,
   Search,
   ShieldCheck,
 } from "lucide-react";
-import { useOrders } from "@/lib/order-store";
+import { EmptyState } from "@/components/harikita/ui";
 import { formatRupiah } from "@/lib/utils";
 import type { AdminCalendarEventDTO } from "@/server/queries/orders";
 
@@ -67,96 +62,9 @@ export function AdminMasterKalenderPage({
   const [selectedDistrict, setSelectedDistrict] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { orders } = useOrders();
-
-  // Baseline events in Kebumen
-  const baselineEvents: MasterEvent[] = [
-    {
-      id: "HK-EV-01",
-      date: "2026-10-18",
-      client: "Aditya & Larasati",
-      venue: "Pendopo Ronggowarsito",
-      district: "Kebumen Kota",
-      vendorsCount: 4,
-      totalAmount: 18500000,
-      vendors: [
-        { name: "Arjuna Cinematic", role: "Foto & Video", callTime: "05:30 WIB" },
-        { name: "Griya Rarasati", role: "Busana & Fitting", callTime: "06:00 WIB" },
-        { name: "Alula MUA", role: "MUA", callTime: "04:30 WIB" },
-        { name: "Dapur Rasa Boga", role: "Katering", callTime: "08:00 WIB" },
-      ],
-      status: "TERKUNCI_DP",
-    },
-    {
-      id: "HK-EV-02",
-      date: "2026-11-20",
-      client: "Bima & Citra",
-      venue: "Gedung Pertemuan Setda Kebumen",
-      district: "Kebumen Kota",
-      vendorsCount: 5,
-      totalAmount: 24750000,
-      vendors: [
-        { name: "Menganti Studio", role: "Prewed", callTime: "08:00 WIB" },
-        { name: "Griya Rarasati", role: "Busana", callTime: "06:00 WIB" },
-        { name: "Alula MUA", role: "MUA", callTime: "05:00 WIB" },
-        { name: "Dapur Rasa Boga", role: "Katering", callTime: "08:30 WIB" },
-        { name: "HariKita Digital", role: "Undangan & Cetak", callTime: "08:00 WIB" },
-      ],
-      status: "TERKUNCI_DP",
-    },
-    {
-      id: "HK-EV-03",
-      date: "2026-11-28",
-      client: "Dimas & Anggi",
-      venue: "Hotel Mexolie Kebumen",
-      district: "Kebumen Kota",
-      vendorsCount: 3,
-      totalAmount: 14200000,
-      vendors: [
-        { name: "Asmara Flora", role: "Dekorasi", callTime: "03:00 WIB" },
-        { name: "Pradana Cinema", role: "Video", callTime: "07:00 WIB" },
-        { name: "L'Aura Cakes", role: "Kue & Dessert", callTime: "08:00 WIB" },
-      ],
-      status: "TERKUNCI_DP",
-    },
-    {
-      id: "HK-EV-04",
-      date: "2026-12-12",
-      client: "Fajar & Sekar",
-      venue: "Kediaman Mempelai, Gombong",
-      district: "Gombong",
-      vendorsCount: 3,
-      totalAmount: 12500000,
-      vendors: [
-        { name: "Hantaran Lestari", role: "Seserahan", callTime: "07:00 WIB" },
-        { name: "Alula MUA", role: "MUA", callTime: "05:30 WIB" },
-        { name: "Dapur Rasa Boga", role: "Katering", callTime: "09:00 WIB" },
-      ],
-      status: "TERKUNCI_DP",
-    },
-  ];
-
-  // Convert real dynamic orders from orderStore into master events
-  const dynamicEvents: MasterEvent[] = orders
-    .filter((o) => !baselineEvents.some((b) => b.id === o.id))
-    .map((ord) => ({
-      id: ord.id,
-      date: ord.eventDate,
-      client: ord.customerName,
-      venue: ord.eventLocation,
-      district: ord.district || "Kebumen Kota",
-      vendorsCount: ord.items.length,
-      totalAmount: ord.financials?.totalAmount || 0,
-      vendors: ord.items.map((i) => ({
-        name: i.vendorName,
-        role: i.categoryTitle,
-        callTime: i.callTime || "08:00 WIB",
-      })),
-      status: ord.paymentStatus === "DP_PAID" ? "TERKUNCI_DP" : "LUNAS_ESCROW",
-    }));
-
-  // Event dari database (admin-only) — sumber utama bila tersedia.
-  const dbMasterEvents: MasterEvent[] = dbEvents.map((e) => ({
+  // Sumber tunggal: event dari DATABASE (admin-only). Tidak ada data demo/baseline
+  // yang disuntikkan agar panel governance ini tidak menampilkan acara fiktif.
+  const allEvents: MasterEvent[] = dbEvents.map((e) => ({
     id: e.id,
     date: e.date,
     client: e.client,
@@ -167,18 +75,6 @@ export function AdminMasterKalenderPage({
     vendors: e.vendors,
     status: e.status,
   }));
-
-  // Gabung: DB event + dynamic mock + baseline, hilangkan duplikat by id.
-  const seenIds = new Set<string>();
-  const allEvents: MasterEvent[] = [
-    ...dbMasterEvents,
-    ...dynamicEvents,
-    ...baselineEvents,
-  ].filter((ev) => {
-    if (seenIds.has(ev.id)) return false;
-    seenIds.add(ev.id);
-    return true;
-  });
 
   // Filter events
   const filteredEvents = allEvents.filter((ev) => {
@@ -298,9 +194,19 @@ export function AdminMasterKalenderPage({
         {/* Master Calendar Events List */}
         <div className="space-y-4">
           {filteredEvents.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-[#C5A880]/30 p-8 text-center text-[#6B5E62] text-xs italic">
-              Tidak ada jadwal pernikahan yang ditemukan untuk kriteria filter ini.
-            </div>
+            <EmptyState
+              icon="inbox"
+              title={
+                allEvents.length === 0
+                  ? "Belum ada jadwal acara di database"
+                  : "Tidak ada jadwal yang cocok"
+              }
+              description={
+                allEvents.length === 0
+                  ? "Master calendar akan terisi otomatis ketika pesanan tersimpan di sistem. Tidak ada data contoh yang ditampilkan di panel ini."
+                  : "Coba ubah filter wilayah atau kata kunci pencarian Anda."
+              }
+            />
           ) : (
             filteredEvents.map((ev) => (
               <div
