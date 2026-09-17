@@ -5,7 +5,7 @@
 > **Terakhir Diperbarui:** 10 September 2026  
 > **Direktori Proyek:** `HariKita - Web App` (Proyek Utama Aktif)  
 > **Status Server Lokal:** Aktif di `http://localhost:3000` (Next.js 15.5)
-> **Last Commit:** `feat: implement unique cover card system for 64+ templates` (branch `main`)
+> **Last Commit:** `feat(catalog): expand Rose Gold collection to 15 templates with full vector SVG registry and fix category filtering` (branch `feat/modular-section-matrix-sfx`)
 
 ---
 
@@ -64,16 +64,20 @@ HariKita adalah platform digital *event lamaran & pernikahan intimate hyperlocal
 * **Portal Super Admin (`/admin`):** Master calendar multi-vendor, funnel 10 konversi, resolution center sengketa, leaderboard vendor populer.
 * **Interactive Mix-and-Match Builder (`/builder`):** Live price simulator, deteksi ketersediaan multi-vendor, lazy registration (booking tanpa wajib login diawal).
 
-### C. 64 Template Undangan Digital Terindividuasi Penuh
-Seluruh 64 template undangan memiliki metadata mandiri, palet warna tematik, ornamen SVG elegan, backsound audio, serta menggunakan salah satu dari **8 Dedicated Layout Engines**:
-1. **Adat Nusantara:** *Surya Majapahit, Parang Kencana, Songket Minang, Sirih Pinang, Batak Ulos, Dayak Mandau, Toraja Pa'ssura, Asmat Papua*.
-2. **Elegant Minimalist:** *Ivory Silk, Champagne Luxe, Slate Monochrome, Alabaster Pure, Cashmere Rose, Pearl Essence, Linen Grace, Obsidian Chic*.
-3. **Botanical Garden:** *Eucalyptus Mist, Olive Grove, Sakura Blossom, Wildflower Meadow, Fern Canopy, Terracotta Bloom, Lavender Breeze, Magnolia Petals*.
-4. **Royal Velvet Luxury:** *Emerald Opulence, Midnight Sapphire, Ruby Grandeur, Gilded Amethyst, Velvet Noir, Imperial Gold, Royale Burgundy, Crown Jewel*.
-5. **Muslim Syar'i:** *Ar-Rahman, Firdaus Green, Nur Medina, Qalbi Gold, Barakah White, Marwah Blossom, Safa Elegance, Tasnim Blue*.
-6. **Chinese Oriental Modern:** *Double Happiness Red, Chinoiserie Porcelain, Peony Jade, Crimson Lantern, Golden Dynasty, Lotus Zen, Dragon Phoenix, Imperial Silk*.
-7. **Retro Vintage Rustic:** *Boho Pampas, Vintage Macrame, Kraft Rustic, Sepia Memories, Victorian Rose, Polaroid Nostalgia, Heritage Wood, Farmhouse Warmth*.
-8. **Gen-Z Playful Y2K:** *Cyber Pastel, Neon Cyber, Retro Pop Art, Matcha Latte, Y2K Bubblegum, Cloud Nine, Sunset Gradient, Holographic Dream*.
+### C. 71 Template Undangan Digital Terindividuasi Penuh
+Seluruh 71 template undangan memiliki metadata mandiri, palet warna tematik, ornamen SVG elegan, backsound audio, serta menggunakan salah satu dari **8 Dedicated Layout Engines** (sumber kebenaran: `src/lib/templates/templatesCatalog.ts`):
+
+| Engine (archetypeId) | Jumlah | Layout Engine |
+| :--- | :--- | :--- |
+| Botanical (`botanical`) | 8 | `BotanicalEngine` |
+| Javanese Royal (`javanese`) | 8 | `JavaneseEngine` |
+| Syar'i / Islamic (`islamic`) | 8 | `IslamicEngine` |
+| Minimalist (`minimalist`) | 8 | `MinimalistEngine` |
+| Rose Gold Luxury (`rose-gold`) | 15 | `RoseGoldEngine` |
+| Rustic Vintage (`rustic`) | 8 | `RusticEngine` |
+| Celestial (`celestial`) | 8 | `CelestialEngine` |
+| Cute Illustrated (`cute-illustrated`) | 8 | `CuteIllustratedEngine` |
+| **Total** | **71** | |
 
 ### D. Fitur-Fitur Khusus Undangan
 * **Cover Depan (Gate):** Wax seal badge, nama tamu kustom (`?to=NamaTamu`), tombol "Buka Undangan" dengan animasi smooth unroll.
@@ -87,7 +91,7 @@ Seluruh 64 template undangan memiliki metadata mandiri, palet warna tematik, orn
 * **Aset Ikon PWA Komprehensif:** Ikon 192x192, 512x512, maskable squircle (Android 13+), Apple touch icon iOS, dan favicon.ico.
 * **Vanilla Service Worker (`public/sw.js`):** Caching aset statis (stale-while-revalidate), navigasi network-first aman tanpa konflik Next.js 15 / React 19.
 * **Add to Home Screen (A2HS) Component (`InstallPrompt.tsx`):** Banner floating elegan di layar sentuh mobile, deteksi instalasi Android Chrome via `beforeinstallprompt`, modal panduan visual khusus Safari iOS, dan batas cooldown dismiss 7 hari.
-* **Automated Unit Tests:** 18/18 test passing (`tests/*.test.ts`).
+* **Automated Unit Tests:** 108/108 test passing (`tests/*.test.ts`).
 
 ---
 
@@ -114,11 +118,35 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
 
 > [!NOTE]
 > **Penanganan Data Demo vs Data Database:**
-> Halaman `/undangan/[slug]` telah dilengkapi fallback cerdas: Jika slug dicari tidak ada di database, sistem otomatis mencocokkan dengan data katalog template 64 tema bawaan (`ALL_INVITATION_TEMPLATES`). Sehingga `/undangan/demo?theme=nama-tema` atau `/undangan/nama-tema` selalu bisa dibuka kapan saja.
+> Halaman `/undangan/[slug]` telah dilengkapi fallback cerdas: Jika slug dicari tidak ada di database, sistem otomatis mencocokkan dengan data katalog template 71 tema bawaan (`ALL_INVITATION_TEMPLATES`). Sehingga `/undangan/demo?theme=nama-tema` atau `/undangan/nama-tema` selalu bisa dibuka kapan saja.
 
 ---
 
-## 🗺️ 6. SITEMAP & RUTE PENGUJIAN UTAMA
+## 🎨 6. MASTER SVG ASSET LIBRARY (PROGRESS & HANDOVER)
+> Referensi Master: [`Premium_Digital_Invitation_SVG_Asset_Master_Specification.md`](file:///c:/Users/asep.suherman/SETTUP%20TESTING/Build%20Project%20In%20Here/IDE/HariKita%20-%20Web%20App/Premium_Digital_Invitation_SVG_Asset_Master_Specification.md)
+
+* **Total Target Aset:** 384 SVG Signature (64 Template × 6 Aset Unik Zero-Duplicate)
+* **Status Selesai:** **96 Aset Selesai & 100% Aktif di UI** (Kategori 1 & 2)
+* **Status Menunggu:** **288 Aset Belum Dibuat** (Kategori 3 sampai 8)
+* **Last SVG Dikerjakan & Diaktifkan:**
+  * **Template 16 (`javanese-pearl`)**: `WhitePearlWreath`, `RonceanMelatiDivider`, `IvoryGebyokFrame`, `WhiteGarudaMedallion`, `PearlPin`, `PearlCalendar`
+  * Direktori: `src/components/invitation/svg/javanese-pearl/`
+  * Export: `javanesePearlSvg` di `src/components/invitation/svg/index.ts`
+  * Runtime UI: Aktif dirender pada `JavaneseEngine.tsx`
+
+### Ringkasan Status per Kategori:
+1. ✅ **Kategori 1: Botanical (01-08)**: 48 Aset Selesai & Aktif (`AutumnelleTemplate`, `TulivelleTemplate`, `BotanicalEngine`)
+2. ✅ **Kategori 2: Javanese Royal (09-16)**: 48 Aset Selesai & Aktif (`JavaneseEngine`, termasuk Burung Walet Emas Kebumen di Template 15)
+3. ⏳ **Kategori 3: Syar'i / Islamic (17-24)**: **NEXT TO RESUME** (48 Aset: `arabesque-royal`, `emerald-syari`, `walimatul-ursy`, `al-fatih`, `salsabila`, `ar-rahman`, `nur-jannah`, `barakah-gold`) → Target: `IslamicEngine.tsx`
+4. ⏳ **Kategori 4: Minimalist / Vogue Editorial (25-32)**: (48 Aset) → Target: `MinimalistEngine.tsx`
+5. ⏳ **Kategori 5: Royal Luxury / Rose Gold (33-40)**: (48 Aset) → Target: `RoseGoldEngine.tsx`
+6. ⏳ **Kategori 6: Rustic Vintage (41-48)**: (48 Aset) → Target: `RusticEngine.tsx`
+7. ⏳ **Kategori 7: Celestial (49-56)**: (48 Aset) → Target: `CelestialEngine.tsx`
+8. ⏳ **Kategori 8: Cute / Illustrated (57-64)**: (48 Aset) → Target: `CuteIllustratedEngine.tsx`
+
+---
+
+## 🗺️ 7. SITEMAP & RUTE PENGUJIAN UTAMA
 
 | Halaman | Rute URL | Deskripsi |
 | :--- | :--- | :--- |
@@ -127,12 +155,12 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
 | **Portal Klien** | `http://localhost:3000/client` | Dashboard calon pengantin, riwayat invoice, fitting tracker |
 | **Portal Vendor** | `http://localhost:3000/vendor` | Dashboard mitra, kalender blackout date, kelola harga paket |
 | **Super Admin** | `http://localhost:3000/admin` | Master multi-vendor calendar, 10-step conversion funnel, resolution |
-| **Demo Undangan Digital** | `http://localhost:3000/undangan/demo?theme=ivory-silk` | Pengujian 64 template (ganti query `theme` sesuai ID template) |
+| **Demo Undangan Digital** | `http://localhost:3000/undangan/demo?theme=javanese-kebumen` | Pengujian 71 template (ganti query `theme` sesuai ID template) |
 | **Manifest Web App** | `http://localhost:3000/manifest.webmanifest` | Verifikasi metadata PWA JSON |
 
 ---
 
-## 🧪 7. PERINTAH VERIFIKASI & PERAWATAN
+## 🧪 8. PERINTAH VERIFIKASI & PERAWATAN
 
 * **Menjalankan Dev Server:**
   ```powershell
@@ -142,6 +170,10 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
   ```powershell
   npx tsx --test tests/*.test.ts
   ```
+* **Mengecek Type Check:**
+  ```powershell
+  npx tsc --noEmit
+  ```
 * **Mengecek Schema Database:**
   ```powershell
   npx prisma studio
@@ -150,4 +182,5 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
   ```powershell
   npx prisma db push
   ```
+
 

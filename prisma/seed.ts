@@ -1,9 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding HariKita Kebumen database...");
+  const DEFAULT_PIN = await bcrypt.hash("123456", 10);
 
   // Clean old records
   await prisma.rsvpWish.deleteMany();
@@ -25,6 +27,7 @@ async function main() {
       name: "Super Admin HariKita",
       phone: "081234567890",
       email: "admin@harikita.id",
+      pin: DEFAULT_PIN,
       role: "ADMIN",
     },
   });
@@ -34,6 +37,7 @@ async function main() {
       name: "Bima & Citra",
       phone: "081987654321",
       email: "bima.citra@gmail.com",
+      pin: DEFAULT_PIN,
       role: "CLIENT",
     },
   });
@@ -256,6 +260,7 @@ async function main() {
         name: item.businessName,
         phone: `0813000000${(i + 1).toString().padStart(2, "0")}`,
         email: `vendor${i + 1}@harikita.id`,
+        pin: DEFAULT_PIN,
         role: "VENDOR",
       },
     });

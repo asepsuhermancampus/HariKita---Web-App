@@ -24,7 +24,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
+!.env.example
 
 # vercel
 .vercel
@@ -36,5 +38,20 @@ next-env.d.ts
 # prisma sqlite temporary
 dev.db-journal
 
+# prisma local db backups
+prisma/dev.db.backup*
+
+# generated sqlite prisma client (dev/test only)
+/generated/
+
 # superpowers sdd scratch
 .superpowers/
+
+# temporary scratch and local assets
+scratch/
+public/refactor_dir_sementara/
+public/logo-previews/
+public/HariKita-Design*.png
+public/preview-*.html
+references/kadio-assets/harvested/
+

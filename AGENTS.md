@@ -83,3 +83,28 @@ Agen AI **DILARANG KERAS** menambahkan hal-hal berikut tanpa persetujuan eksplis
 3. **Desain Mobile-First & Responsif 100%:**
    * Tampil sempurna tanpa *horizontal overflow* di ponsel (`375px`), tablet (`768px`), dan laptop (`>1024px`).
    * Tombol sentuh minimal 44px (ramah jempol keluarga).
+
+---
+
+## 5. Phase 1 Database Safety Rules
+
+1. Jangan menghapus model, field, atau relation existing tanpa audit dan persetujuan eksplisit.
+2. Jangan mengganti database SQLite ke PostgreSQL pada Phase 1.
+3. Jangan menggunakan Float untuk nominal uang; gunakan Int dalam satuan rupiah.
+4. Semua OrderItem wajib menyimpan snapshot nama paket, kategori, harga, dan detail transaksi.
+5. Semua perubahan status Order dan OrderItem harus dapat dicatat dalam status history.
+6. Semua ledger journal wajib memiliki minimal dua entry.
+7. Total debit dan credit wajib seimbang sebelum transaksi disimpan.
+8. Ledger yang sudah tersimpan tidak boleh diedit atau dihapus; gunakan reversal journal.
+9. Semua payment webhook wajib idempotent berdasarkan provider dan eventId.
+10. Jangan mengubah alur frontend localStorage menjadi database secara parsial tanpa Server Action yang tervalidasi.
+11. Jangan mengubah UI besar-besaran selama Phase 1.
+12. Setiap perubahan schema wajib disertai:
+    - prisma validation
+    - migration/db push check
+    - TypeScript check
+    - test relasi
+    - test seed
+13. Backup prisma/dev.db sebelum menjalankan perubahan database.
+14. Jangan menganggap tombol frontend sebagai bukti pembayaran berhasil.
+15. Semua perubahan finansial hanya boleh dilakukan melalui server-side transaction.

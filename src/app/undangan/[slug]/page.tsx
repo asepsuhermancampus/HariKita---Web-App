@@ -42,41 +42,59 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
     ? invitation.eventDate.toISOString()
     : "2026-11-20T09:00:00Z";
 
-  const storyTimeline = invitation?.storyTimeline
-    ? JSON.parse(invitation.storyTimeline)
-    : [
-        {
-          year: "2021",
-          title: "Pertemuan Pertama di Alun-Alun Kebumen",
-          desc: "Berjumpa saat sama-sama menikmati kuliner sate ambal di sore hari.",
-        },
-        {
-          year: "2023",
-          title: "Komitmen Bersama",
-          desc: "Sepakat menjalin hubungan serius untuk menyatukan dua keluarga besar.",
-        },
-        {
-          year: "2026",
-          title: "Hari Bahagia Menuju Pelaminan",
-          desc: "Dengan restu kedua orang tua, mengikat janji suci pernikahan abadi.",
-        },
-      ];
+  function safeJsonParse<T>(val: string | null | undefined, fallback: T): T {
+    if (!val || typeof val !== "string" || val.trim() === "") return fallback;
+    try {
+      return JSON.parse(val) as T;
+    } catch {
+      return fallback;
+    }
+  }
 
-  const galleryPhotos = invitation?.galleryPhotos
-    ? JSON.parse(invitation.galleryPhotos)
-    : [
-        "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800",
-        "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800",
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800",
-        "https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=800",
-      ];
+  const defaultStory = [
+    {
+      year: "2021",
+      title: "Takdir di Sudut Alun-Alun Kebumen",
+      desc: "Pertemuan pertama yang tak pernah direncanakan di bawah hangatnya lembayung sore Alun-Alun Kebumen. Berawal dari percakapan santai seputar kuliner lokal dan tawa kecil yang tak sengaja beradu, semesta diam-diam mulai menenun rasa nyaman di antara dua insan yang sebelumnya saling asing.",
+    },
+    {
+      year: "2022",
+      title: "Mengikat Kepercayaan di Pantai Menganti",
+      desc: "Perjalanan demi perjalanan kami lewati bersama, hingga suatu senja di atas tebing kapur Pantai Menganti. Di sanalah lembaran demi lembaran cerita hidup kami buka tanpa ragu; saling mendengarkan mimpi sederhana, memahami cerita masa lalu, dan menyadari bahwa kehadiran masing-masing adalah rumah terbaik untuk berpulang.",
+    },
+    {
+      year: "2024",
+      title: "Menyelaraskan Hati & Restu Dua Keluarga",
+      desc: "Cinta bukan lagi sekadar tentang 'aku dan kamu', melainkan menyelaraskan niat tulus dengan restu keluarga besar. Melewati diskusi panjang, silaturahmi yang hangat, dan doa-doa di sepertiga malam, kedua orang tua akhirnya saling menyatukan tangan dan merestui jalan suci ini menuju ikatan pernikahan.",
+    },
+    {
+      year: "2026",
+      title: "Mengucap Janji di Depan Penghulu",
+      desc: "Setelah menempuh perjalanan waktu yang mendewasakan, hari yang paling kami nantikan kini menjelma nyata. Dengan bismillah dan kerendahan hati, kami bersiap mengikrarkan janji suci di hadapan Sang Khalik, mengarungi bahtera rumah tangga yang sakinah, mawaddah, dan warahmah hingga akhir usia.",
+    },
+  ];
 
-  const bankAccounts = invitation?.bankAccounts
-    ? JSON.parse(invitation.bankAccounts)
-    : [
-        { bank: "BCA", number: "19827398124", holder: "Bima Arya Pratama" },
-        { bank: "Mandiri", number: "136001239847", holder: "Citra Ayu Lestari" },
-      ];
+  const defaultPhotos = [
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800", // Romantic couple outdoor sunlight
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800", // Classic bride & groom portrait
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800", // Golden hour couple embrace
+    "https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=800", // Wedding dress & rings details
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=800", // Coastal / beach nature prewed
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800", // Close-up holding hands & floral bouquet
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800", // Rustic wedding ceremony floral arch & venue
+    "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800", // Cinematic black & white couple kiss
+    "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800", // Intimate prewed casual laugh
+    "https://images.unsplash.com/photo-1529636798458-92182e662485?q=80&w=800", // Sunset romantic silhouettes
+  ];
+
+  const defaultBanks = [
+    { bank: "BCA", number: "19827398124", holder: "Bima Arya Pratama" },
+    { bank: "Mandiri", number: "136001239847", holder: "Citra Ayu Lestari" },
+  ];
+
+  const storyTimeline = safeJsonParse(invitation?.storyTimeline, defaultStory);
+  const galleryPhotos = safeJsonParse(invitation?.galleryPhotos, defaultPhotos);
+  const bankAccounts = safeJsonParse(invitation?.bankAccounts, defaultBanks);
 
   const rawWishes = invitation?.rsvps || [
     {
@@ -107,12 +125,21 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
   }));
 
   return (
-    <>
+    <div
+      style={{
+        backgroundColor: themePreset.colors.background,
+        minHeight: "100vh",
+      }}
+    >
       <TemplateEngineResolver
         invitationId={invitation?.id || "demo-invitation"}
         theme={themePreset}
         guestName={guestName}
         activeSessionCode={sesi as "s1" | "s2" | "s3"}
+        couplePhoto={
+          galleryPhotos[0] ||
+          "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800"
+        }
         bride={{
           name: "Citra",
           fullName: brideName,
@@ -170,6 +197,6 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
         initialWishes={formattedWishes}
       />
       <LiveThemeSwitcherToolbar currentThemeId={activeThemeId} />
-    </>
+    </div>
   );
 }

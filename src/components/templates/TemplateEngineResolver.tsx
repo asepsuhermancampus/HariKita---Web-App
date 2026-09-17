@@ -6,11 +6,10 @@ import { CoverCardEngine } from "@/components/invitation/cover/CoverCardEngine";
 import {
   InvitationDesktopLayout,
   InvitationBottomDock,
-  RotatingVinylPlayer,
-  AutoScrollButton,
   ETicketBoardingPass,
-  SmoothOutroClosingGate,
+  InvitationAudioPlayer,
 } from "@/components/invitation/shell";
+import { resolveThemeAudio } from "@/lib/sound/themeAudioMap";
 
 // 8 Bespoke Layout Engines
 import {
@@ -24,55 +23,102 @@ import {
   CuteIllustratedEngine,
 } from "./engines";
 
+// Dedicated Atomic Templates
+import { AutumnelleTemplate } from "./themes/autumnelle";
+import { TulivelleTemplate } from "./themes/tulivelle";
+
 export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) => {
   const [isCoverOpened, setIsCoverOpened] = useState(false);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [isTicketOpen, setIsTicketOpen] = useState(false);
 
+  // Scroll-lock: prevent background content scrolling while cover is visible.
+  // IMPORTANT: We only lock overflow — we do NOT set touchAction:none because
+  // that would prevent touch events from reaching the fixed-position cover card.
+  React.useEffect(() => {
+    if (!isCoverOpened) {
+      const originalDocOverflow = document.documentElement.style.overflow;
+      const originalBodyOverflow = document.body.style.overflow;
+
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+
+      return () => {
+        document.documentElement.style.overflow = originalDocOverflow;
+        document.body.style.overflow = originalBodyOverflow;
+      };
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+  }, [isCoverOpened]);
+
   const archetypeId = props.theme?.archetypeId || "botanical";
+  const themeId = props.theme?.id;
+
+  const audioPreset = React.useMemo(
+    () => resolveThemeAudio(archetypeId, props.theme?.sectionConfig?.sfxTheme),
+    [archetypeId, props.theme?.sectionConfig?.sfxTheme],
+  );
 
   const handleOpenCover = () => {
     setIsCoverOpened(true);
-    setIsMusicPlaying(true);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+  };
+
+  const handleCloseCover = () => {
+    setIsCoverOpened(false);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
   };
 
   const renderEngine = () => {
+    // 1. Dedicated Decoupled Atomic Templates
+    switch (themeId) {
+      case "autumnelle":
+        return <AutumnelleTemplate {...props} onCloseInvitation={handleCloseCover} />;
+      case "tulivelle":
+        return <TulivelleTemplate {...props} onCloseInvitation={handleCloseCover} />;
+    }
+
+    // 2. Archetype Engine Fallback for remaining templates
     switch (archetypeId) {
       case "botanical":
       case "romantic-floral":
       case "animated-motion":
-        return <BotanicalEngine {...props} />;
+        return <BotanicalEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "javanese":
       case "cultural-traditional":
-        return <JavaneseEngine {...props} />;
+        return <JavaneseEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "islamic":
       case "syari-islamic":
-        return <IslamicEngine {...props} />;
+        return <IslamicEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "minimalist":
       case "minimalist-typographic":
-        return <MinimalistEngine {...props} />;
+        return <MinimalistEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "rose-gold":
       case "royal-luxury":
-        return <RoseGoldEngine {...props} />;
+        return <RoseGoldEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "rustic":
-        return <RusticEngine {...props} />;
+        return <RusticEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "celestial":
       case "fullscreen-prewed":
-        return <CelestialEngine {...props} />;
+        return <CelestialEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       case "cute-illustrated":
       case "special-family-event":
-        return <CuteIllustratedEngine {...props} />;
+        return <CuteIllustratedEngine {...props} onCloseInvitation={handleCloseCover} />;
 
       default:
-        return <BotanicalEngine {...props} />;
+        return <BotanicalEngine {...props} onCloseInvitation={handleCloseCover} />;
     }
   };
 
@@ -93,39 +139,28 @@ export const TemplateEngineResolver: React.FC<DedicatedTemplateProps> = (props) 
 
       {/* 2. Desktop Dual-Pane & Mobile Showcase Layout */}
       <InvitationDesktopLayout
+        themeColors={props.theme?.colors}
         brideName={props.bride.name}
         groomName={props.groom.name}
         eventDate={props.eventDate}
         coverPhoto={props.bride.photo}
         venueName={activeSession.venueName}
+        isCoverOpened={isCoverOpened}
+        entryAnimId={props.theme?.coverConfig?.entryAnimId || "rise-up"}
       >
         {/* Render the Bespoke Archetype Layout Engine */}
         {renderEngine()}
 
-        {/* Grand Outro Smooth Closing Gate */}
-        <SmoothOutroClosingGate
-          theme={props.theme}
-          brideName={props.bride.name}
-          groomName={props.groom.name}
-        />
-
         {/* 3. Floating Peripherals (Rendered when cover is open) */}
         {isCoverOpened && (
           <>
-            {/* Spinning Vinyl Audio Player */}
-            <RotatingVinylPlayer
-              audioUrl={props.musicUrl}
-              isPlaying={isMusicPlaying}
-              onTogglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
-              albumCoverUrl={props.bride.photo}
-              songTitle={`${props.bride.name} & ${props.groom.name} Nuptial`}
-            />
-
-            {/* Hands-Free Auto Scroll Button */}
-            <AutoScrollButton
-              isAutoScrolling={isAutoScrolling}
-              onToggleAutoScroll={() => setIsAutoScrolling(!isAutoScrolling)}
-              isVisible={true}
+            {/* Backsound + SFX controller — reads catalog track + palette */}
+            <InvitationAudioPlayer
+              trackId={audioPreset.defaultTrackId}
+              paletteId={audioPreset.sfxPaletteId}
+              started={isCoverOpened}
+              musicUrlOverride={props.musicUrl}
+              themeColors={props.theme?.colors}
             />
 
             {/* E-Ticket Boarding Pass Trigger & Modal */}

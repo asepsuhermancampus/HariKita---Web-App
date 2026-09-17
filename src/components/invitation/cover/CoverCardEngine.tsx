@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { CoverConfig, TemplateThemePreset } from "@/lib/templates/types";
+import { soundscape } from "@/lib/sound/soundscapeEngine";
 import { CoverLayout_FloatingCard } from "./layouts/CoverLayout_FloatingCard";
 import { CoverLayout_FullBleedText } from "./layouts/CoverLayout_FullBleedText";
 import { CoverLayout_SplitPanel } from "./layouts/CoverLayout_SplitPanel";
@@ -67,20 +68,24 @@ export const CoverCardEngine: React.FC<CoverCardEngineProps> = ({
   useEffect(() => {
     if (!isOpened) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
       setShouldRender(true);
       setExitClass("");
       setIsExiting(false);
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [isOpened]);
 
   const handleOpenClick = () => {
     if (isExiting) return;
     setIsExiting(true);
+    soundscape.playCoverOpen();
     const { exitAnimId } = coverConfig;
     setExitClass(EXIT_ANIM_CLASSES[exitAnimId] ?? "animate-cover-slide-up");
     setTimeout(() => {

@@ -1,0 +1,95 @@
+/* HariKita Luxury Motion & Optical Effects System (60 FPS CSS GPU) */
+
+@keyframes hk-path-draw {
+  0% {
+    stroke-dashoffset: 1000;
+    opacity: 0.2;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes hk-botanical-sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(1.8deg);
+  }
+}
+
+@keyframes hk-gold-shimmer {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  40% {
+    transform: translateX(200%) skewX(-20deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(200%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+@keyframes hk-falling-petal {
+  0% {
+    transform: translateY(-20px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(700px) translateX(40px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes hk-heartbeat-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.028);
+  }
+}
+
+@keyframes hk-stardust-twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* Utility Animation Classes */
+.animate-hk-path-draw path {
+  stroke-dasharray: 1000;
+  animation: hk-path-draw 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-hk-botanical-sway {
+  animation: hk-botanical-sway 6s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-hk-pulse-slow {
+  animation: hk-heartbeat-pulse 3.5s ease-in-out infinite;
+}
+
+.animate-hk-twinkle {
+  animation: hk-stardust-twinkle 2.5s ease-in-out infinite;
+}

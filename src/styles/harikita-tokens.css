@@ -1,0 +1,150 @@
+/* HariKita Official Brand Design System Tokens */
+/* Reference: HariKita-DesignSystem-Asset.png, AGENTS.md & Brand Identity */
+
+:root, [data-theme="harikita"] {
+  /* Official Brand Palette */
+  --color-charcoal: #2B2B2B;      /* Deep Plum Charcoal Text */
+  --color-taupe: #88735B;         /* Muted Taupe */
+  --color-champagne: #C9A88A;     /* Gilded Champagne Gold */
+  --color-soft-beige: #E8DED1;    /* Soft Beige Accent */
+  --color-ivory: #F8F6F1;         /* Ivory Surface */
+  --color-canvas: #FAF8F5;        /* Cashmere Alabaster Base Canvas */
+  --color-canvas-subtle: #F3EDE6; /* Champagne Surface Muted */
+
+  /* Plum & Gold Semantic Aliases */
+  --color-plum: #4A2E35;
+  --color-plum-light: #6B5E62;
+  --color-plum-dark: #2A181D;
+  --color-gold: #C5A880;
+  --color-gold-light: #E3CAA5;
+  --color-gold-dark: #A3865E;
+
+  /* HK Namespace Aliases */
+  --hk-charcoal: var(--color-charcoal);
+  --hk-taupe: var(--color-taupe);
+  --hk-champagne: var(--color-champagne);
+  --hk-soft-beige: var(--color-soft-beige);
+  --hk-ivory: var(--color-ivory);
+  --hk-canvas: var(--color-canvas);
+  --hk-plum: var(--color-plum);
+  --hk-plum-light: var(--color-plum-light);
+
+  /* Typography Scales */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-serif-luxury: 'Playfair Display', Georgia, serif;
+  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+
+  /* ── Phase 7: Design System Finalization ─────────────────────────────
+     4pt spacing scale, radius, elevation, motion & z-index tokens.
+     Dipakai lintas komponen agar ritme visual konsisten. */
+
+  /* Spacing scale (4pt base) */
+  --hk-space-0: 0;
+  --hk-space-1: 0.25rem;  /* 4px  */
+  --hk-space-2: 0.5rem;   /* 8px  */
+  --hk-space-3: 0.75rem;  /* 12px */
+  --hk-space-4: 1rem;     /* 16px */
+  --hk-space-5: 1.25rem;  /* 20px */
+  --hk-space-6: 1.5rem;   /* 24px */
+  --hk-space-8: 2rem;     /* 32px */
+  --hk-space-10: 2.5rem;  /* 40px */
+  --hk-space-12: 3rem;    /* 48px */
+  --hk-space-16: 4rem;    /* 64px */
+  --hk-space-20: 5rem;    /* 80px */
+
+  /* Border radius */
+  --hk-radius-sm: 0.5rem;   /* 8px  */
+  --hk-radius-md: 0.75rem;  /* 12px */
+  --hk-radius-lg: 1rem;     /* 16px */
+  --hk-radius-xl: 1.5rem;   /* 24px */
+  --hk-radius-full: 9999px;
+
+  /* Elevation / shadow */
+  --hk-shadow-xs: 0 1px 2px rgba(43, 43, 43, 0.06);
+  --hk-shadow-sm: 0 2px 8px -2px rgba(43, 43, 43, 0.08);
+  --hk-shadow-md: 0 10px 30px -10px rgba(74, 46, 53, 0.12);
+  --hk-shadow-lg: 0 20px 45px -16px rgba(43, 43, 43, 0.20);
+
+  /* Motion (duration + easing) */
+  --hk-duration-fast: 150ms;
+  --hk-duration-base: 220ms;
+  --hk-duration-slow: 320ms;
+  --hk-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --hk-ease-emphasized: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Z-index scale */
+  --hk-z-base: 0;
+  --hk-z-sticky: 40;
+  --hk-z-overlay: 50;
+  --hk-z-modal: 60;
+  --hk-z-toast: 70;
+
+  /* Focus ring (accessible, high-contrast) */
+  --hk-focus-ring-color: #2B2B2B;
+  --hk-focus-ring-width: 2px;
+  --hk-focus-ring-offset: 2px;
+}
+
+/* ── Phase 7: Global prefers-reduced-motion guard ─────────────────────
+   Menghormati preferensi pengguna yang sensitif terhadap gerakan.
+   Menonaktifkan animasi/transisi dekoratif, mempertahankan transisi instan. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Hentikan sepenuhnya animasi loop dekoratif */
+  .animate-spin-slow,
+  .animate-botanical-sway,
+  .animate-shimmer-foil,
+  .animate-hk-botanical-sway,
+  .animate-hk-pulse-slow,
+  .animate-hk-path-draw path,
+  .animate-bounce-subtle {
+    animation: none !important;
+  }
+}
+
+/* Reduced-data / low-power: matikan efek blur berat (glassmorphism) agar tetap terjangkau */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel,
+  .glass-panel-gold {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: #FFFFFF;
+  }
+}
+
+/* Background Utility Classes */
+.bg-hk-charcoal { background-color: var(--color-charcoal); }
+.bg-hk-taupe { background-color: var(--color-taupe); }
+.bg-hk-champagne { background-color: var(--color-champagne); }
+.bg-hk-soft-beige { background-color: var(--color-soft-beige); }
+.bg-hk-ivory { background-color: var(--color-ivory); }
+.bg-hk-canvas { background-color: var(--color-canvas); }
+
+/* Text Utility Classes */
+.text-hk-charcoal { color: var(--color-charcoal); }
+.text-hk-taupe { color: var(--color-taupe); }
+.text-hk-champagne { color: var(--color-champagne); }
+.text-hk-soft-beige { color: var(--color-soft-beige); }
+.text-hk-ivory { color: var(--color-ivory); }
+.text-hk-plum { color: var(--color-plum); }
+.text-hk-plum-light { color: var(--color-plum-light); }
+
+/* Border Utility Classes */
+.border-hk-charcoal { border-color: var(--color-charcoal); }
+.border-hk-taupe { border-color: var(--color-taupe); }
+.border-hk-champagne { border-color: var(--color-champagne); }
+.border-hk-soft-beige { border-color: var(--color-soft-beige); }
+.border-hk-ivory { border-color: var(--color-ivory); }
+
+/* Typography Utility Classes */
+.font-editorial { font-family: var(--font-display); }
+.font-serif-luxury { font-family: var(--font-serif-luxury); }
+.font-manrope { font-family: var(--font-body); }

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from "react";
 import { CoverLayoutProps } from "../CoverCardEngine";
 import { MailOpen, Heart } from "lucide-react";
@@ -12,10 +12,10 @@ export const CoverLayout_BookCover: React.FC<CoverLayoutProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${exitClass}`}
+      className={`fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 ${exitClass}`}
       style={{ background: c.background }}
     >
-      <div className="relative w-full max-w-sm flex shadow-2xl" style={{ maxHeight: "90vh" }}>
+      <div className="relative w-full max-w-sm flex shadow-2xl my-auto" style={{ maxHeight: "90vh" }}>
         {/* Book Spine */}
         <div
           className="w-8 flex-shrink-0 flex flex-col items-center justify-between py-6 rounded-l-sm"

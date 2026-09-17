@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from "react";
 import { CoverLayoutProps } from "../CoverCardEngine";
 import { MailOpen, Heart } from "lucide-react";
@@ -12,7 +12,7 @@ export const CoverLayout_ScrollUnroll: React.FC<CoverLayoutProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${exitClass}`}
+      className={`fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 ${exitClass}`}
       style={{ background: c.background }}
     >
       {/* Background shimmer radial */}
@@ -22,7 +22,7 @@ export const CoverLayout_ScrollUnroll: React.FC<CoverLayoutProps> = ({
       />
 
       {/* Scroll container */}
-      <div className="relative w-full max-w-sm">
+      <div className="relative w-full max-w-sm my-auto">
         {/* Top scroll rod */}
         <div
           className="relative w-full h-8 rounded-full flex items-center shadow-xl"

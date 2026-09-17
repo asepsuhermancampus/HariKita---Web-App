@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint · Typecheck · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      # Skema produksi = PostgreSQL; validate butuh URL berformat postgres.
+      # Test memakai SQLite temporer (schema.sqlite.prisma) — tidak butuh koneksi nyata.
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/harikita?schema=public"
+      DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/harikita?schema=public"
+      HARIKITA_PAYMENT_PROVIDER: "simulated_qris"
+      HARIKITA_CRON_SECRET: "ci-cron-secret"
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma generate (PostgreSQL client)
+        run: npx prisma generate
+
+      - name: Prisma generate (SQLite client — tests)
+        run: npx prisma generate --schema prisma/schema.sqlite.prisma
+
+      - name: Prisma validate
+        run: npx prisma validate
+
+      - name: Push schema to test DB (SQLite)
+        run: npx prisma db push --schema prisma/schema.sqlite.prisma --skip-generate
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build

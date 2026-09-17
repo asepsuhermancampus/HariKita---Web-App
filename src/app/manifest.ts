@@ -1,4 +1,7 @@
 import type { MetadataRoute } from "next";
+import { ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
+
+const TEMPLATE_COUNT = ALL_INVITATION_TEMPLATES.length;
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -45,7 +48,7 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: "Katalog Undangan Digital",
         short_name: "Undangan",
-        description: "Eksplorasi 64 template undangan digital",
+        description: `Eksplorasi ${TEMPLATE_COUNT} template undangan digital`,
         url: "/undangan/demo",
         icons: [{ src: "/icons/icon-192x192.png", sizes: "192x192" }],
       },

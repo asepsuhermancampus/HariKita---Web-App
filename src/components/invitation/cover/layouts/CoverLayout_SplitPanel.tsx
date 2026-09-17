@@ -12,12 +12,12 @@ export const CoverLayout_SplitPanel: React.FC<CoverLayoutProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col sm:flex-row ${exitClass}`}
+      className={`fixed inset-0 z-50 flex flex-col sm:flex-row overflow-y-auto ${exitClass}`}
       style={{ background: c.background }}
     >
       {/* Left panel — decorative/ornament */}
       <div
-        className="sm:w-2/5 h-40 sm:h-full flex flex-col items-center justify-center relative overflow-hidden"
+        className="sm:w-2/5 h-28 sm:h-full flex-shrink-0 flex flex-col items-center justify-center relative overflow-hidden"
         style={{ background: `linear-gradient(160deg, ${c.primary}22, ${c.secondary}33)` }}
       >
         {/* Vertical text label */}
@@ -54,7 +54,7 @@ export const CoverLayout_SplitPanel: React.FC<CoverLayoutProps> = ({
       </div>
 
       {/* Right panel — text content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-8 py-8 text-center space-y-4">
+      <div className="flex-1 flex flex-col items-center justify-start overflow-y-auto px-8 py-6 text-center space-y-4">
         {/* Label */}
         <p className="text-[9px] uppercase tracking-[0.35em]" style={{ color: c.accent, opacity: 0.7 }}>
           The Wedding of
@@ -62,7 +62,7 @@ export const CoverLayout_SplitPanel: React.FC<CoverLayoutProps> = ({
 
         {/* Names */}
         <div className="space-y-0.5">
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold" style={{ color: c.text }}>
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold leading-tight" style={{ color: c.text }}>
             {brideName}
           </h1>
           <div className="flex items-center justify-center gap-3 py-0.5">
@@ -70,7 +70,7 @@ export const CoverLayout_SplitPanel: React.FC<CoverLayoutProps> = ({
             <span className="text-xl" style={{ color: c.accent }}>&amp;</span>
             <span className="h-px w-8" style={{ background: c.border }} />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold" style={{ color: c.text }}>
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold leading-tight" style={{ color: c.text }}>
             {groomName}
           </h1>
         </div>

@@ -3,13 +3,32 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev_runner.js",
+    "dev:next": "next dev",
+    "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true}); console.log('.next cache dibersihkan')\"",
+    "dev:clean": "npm run clean && npm run dev",
+    "prebuild": "node scripts/generate_asset_manifest.js && node scripts/verify_assets_complete.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "validate": "prisma validate",
+    "generate": "prisma generate",
+    "generate:sqlite": "prisma generate --schema prisma/schema.sqlite.prisma",
+    "test": "tsx --test tests/*.test.ts",
+    "verify": "npm run typecheck && npm run validate && npm run test",
+    "assets:manifest": "node scripts/generate_asset_manifest.js && node scripts/verify_assets_complete.js",
+    "assets:verify": "node scripts/verify_assets_complete.js",
+    "audio:fetch": "node scripts/fetch-cc0-audio.mjs",
+    "audio:verify": "node scripts/fetch-cc0-audio.mjs --verify",
+    "assets:watch": "node scripts/watch_assets.js",
     "db:push": "prisma db push",
+    "db:push:sqlite": "prisma db push --schema prisma/schema.sqlite.prisma",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate && prisma generate --schema prisma/schema.sqlite.prisma"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -21,6 +40,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.2",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "daisyui": "^4.12.23",
@@ -32,12 +52,15 @@
     "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.10.1",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
+    "potrace": "^2.1.8",
     "prisma": "^6.1.0",
+    "svgo": "^4.1.0",
     "tailwindcss": "^3.4.16",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"

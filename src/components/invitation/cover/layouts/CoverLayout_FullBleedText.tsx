@@ -12,7 +12,7 @@ export const CoverLayout_FullBleedText: React.FC<CoverLayoutProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center px-8 py-8 text-center ${exitClass}`}
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-start overflow-y-auto px-8 py-8 text-center ${exitClass}`}
       style={{ background: c.background }}
     >
       {/* Horizontal rule top */}
@@ -27,7 +27,7 @@ export const CoverLayout_FullBleedText: React.FC<CoverLayoutProps> = ({
         </div>
       ))}
 
-      <div className="space-y-6 max-w-sm w-full">
+      <div className="space-y-6 max-w-sm w-full my-auto">
         {/* Eyebrow label */}
         <p
           className="text-[9px] uppercase tracking-[0.4em] font-medium"

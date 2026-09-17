@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="54" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <circle cx="60" cy="60" r="48" stroke="currentColor" stroke-width="1"/>
+      <text x="60" y="52" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-weight="600" font-size="16" letter-spacing="2" fill="currentColor">HariKita</text>
+      <text x="60" y="68" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-style="italic" font-size="9" letter-spacing="1" fill="currentColor">Your Day. Our Story.</text>
+      <circle cx="60" cy="80" r="2" fill="currentColor"/>
+    </svg>

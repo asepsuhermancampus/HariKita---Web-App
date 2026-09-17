@@ -1,9 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { cartStore } from "@/lib/cart-store";
+import {
+  mergeSelections,
+  selectionsFromCartItems,
+  CATEGORY_TO_SERVICE as categoryToServiceMap,
+  VENDOR_TO_SERVICE as vendorToServiceMap,
+} from "@/lib/builder-selection";
 import { formatRupiah } from "@/lib/utils";
 import { ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
+import { availabilityStore } from "@/lib/availability-store";
+import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
+import { checkAvailabilityMatrixAction, type MatrixResult } from "@/server/actions/availability-matrix";
+import { MULTI_VENDOR_CATALOG } from "@/data/multi-vendor-catalog";
 import {
   Sparkles,
   Check,
@@ -21,6 +33,7 @@ import {
   Gift,
   Camera,
   Scissors,
+  AlertTriangle,
   Palette,
   Heart,
   Cake,
@@ -160,31 +173,68 @@ const KEBUMEN_SERVICES: ServiceItem[] = [
   },
 ];
 
+// Mapping categoryId/vendorId katalog → service ID kini diimpor dari
+// "@/lib/builder-selection" (categoryToServiceMap, vendorToServiceMap).
+
 export default function MixMatchBuilderPage() {
-  // State: selected items map
-  const [selectedItems, setSelectedItems] = useState<{ [id: string]: { count?: number } }>({
-    "busana-1": { count: 1 },
-    "mua-1": { count: 1 },
-    "katering-1": { count: 100 },
-    "undangan-1": { count: 1 },
-  });
+  // State: selected items map (awal kosong — diisi hanya bila akses via tombol "Pilih Layanan").
+  const [selectedItems, setSelectedItems] = useState<{ [id: string]: { count?: number } }>({});
 
   // State: selected theme for digital invitation
-  const [selectedThemeId, setSelectedThemeId] = useState("autumnelle");
+  const [selectedThemeId, setSelectedThemeId] = useState("");
 
+  // Baca URL param (auto-pilih layanan/tema) DAN hydrate dari cartStore,
+  // lalu MERGE agar pilihan dari halaman /vendor/kategori/* tidak hilang.
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const themeFromUrl = params.get("selectedTheme");
-      if (themeFromUrl && ALL_INVITATION_TEMPLATES.some((t) => t.id === themeFromUrl)) {
-        setSelectedThemeId(themeFromUrl);
-      }
+    if (typeof window === "undefined") return;
+
+    // 1) Hydrate dari cartStore (vendor yang dikumpulkan lintas halaman).
+    const hydrated = selectionsFromCartItems(cartStore.getSnapshot().items);
+
+    // 2) Auto-pilih dari URL param.
+    const params = new URLSearchParams(window.location.search);
+    const vendorParam = params.get("vendor");
+    const catParam = params.get("cat");
+    const serviceId =
+      (vendorParam && vendorToServiceMap[vendorParam]) ||
+      (catParam && (categoryToServiceMap[catParam] || vendorToServiceMap[catParam])) ||
+      null;
+
+    const fromUrl: { [id: string]: { count?: number } } = {};
+    if (serviceId) {
+      const service = KEBUMEN_SERVICES.find((s) => s.id === serviceId);
+      if (service) fromUrl[serviceId] = { count: service.defaultUnit || 1 };
+    }
+
+    // 3) Merge: URL param menang atas hidrasi (bila bentrok), sisanya dipertahankan.
+    setSelectedItems((prev) => mergeSelections(mergeSelections(prev, hydrated), fromUrl));
+
+    // 4) Tema undangan dari URL.
+    const themeFromUrl = params.get("selectedTheme");
+    if (themeFromUrl && ALL_INVITATION_TEMPLATES.some((t) => t.id === themeFromUrl)) {
+      setSelectedThemeId(themeFromUrl);
     }
   }, []);
 
-  // State: checkout modal (Lazy registration)
+  const router = useRouter();
+
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isOrderSubmitted, setIsOrderSubmitted] = useState(false);
+  const checkoutDialogRef = useRef<HTMLDivElement>(null);
+  const checkoutInitialFocusRef = useRef<HTMLButtonElement>(null);
+
+  // Callback stabil (useCallback) supaya perubahan referensi dari re-render
+  // (mis. saat mengetik di form) tidak me-restart focus trap & memindahkan
+  // fokus kembali ke tombol "Batal".
+  const closeCheckout = useCallback(() => setIsCheckoutOpen(false), []);
+
+  // Focus trap + Escape untuk modal checkout (Phase 7 a11y).
+  useFocusTrap(
+    checkoutDialogRef,
+    isCheckoutOpen,
+    closeCheckout,
+    checkoutInitialFocusRef
+  );
   const [clientForm, setClientForm] = useState({
     name: "",
     phone: "",
@@ -193,32 +243,71 @@ export default function MixMatchBuilderPage() {
     notes: "",
   });
 
+  // Reactive Availability Matrix (DB-backed, dengan fallback mock).
+  const selectedVendors = KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).map((s) => s.vendor);
+  const mockMatrixResult = availabilityStore.checkMatrix(clientForm.eventDate, selectedVendors);
+
+  // Peta nama vendor → ID katalog (untuk resolve ke DB).
+  const catalogIdByVendorName = React.useMemo(() => {
+    const map: Record<string, { catalogVendorId: string; catalogPackageId: string }> = {};
+    for (const v of MULTI_VENDOR_CATALOG) {
+      map[v.name] = { catalogVendorId: v.id, catalogPackageId: v.packages[0]?.id ?? "" };
+    }
+    return map;
+  }, []);
+
+  const [dbMatrix, setDbMatrix] = React.useState<MatrixResult | null>(null);
+  const [matrixPending, setMatrixPending] = React.useState(false);
+
+  // Query ketersediaan nyata ketika tanggal/kategori berubah.
+  React.useEffect(() => {
+    const items = KEBUMEN_SERVICES.filter((s) => selectedItems[s.id])
+      .map((s) => catalogIdByVendorName[s.vendor])
+      .filter((x): x is { catalogVendorId: string; catalogPackageId: string } => Boolean(x?.catalogPackageId));
+
+    if (!clientForm.eventDate || items.length === 0) {
+      setDbMatrix(null);
+      return;
+    }
+
+    let cancelled = false;
+    setMatrixPending(true);
+    checkAvailabilityMatrixAction({ eventDate: clientForm.eventDate, vendors: items })
+      .then((res) => {
+        if (!cancelled && res.success) setDbMatrix(res.data);
+      })
+      .finally(() => {
+        if (!cancelled) setMatrixPending(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientForm.eventDate, selectedVendors.join(",")]);
+
+  // Gunakan hasil DB bila ada; jika tidak, fallback ke mock.
+  const matrixResult = dbMatrix ?? mockMatrixResult;
+
   // Calculate live total
   const calculateTotal = () => {
     let total = 0;
-    KEBUMEN_SERVICES.forEach((service) => {
-      const selected = selectedItems[service.id];
-      if (selected) {
-        if (service.unitType === "pax") {
-          const pax = selected.count || service.defaultUnit || 100;
-          total += pax * (service.unitPrice || 45000);
-        } else if (service.unitType === "baki") {
-          const baki = selected.count || service.defaultUnit || 7;
-          total += baki * (service.unitPrice || 150000);
-        } else if (service.unitType === "pcs") {
-          const pcs = selected.count || service.defaultUnit || 100;
-          total += pcs * (service.unitPrice || 15000);
-        } else {
-          total += service.basePrice;
-        }
+    Object.entries(selectedItems).forEach(([serviceId, itemState]) => {
+      const service = KEBUMEN_SERVICES.find((s) => s.id === serviceId);
+      if (!service) return;
+
+      if (service.unitType && service.unitPrice) {
+        const units = itemState.count || service.defaultUnit || 1;
+        total += service.basePrice + units * service.unitPrice;
+      } else {
+        total += service.basePrice;
       }
     });
     return total;
   };
 
   const totalAmount = calculateTotal();
-  const dpAmount = totalAmount * 0.3; // 30%
-  const settlementAmount = totalAmount * 0.7; // 70%
+  const dpAmount = Math.round(totalAmount * 0.3);
+  const settlementAmount = totalAmount - dpAmount;
 
   const toggleItem = (id: string, defaultCount: number = 1) => {
     setSelectedItems((prev) => {
@@ -239,9 +328,76 @@ export default function MixMatchBuilderPage() {
     }));
   };
 
+  const syncToCart = () => {
+    // Upsert: jangan clearCart — pertahankan kategori lain yang mungkin
+    // dikumpulkan dari halaman /vendor/kategori/* tetapi belum diubah di builder.
+    const builderServiceIds = new Set(
+      KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).map((s) => s.id)
+    );
+
+    // Hapus dulu item cart yang kategorinya sedang di-drive builder,
+    // agar tidak ada duplikat kategori; kategori lain tetap utuh.
+    for (const item of cartStore.getSnapshot().items) {
+      const serviceId =
+        categoryToServiceMap[item.categoryId] || vendorToServiceMap[item.vendorId];
+      if (serviceId && builderServiceIds.has(serviceId)) {
+        cartStore.removeItem(item.id);
+      }
+    }
+
+    KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).forEach((item) => {
+      const current = selectedItems[item.id];
+      const unitPrice =
+        item.unitType && item.unitPrice
+          ? item.basePrice + (current?.count || item.defaultUnit || 1) * item.unitPrice
+          : item.basePrice;
+
+      // Resolve ID katalog asli (v_*) dari nama vendor; fallback ke nama
+      // ter-slug bila tidak ditemukan, supaya tidak pernah menulis "vendor_<id>".
+      const catalog = catalogIdByVendorName[item.vendor];
+      const vendorId =
+        catalog?.catalogVendorId || item.vendor.toLowerCase().replace(/[^a-z0-9]/g, "-");
+
+      // ServiceItem tidak punya field `categoryId`; turunkan dari peta
+      // CATEGORY_TO_SERVICE agar konsisten dengan kunci cart yang dipakai
+      // selectionsFromCartItems.
+      const categoryId =
+        Object.entries(categoryToServiceMap).find(([, sid]) => sid === item.id)?.[0] ??
+        item.category.toLowerCase().replace(/[^a-z0-9]/g, "_");
+
+      cartStore.addItem({
+        categoryId,
+        categoryTitle: item.category,
+        vendorId,
+        vendorName: item.vendor,
+        district: "Kebumen Kota",
+        packageId: catalog?.catalogPackageId || item.id,
+        packageName: item.name,
+        unitPrice,
+        quantity: 1,
+        callTime: "08:00 WIB",
+        notes: item.description,
+      });
+    });
+
+    if (clientForm.name || clientForm.phone) {
+      cartStore.setCustomerInfo(clientForm.name, clientForm.phone);
+    }
+    if (clientForm.eventDate) {
+      cartStore.setEventDate(clientForm.eventDate);
+    }
+    if (clientForm.venueAddress) {
+      cartStore.setEventLocation(clientForm.venueAddress);
+    }
+  };
+
   const handleCheckoutSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    syncToCart();
     setIsOrderSubmitted(true);
+    setTimeout(() => {
+      router.push("/checkout");
+    }, 600);
   };
 
   return (
@@ -297,11 +453,20 @@ export default function MixMatchBuilderPage() {
                     </div>
 
                     <div className="space-y-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-gold-dark bg-gold/15 px-2 py-0.5 rounded-full">
                           {service.category}
                         </span>
                         <span className="text-xs text-plum-light font-medium">• {service.vendor}</span>
+                        {availabilityStore.checkMatrix(clientForm.eventDate, [service.vendor]).isAllAvailable ? (
+                          <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                            ✓ Siap Hadir
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-semibold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
+                            Jadwal Terisi
+                          </span>
+                        )}
                       </div>
                       <h3 className="font-serif-luxury text-lg font-bold text-plum">
                         {service.name}
@@ -332,17 +497,19 @@ export default function MixMatchBuilderPage() {
                     {/* Unit Slider for Pax Catering */}
                     {service.unitType === "pax" && (
                       <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <span className="font-bold text-plum">Jumlah Tamu (Pax):</span>
+                        <label htmlFor={`pax-${service.id}`} className="font-bold text-plum">Jumlah Tamu (Pax):</label>
                         <input
+                          id={`pax-${service.id}`}
                           type="range"
                           min="50"
                           max="500"
                           step="25"
                           value={currentItem?.count || 100}
                           onChange={(e) => updateCount(service.id, parseInt(e.target.value, 10))}
-                          className="range range-xs range-primary w-40"
+                          aria-valuetext={`${currentItem?.count || 100} pax`}
+                          className="range range-xs range-primary w-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum"
                         />
-                        <span className="font-mono font-bold text-plum bg-gold/15 px-2.5 py-1 rounded-lg">
+                        <span className="font-mono font-bold text-plum bg-gold/15 px-2.5 py-1 rounded-lg" aria-hidden="true">
                           {currentItem?.count || 100} Pax
                         </span>
                       </div>
@@ -377,6 +544,9 @@ export default function MixMatchBuilderPage() {
                           onChange={(e) => setSelectedThemeId(e.target.value)}
                           className="select select-xs bg-[#FAF8F5] border-gold/30 text-plum font-semibold rounded-lg max-w-[200px]"
                         >
+                          <option value="" disabled>
+                            -- Pilih desain undangan --
+                          </option>
                           {ALL_INVITATION_TEMPLATES.map((t) => (
                             <option key={t.id} value={t.id}>
                               {t.title} ({t.category})
@@ -384,7 +554,7 @@ export default function MixMatchBuilderPage() {
                           ))}
                         </select>
                         <Link
-                          href={`/undangan/demo?theme=${selectedThemeId}`}
+                          href={`/undangan/demo?theme=${selectedThemeId || "autumnelle"}`}
                           target="_blank"
                           className="text-[11px] text-gold-dark hover:underline font-bold"
                         >
@@ -420,6 +590,42 @@ export default function MixMatchBuilderPage() {
               <h3 className="font-serif-luxury text-2xl font-bold text-plum">
                 Paket Impian Hari H
               </h3>
+            </div>
+
+            {/* Multi-Vendor Availability Matrix Box */}
+            <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-gold/30 space-y-2.5 text-xs">
+              <div className="flex items-center justify-between gap-2">
+                <label className="font-bold text-plum flex items-center gap-1.5 shrink-0">
+                  <Calendar className="w-3.5 h-3.5 text-gold-dark" />
+                  <span>Tanggal Acara:</span>
+                </label>
+                <input
+                  type="date"
+                  value={clientForm.eventDate}
+                  onChange={(e) => setClientForm((prev) => ({ ...prev, eventDate: e.target.value }))}
+                  className="p-1.5 rounded-lg border border-gold/40 text-xs font-mono font-bold text-plum bg-white focus:outline-none focus:border-gold w-36"
+                />
+              </div>
+
+              {selectedVendors.length > 0 && (
+                matrixResult.isAllAvailable ? (
+                  <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-[11px] flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block">Matriks Ketersediaan 100% Bebas:</strong>
+                      Seluruh {matrixResult.totalChecked} vendor terpilih siap hadir di Kebumen pada tanggal ini.
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-[11px] flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block">Bentrok Jadwal Terdeteksi ({matrixResult.conflicts.length} Vendor):</strong>
+                      {matrixResult.conflicts.map((c) => `${c.vendorName} (${c.reason})`).join(", ")}.
+                    </div>
+                  </div>
+                )
+              )}
             </div>
 
             {/* Selected Breakdown */}
@@ -486,12 +692,20 @@ export default function MixMatchBuilderPage() {
 
       {/* LAZY REGISTRATION CHECKOUT MODAL */}
       {isCheckoutOpen && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl border border-gold/40 space-y-6 animate-fadeIn">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="builder-checkout-title"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+        >
+          <div
+            ref={checkoutDialogRef}
+            className="w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl border border-gold/40 space-y-6 animate-fadeIn max-h-[90vh] overflow-y-auto"
+          >
             {isOrderSubmitted ? (
               <div className="text-center space-y-4 py-4">
-                <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" />
-                <h3 className="font-serif-luxury text-2xl font-bold text-plum">
+                <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" aria-hidden="true" />
+                <h3 id="builder-checkout-title" className="font-serif-luxury text-2xl font-bold text-plum">
                   Pesanan Berhasil Diajukan!
                 </h3>
                 <p className="text-xs text-plum-light leading-relaxed">
@@ -521,7 +735,7 @@ export default function MixMatchBuilderPage() {
                   <span className="text-[10px] uppercase tracking-wider text-gold-dark font-bold">
                     Pemesanan Praktis (Lazy Registration)
                   </span>
-                  <h3 className="font-serif-luxury text-2xl font-bold text-plum">
+                  <h3 id="builder-checkout-title" className="font-serif-luxury text-2xl font-bold text-plum">
                     Lengkapi Kontak Acara
                   </h3>
                   <p className="text-xs text-plum-light">
@@ -531,43 +745,50 @@ export default function MixMatchBuilderPage() {
 
                 <div className="space-y-3 pt-2">
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-plum">Nama Calon Pengantin / Keluarga</label>
+                    <label htmlFor="builder-name" className="text-xs font-bold text-plum">Nama Calon Pengantin / Keluarga</label>
                     <input
+                      id="builder-name"
                       type="text"
                       required
                       placeholder="Contoh: Bima & Citra"
+                      autoComplete="name"
                       value={clientForm.name}
                       onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
-                      className="input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-plum">Nomor WhatsApp Aktif</label>
+                    <label htmlFor="builder-phone" className="text-xs font-bold text-plum">Nomor WhatsApp Aktif</label>
                     <input
+                      id="builder-phone"
                       type="tel"
                       required
                       placeholder="0812xxxxxxx"
+                      autoComplete="tel"
+                      inputMode="tel"
                       value={clientForm.phone}
                       onChange={(e) => setClientForm({ ...clientForm, phone: e.target.value })}
-                      className="input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-plum">Tanggal Acara</label>
+                      <label htmlFor="builder-event-date" className="text-xs font-bold text-plum">Tanggal Acara</label>
                       <input
+                        id="builder-event-date"
                         type="date"
                         required
                         value={clientForm.eventDate}
                         onChange={(e) => setClientForm({ ...clientForm, eventDate: e.target.value })}
-                        className="input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum text-xs"
+                        className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum text-xs"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-xs font-bold text-plum">Kota Pelaksanaan</label>
+                      <label htmlFor="builder-city" className="text-xs font-bold text-plum">Kota Pelaksanaan</label>
                       <input
+                        id="builder-city"
                         type="text"
                         disabled
                         value="Kabupaten Kebumen"
@@ -577,14 +798,15 @@ export default function MixMatchBuilderPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs font-bold text-plum">Lokasi Acara (Gedung / Kediaman)</label>
+                    <label htmlFor="builder-venue" className="text-xs font-bold text-plum">Lokasi Acara (Gedung / Kediaman)</label>
                     <input
+                      id="builder-venue"
                       type="text"
                       required
                       placeholder="Contoh: Gedung Setda Kebumen"
                       value={clientForm.venueAddress}
                       onChange={(e) => setClientForm({ ...clientForm, venueAddress: e.target.value })}
-                      className="input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
                     />
                   </div>
                 </div>
@@ -601,15 +823,16 @@ export default function MixMatchBuilderPage() {
 
                 <div className="flex items-center justify-end gap-3 pt-2">
                   <button
+                    ref={checkoutInitialFocusRef}
                     type="button"
-                    onClick={() => setIsCheckoutOpen(false)}
-                    className="btn btn-sm btn-ghost text-plum rounded-full"
+                    onClick={closeCheckout}
+                    className="focus-ring btn btn-sm btn-ghost text-plum rounded-full min-h-[44px]"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-sm"
+                    className="focus-ring btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-sm min-h-[44px]"
                   >
                     Konfirmasi Booking Tanggal
                   </button>

@@ -1,37 +1,60 @@
-"use client";
-import React from "react";
+﻿"use client";
+import React, { useState, useEffect } from "react";
 import { CoverLayoutProps } from "../CoverCardEngine";
 import { MailOpen, Heart } from "lucide-react";
 
-// Layout: PolaroidPhoto — Frame foto instan Polaroid, untuk Cute-Illustrated (4 templates)
+// Dot config computed once on the client — never causes SSR hydration mismatch
+interface DotConfig {
+  bg: string;
+  opacity: number;
+  left: string;
+  top: string;
+  transform: string;
+}
+
 export const CoverLayout_PolaroidPhoto: React.FC<CoverLayoutProps> = ({
   theme, brideName, groomName, guestName, formattedDate, exitClass, onOpenClick,
 }) => {
   const c = theme.colors;
 
+  // Client-only: render confetti dots AFTER hydration to avoid SSR mismatch
+  const [dots, setDots] = useState<DotConfig[] | null>(null);
+  useEffect(() => {
+    setDots(
+      [...Array(16)].map((_, i) => ({
+        bg: [c.primary, c.accent, c.secondary][i % 3],
+        opacity: 0.25 + Math.random() * 0.2,
+        left: `${5 + Math.random() * 90}%`,
+        top: `${5 + Math.random() * 90}%`,
+        transform: `rotate(${Math.random() * 360}deg) scale(${0.5 + Math.random()})`,
+      }))
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${exitClass}`}
+      className={`fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 ${exitClass}`}
       style={{ background: `linear-gradient(135deg, ${c.background} 0%, ${c.border}50 100%)` }}
     >
-      {/* Scattered confetti dots */}
-      {[...Array(16)].map((_, i) => (
+      {/* Scattered confetti dots — client-only, no SSR hydration mismatch */}
+      {dots?.map((dot, i) => (
         <div
           key={i}
           className="absolute w-2 h-2 rounded-full pointer-events-none"
           style={{
-            background: [c.primary, c.accent, c.secondary][i % 3],
-            opacity: 0.25 + Math.random() * 0.2,
-            left: `${5 + Math.random() * 90}%`,
-            top: `${5 + Math.random() * 90}%`,
-            transform: `rotate(${Math.random() * 360}deg) scale(${0.5 + Math.random()})`,
+            background: dot.bg,
+            opacity: dot.opacity,
+            left: dot.left,
+            top: dot.top,
+            transform: dot.transform,
           }}
         />
       ))}
 
       {/* Polaroid frame */}
       <div
-        className="relative w-full max-w-xs flex flex-col items-center"
+        className="relative w-full max-w-xs flex flex-col items-center my-auto"
         style={{
           background: "#FFFFFF",
           borderRadius: "4px",

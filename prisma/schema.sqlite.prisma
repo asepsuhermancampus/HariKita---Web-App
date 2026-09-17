@@ -1,0 +1,521 @@
+// ── HariKita - Skema SQLite (DEV LOKAL & TEST) ───────────────────────────────
+// Salinan dari schema.prisma untuk provider SQLite. Menghasilkan client
+// terpisah di `generated/sqlite-client` agar tidak bentrok dengan client
+// PostgreSQL utama. JANGAN tambahkan model di sini tanpa menyelaraskan
+// schema.prisma (PostgreSQL) — schema.prisma adalah sumber kebenaran produksi.
+//
+// Generate: npx prisma generate --schema prisma/schema.sqlite.prisma
+// Push dev:  npx prisma db push --schema prisma/schema.sqlite.prisma
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/sqlite-client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String               @id @default(cuid())
+  name              String
+  phone             String               @unique
+  email             String?              @unique
+  pin               String?              // bcrypt hash PIN 6-digit untuk autentikasi
+  role              String               @default("CLIENT") // "CLIENT", "VENDOR", "ADMIN"
+  vendorProfile     VendorProfile?
+  clientProfile     ClientProfile?
+  orders            Order[]
+  heldSlots         VendorAvailability[] @relation("UserAvailabilityHolds")
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+}
+
+model ClientProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  partnerName     String?   // Nama mempelai pasangan (contoh: "Citra Kirana")
+  eventDate       DateTime? // Tanggal hari H acara
+  eventLocation   String?   // Venue / Gedung / Alamat di Kebumen
+  district        String?   @default("Kebumen") // Kecamatan di Kebumen (Kebumen, Gombong, Ayah, dll)
+  themePreference String?   // Preferensi tema/adat (contoh: "Jawa Klasik Modern", "Minimalist Floral")
+  notes           String?   // Catatan khusus impian calon pengantin
+  avatarUrl       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model VendorProfile {
+  id             String               @id @default(cuid())
+  userId         String               @unique
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName   String
+  category       String               // 11 Kategori Layanan
+  picName        String?              // Nama Pemilik / PIC Vendor
+  city           String               @default("Kebumen")
+  district       String?              @default("Kebumen") // Kecamatan di Kebumen (Kebumen Kota, Gombong, Ayah, dll)
+  address        String
+  description    String?              // Deskripsi studio & layanan
+  slaGuarantees  String?              // Pernyataan komitmen SLA & garansi kru cadangan
+  rating         Float                @default(5.0)
+  reviewCount    Int                  @default(0)
+  igHandle       String?
+  tiktokHandle   String?
+  bankName       String?
+  bankAccount    String?
+  bankHolder     String?
+  walletBalance  Int                  @default(0) // Integer Rupiah
+  isVerified     Boolean              @default(true)
+
+  // Status Kurasi/Verifikasi Vendor
+  verificationStatus String           @default("APPROVED") // "PENDING", "APPROVED", "REJECTED"
+  verificationNote   String?          // Catatan revisi/penolakan Super Admin
+
+  // Statistik & Multi-Tier Analytics
+  viewsGuest     Int                  @default(142) // Dilihat pengunjung belum memiliki akun
+  viewsAuth      Int                  @default(58)  // Dilihat klien terdaftar (memiliki akun)
+  builderTrials  Int                  @default(34)  // Percobaan peracikan mix-and-match dengan vendor lain
+  bookmarksCount Int                  @default(19)  // Postingan yang disukai/disimpan klien
+  ordersSolo     Int                  @default(7)   // Pesanan berhasil jasa tunggal vendor
+  ordersCombo    Int                  @default(12)  // Pesanan berhasil yang dikombinasikan dengan vendor lain
+
+  packages       ServicePackage[]
+  blackoutDates  BlackoutDate[]
+  availabilities VendorAvailability[]
+  orderItems     OrderItem[]
+  portfolios     VendorPortfolio[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+}
+
+model VendorPortfolio {
+  id           String        @id @default(cuid())
+  vendorId     String
+  vendor       VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  title        String
+  locationTag  String?
+  categoryTag  String?
+  styleTags    String?       // JSON stringified array
+  caption      String?
+  imageUrl     String
+  likes        Int           @default(0)
+  isPublished  Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([vendorId, createdAt])
+}
+
+model BlackoutDate {
+  id          String        @id @default(cuid())
+  vendorId    String
+  vendor      VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  date        DateTime
+  reason      String?
+  createdAt   DateTime      @default(now())
+
+  @@unique([vendorId, date])
+}
+
+model ServicePackage {
+  id          String         @id @default(cuid())
+  vendorId    String
+  vendor      VendorProfile  @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  category    String
+  name        String
+  description String
+  basePrice   Int            // Integer Rupiah
+  unitType    String?        // "pax", "baki", "pcs", "all_in"
+  unitPrice   Int?           // Integer Rupiah harga per tambahan satuan
+  minUnit     Int?           @default(1)
+  maxUnit     Int?
+  slaDays     Int            @default(7)
+  imageUrl    String?
+  includes    String?        // JSON stringified array fitur
+  orderItems  OrderItem[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model VendorAvailability {
+  id                   String         @id @default(cuid())
+  vendorId             String
+  vendor               VendorProfile  @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  date                 DateTime       // Disimpan pada 00:00:00 WIB (Asia/Jakarta)
+  status               String         @default("OPEN") // "OPEN", "HELD", "RESERVED", "BOOKED", "BLACKED_OUT"
+  
+  // Checkout Temporary Hold (15 menit)
+  holdTokenHash        String?
+  heldByUserId         String?
+  heldByUser           User?          @relation("UserAvailabilityHolds", fields: [heldByUserId], references: [id], onDelete: SetNull)
+  holdExpiresAt        DateTime?      // Hanya berlaku saat status = "HELD"
+  
+  // Order Reservation Binding
+  reservationExpiresAt DateTime?      // Batas waktu canonical saat RESERVED
+  orderItemId          String?        @unique
+  orderItem            OrderItem?     @relation(fields: [orderItemId], references: [id], onDelete: SetNull)
+
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  @@unique([vendorId, date])
+  @@index([vendorId, status, date])
+}
+
+model Order {
+  id                  String               @id @default(cuid())
+  orderNumber         String               @unique
+  userId              String?
+  user                User?                @relation(fields: [userId], references: [id])
+  clientName          String
+  clientPhone         String
+  eventDate           DateTime
+  city                String               @default("Kebumen")
+  totalAmount         Int                  // Integer Rupiah
+  status              String               @default("PENDING_CONFIRMATION")
+  notes               String?
+
+  // Canonical Deadlines
+  vendorResponseDueAt DateTime?            // Batas SLA vendor (24 jam dari order dibuat)
+  dpDueAt             DateTime?            // Batas transfer DP (24 jam dari semua vendor accept)
+
+  items               OrderItem[]
+  installments        PaymentInstallment[]
+  refunds             Refund[]
+  disputes            Dispute[]
+  journals            LedgerJournal[]
+  statusHistories     OrderStatusHistory[]
+  escrow              EscrowTransaction?   // Legacy Bridge
+  contract            DigitalContract?
+  sessions            PhysicalSession[]
+  rundowns            EventRundown[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+}
+
+model OrderItem {
+  id                  String                  @id @default(cuid())
+  orderId             String
+  order               Order                   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  vendorId            String
+  vendor              VendorProfile           @relation(fields: [vendorId], references: [id])
+  packageId           String?
+  package             ServicePackage?         @relation(fields: [packageId], references: [id], onDelete: SetNull)
+
+  // Snapshot Identitas Vendor & Paket
+  vendorNameSnapshot  String                  @default("")
+  vendorSlugSnapshot  String?
+  categorySlug        String                  @default("")
+  serviceName         String                  @default("")
+  packageName         String                  @default("")
+  packageSnapshot     String?                 // JSON string tersanitasi
+  snapshotVersion     String                  @default("v1")
+
+  // Perhitungan Harga Terverifikasi Server
+  unitType            String?                 // "pax", "baki", "pcs", "all_in"
+  quantity            Int                     @default(1)
+  unitPrice           Int                     // Integer Rupiah
+  subtotal            Int                     // Integer Rupiah: quantity * unitPrice
+
+  // Status & Siklus Respon Vendor
+  status              String                  @default("PENDING") // "PENDING", "ACCEPTED", "REJECTED", "CANCELLED"
+  rejectionReason     String?
+  vendorResponseDueAt DateTime?
+  confirmedAt         DateTime?
+  rejectedAt          DateTime?
+  cancelledAt         DateTime?
+
+  // Relasi Pendamping
+  availability        VendorAvailability?     // Relasi 1-to-1 ke slot ketersediaan
+  disputes            Dispute[]               // Sengketa spesifik pada item ini
+  statusHistories     OrderItemStatusHistory[]
+
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+
+  @@index([orderId, status])
+  @@index([vendorId, status])
+}
+
+model PaymentInstallment {
+  id             String           @id @default(cuid())
+  orderId        String
+  order          Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type           String           // "DP_30", "SETTLEMENT_70", "FULL_100"
+  amount         Int              // Integer Rupiah
+  status         String           @default("PENDING") // "PENDING", "PAID", "CANCELLED"
+  dueAt          DateTime?
+  paidAt         DateTime?
+
+  attempts       PaymentAttempt[]
+  refunds        Refund[]
+  journals       LedgerJournal[]
+
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([orderId, type])
+  @@index([orderId, status])
+}
+
+model PaymentAttempt {
+  id                    String             @id @default(cuid())
+  installmentId         String
+  installment           PaymentInstallment @relation(fields: [installmentId], references: [id], onDelete: Cascade)
+  provider              String             // "midtrans", "xendit", "simulated_qris"
+  providerTransactionId String?
+  gatewayRef            String?
+  amount                Int                // Integer Rupiah
+  status                String             @default("CREATED") // "CREATED", "PENDING", "PAID", "FAILED", "EXPIRED"
+  idempotencyKey        String             @unique
+  paidAt                DateTime?
+  errorMessage          String?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  @@index([installmentId, status])
+}
+
+model PaymentWebhookEvent {
+  id           String    @id @default(cuid())
+  provider     String    // "midtrans", "xendit", "simulated"
+  eventId      String
+  eventType    String
+  payload      String    // Raw JSON string
+  processed    Boolean   @default(false)
+  processedAt  DateTime?
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+
+  @@unique([provider, eventId])
+  @@index([provider, processed])
+}
+
+model Refund {
+  id                    String              @id @default(cuid())
+  orderId               String
+  order                 Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  installmentId         String?
+  installment           PaymentInstallment? @relation(fields: [installmentId], references: [id], onDelete: SetNull)
+  amount                Int                 // Integer Rupiah
+  reason                String
+  status                String              @default("PENDING") // "PENDING", "PROCESSING", "PAID", "FAILED", "CANCELLED"
+  gatewayRef            String?
+  providerTransactionId String?
+  processedAt           DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  @@index([orderId, status])
+}
+
+model Dispute {
+  id          String     @id @default(cuid())
+  orderId     String
+  order       Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderItemId String?
+  orderItem   OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: SetNull)
+  openedBy    String     // User ID (Klien atau Vendor)
+  reason      String     // "VENDOR_NO_SHOW", "QUALITY_MISMATCH", "UNAUTHORIZED_EXTRA_FEE", "CANCEL_REQUEST"
+  description String
+  evidence    String?    // JSON metadata bukti privat
+  status      String     @default("OPEN") // "OPEN", "UNDER_REVIEW", "RESOLVED", "REJECTED", "CLOSED"
+  resolution  String?
+  resolvedBy  String?    // Admin User ID
+  resolvedAt  DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([orderId, status])
+  @@index([orderItemId])
+}
+
+model LedgerJournal {
+  id            String              @id @default(cuid())
+  journalNumber String              @unique // "JRN-YYYYMMDD-XXXX"
+  orderId       String?
+  order         Order?              @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  installmentId String?
+  installment   PaymentInstallment? @relation(fields: [installmentId], references: [id], onDelete: SetNull)
+  type          String              // "ESCROW_DP_IN", "DP_DISBURSEMENT", "SETTLEMENT_IN", "SETTLEMENT_PAYOUT", "REVERSAL"
+  description   String
+  currency      String              @default("IDR")
+
+  // Self-Relation untuk Jurnal Pembalik
+  reversalOfId  String?             @unique
+  reversalOf    LedgerJournal?      @relation("JournalReversal", fields: [reversalOfId], references: [id], onDelete: Restrict)
+  reversedBy    LedgerJournal?      @relation("JournalReversal")
+
+  createdAt     DateTime            @default(now())
+  entries       LedgerEntry[]
+
+  @@index([orderId])
+  @@index([installmentId])
+}
+
+model LedgerEntry {
+  id        String        @id @default(cuid())
+  journalId String
+  journal   LedgerJournal @relation(fields: [journalId], references: [id], onDelete: Restrict)
+  accountId String        // "1010_CASH_GATEWAY", "2010_CLIENT_ESCROW", "2020_VENDOR_PAYABLE", "4010_PLATFORM_FEE"
+  entityId  String?       // ID Vendor atau ID Klien jika relevan
+  debit     Int           @default(0) // Integer Rupiah
+  credit    Int           @default(0) // Integer Rupiah
+  createdAt DateTime      @default(now())
+
+  @@index([journalId])
+  @@index([accountId, entityId])
+}
+
+model OrderStatusHistory {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fromStatus String?
+  toStatus   String
+  reason     String?
+  changedBy  String?  // User ID atau "SYSTEM"
+  createdAt  DateTime @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+model OrderItemStatusHistory {
+  id          String    @id @default(cuid())
+  orderItemId String
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  fromStatus  String?
+  toStatus    String
+  reason      String?
+  changedBy   String?
+  createdAt   DateTime  @default(now())
+
+  @@index([orderItemId, createdAt])
+}
+
+model EscrowTransaction {
+  id                   String    @id @default(cuid())
+  orderId              String    @unique
+  order                Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  dpAmount             Int       // Integer Rupiah (30%)
+  dpStatus             String    @default("UNPAID") // "UNPAID", "HOLD", "RELEASED"
+  dpPaidAt             DateTime?
+  dpReleasedAt         DateTime?
+  settlementAmount     Int       // Integer Rupiah (70%)
+  settlementStatus     String    @default("UNPAID") // "UNPAID", "HOLD", "RELEASED"
+  settlementPaidAt     DateTime?
+  settlementReleasedAt DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model DigitalContract {
+  id             String    @id @default(cuid())
+  orderId        String    @unique
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  contractNumber String    @unique
+  terms          String
+  clientSigned   Boolean   @default(false)
+  clientSignedAt DateTime?
+  vendorSigned   Boolean   @default(true)
+  vendorSignedAt DateTime? @default(now())
+  createdAt      DateTime  @default(now())
+}
+
+model PhysicalSession {
+  id            String   @id @default(cuid())
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type          String   // "FIRST_FITTING", "FINAL_FITTING", "TEST_FOOD"
+  scheduledDate DateTime
+  status        String   @default("SCHEDULED") // "SCHEDULED", "COMPLETED", "RESCHEDULED"
+  notes         String?
+  location      String
+  createdAt     DateTime @default(now())
+}
+
+model EventRundown {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  timeSlot  String  // e.g. "08:00 - 09:30"
+  activity  String  // e.g. "Akad Nikah & Ijab Qabul"
+  picName   String?
+  picPhone  String?
+  location  String?
+  sortOrder Int     @default(0)
+}
+
+model DigitalInvitation {
+  id            String     @id @default(cuid())
+  slug          String     @unique // e.g. "annika-sebastian"
+  themeId       String     // e.g. "autumnelle-animasi", "seraphicus-lux"
+  title         String
+  brideName     String
+  brideFather   String?
+  brideMother   String?
+  bridePhoto    String?
+  groomName     String
+  groomFather   String?
+  groomMother   String?
+  groomPhoto    String?
+  eventDate     DateTime
+  venueName     String
+  venueAddress  String
+  googleMapsUrl String?
+  liveStreamUrl String?
+  igFilterUrl   String?
+  musicUrl      String?
+  backsoundTrackId String?  // NEW — catalog track id (CC0 backsound)
+  sfxPaletteId     String?  // NEW — SfxPalette.id
+  storyTimeline String?    // JSON string array
+  bankAccounts  String?    // JSON string array
+  giftAddress   String?
+  qrisImageUrl  String?
+  galleryPhotos String?    // JSON string array
+  rsvps         RsvpWish[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model RsvpWish {
+  id           String            @id @default(cuid())
+  invitationId String
+  invitation   DigitalInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  guestName    String
+  attendance   String            // "hadir", "tidak_hadir", "ragu"
+  paxCount     Int               @default(1)
+  sessionCode  String?           // "s1", "s2", "s3"
+  message      String
+  createdAt    DateTime          @default(now())
+}
+
+model AnalyticsTelemetry {
+  id        String   @id @default(cuid())
+  eventType String   // "PAGE_VIEW", "CART_ADD", "PRICELIST_CLICK", "CHECKOUT_INIT", "DEAL_CLOSED"
+  path      String
+  metadata  String?  // JSON string
+  timestamp DateTime @default(now())
+}
+
+model Notification {
+  id            String    @id @default(cuid())
+  channel       String    // "WHATSAPP", "EMAIL", "IN_APP"
+  status        String    @default("PENDING") // "PENDING", "SENT", "FAILED"
+  templateKey   String    // mis. "ORDER_CREATED_VENDOR", "DP_PAID_CLIENT"
+  recipientType String    // "CLIENT", "VENDOR", "ADMIN"
+  recipientName String?
+  recipientRef  String?   // nomor HP atau email
+  orderId       String?
+  payload       String?   // JSON string konteks (nama, tanggal, nominal)
+  body          String    // isi pesan final
+  attempts      Int       @default(0)
+  lastError     String?
+  sentAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([status, createdAt])
+  @@index([orderId])
+}

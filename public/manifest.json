@@ -8,7 +8,11 @@
   "background_color": "#FAF8F5",
   "theme_color": "#FAF8F5",
   "orientation": "portrait",
-  "categories": ["lifestyle", "events", "shopping"],
+  "categories": [
+    "lifestyle",
+    "events",
+    "shopping"
+  ],
   "lang": "id",
   "dir": "ltr",
   "prefer_related_applications": false,
@@ -36,21 +40,36 @@
       "short_name": "Builder",
       "description": "Simulator racik paket lamaran & pernikahan",
       "url": "/builder",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Katalog Undangan Digital",
       "short_name": "Undangan",
-      "description": "Eksplorasi 64 template undangan digital",
+      "description": "Eksplorasi 71 template undangan digital",
       "url": "/undangan/demo",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Portal Klien",
       "short_name": "Klien",
       "description": "Dashboard invoice & tracker fitting",
       "url": "/client",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HariKita - Review 11 Aset Baru (Vine Ornaments)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --canvas: #FAF8F5;
+      --charcoal: #2B2B2B;
+      --plum: #4A2E35;
+      --taupe: #88735B;
+      --gold: #C5A880;
+      --gold-dark: #6B5741;
+      --soft-beige: #E8DED1;
+      --card-bg: #FFFFFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--canvas);
+      color: var(--charcoal);
+      font-family: 'Manrope', sans-serif;
+      padding: 40px 24px 80px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--soft-beige);
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.6rem;
+      font-weight: 600;
+      color: var(--plum);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--taupe);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .badge-status {
+      display: inline-block;
+      padding: 6px 14px;
+      background: #EBF7EE;
+      color: #1B7A38;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 14px;
+      letter-spacing: 0.5px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.8rem;
+      color: var(--plum);
+      margin: 36px 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--soft-beige);
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid var(--soft-beige);
+      box-shadow: 0 4px 16px rgba(74, 46, 53, 0.04);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--plum);
+    }
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #F5EFEB;
+      color: var(--gold-dark);
+    }
+    .card-desc {
+      font-size: 0.82rem;
+      color: #666;
+      margin-bottom: 14px;
+    }
+    .preview-box {
+      background: #FAF8F5;
+      border: 1px dashed #D6C8B8;
+      border-radius: 12px;
+      padding: 24px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
+      position: relative;
+    }
+    .preview-box img {
+      max-width: 100%;
+      max-height: 140px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(74, 46, 53, 0.08));
+    }
+    .color-swatches {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      justify-content: flex-end;
+    }
+    .color-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .callout {
+      background: #FAF5EE;
+      border-left: 4px solid var(--gold-dark);
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 24px 0;
+      font-size: 0.92rem;
+      color: #5A4736;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>HariKita Vine Ornaments Gallery</h1>
+      <p class="subtitle">Ekstraksi 11 Aset Vektor Baru dari Lembar Master ornamen_11.png ke dalam Kategori Ornaments</p>
+      <div class="badge-status">11 / 11 Vektor Berhasil Dibuat • 0% Clipping • Belum Di-commit</div>
+    </header>
+
+    <div class="callout">
+      <strong>Catatan Kualitas:</strong> Seluruh 11 ornamen telah diekstrak dengan kurva halus <em>potrace</em>, mendukung <code>fill="currentColor"</code> untuk adaptasi tema, memiliki margin pelindung 25px (bebas clipping), dan telah terdaftar di <code>src/data/harikita-assets.json</code> (Total aset: 254).
+    </div>
+
+    <!-- Row 1: Header Brackets -->
+    <h2 class="section-title">1. Bingkai Sulur Lebar / Header Brackets (3 Aset)</h2>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-01.svg</div>
+            <div class="card-desc">Bingkai horizontal sulur lekuk melebar</div>
+          </div>
+          <span class="tag">Bracket</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-01.svg" alt="Vine 01" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-02.svg</div>
+            <div class="card-desc">Bingkai horizontal sudut U lembut</div>
+          </div>
+          <span class="tag">Bracket</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-02.svg" alt="Vine 02" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-03.svg</div>
+            <div class="card-desc">Bingkai horizontal sulur lengkung natural</div>
+          </div>
+          <span class="tag">Bracket</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-03.svg" alt="Vine 03" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Circular Wreaths -->
+    <h2 class="section-title">2. Karangan Bunga Melingkar / Circular Wreaths (4 Aset)</h2>
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-04.svg</div>
+            <div class="card-desc">Lingkaran ranting ganda</div>
+          </div>
+          <span class="tag">Wreath</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-04.svg" alt="Vine 04" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-05.svg</div>
+            <div class="card-desc">Lingkaran gelombang organik</div>
+          </div>
+          <span class="tag">Wreath</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-05.svg" alt="Vine 05" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-06.svg</div>
+            <div class="card-desc">Lingkaran spiral kuncup halus</div>
+          </div>
+          <span class="tag">Wreath</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-06.svg" alt="Vine 06" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-07.svg</div>
+            <div class="card-desc">Lingkaran sulur simpul kuncup</div>
+          </div>
+          <span class="tag">Wreath</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-07.svg" alt="Vine 07" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Bottom Crests -->
+    <h2 class="section-title">3. Karangan Lengkung Bawah / Crest Wreaths (4 Aset)</h2>
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-08.svg</div>
+            <div class="card-desc">Lengkung setengah lingkaran bawah</div>
+          </div>
+          <span class="tag">Crest</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-08.svg" alt="Vine 08" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-09.svg</div>
+            <div class="card-desc">Sepasang cabang sulur kiri-kanan</div>
+          </div>
+          <span class="tag">Crest</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-09.svg" alt="Vine 09" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-10.svg</div>
+            <div class="card-desc">Silang simpul cabang bawah</div>
+          </div>
+          <span class="tag">Crest</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-10.svg" alt="Vine 10" />
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">ornament-vine-11.svg</div>
+            <div class="card-desc">Mahkota sulur lengkung lembut</div>
+          </div>
+          <span class="tag">Crest</span>
+        </div>
+        <div class="preview-box">
+          <img src="/assets/harikita/ornaments/ornament-vine-11.svg" alt="Vine 11" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

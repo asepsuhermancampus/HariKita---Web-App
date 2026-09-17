@@ -1,38 +1,68 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ALL_INVITATION_TEMPLATES, MASTER_ARCHETYPES } from "@/lib/templates/registry";
-import { Sparkles, Eye, CheckCircle2, Filter, Search } from "lucide-react";
+import { Sparkles, Eye, CheckCircle2, Search } from "lucide-react";
+
+const InvitationPreviewModal = dynamic(
+  () =>
+    import("@/components/invitation/InvitationPreviewModal").then(
+      (mod) => mod.InvitationPreviewModal
+    ),
+  { ssr: false }
+);
+
+const CATEGORIES = [
+  "All",
+  "Botanical",
+  "Javanese",
+  "Islamic",
+  "Minimalist",
+  "Rose Gold",
+  "Rustic",
+  "Celestial",
+  "Cute",
+];
+
+const normalize = (str: string) => str.toLowerCase().replace(/[-\s]/g, "");
 
 export default function UndanganCatalogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [previewModal, setPreviewModal] = useState<{ themeId: string; themeTitle: string } | null>(null);
 
-  const categories = [
-    "All",
-    "Botanical",
-    "Javanese",
-    "Islamic",
-    "Minimalist",
-    "Rose Gold",
-    "Rustic",
-    "Celestial",
-    "Cute",
-  ];
+  const categories = CATEGORIES;
 
-  const filteredThemes = ALL_INVITATION_TEMPLATES.filter((theme) => {
-    const matchesCategory =
-      selectedCategory === "All" ||
-      theme.category.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-      theme.archetypeId.toLowerCase().includes(selectedCategory.toLowerCase());
-    const matchesSearch =
-      theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      theme.sourceOrigin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      theme.category.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filteredThemes = useMemo(() => {
+    return ALL_INVITATION_TEMPLATES.filter((theme) => {
+      const selNorm = normalize(selectedCategory);
+      const catNorm = normalize(theme.category || "");
+      const archNorm = normalize(theme.archetypeId || "");
+
+      const matchesCategory =
+        selectedCategory === "All" ||
+        catNorm.includes(selNorm) ||
+        archNorm.includes(selNorm) ||
+        (selNorm === "rosegold" && (archNorm.includes("rose") || archNorm.includes("royal") || catNorm.includes("royal") || catNorm.includes("gold"))) ||
+        (selNorm === "cute" && (archNorm.includes("cute") || archNorm.includes("animated") || archNorm.includes("special"))) ||
+        (selNorm === "islamic" && (archNorm.includes("islamic") || archNorm.includes("syari"))) ||
+        (selNorm === "javanese" && (archNorm.includes("javanese") || archNorm.includes("traditional") || archNorm.includes("cultural"))) ||
+        (selNorm === "botanical" && (archNorm.includes("botanical") || archNorm.includes("floral")));
+
+      const queryNorm = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !queryNorm ||
+        theme.title.toLowerCase().includes(queryNorm) ||
+        theme.sourceOrigin.toLowerCase().includes(queryNorm) ||
+        theme.category.toLowerCase().includes(queryNorm) ||
+        theme.archetypeId.toLowerCase().includes(queryNorm);
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [selectedCategory, searchQuery]);
 
   return (
     <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
@@ -50,21 +80,39 @@ export default function UndanganCatalogPage() {
         </p>
       </div>
 
-      {/* 8 Master Archetype Cards (Educational Bar) */}
+      {/* 8 Master Archetype Cards (Educational Bar & Quick Filters) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
-        {MASTER_ARCHETYPES.map((arch) => (
-          <div
-            key={arch.id}
-            className="p-3 rounded-2xl bg-white/70 border border-gold/25 shadow-xs text-center space-y-1 hover:border-gold transition-colors"
-          >
-            <span className="text-[10px] font-bold text-gold-dark uppercase tracking-wider block">
-              {arch.name.split(" ")[0]}
-            </span>
-            <p className="text-[9px] text-plum-light line-clamp-2 leading-snug">
-              {arch.description}
-            </p>
-          </div>
-        ))}
+        {MASTER_ARCHETYPES.map((arch) => {
+          const categoryName =
+            arch.id.includes("botanical") || arch.id.includes("floral") ? "Botanical" :
+            arch.id.includes("traditional") || arch.id.includes("javanese") ? "Javanese" :
+            arch.id.includes("islamic") || arch.id.includes("syari") ? "Islamic" :
+            arch.id.includes("minimalist") ? "Minimalist" :
+            arch.id.includes("royal") || arch.id.includes("rose") || arch.id.includes("fullscreen") ? "Rose Gold" :
+            arch.id.includes("rustic") || arch.id.includes("pampas") ? "Rustic" :
+            arch.id.includes("celestial") ? "Celestial" : "Cute";
+
+          const isSelected = selectedCategory.toLowerCase() === categoryName.toLowerCase();
+
+          return (
+            <button
+              key={arch.id}
+              onClick={() => setSelectedCategory(isSelected ? "All" : categoryName)}
+              className={`p-3 rounded-2xl border text-center space-y-1 transition-all cursor-pointer ${
+                isSelected
+                  ? "bg-amber-100/90 border-amber-600 shadow-sm scale-102"
+                  : "bg-white/70 border-gold/25 hover:border-gold shadow-xs hover:bg-white"
+              }`}
+            >
+              <span className={`text-[10px] font-bold uppercase tracking-wider block ${isSelected ? "text-amber-900 font-extrabold" : "text-gold-dark"}`}>
+                {arch.name.split(" ")[0]} {categoryName}
+              </span>
+              <p className="text-[9px] text-plum-light line-clamp-2 leading-snug">
+                {arch.description}
+              </p>
+            </button>
+          );
+        })}
       </div>
 
       {/* Search & Filter Bar */}
@@ -99,8 +147,24 @@ export default function UndanganCatalogPage() {
         </div>
       </div>
 
+      {/* Results Header */}
+      <div className="flex items-center justify-between px-1">
+        <span className="text-xs font-semibold text-plum-light">
+          Menampilkan <strong className="text-plum">{filteredThemes.length}</strong> dari {ALL_INVITATION_TEMPLATES.length} desain template
+          {selectedCategory !== "All" && <span className="text-gold-dark font-medium"> • Kategori: {selectedCategory}</span>}
+        </span>
+        {(selectedCategory !== "All" || searchQuery) && (
+          <button
+            onClick={() => { setSelectedCategory("All"); setSearchQuery(""); }}
+            className="text-xs text-amber-800 hover:underline font-semibold cursor-pointer"
+          >
+            Reset Filter
+          </button>
+        )}
+      </div>
+
       {/* Theme Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 contain-content-auto">
         {filteredThemes.map((theme) => (
           <div
             key={theme.id}
@@ -113,6 +177,8 @@ export default function UndanganCatalogPage() {
                   src={theme.previewImageUrl}
                   alt={theme.title}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  loading="lazy"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute top-3 left-3">
@@ -168,14 +234,14 @@ export default function UndanganCatalogPage() {
 
             {/* Action Buttons */}
             <div className="p-5 pt-0 grid grid-cols-2 gap-2">
-              <Link
-                href={`/undangan/demo?theme=${theme.id}&to=Bapak+Joko+dan+Keluarga&sesi=s1`}
-                target="_blank"
-                className="btn btn-xs btn-outline border-gold/40 text-plum font-bold rounded-full hover:bg-gold/15 flex items-center justify-center gap-1"
+              <button
+                id={`btn-preview-${theme.id}`}
+                onClick={() => setPreviewModal({ themeId: theme.id, themeTitle: theme.title })}
+                className="btn btn-xs btn-outline border-gold/40 text-plum font-bold rounded-full hover:bg-gold/15 flex items-center justify-center gap-1 min-h-[36px]"
               >
                 <Eye className="w-3.5 h-3.5 text-gold-dark" />
                 <span>Lihat Demo</span>
-              </Link>
+              </button>
               <Link
                 href={`/builder?selectedTheme=${theme.id}`}
                 className="btn btn-xs gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-xs hover:brightness-105 flex items-center justify-center gap-1"
@@ -187,6 +253,14 @@ export default function UndanganCatalogPage() {
           </div>
         ))}
       </div>
+
+      {/* Invitation Preview Modal */}
+      <InvitationPreviewModal
+        isOpen={previewModal !== null}
+        themeId={previewModal?.themeId ?? ""}
+        themeTitle={previewModal?.themeTitle ?? ""}
+        onClose={() => setPreviewModal(null)}
+      />
     </div>
   );
 }

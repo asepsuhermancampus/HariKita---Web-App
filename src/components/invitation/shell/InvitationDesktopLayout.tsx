@@ -2,22 +2,29 @@
 
 import React, { useState, useEffect } from "react";
 import { Calendar, MapPin, Heart, Clock } from "lucide-react";
+import { TemplateThemePreset } from "@/lib/templates/types";
 
 interface InvitationDesktopLayoutProps {
+  themeColors?: TemplateThemePreset["colors"];
   brideName: string;
   groomName: string;
   eventDate: string; // ISO string e.g. "2026-11-20T09:00:00Z"
   coverPhoto?: string;
   venueName?: string;
+  isCoverOpened?: boolean;
+  entryAnimId?: string;
   children: React.ReactNode;
 }
 
 export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = ({
+  themeColors,
   brideName,
   groomName,
   eventDate,
   coverPhoto = "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
   venueName = "Kebumen, Jawa Tengah",
+  isCoverOpened = true,
+  entryAnimId = "rise-up",
   children,
 }) => {
   const [timeLeft, setTimeLeft] = useState({
@@ -61,7 +68,13 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
   });
 
   return (
-    <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex flex-col lg:flex-row overflow-x-hidden font-sans">
+    <div
+      className="w-full min-h-screen flex flex-col lg:flex-row overflow-x-hidden font-sans transition-colors duration-300"
+      style={{
+        backgroundColor: themeColors?.background ?? "#020617",
+        color: themeColors?.text ?? "#f8fafc",
+      }}
+    >
       {/* LEFT PANE: Desktop Cinematic Showcase (Visible >= 1024px) */}
       <aside className="hidden lg:flex lg:w-1/2 h-screen sticky top-0 relative overflow-hidden flex-col justify-between p-12 select-none z-10">
         {/* Background Image with Slow Ken Burns Scale */}
@@ -150,11 +163,103 @@ export const InvitationDesktopLayout: React.FC<InvitationDesktopLayoutProps> = (
       </aside>
 
       {/* RIGHT PANE: Centered Mobile Viewport Showcase */}
-      <main className="w-full lg:w-1/2 min-h-screen flex justify-center bg-slate-900/60 relative">
-        <div className="w-full max-w-[480px] min-h-screen relative shadow-2xl bg-white dark:bg-slate-900 flex flex-col transition-all">
+      <main
+        className={`w-full lg:w-1/2 min-h-screen flex justify-center relative ${
+          !isCoverOpened ? "h-screen max-h-screen overflow-hidden" : ""
+        }`}
+        style={{
+          backgroundColor: themeColors ? `${themeColors.background}D9` : "rgba(15, 23, 42, 0.6)",
+        }}
+      >
+        <div
+          className={`w-full max-w-[480px] min-h-screen relative shadow-2xl flex flex-col transition-all ${
+            !isCoverOpened
+              ? "h-screen max-h-screen overflow-hidden"
+              : (ENTRY_ANIM_MAP[entryAnimId] ?? "animate-entry-rise-up")
+          }`}
+          style={{
+            backgroundColor: themeColors?.background ?? "#ffffff",
+          }}
+        >
           {children}
+          {/* Opaque shield: covers content completely until cover is opened.
+              Rendered via inline style to guarantee it is applied before
+              any CSS class resolution or paint, eliminating the brief flash.
+              Now uses themeColors.background so zero navy blue flash occurs. */}
+          {!isCoverOpened && (
+            <div
+              aria-hidden="true"
+              suppressHydrationWarning
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                zIndex: 40,
+                background: themeColors?.background ?? "#0f172a",
+                pointerEvents: "none",
+              }}
+            />
+          )}
         </div>
       </main>
+      <style>{ENTRY_KEYFRAMES}</style>
     </div>
   );
 };
+
+const ENTRY_ANIM_MAP: Record<string, string> = {
+  "rise-up": "animate-entry-rise-up",
+  "fade-in": "animate-entry-fade-in",
+  "fall-in": "animate-entry-fall-in",
+  "scale-in": "animate-entry-scale-in",
+  "rotate-in": "animate-entry-rotate-in",
+  "unfurl": "animate-entry-unfurl",
+  "doors-close": "animate-entry-doors-close",
+  "slide-left": "animate-entry-slide-left",
+};
+
+const ENTRY_KEYFRAMES = `
+  @keyframes entryRiseUp {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes entryFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes entryFallIn {
+    0% { opacity: 0; transform: translateY(-40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes entryScaleIn {
+    0% { opacity: 0; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes entryRotateIn {
+    0% { opacity: 0; transform: perspective(800px) rotateX(10deg) translateY(24px); }
+    100% { opacity: 1; transform: perspective(800px) rotateX(0deg) translateY(0); }
+  }
+  @keyframes entryUnfurl {
+    0% { opacity: 0; transform: scaleY(0.85); transform-origin: top center; }
+    100% { opacity: 1; transform: scaleY(1); transform-origin: top center; }
+  }
+  @keyframes entryDoorsClose {
+    0% { opacity: 0; filter: blur(6px); transform: scale(0.96); }
+    100% { opacity: 1; filter: blur(0px); transform: scale(1); }
+  }
+  @keyframes entrySlideLeft {
+    0% { opacity: 0; transform: translateX(40px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+
+  .animate-entry-rise-up { animation: entryRiseUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-fade-in { animation: entryFadeIn 0.8s ease-out both; }
+  .animate-entry-fall-in { animation: entryFallIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-scale-in { animation: entryScaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-rotate-in { animation: entryRotateIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-unfurl { animation: entryUnfurl 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .animate-entry-doors-close { animation: entryDoorsClose 0.85s ease-out both; }
+  .animate-entry-slide-left { animation: entrySlideLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+`;

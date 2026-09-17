@@ -42,7 +42,7 @@ export const CoverLayout_GateDoors: React.FC<CoverLayoutProps> = ({
       />
 
       {/* Central content panel */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 py-8 space-y-5 z-10">
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 py-4 space-y-4 z-10 overflow-y-auto">
         {/* Gold bar ornament top */}
         <div className="flex items-center gap-3 w-full max-w-xs">
           <span className="h-px flex-1" style={{ background: `linear-gradient(to right, transparent, ${c.accent})` }} />
@@ -59,15 +59,15 @@ export const CoverLayout_GateDoors: React.FC<CoverLayoutProps> = ({
 
         {/* Names */}
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-serif font-bold" style={{ color: c.text }}>
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold leading-tight" style={{ color: c.text }}>
             {brideName}
           </h1>
           <div className="flex items-center justify-center gap-4">
             <svg width="40" height="2"><line x1="0" y1="1" x2="40" y2="1" stroke={c.accent} strokeWidth="1" opacity="0.5" /></svg>
-            <span className="text-3xl font-light" style={{ color: c.accent }}>&</span>
+            <span className="text-2xl sm:text-3xl font-light" style={{ color: c.accent }}>&</span>
             <svg width="40" height="2"><line x1="0" y1="1" x2="40" y2="1" stroke={c.accent} strokeWidth="1" opacity="0.5" /></svg>
           </div>
-          <h1 className="text-4xl font-serif font-bold" style={{ color: c.text }}>
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold leading-tight" style={{ color: c.text }}>
             {groomName}
           </h1>
         </div>

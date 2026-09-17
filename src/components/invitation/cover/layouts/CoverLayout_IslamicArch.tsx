@@ -12,7 +12,7 @@ export const CoverLayout_IslamicArch: React.FC<CoverLayoutProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-4 transition-none ${exitClass}`}
+      className={`fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 transition-none ${exitClass}`}
       style={{ background: c.background }}
     >
       {/* Background Arabesque Pattern */}
@@ -25,7 +25,7 @@ export const CoverLayout_IslamicArch: React.FC<CoverLayoutProps> = ({
       />
 
       {/* Arch Frame SVG */}
-      <div className="relative w-full max-w-sm mx-auto">
+      <div className="relative w-full max-w-sm mx-auto my-auto">
         {/* Islamic Arch SVG at top */}
         <svg viewBox="0 0 320 80" className="w-full" style={{ marginBottom: "-2px" }}>
           <path
@@ -52,7 +52,7 @@ export const CoverLayout_IslamicArch: React.FC<CoverLayoutProps> = ({
 
         {/* Main Card Body */}
         <div
-          className="relative px-8 pb-8 pt-4 text-center space-y-5 shadow-2xl"
+          className="relative px-8 pb-6 pt-3 text-center space-y-4 shadow-2xl"
           style={{ background: c.cardBg, border: `1px solid ${c.border}`, borderTop: "none" }}
         >
           {/* Arabic Bismillah-style header */}

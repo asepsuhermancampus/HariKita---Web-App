@@ -1,7 +1,18 @@
-"use client";
-import React from "react";
+﻿"use client";
+import React, { useState, useEffect } from "react";
 import { CoverLayoutProps } from "../CoverCardEngine";
 import { MailOpen, Heart } from "lucide-react";
+
+// Particle dot config — client-only to prevent SSR hydration mismatch
+interface ParticleDot {
+  width: string;
+  height: string;
+  opacity: number;
+  left: string;
+  top: string;
+  animation: string;
+  animationDelay: string;
+}
 
 // Layout: CircleMonogram — Lingkaran monogram besar berkilau, untuk Rose-Gold & Celestial
 export const CoverLayout_CircleMonogram: React.FC<CoverLayoutProps> = ({
@@ -9,25 +20,42 @@ export const CoverLayout_CircleMonogram: React.FC<CoverLayoutProps> = ({
 }) => {
   const c = theme.colors;
 
+  // Client-only: particle dots rendered AFTER hydration to avoid SSR mismatch
+  const [particles, setParticles] = useState<ParticleDot[] | null>(null);
+  useEffect(() => {
+    setParticles(
+      [...Array(12)].map((_, i) => ({
+        width: `${2 + Math.random() * 3}px`,
+        height: `${2 + Math.random() * 3}px`,
+        opacity: 0.15 + Math.random() * 0.25,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        animation: `float-dot ${3 + Math.random() * 4}s ease-in-out infinite alternate`,
+        animationDelay: `${Math.random() * 2}s`,
+      }))
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center p-4 ${exitClass}`}
+      className={`fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 ${exitClass}`}
       style={{ background: c.background }}
     >
-      {/* Floating particle dots */}
-      {[...Array(12)].map((_, i) => (
+      {/* Floating particle dots — client-only, no SSR hydration mismatch */}
+      {particles?.map((p, i) => (
         <div
           key={i}
           className="absolute rounded-full pointer-events-none"
           style={{
-            width: `${2 + Math.random() * 3}px`,
-            height: `${2 + Math.random() * 3}px`,
+            width: p.width,
+            height: p.height,
             background: c.accent,
-            opacity: 0.15 + Math.random() * 0.25,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animation: `float-dot ${3 + Math.random() * 4}s ease-in-out infinite alternate`,
-            animationDelay: `${Math.random() * 2}s`,
+            opacity: p.opacity,
+            left: p.left,
+            top: p.top,
+            animation: p.animation,
+            animationDelay: p.animationDelay,
           }}
         />
       ))}

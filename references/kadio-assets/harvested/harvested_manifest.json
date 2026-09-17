@@ -1,0 +1,2242 @@
+[
+  {
+    "name": "paper.png",
+    "theme": "iris-lotus",
+    "source": "css",
+    "sizeKb": "276.3",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo4/paper.png"
+  },
+  {
+    "name": "flower-back-2.png",
+    "theme": "arctic-rose",
+    "source": "css",
+    "sizeKb": "334.7",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo4/flower-back-2.png"
+  },
+  {
+    "name": "flower-back.png",
+    "theme": "arctic-rose",
+    "source": "css",
+    "sizeKb": "333.8",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo4/flower-back.png"
+  },
+  {
+    "name": "cover-flower.png",
+    "theme": "arctic-rose",
+    "source": "css",
+    "sizeKb": "74.0",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo4/cover-flower.png"
+  },
+  {
+    "name": "cover-flower-2.png",
+    "theme": "arctic-rose",
+    "source": "css",
+    "sizeKb": "71.6",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo4/cover-flower-2.png"
+  },
+  {
+    "name": "bride-bg.png",
+    "theme": "arctic-rose",
+    "source": "css",
+    "sizeKb": "42.3",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo4/bride-bg.png"
+  },
+  {
+    "name": "bride-bg-2.png",
+    "theme": "arctic-rose",
+    "source": "css",
+    "sizeKb": "41.6",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo4/bride-bg-2.png"
+  },
+  {
+    "name": "story-flower.png",
+    "theme": "arctic-rose",
+    "source": "css",
+    "sizeKb": "14.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo4/story-flower.png"
+  },
+  {
+    "name": "particle.png",
+    "theme": "arctic-rose",
+    "source": "css",
+    "sizeKb": "8.0",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo4/particle.png"
+  },
+  {
+    "name": "bg-flower.png",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "287.8",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/bg-flower.png"
+  },
+  {
+    "name": "paper-1.png",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "208.4",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/paper-1.png"
+  },
+  {
+    "name": "bg2.svg",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "20.8",
+    "ext": ".svg",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/bg2.svg"
+  },
+  {
+    "name": "bride-flower-1.png",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "122.0",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/bride-flower-1.png"
+  },
+  {
+    "name": "bride-flower-2.png",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "33.8",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/bride-flower-2.png"
+  },
+  {
+    "name": "story-flower-3.png",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "50.2",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/story-flower-3.png"
+  },
+  {
+    "name": "story-flower-4.png",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "50.0",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/story-flower-4.png"
+  },
+  {
+    "name": "sidebar-2.png",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "10.7",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/sidebar-2.png"
+  },
+  {
+    "name": "sidebar-5.png",
+    "theme": "ocean-rose",
+    "source": "css",
+    "sizeKb": "1025.0",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo2/sidebar-5.png"
+  },
+  {
+    "name": "cover-2.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "34.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/cover-2.png"
+  },
+  {
+    "name": "cover-1.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "33.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/cover-1.png"
+  },
+  {
+    "name": "wave.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "3.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/wave.png"
+  },
+  {
+    "name": "bg-2.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "136.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/bg-2.png"
+  },
+  {
+    "name": "title-bg.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "22.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/title-bg.png"
+  },
+  {
+    "name": "stamp-1.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "7.8",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/stamp-1.png"
+  },
+  {
+    "name": "bg-3.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "175.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/bg-3.png"
+  },
+  {
+    "name": "title-bg-2.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "55.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/title-bg-2.png"
+  },
+  {
+    "name": "bg-4.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "230.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/bg-4.png"
+  },
+  {
+    "name": "stamp-2.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "5.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/stamp-2.png"
+  },
+  {
+    "name": "bg-5.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "202.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/bg-5.png"
+  },
+  {
+    "name": "wave-2.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "4.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/wave-2.png"
+  },
+  {
+    "name": "wave-3.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "5.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/wave-3.png"
+  },
+  {
+    "name": "message-bg.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "84.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/message-bg.png"
+  },
+  {
+    "name": "rips-1.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "12.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/rips-1.png"
+  },
+  {
+    "name": "rips-2.png",
+    "theme": "paper-letter",
+    "source": "css",
+    "sizeKb": "14.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo24/rips-2.png"
+  },
+  {
+    "name": "cd-bg-2.png",
+    "theme": "poppy-dream",
+    "source": "css",
+    "sizeKb": "2.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo20/cd-bg-2.png"
+  },
+  {
+    "name": "cd-bg-1.png",
+    "theme": "poppy-dream",
+    "source": "css",
+    "sizeKb": "4.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo20/cd-bg-1.png"
+  },
+  {
+    "name": "cover-3.png",
+    "theme": "poppy-dream",
+    "source": "css",
+    "sizeKb": "186.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo20/cover-3.png"
+  },
+  {
+    "name": "cover-4.png",
+    "theme": "poppy-dream",
+    "source": "css",
+    "sizeKb": "41.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo20/cover-4.png"
+  },
+  {
+    "name": "frame-1.png",
+    "theme": "poppy-dream",
+    "source": "css",
+    "sizeKb": "41.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo20/frame-1.png"
+  },
+  {
+    "name": "cover-bg.jpg",
+    "theme": "navy-gold",
+    "source": "css",
+    "sizeKb": "262.0",
+    "ext": ".jpg",
+    "url": "https://kadio.id/images/kdo19/cover-bg.jpg"
+  },
+  {
+    "name": "cover-flower-1.png",
+    "theme": "navy-gold",
+    "source": "css",
+    "sizeKb": "8.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo19/cover-flower-1.png"
+  },
+  {
+    "name": "event-bg-top.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "11.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/event-bg-top.png"
+  },
+  {
+    "name": "divider-row.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "4.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/divider-row.png"
+  },
+  {
+    "name": "event-bg-right.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "12.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/event-bg-right.png"
+  },
+  {
+    "name": "event-bg-left.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "10.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/event-bg-left.png"
+  },
+  {
+    "name": "story-bg.png",
+    "theme": "navy-gold",
+    "source": "css",
+    "sizeKb": "285.8",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo19/story-bg.png"
+  },
+  {
+    "name": "rsvp-bg-1.png",
+    "theme": "navy-gold",
+    "source": "css",
+    "sizeKb": "104.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo19/rsvp-bg-1.png"
+  },
+  {
+    "name": "rsvp-bg-2.png",
+    "theme": "navy-gold",
+    "source": "css",
+    "sizeKb": "92.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo19/rsvp-bg-2.png"
+  },
+  {
+    "name": "message-bg-2.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "46.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/message-bg-2.png"
+  },
+  {
+    "name": "1748925156_flower-2-44.png",
+    "theme": "senandung-rasa",
+    "source": "css",
+    "sizeKb": "255.6",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1748925156_flower-2-44.png"
+  },
+  {
+    "name": "1748925440_flower-3-44.png",
+    "theme": "senandung-rasa",
+    "source": "css",
+    "sizeKb": "243.6",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1748925440_flower-3-44.png"
+  },
+  {
+    "name": "live.svg",
+    "theme": "spring-serenity",
+    "source": "css",
+    "sizeKb": "0.6",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo44/live.svg"
+  },
+  {
+    "name": "map-green.svg",
+    "theme": "crimson-romance",
+    "source": "css",
+    "sizeKb": "1.2",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo44/map-green.svg"
+  },
+  {
+    "name": "live-green.svg",
+    "theme": "crimson-romance",
+    "source": "css",
+    "sizeKb": "0.7",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo44/live-green.svg"
+  },
+  {
+    "name": "index-bg.jpg",
+    "theme": "coffee-marble",
+    "source": "css",
+    "sizeKb": "154.3",
+    "ext": ".jpg",
+    "url": "https://kadio.id/images/kdo22/index-bg.jpg"
+  },
+  {
+    "name": "frame-cover.png",
+    "theme": "coffee-marble",
+    "source": "css",
+    "sizeKb": "11.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo22/frame-cover.png"
+  },
+  {
+    "name": "rsvp-bg.png",
+    "theme": "coffee-marble",
+    "source": "css",
+    "sizeKb": "118.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo22/rsvp-bg.png"
+  },
+  {
+    "name": "message-frame.png",
+    "theme": "coffee-marble",
+    "source": "css",
+    "sizeKb": "16.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo22/message-frame.png"
+  },
+  {
+    "name": "cover-frame.png",
+    "theme": "iris-lotus",
+    "source": "css",
+    "sizeKb": "53.7",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo6/cover-frame.png"
+  },
+  {
+    "name": "story-flower-1.png",
+    "theme": "iris-lotus",
+    "source": "css",
+    "sizeKb": "106.2",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo6/story-flower-1.png"
+  },
+  {
+    "name": "story-flower-2.png",
+    "theme": "iris-lotus",
+    "source": "css",
+    "sizeKb": "43.7",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo6/story-flower-2.png"
+  },
+  {
+    "name": "1742369208_top-flower.png",
+    "theme": "romansa-bunga",
+    "source": "css",
+    "sizeKb": "71.8",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1742369208_top-flower.png"
+  },
+  {
+    "name": "1742797881_event-flower.png",
+    "theme": "romansa-bunga",
+    "source": "css",
+    "sizeKb": "10.3",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1742797881_event-flower.png"
+  },
+  {
+    "name": "story-right.svg",
+    "theme": "flower-biscuit",
+    "source": "css",
+    "sizeKb": "135.2",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo29/story-right.svg"
+  },
+  {
+    "name": "story-left.svg",
+    "theme": "flower-biscuit",
+    "source": "css",
+    "sizeKb": "135.2",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo29/story-left.svg"
+  },
+  {
+    "name": "story-bottom.svg",
+    "theme": "moringa",
+    "source": "css",
+    "sizeKb": "135.2",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo29/story-bottom.svg"
+  },
+  {
+    "name": "cover-bg.png",
+    "theme": "pastel-dream",
+    "source": "css",
+    "sizeKb": "62.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo21/cover-bg.png"
+  },
+  {
+    "name": "cover-frame-2.png",
+    "theme": "pastel-dream",
+    "source": "css",
+    "sizeKb": "62.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo21/cover-frame-2.png"
+  },
+  {
+    "name": "bride-frame.png",
+    "theme": "pastel-dream",
+    "source": "css",
+    "sizeKb": "46.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo21/bride-frame.png"
+  },
+  {
+    "name": "mb-1.png",
+    "theme": "pastel-dream",
+    "source": "css",
+    "sizeKb": "122.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo21/mb-1.png"
+  },
+  {
+    "name": "mb-2.png",
+    "theme": "pastel-dream",
+    "source": "css",
+    "sizeKb": "94.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo21/mb-2.png"
+  },
+  {
+    "name": "mb-3.png",
+    "theme": "pastel-dream",
+    "source": "css",
+    "sizeKb": "69.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo21/mb-3.png"
+  },
+  {
+    "name": "message-left.png",
+    "theme": "pastel-dream",
+    "source": "css",
+    "sizeKb": "68.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo21/message-left.png"
+  },
+  {
+    "name": "message-right.png",
+    "theme": "pastel-dream",
+    "source": "css",
+    "sizeKb": "68.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo21/message-right.png"
+  },
+  {
+    "name": "1754402536_kdo55-flower-1.png",
+    "theme": "rustic-charm",
+    "source": "css",
+    "sizeKb": "232.7",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754402536_kdo55-flower-1.png"
+  },
+  {
+    "name": "1754402793_kdo55-flower-2.png",
+    "theme": "rustic-charm",
+    "source": "css",
+    "sizeKb": "157.4",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754402793_kdo55-flower-2.png"
+  },
+  {
+    "name": "1754550745_kdo55-flower-5.png",
+    "theme": "rustic-charm",
+    "source": "css",
+    "sizeKb": "35.4",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754550745_kdo55-flower-5.png"
+  },
+  {
+    "name": "calender.svg",
+    "theme": "rustic-charm",
+    "source": "css",
+    "sizeKb": "2.4",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo55/calender.svg"
+  },
+  {
+    "name": "1754575179_kdo55-flower-4.png",
+    "theme": "rustic-charm",
+    "source": "css",
+    "sizeKb": "38.5",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754575179_kdo55-flower-4.png"
+  },
+  {
+    "name": "1754671596_kdo55-bg-8.png",
+    "theme": "rustic-charm",
+    "source": "css",
+    "sizeKb": "202.3",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754671596_kdo55-bg-8.png"
+  },
+  {
+    "name": "bg-1.png",
+    "theme": "sapphire-dream",
+    "source": "css",
+    "sizeKb": "176.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo33/bg-1.png"
+  },
+  {
+    "name": "bg-blur-2.png",
+    "theme": "quicksand-rose",
+    "source": "css",
+    "sizeKb": "610.0",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo5/bg-blur-2.png"
+  },
+  {
+    "name": "bg-blur-1.png",
+    "theme": "quicksand-rose",
+    "source": "css",
+    "sizeKb": "609.1",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo5/bg-blur-1.png"
+  },
+  {
+    "name": "bg-4.svg",
+    "theme": "quicksand-rose",
+    "source": "css",
+    "sizeKb": "46.2",
+    "ext": ".svg",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo5/bg-4.svg"
+  },
+  {
+    "name": "flower-3.png",
+    "theme": "quicksand-rose",
+    "source": "css",
+    "sizeKb": "100.9",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo5/flower-3.png"
+  },
+  {
+    "name": "story.png",
+    "theme": "quicksand-rose",
+    "source": "css",
+    "sizeKb": "20.4",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo5/story.png"
+  },
+  {
+    "name": "particle3.png",
+    "theme": "quicksand-rose",
+    "source": "css",
+    "sizeKb": "1.8",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo5/particle3.png"
+  },
+  {
+    "name": "1745992861_bg-kdo43.png",
+    "theme": "blossom-elegance",
+    "source": "css",
+    "sizeKb": "274.4",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1745992861_bg-kdo43.png"
+  },
+  {
+    "name": "1745985390_kdo43.png",
+    "theme": "blossom-elegance",
+    "source": "css",
+    "sizeKb": "102.8",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1745985390_kdo43.png"
+  },
+  {
+    "name": "paper-story.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "228.3",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/paper-story.png"
+  },
+  {
+    "name": "bg-small-1.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "196.8",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/bg-small-1.png"
+  },
+  {
+    "name": "frame-small.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "7.0",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/frame-small.png"
+  },
+  {
+    "name": "bg-paper-small-1.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "30.0",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/bg-paper-small-1.png"
+  },
+  {
+    "name": "bg-open-small.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "13.6",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/bg-open-small.png"
+  },
+  {
+    "name": "bg-paper-2.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "155.1",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/bg-paper-2.png"
+  },
+  {
+    "name": "flower-bride-small-1.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "47.1",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/flower-bride-small-1.png"
+  },
+  {
+    "name": "flower-bride-small-2.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "47.4",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/flower-bride-small-2.png"
+  },
+  {
+    "name": "divider-event-1.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "8.3",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/divider-event-1.png"
+  },
+  {
+    "name": "divider-event-2.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "8.9",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/divider-event-2.png"
+  },
+  {
+    "name": "divider-story.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "3.1",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/divider-story.png"
+  },
+  {
+    "name": "divider-message.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "3.1",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/divider-message.png"
+  },
+  {
+    "name": "frame-small-2.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "4.9",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/frame-small-2.png"
+  },
+  {
+    "name": "bg-paper-small-2.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "49.9",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/bg-paper-small-2.png"
+  },
+  {
+    "name": "bg-open-small-2.png",
+    "theme": "royal-vintage",
+    "source": "css",
+    "sizeKb": "10.7",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo10/bg-open-small-2.png"
+  },
+  {
+    "name": "bg-left.svg",
+    "theme": "serenity-blossom",
+    "source": "css",
+    "sizeKb": "23.1",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo39/bg-left.svg"
+  },
+  {
+    "name": "bg-right.svg",
+    "theme": "serenity-blossom",
+    "source": "css",
+    "sizeKb": "22.4",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo39/bg-right.svg"
+  },
+  {
+    "name": "bg-top.svg",
+    "theme": "serenity-blossom",
+    "source": "css",
+    "sizeKb": "10.5",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo39/bg-top.svg"
+  },
+  {
+    "name": "bg-bottom.svg",
+    "theme": "serenity-blossom",
+    "source": "css",
+    "sizeKb": "10.3",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo39/bg-bottom.svg"
+  },
+  {
+    "name": "bg-center.svg",
+    "theme": "serenity-blossom",
+    "source": "css",
+    "sizeKb": "22.6",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo39/bg-center.svg"
+  },
+  {
+    "name": "frame-top.svg",
+    "theme": "cream-puff",
+    "source": "css",
+    "sizeKb": "10.3",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo34/frame-top.svg"
+  },
+  {
+    "name": "frame-bottom.svg",
+    "theme": "cream-puff",
+    "source": "css",
+    "sizeKb": "10.3",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo34/frame-bottom.svg"
+  },
+  {
+    "name": "index-bg-top-left.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "61.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/index-bg-top-left.png"
+  },
+  {
+    "name": "index-bg-center.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "131.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/index-bg-center.png"
+  },
+  {
+    "name": "index-bg-bottom-right.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "61.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/index-bg-bottom-right.png"
+  },
+  {
+    "name": "frame-3.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "31.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/frame-3.png"
+  },
+  {
+    "name": "frame-2.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "63.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/frame-2.png"
+  },
+  {
+    "name": "bride-left.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "108.8",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/bride-left.png"
+  },
+  {
+    "name": "bride-right.png",
+    "theme": "passion-red",
+    "source": "css",
+    "sizeKb": "106.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo18/bride-right.png"
+  },
+  {
+    "name": "event-flower-right.png",
+    "theme": "barely-spring",
+    "source": "css",
+    "sizeKb": "17.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo26/event-flower-right.png"
+  },
+  {
+    "name": "event-flower-left.png",
+    "theme": "barely-spring",
+    "source": "css",
+    "sizeKb": "14.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo26/event-flower-left.png"
+  },
+  {
+    "name": "story-right.png",
+    "theme": "barely-spring",
+    "source": "css",
+    "sizeKb": "6.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo26/story-right.png"
+  },
+  {
+    "name": "vector-2.png",
+    "theme": "starry-night",
+    "source": "css",
+    "sizeKb": "4.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo25/vector-2.png"
+  },
+  {
+    "name": "story-left.png",
+    "theme": "barely-spring",
+    "source": "css",
+    "sizeKb": "6.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo26/story-left.png"
+  },
+  {
+    "name": "rsvp-right.png",
+    "theme": "barely-spring",
+    "source": "css",
+    "sizeKb": "14.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo26/rsvp-right.png"
+  },
+  {
+    "name": "rsvp-left.png",
+    "theme": "barely-spring",
+    "source": "css",
+    "sizeKb": "8.8",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo26/rsvp-left.png"
+  },
+  {
+    "name": "kdo46-bg.svg",
+    "theme": "rustic-blossom",
+    "source": "css",
+    "sizeKb": "150.8",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo46/kdo46-bg.svg"
+  },
+  {
+    "name": "1750132663_kdo46-bg-2.png",
+    "theme": "rustic-blossom",
+    "source": "css",
+    "sizeKb": "368.8",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1750132663_kdo46-bg-2.png"
+  },
+  {
+    "name": "kdo46-bg-3.svg",
+    "theme": "rustic-blossom",
+    "source": "css",
+    "sizeKb": "150.8",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo46/kdo46-bg-3.svg"
+  },
+  {
+    "name": "1750151641_kdo46-flower-5.png",
+    "theme": "rustic-blossom",
+    "source": "css",
+    "sizeKb": "128.5",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1750151641_kdo46-flower-5.png"
+  },
+  {
+    "name": "1750171860_kdo46-bg-7.png",
+    "theme": "rustic-blossom",
+    "source": "css",
+    "sizeKb": "129.0",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1750171860_kdo46-bg-7.png"
+  },
+  {
+    "name": "flower-4.png",
+    "theme": "royal-blossom",
+    "source": "css",
+    "sizeKb": "133.7",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo9/flower-4.png"
+  },
+  {
+    "name": "flower-5.png",
+    "theme": "royal-blossom",
+    "source": "css",
+    "sizeKb": "133.7",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo9/flower-5.png"
+  },
+  {
+    "name": "flower-6.png",
+    "theme": "royal-blossom",
+    "source": "css",
+    "sizeKb": "131.0",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo9/flower-6.png"
+  },
+  {
+    "name": "flower-7.png",
+    "theme": "royal-blossom",
+    "source": "css",
+    "sizeKb": "147.4",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo9/flower-7.png"
+  },
+  {
+    "name": "flower-8.png",
+    "theme": "royal-blossom",
+    "source": "css",
+    "sizeKb": "128.2",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo9/flower-8.png"
+  },
+  {
+    "name": "flower-9.png",
+    "theme": "royal-blossom",
+    "source": "css",
+    "sizeKb": "185.4",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo9/flower-9.png"
+  },
+  {
+    "name": "flower-11.png",
+    "theme": "royal-blossom",
+    "source": "css",
+    "sizeKb": "443.1",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo9/flower-11.png"
+  },
+  {
+    "name": "1749706359_kdo45-bg.png",
+    "theme": "romantic-lavender",
+    "source": "css",
+    "sizeKb": "94.8",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1749706359_kdo45-bg.png"
+  },
+  {
+    "name": "1749788204_kdo45-flower-5.png",
+    "theme": "romantic-lavender",
+    "source": "css",
+    "sizeKb": "87.0",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1749788204_kdo45-flower-5.png"
+  },
+  {
+    "name": "1751093272_kdo48-bg-1.png",
+    "theme": "arctic-bloom-2",
+    "source": "css",
+    "sizeKb": "80.3",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751093272_kdo48-bg-1.png"
+  },
+  {
+    "name": "1751093782_kdo48-bg-2.png",
+    "theme": "arctic-bloom-2",
+    "source": "css",
+    "sizeKb": "44.5",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751093782_kdo48-bg-2.png"
+  },
+  {
+    "name": "1751093823_kdo48-flower-1.png",
+    "theme": "arctic-bloom-2",
+    "source": "css",
+    "sizeKb": "155.5",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751093823_kdo48-flower-1.png"
+  },
+  {
+    "name": "1751093852_kdo48-flower-2.png",
+    "theme": "arctic-bloom-2",
+    "source": "css",
+    "sizeKb": "138.2",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751093852_kdo48-flower-2.png"
+  },
+  {
+    "name": "1751125926_kdo48-bg-3.png",
+    "theme": "arctic-bloom-2",
+    "source": "css",
+    "sizeKb": "68.2",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751125926_kdo48-bg-3.png"
+  },
+  {
+    "name": "1751125968_kdo48-bg-4.png",
+    "theme": "arctic-bloom-2",
+    "source": "css",
+    "sizeKb": "103.2",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751125968_kdo48-bg-4.png"
+  },
+  {
+    "name": "1751185744_kdo48-flower-6.png",
+    "theme": "arctic-bloom-2",
+    "source": "css",
+    "sizeKb": "94.2",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751185744_kdo48-flower-6.png"
+  },
+  {
+    "name": "1754380489_kdo54-frame-1.png",
+    "theme": "blue-velvet",
+    "source": "css",
+    "sizeKb": "57.1",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754380489_kdo54-frame-1.png"
+  },
+  {
+    "name": "1754548329_kdo54-bg-2.png",
+    "theme": "blue-velvet",
+    "source": "css",
+    "sizeKb": "831.9",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754548329_kdo54-bg-2.png"
+  },
+  {
+    "name": "1754570476_kdo55-flower-6.png",
+    "theme": "blue-velvet",
+    "source": "css",
+    "sizeKb": "98.4",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754570476_kdo55-flower-6.png"
+  },
+  {
+    "name": "1754627884_kdo53-flower-4.png",
+    "theme": "blue-velvet",
+    "source": "css",
+    "sizeKb": "171.5",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754627884_kdo53-flower-4.png"
+  },
+  {
+    "name": "1754648453_kdo54-bg-3.png",
+    "theme": "blue-velvet",
+    "source": "css",
+    "sizeKb": "81.1",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754648453_kdo54-bg-3.png"
+  },
+  {
+    "name": "1751261948_kdo49-flower-1.png",
+    "theme": "golden-blossom-2",
+    "source": "css",
+    "sizeKb": "124.3",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751261948_kdo49-flower-1.png"
+  },
+  {
+    "name": "1751261963_kdo49-flower-2.png",
+    "theme": "golden-blossom-2",
+    "source": "css",
+    "sizeKb": "178.9",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751261963_kdo49-flower-2.png"
+  },
+  {
+    "name": "1751261920_kdo49-bg-1.png",
+    "theme": "golden-blossom-2",
+    "source": "css",
+    "sizeKb": "163.7",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751261920_kdo49-bg-1.png"
+  },
+  {
+    "name": "1751268523_kdo49-bg-3.png",
+    "theme": "golden-blossom-2",
+    "source": "css",
+    "sizeKb": "120.4",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751268523_kdo49-bg-3.png"
+  },
+  {
+    "name": "1751272649_kdo49-bg-4.png",
+    "theme": "golden-blossom-2",
+    "source": "css",
+    "sizeKb": "107.8",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1751272649_kdo49-bg-4.png"
+  },
+  {
+    "name": "maps.svg",
+    "theme": "golden-blossom-2",
+    "source": "css",
+    "sizeKb": "2.8",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo49/maps.svg"
+  },
+  {
+    "name": "bg-index.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "63.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/bg-index.png"
+  },
+  {
+    "name": "frame-index.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "44.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/frame-index.png"
+  },
+  {
+    "name": "divider-cover.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "6.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/divider-cover.png"
+  },
+  {
+    "name": "frame-countdown.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "13.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/frame-countdown.png"
+  },
+  {
+    "name": "bg-top.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "57.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/bg-top.png"
+  },
+  {
+    "name": "bg-bottom.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "57.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/bg-bottom.png"
+  },
+  {
+    "name": "flower-bride.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "23.7",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo12/flower-bride.png"
+  },
+  {
+    "name": "bride-flower-left.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "174.1",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo12/bride-flower-left.png"
+  },
+  {
+    "name": "bride-flower-right.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "141.6",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo12/bride-flower-right.png"
+  },
+  {
+    "name": "event-border-1.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "12.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/event-border-1.png"
+  },
+  {
+    "name": "event-border-2.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "12.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/event-border-2.png"
+  },
+  {
+    "name": "event-story-flower.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "28.6",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo12/event-story-flower.png"
+  },
+  {
+    "name": "story-bottom-flower-1.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "87.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/story-bottom-flower-1.png"
+  },
+  {
+    "name": "story-center-flower.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "78.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/story-center-flower.png"
+  },
+  {
+    "name": "story-bottom-flower-2.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "12.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/story-bottom-flower-2.png"
+  },
+  {
+    "name": "bg-paper.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "79.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo12/bg-paper.png"
+  },
+  {
+    "name": "divider-rsvp.png",
+    "theme": "royal-ethnic",
+    "source": "css",
+    "sizeKb": "2.7",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo12/divider-rsvp.png"
+  },
+  {
+    "name": "bg-bride.png",
+    "theme": "starry-night",
+    "source": "css",
+    "sizeKb": "22.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo25/bg-bride.png"
+  },
+  {
+    "name": "flower.png",
+    "theme": "flower-biscuit",
+    "source": "css",
+    "sizeKb": "2.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo30/flower.png"
+  },
+  {
+    "name": "home-flower.png",
+    "theme": "flower-biscuit",
+    "source": "css",
+    "sizeKb": "44.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo30/home-flower.png"
+  },
+  {
+    "name": "cover-left.png",
+    "theme": "flower-biscuit",
+    "source": "css",
+    "sizeKb": "16.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo30/cover-left.png"
+  },
+  {
+    "name": "cover-right.png",
+    "theme": "flower-biscuit",
+    "source": "css",
+    "sizeKb": "15.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo30/cover-right.png"
+  },
+  {
+    "name": "bg-flower-1.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "143.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo11/bg-flower-1.png"
+  },
+  {
+    "name": "bg-paper-1.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "93.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo11/bg-paper-1.png"
+  },
+  {
+    "name": "frame-card.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "5.0",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/frame-card.png"
+  },
+  {
+    "name": "bg-flower-3.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "44.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo11/bg-flower-3.png"
+  },
+  {
+    "name": "divider-countdown.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "4.3",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/divider-countdown.png"
+  },
+  {
+    "name": "bg-bride-flower-1.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "32.8",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/bg-bride-flower-1.png"
+  },
+  {
+    "name": "bg-bride-flower-2.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "41.4",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/bg-bride-flower-2.png"
+  },
+  {
+    "name": "bg-bride-flower-3.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "44.4",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/bg-bride-flower-3.png"
+  },
+  {
+    "name": "bg-event.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "75.1",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/bg-event.png"
+  },
+  {
+    "name": "bg-story.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "106.3",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/bg-story.png"
+  },
+  {
+    "name": "rsvp-flower-3.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "26.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo11/rsvp-flower-3.png"
+  },
+  {
+    "name": "message-flower.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "68.0",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/message-flower.png"
+  },
+  {
+    "name": "frame-card-small.png",
+    "theme": "royal-purple",
+    "source": "css",
+    "sizeKb": "6.7",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo11/frame-card-small.png"
+  },
+  {
+    "name": "splash1.png",
+    "theme": "cherry-blossom",
+    "source": "css",
+    "sizeKb": "17.5",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo7/splash1.png"
+  },
+  {
+    "name": "splash2.png",
+    "theme": "cherry-blossom",
+    "source": "css",
+    "sizeKb": "14.8",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo7/splash2.png"
+  },
+  {
+    "name": "bg1.png",
+    "theme": "cherry-blossom",
+    "source": "css",
+    "sizeKb": "35.3",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo7/bg1.png"
+  },
+  {
+    "name": "2_splash.png",
+    "theme": "cherry-blossom",
+    "source": "css",
+    "sizeKb": "19.6",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo7/2_splash.png"
+  },
+  {
+    "name": "4_flower_trans.png",
+    "theme": "cherry-blossom",
+    "source": "css",
+    "sizeKb": "29.9",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo7/4_flower_trans.png"
+  },
+  {
+    "name": "cover-stamp.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "10.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/cover-stamp.png"
+  },
+  {
+    "name": "bride-bulat-1.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "14.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/bride-bulat-1.png"
+  },
+  {
+    "name": "bride-bulat-2.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "3.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/bride-bulat-2.png"
+  },
+  {
+    "name": "bride-flower-3.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "15.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/bride-flower-3.png"
+  },
+  {
+    "name": "bride-bulat-3.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "13.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/bride-bulat-3.png"
+  },
+  {
+    "name": "bride-divider.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "39.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/bride-divider.png"
+  },
+  {
+    "name": "event-title-bg.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "9.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/event-title-bg.png"
+  },
+  {
+    "name": "event-flower-3.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "13.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/event-flower-3.png"
+  },
+  {
+    "name": "story-top-bg.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "40.5",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/story-top-bg.png"
+  },
+  {
+    "name": "story-stamp.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "9.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/story-stamp.png"
+  },
+  {
+    "name": "story-center-bg.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "166.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/story-center-bg.png"
+  },
+  {
+    "name": "rsvp-bg-4.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "13.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/rsvp-bg-4.png"
+  },
+  {
+    "name": "rsvp-bg-3.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "24.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/rsvp-bg-3.png"
+  },
+  {
+    "name": "bg-msg-1.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "8.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/bg-msg-1.png"
+  },
+  {
+    "name": "bg-msg-2.png",
+    "theme": "delicate-olive",
+    "source": "css",
+    "sizeKb": "9.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo17/bg-msg-2.png"
+  },
+  {
+    "name": "index-flower-top.png",
+    "theme": "spring-hibiscus",
+    "source": "css",
+    "sizeKb": "101.0",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo3/index-flower-top.png"
+  },
+  {
+    "name": "index-flower-bottom.png",
+    "theme": "spring-hibiscus",
+    "source": "css",
+    "sizeKb": "45.3",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo3/index-flower-bottom.png?v=2"
+  },
+  {
+    "name": "bg.svg",
+    "theme": "spring-hibiscus",
+    "source": "css",
+    "sizeKb": "42.5",
+    "ext": ".svg",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo3/bg.svg"
+  },
+  {
+    "name": "flower-1.png",
+    "theme": "spring-hibiscus",
+    "source": "css",
+    "sizeKb": "60.3",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo3/flower-1.png"
+  },
+  {
+    "name": "story-frame.png",
+    "theme": "spring-hibiscus",
+    "source": "css",
+    "sizeKb": "83.8",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo3/story-frame.png"
+  },
+  {
+    "name": "index_flower_bg.png",
+    "theme": "pinky-jasmine",
+    "source": "css",
+    "sizeKb": "156.8",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo1/index_flower_bg.png"
+  },
+  {
+    "name": "bride_info_flower1.png",
+    "theme": "pinky-jasmine",
+    "source": "css",
+    "sizeKb": "154.3",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo1/bride_info_flower1.png"
+  },
+  {
+    "name": "bride_info_flower2.png",
+    "theme": "pinky-jasmine",
+    "source": "css",
+    "sizeKb": "154.3",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo1/bride_info_flower2.png"
+  },
+  {
+    "name": "story_bg.png",
+    "theme": "pinky-jasmine",
+    "source": "css",
+    "sizeKb": "188.0",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo1/story_bg.png"
+  },
+  {
+    "name": "story_flower_item.png",
+    "theme": "pinky-jasmine",
+    "source": "css",
+    "sizeKb": "42.7",
+    "ext": ".png",
+    "url": "https://s3.ap-southeast-1.amazonaws.com/cdn.kadio.id/images/kdo1/story_flower_item.png"
+  },
+  {
+    "name": "1753710203_bg-flower-2.png",
+    "theme": "blue-serenity",
+    "source": "css",
+    "sizeKb": "218.2",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1753710203_bg-flower-2.png"
+  },
+  {
+    "name": "1753799574_bg-flower-4.png",
+    "theme": "blue-serenity",
+    "source": "css",
+    "sizeKb": "134.0",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1753799574_bg-flower-4.png"
+  },
+  {
+    "name": "1753928502_bg-cover.png",
+    "theme": "emerald-grace",
+    "source": "css",
+    "sizeKb": "483.3",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1753928502_bg-cover.png"
+  },
+  {
+    "name": "1753942426_bg-flower-1.png",
+    "theme": "emerald-grace",
+    "source": "css",
+    "sizeKb": "110.4",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1753942426_bg-flower-1.png"
+  },
+  {
+    "name": "1753942722_bg-flower-2.png",
+    "theme": "emerald-grace",
+    "source": "css",
+    "sizeKb": "159.6",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1753942722_bg-flower-2.png"
+  },
+  {
+    "name": "1753942874_bg-flower-3.png",
+    "theme": "emerald-grace",
+    "source": "css",
+    "sizeKb": "164.3",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1753942874_bg-flower-3.png"
+  },
+  {
+    "name": "1753945960_bg-flower-4.png",
+    "theme": "emerald-grace",
+    "source": "css",
+    "sizeKb": "108.4",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1753945960_bg-flower-4.png"
+  },
+  {
+    "name": "1754405093_kdo56-bg-1.png",
+    "theme": "black-elegance",
+    "source": "css",
+    "sizeKb": "524.3",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754405093_kdo56-bg-1.png"
+  },
+  {
+    "name": "1754403915_kdo56-flower-1.png",
+    "theme": "golden-vows",
+    "source": "css",
+    "sizeKb": "63.2",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754403915_kdo56-flower-1.png"
+  },
+  {
+    "name": "1754404007_kdo56-flower-2.png",
+    "theme": "black-elegance",
+    "source": "css",
+    "sizeKb": "59.4",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754404007_kdo56-flower-2.png"
+  },
+  {
+    "name": "1754404018_kdo56-flower-3.png",
+    "theme": "golden-vows",
+    "source": "css",
+    "sizeKb": "60.9",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754404018_kdo56-flower-3.png"
+  },
+  {
+    "name": "1754404030_kdo56-flower-4.png",
+    "theme": "golden-vows",
+    "source": "css",
+    "sizeKb": "75.8",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754404030_kdo56-flower-4.png"
+  },
+  {
+    "name": "1754551969_kdo56-bg-2.png",
+    "theme": "golden-vows",
+    "source": "css",
+    "sizeKb": "472.5",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754551969_kdo56-bg-2.png"
+  },
+  {
+    "name": "1754637732_kdo56-bg-3.png",
+    "theme": "golden-vows",
+    "source": "css",
+    "sizeKb": "441.1",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754637732_kdo56-bg-3.png"
+  },
+  {
+    "name": "1754672368_kdo56-bg-4.png",
+    "theme": "golden-vows",
+    "source": "css",
+    "sizeKb": "160.8",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754672368_kdo56-bg-4.png"
+  },
+  {
+    "name": "1755675618_kdo58-flower-3.png",
+    "theme": "golden-luxe",
+    "source": "css",
+    "sizeKb": "88.5",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1755675618_kdo58-flower-3.png"
+  },
+  {
+    "name": "1755749211_kdo57-flower-7.png",
+    "theme": "golden-luxe",
+    "source": "css",
+    "sizeKb": "140.5",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1755749211_kdo57-flower-7.png"
+  },
+  {
+    "name": "1754319774_kdo53-bg1.png",
+    "theme": "crimson-romance",
+    "source": "css",
+    "sizeKb": "39.1",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754319774_kdo53-bg1.png"
+  },
+  {
+    "name": "1754319965_kdo53-bg2.png",
+    "theme": "crimson-romance",
+    "source": "css",
+    "sizeKb": "35.7",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754319965_kdo53-bg2.png"
+  },
+  {
+    "name": "1754539506_kdo55-bg-3.png",
+    "theme": "crimson-romance",
+    "source": "css",
+    "sizeKb": "84.7",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754539506_kdo55-bg-3.png"
+  },
+  {
+    "name": "1754539843_kdo55-bg-7.png",
+    "theme": "crimson-romance",
+    "source": "css",
+    "sizeKb": "87.9",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754539843_kdo55-bg-7.png"
+  },
+  {
+    "name": "1754557351_kdo55-bg-6.png",
+    "theme": "crimson-romance",
+    "source": "css",
+    "sizeKb": "63.1",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1754557351_kdo55-bg-6.png"
+  },
+  {
+    "name": "ornament-1.svg",
+    "theme": "with-luv",
+    "source": "css",
+    "sizeKb": "0.5",
+    "ext": ".svg",
+    "url": "https://kadio.id/images/kdo32/ornament-1.svg"
+  },
+  {
+    "name": "1752826556_bg-cover-50-1.png",
+    "theme": "aurora-cempaka",
+    "source": "css",
+    "sizeKb": "109.3",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1752826556_bg-cover-50-1.png"
+  },
+  {
+    "name": "1752826653_bg-cover-50-2.png",
+    "theme": "aurora-cempaka",
+    "source": "css",
+    "sizeKb": "363.6",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1752826653_bg-cover-50-2.png"
+  },
+  {
+    "name": "1750918112_kdo47-bg-1.png",
+    "theme": "spring-serenity",
+    "source": "css",
+    "sizeKb": "118.1",
+    "ext": ".png",
+    "url": "https://cdn.kadio.id/cdn/1750918112_kdo47-bg-1.png"
+  },
+  {
+    "name": "1_3_5_gold_splash.png",
+    "theme": "golden-matcha",
+    "source": "css",
+    "sizeKb": "14.6",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo8/1_3_5_gold_splash.png"
+  },
+  {
+    "name": "1_5_gold_splash2.png",
+    "theme": "golden-matcha",
+    "source": "css",
+    "sizeKb": "19.1",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo8/1_5_gold_splash2.png"
+  },
+  {
+    "name": "1_watercolor.png",
+    "theme": "golden-matcha",
+    "source": "css",
+    "sizeKb": "52.2",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo8/1_watercolor.png"
+  },
+  {
+    "name": "4_gold_splash.png",
+    "theme": "golden-matcha",
+    "source": "css",
+    "sizeKb": "14.7",
+    "ext": ".png",
+    "url": "https://kadio.id/../images/kdo8/4_gold_splash.png"
+  },
+  {
+    "name": "bg-index.jpg",
+    "theme": "romantic-paradise",
+    "source": "css",
+    "sizeKb": "91.7",
+    "ext": ".jpg",
+    "url": "https://kadio.id/images/kdo16/bg-index.jpg"
+  },
+  {
+    "name": "mempelai-bg.png",
+    "theme": "romantic-paradise",
+    "source": "css",
+    "sizeKb": "106.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo16/mempelai-bg.png"
+  },
+  {
+    "name": "story-bg-1.png",
+    "theme": "romantic-paradise",
+    "source": "css",
+    "sizeKb": "67.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo16/story-bg-1.png"
+  },
+  {
+    "name": "story-bg-3.png",
+    "theme": "romantic-paradise",
+    "source": "css",
+    "sizeKb": "5.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo16/story-bg-3.png"
+  },
+  {
+    "name": "story-bg-5.png",
+    "theme": "romantic-paradise",
+    "source": "css",
+    "sizeKb": "4.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo16/story-bg-5.png"
+  },
+  {
+    "name": "story-bg-4.png",
+    "theme": "romantic-paradise",
+    "source": "css",
+    "sizeKb": "5.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo16/story-bg-4.png"
+  },
+  {
+    "name": "story-bg-2.png",
+    "theme": "romantic-paradise",
+    "source": "css",
+    "sizeKb": "15.8",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo16/story-bg-2.png"
+  },
+  {
+    "name": "index-top-flower.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "68.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/index-top-flower.png"
+  },
+  {
+    "name": "index-flower-2.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "28.8",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/index-flower-2.png"
+  },
+  {
+    "name": "index-flower-3.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "24.6",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/index-flower-3.png"
+  },
+  {
+    "name": "divider-cover-1.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "3.7",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/divider-cover-1.png"
+  },
+  {
+    "name": "divider-cover-2.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "3.8",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/divider-cover-2.png"
+  },
+  {
+    "name": "cover-bottom-left-1.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "30.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/cover-bottom-left-1.png"
+  },
+  {
+    "name": "cover-bottom-right-1.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "35.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/cover-bottom-right-1.png"
+  },
+  {
+    "name": "cover-top-left.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "29.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/cover-top-left.png"
+  },
+  {
+    "name": "cover-top-right.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "31.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/cover-top-right.png"
+  },
+  {
+    "name": "cover-bottom-left.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "29.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/cover-bottom-left.png"
+  },
+  {
+    "name": "cover-bottom-right.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "29.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/cover-bottom-right.png"
+  },
+  {
+    "name": "bride-top-left.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "31.0",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/bride-top-left.png"
+  },
+  {
+    "name": "bride-top-right.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "31.4",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/bride-top-right.png"
+  },
+  {
+    "name": "flower-add-1.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "26.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/flower-add-1.png"
+  },
+  {
+    "name": "flower-add-2.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "8.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/flower-add-2.png"
+  },
+  {
+    "name": "flower-add-3.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "7.3",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/flower-add-3.png"
+  },
+  {
+    "name": "event-top-left.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "28.1",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/event-top-left.png"
+  },
+  {
+    "name": "event-top-right.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "29.2",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/event-top-right.png"
+  },
+  {
+    "name": "event-bottom-left.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "27.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/event-bottom-left.png"
+  },
+  {
+    "name": "event-bottom-right.png",
+    "theme": "frozen-skylight",
+    "source": "css",
+    "sizeKb": "28.9",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo15/event-bottom-right.png"
+  },
+  {
+    "name": "rsvp-message.png",
+    "theme": "azure-marble",
+    "source": "css",
+    "sizeKb": "139.8",
+    "ext": ".png",
+    "url": "https://kadio.id/images/kdo23/rsvp-message.png"
+  }
+]

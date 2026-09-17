@@ -1,0 +1,169 @@
+import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/session";
+import { scanForContactLeaks } from "@/server/services/content-audit";
+
+/**
+ * HariKita - Admin Query Layer (Phase 9)
+ *
+ * Query read-only untuk admin (admin-only). Semua fungsi memeriksa role ADMIN.
+ */
+
+async function requireAdmin(): Promise<boolean> {
+  const session = await getSession();
+  return Boolean(session && session.role === "ADMIN");
+}
+
+export interface VendorVerificationDTO {
+  id: string;
+  businessName: string;
+  category: string;
+  district: string;
+  address: string;
+  picName: string | null;
+  igHandle: string | null;
+  tiktokHandle: string | null;
+  rating: number;
+  reviewCount: number;
+  verificationStatus: string;
+  verificationNote: string | null;
+  isVerified: boolean;
+  createdAt: string;
+}
+
+/** Daftar vendor untuk kurasi/verifikasi. */
+export async function getVendorVerifications(
+  status?: "PENDING" | "APPROVED" | "REJECTED"
+): Promise<VendorVerificationDTO[]> {
+  if (!(await requireAdmin())) return [];
+
+  const vendors = await prisma.vendorProfile.findMany({
+    where: status ? { verificationStatus: status } : undefined,
+    orderBy: { createdAt: "desc" },
+    take: 200,
+  });
+
+  return vendors.map((v) => ({
+    id: v.id,
+    businessName: v.businessName,
+    category: v.category,
+    district: v.district ?? "Kebumen",
+    address: v.address,
+    picName: v.picName,
+    igHandle: v.igHandle,
+    tiktokHandle: v.tiktokHandle,
+    rating: v.rating,
+    reviewCount: v.reviewCount,
+    verificationStatus: v.verificationStatus,
+    verificationNote: v.verificationNote,
+    isVerified: v.isVerified,
+    createdAt: v.createdAt.toISOString().split("T")[0],
+  }));
+}
+
+export interface ContentAuditFinding {
+  scope: string;
+  refId: string;
+  owner: string;
+  snippet: string;
+  matches: string[];
+}
+
+/** Memindai deskripsi vendor & caption portofolio terhadap kebocoran kontak. */
+export async function getContentAuditFindings(): Promise<ContentAuditFinding[]> {
+  if (!(await requireAdmin())) return [];
+
+  const findings: ContentAuditFinding[] = [];
+
+  const vendors = await prisma.vendorProfile.findMany({
+    select: { id: true, businessName: true, description: true, slaGuarantees: true },
+  });
+  for (const v of vendors) {
+    for (const [field, text] of [
+      ["description", v.description],
+      ["slaGuarantees", v.slaGuarantees],
+    ] as const) {
+      if (!text) continue;
+      const scan = scanForContactLeaks(text);
+      if (scan.flagged) {
+        findings.push({
+          scope: `vendor.${field}`,
+          refId: v.id,
+          owner: v.businessName,
+          snippet: text.slice(0, 160),
+          matches: scan.matches,
+        });
+      }
+    }
+  }
+
+  const portfolios = await prisma.vendorPortfolio.findMany({
+    select: { id: true, title: true, caption: true, vendor: { select: { businessName: true } } },
+  });
+  for (const p of portfolios) {
+    const text = `${p.title} ${p.caption ?? ""}`;
+    const scan = scanForContactLeaks(text);
+    if (scan.flagged) {
+      findings.push({
+        scope: "portfolio.caption",
+        refId: p.id,
+        owner: p.vendor.businessName,
+        snippet: text.slice(0, 160),
+        matches: scan.matches,
+      });
+    }
+  }
+
+  return findings;
+}
+
+export interface DisputeAdminDTO {
+  id: string;
+  orderId: string;
+  orderNumber: string;
+  clientName: string;
+  totalAmount: number;
+  orderStatus: string;
+  reason: string;
+  description: string;
+  status: string;
+  resolution: string | null;
+  createdAt: string;
+}
+
+/** Daftar sengketa untuk admin. */
+export async function getDisputes(status?: string): Promise<DisputeAdminDTO[]> {
+  if (!(await requireAdmin())) return [];
+
+  const disputes = await prisma.dispute.findMany({
+    where: status ? { status } : undefined,
+    include: { order: { select: { orderNumber: true, clientName: true, totalAmount: true, status: true } } },
+    orderBy: { createdAt: "desc" },
+    take: 200,
+  });
+
+  return disputes.map((d) => ({
+    id: d.id,
+    orderId: d.orderId,
+    orderNumber: d.order.orderNumber,
+    clientName: d.order.clientName,
+    totalAmount: d.order.totalAmount,
+    orderStatus: d.order.status,
+    reason: d.reason,
+    description: d.description,
+    status: d.status,
+    resolution: d.resolution,
+    createdAt: d.createdAt.toISOString(),
+  }));
+}
+
+/** Ringkasan funnel dari AnalyticsTelemetry (10 tahap → jumlah per eventType). */
+export async function getFunnelTelemetry(): Promise<Array<{ eventType: string; count: number }>> {
+  if (!(await requireAdmin())) return [];
+
+  const grouped = await prisma.analyticsTelemetry.groupBy({
+    by: ["eventType"],
+    _count: { _all: true },
+  });
+
+  return grouped.map((g) => ({ eventType: g.eventType, count: g._count._all }));
+}

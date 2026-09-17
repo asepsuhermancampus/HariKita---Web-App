@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from "react";
 import { CoverLayoutProps } from "../CoverCardEngine";
 import { MailOpen, Heart, Sparkles } from "lucide-react";
@@ -12,7 +12,7 @@ export const CoverLayout_FloatingCard: React.FC<CoverLayoutProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${exitClass}`}
+      className={`fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 ${exitClass}`}
       style={{
         background: `radial-gradient(ellipse 90% 70% at 50% 50%, ${c.background} 0%, ${c.border}80 100%)`,
       }}
@@ -25,7 +25,7 @@ export const CoverLayout_FloatingCard: React.FC<CoverLayoutProps> = ({
 
       {/* Main floating card */}
       <div
-        className="relative w-full max-w-md rounded-3xl p-8 text-center space-y-5"
+        className="relative w-full max-w-md my-auto rounded-2xl sm:rounded-3xl p-5 sm:p-8 text-center space-y-3.5 sm:space-y-5"
         style={{
           background: `${c.cardBg}F5`,
           backdropFilter: "blur(20px)",
@@ -35,7 +35,7 @@ export const CoverLayout_FloatingCard: React.FC<CoverLayoutProps> = ({
       >
         {/* Top header tag */}
         <div
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] uppercase tracking-widest font-semibold"
+          className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] uppercase tracking-widest font-semibold"
           style={{
             background: `${c.accent}15`,
             color: c.primary,
@@ -47,16 +47,16 @@ export const CoverLayout_FloatingCard: React.FC<CoverLayoutProps> = ({
         </div>
 
         {/* Couple names */}
-        <div className="space-y-1.5">
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold leading-tight" style={{ color: c.primary }}>
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold leading-tight" style={{ color: c.primary }}>
             {brideName}
           </h1>
           <div className="flex items-center justify-center gap-3 py-0.5">
-            <span className="h-px w-10" style={{ background: `${c.accent}50` }} />
-            <span className="text-2xl font-light italic" style={{ color: c.accent }}>&amp;</span>
-            <span className="h-px w-10" style={{ background: `${c.accent}50` }} />
+            <span className="h-px w-8 sm:w-10" style={{ background: `${c.accent}50` }} />
+            <span className="text-xl sm:text-2xl font-light italic" style={{ color: c.accent }}>&amp;</span>
+            <span className="h-px w-8 sm:w-10" style={{ background: `${c.accent}50` }} />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold leading-tight" style={{ color: c.primary }}>
+          <h1 className="text-2xl sm:text-4xl font-serif font-bold leading-tight" style={{ color: c.primary }}>
             {groomName}
           </h1>
         </div>

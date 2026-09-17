@@ -39,6 +39,14 @@ export const GoldenDustCanvas: React.FC<GoldenDustCanvasProps> = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Hormati prefers-reduced-motion (Phase 7 a11y).
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
     let animationFrameId: number;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
@@ -104,5 +112,11 @@ export const GoldenDustCanvas: React.FC<GoldenDustCanvasProps> = ({
     };
   }, [particleCount]);
 
-  return <canvas ref={canvasRef} className={className} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`fixed inset-0 pointer-events-none ${className}`}
+      style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+    />
+  );
 };
