@@ -110,7 +110,7 @@ export function VendorInboxClient({ dbItems }: { dbItems: VendorInboxItemDTO[] }
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="text-xs font-manrope text-hk-charcoal/70 flex items-center gap-1 mb-1">
-              <Link href="/vendor" className="hover:text-hk-charcoal">
+              <Link href="/dashboard/vendor" className="hover:text-hk-charcoal">
                 Portal Mitra Vendor
               </Link>
               <span>/</span>
@@ -125,7 +125,7 @@ export function VendorInboxClient({ dbItems }: { dbItems: VendorInboxItemDTO[] }
           </div>
 
           <Link
-            href="/vendor/kalender"
+            href="/dashboard/vendor/kalender"
             className="px-4 py-2 rounded-full bg-white border border-hk-champagne/60 text-hk-charcoal text-xs font-manrope font-bold hover:bg-hk-ivory transition-colors shadow-2xs"
           >
             Cek Kalender Sibuk

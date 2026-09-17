@@ -208,7 +208,9 @@ export async function updateVendorProfileAction(
       });
     });
 
-    revalidatePath("/vendor/profil");
+    revalidatePath("/dashboard/vendor/profil");
+    revalidatePath("/dashboard/vendor");
+    // Profil publik & katalog ikut berubah saat nama/kategori vendor diperbarui
     revalidatePath("/vendor");
 
     return {

@@ -32,7 +32,7 @@ function parseSession(cookieValue: string | undefined): SessionPayload | null {
 
 function getDashboardPath(role: string): string {
   if (role === "ADMIN") return "/admin";
-  if (role === "VENDOR") return "/vendor/profil";
+  if (role === "VENDOR") return "/dashboard/vendor/profil";
   return "/client/profil";
 }
 
@@ -41,9 +41,9 @@ export function middleware(request: NextRequest) {
   const rawCookie = request.cookies.get(COOKIE_NAME)?.value;
   const session = parseSession(rawCookie);
 
-  // ── 0. Alias redirects: /vendor/profile → /vendor/profil & /client/profile → /client/profil ──
-  if (pathname === "/vendor/profile") {
-    return NextResponse.redirect(new URL("/vendor/profil", request.url));
+  // ── 0. Alias redirects: /dashboard/vendor/profile → /dashboard/vendor/profil & /client/profile → /client/profil ──
+  if (pathname === "/dashboard/vendor/profile") {
+    return NextResponse.redirect(new URL("/dashboard/vendor/profil", request.url));
   }
   if (pathname === "/client/profile") {
     return NextResponse.redirect(new URL("/client/profil", request.url));
@@ -74,41 +74,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // ── 3. Proteksi /vendor/* → hanya VENDOR atau ADMIN ──
-  //    Kecualikan /vendor/[slug] (profil publik toko)
-  //    Slug yang PROTECTED: profil, profile, inbox, portofolio, paket, kalender, dompet
-  //    Slug lainnya (nama toko) = profil publik, bebas diakses
-  if (pathname.startsWith("/vendor/")) {
-    const segment = pathname.split("/")[2]; // "profil", "inbox", "studio-xyz", dll.
-    const PROTECTED_VENDOR_SEGMENTS = new Set([
-      "profil",
-      "profile",
-      "inbox",
-      "portofolio",
-      "paket",
-      "kalender",
-      "dompet",
-    ]);
-    const isProtectedSegment =
-      !segment || PROTECTED_VENDOR_SEGMENTS.has(segment);
-
-    if (isProtectedSegment) {
-      if (!session) {
-        const url = new URL("/auth/login", request.url);
-        url.searchParams.set("callbackUrl", pathname);
-        return NextResponse.redirect(url);
-      }
-      if (session.role !== "VENDOR" && session.role !== "ADMIN") {
-        return NextResponse.redirect(
-          new URL(getDashboardPath(session.role), request.url)
-        );
-      }
-    }
-    return NextResponse.next();
-  }
-
-  // ── 4. Proteksi /vendor (dashboard index) ──
-  if (pathname === "/vendor") {
+  // ── 3. Proteksi /dashboard/vendor/* → hanya VENDOR atau ADMIN ──
+  //    Seluruh dashboard mitra vendor kini berada di /dashboard/vendor/*.
+  //    Ruang publik /vendor, /vendor/kategori/*, dan /vendor/[slug] bebas diakses.
+  if (pathname === "/dashboard/vendor" || pathname.startsWith("/dashboard/vendor/")) {
     if (!session) {
       const url = new URL("/auth/login", request.url);
       url.searchParams.set("callbackUrl", pathname);

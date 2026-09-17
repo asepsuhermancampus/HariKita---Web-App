@@ -117,7 +117,7 @@ export async function simulatePaymentSuccessAction(input: {
       return { orderStatus: paid.orderStatus, installmentType: paid.installmentType };
     });
 
-    revalidate(["/client", "/client/pesanan", "/vendor/dompet", "/admin/escrow"]);
+    revalidate(["/client", "/client/pesanan", "/dashboard/vendor/dompet", "/admin/escrow"]);
     return result;
   });
 }
@@ -133,7 +133,7 @@ export async function runPayoutSweepAction(
     }
 
     const result = await withTransactionRetry((tx) => runPayoutSweep(candidates, tx));
-    revalidate(["/admin/escrow", "/vendor/dompet"]);
+    revalidate(["/admin/escrow", "/dashboard/vendor/dompet"]);
     return {
       eligible: result.eligible,
       executed: result.executed,

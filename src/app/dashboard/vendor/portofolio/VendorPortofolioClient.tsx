@@ -150,7 +150,7 @@ export function VendorPortofolioClient({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="text-xs text-[#6B5E62] flex items-center gap-1 mb-1">
-              <Link href="/vendor" className="hover:text-[#4A2E35]">
+              <Link href="/dashboard/vendor" className="hover:text-[#4A2E35]">
                 Portal Mitra Vendor
               </Link>
               <span>/</span>

@@ -157,7 +157,7 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
 
             {/* Quick Link Navigation */}
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <Link href="/vendor" className="w-full sm:w-auto">
+              <Link href="/dashboard/vendor" className="w-full sm:w-auto">
                 <ButtonPrimary size="sm" className="w-full justify-center">
                   <Calendar className="w-3.5 h-3.5 mr-1.5" />
                   Kalender Booking

@@ -41,7 +41,7 @@ export default function AuthRegisterVendorPage() {
       setIsLoading(false);
       setIsSuccess(true);
       setTimeout(() => {
-        router.push("/vendor");
+        router.push("/dashboard/vendor");
       }, 1500);
     }, 1000);
   };

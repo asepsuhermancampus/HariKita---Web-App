@@ -207,7 +207,7 @@ export const notificationStore = {
       `• Lokasi: ${notif.venue}\n` +
       `• Nilai Jasa: Rp ${notif.price.toLocaleString("id-ID")}\n` +
       `• Status: DP 30% Terkunci di Escrow (Rp ${notif.dpAmount.toLocaleString("id-ID")})\n\n` +
-      `Mohon buka portal Anda untuk konfirmasi & kunci tanggal acara: https://harikita.id/vendor/inbox`
+      `Mohon buka portal Anda untuk konfirmasi & kunci tanggal acara: https://harikita.id/dashboard/vendor/inbox`
     );
     return `https://wa.me/?text=${message}`;
   },

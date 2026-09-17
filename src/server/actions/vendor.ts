@@ -45,7 +45,7 @@ export async function addBlackoutAction(input: {
       setBlackoutDate({ vendorId, date: input.date, reason: input.reason }, tx)
     );
 
-    revalidate(["/vendor/kalender"]);
+    revalidate(["/dashboard/vendor/kalender"]);
     return { date: input.date };
   });
 }
@@ -62,7 +62,7 @@ export async function removeBlackoutAction(input: {
 
     await withTransactionRetry((tx) => removeBlackoutDate(vendorId, input.date, tx));
 
-    revalidate(["/vendor/kalender"]);
+    revalidate(["/dashboard/vendor/kalender"]);
     return { date: input.date };
   });
 }
@@ -120,7 +120,7 @@ export async function createPackageAction(
       },
     });
 
-    revalidate(["/vendor/paket", "/kategori"]);
+    revalidate(["/dashboard/vendor/paket", "/kategori"]);
     return { id: created.id };
   });
 }
@@ -154,7 +154,7 @@ export async function updatePackageAction(
       },
     });
 
-    revalidate(["/vendor/paket", "/kategori"]);
+    revalidate(["/dashboard/vendor/paket", "/kategori"]);
     return { id: input.id };
   });
 }
@@ -183,7 +183,7 @@ export async function deletePackageAction(input: {
     }
 
     await prisma.servicePackage.delete({ where: { id: input.id } });
-    revalidate(["/vendor/paket", "/kategori"]);
+    revalidate(["/dashboard/vendor/paket", "/kategori"]);
     return { id: input.id };
   });
 }
@@ -239,7 +239,7 @@ export async function createPortfolioAction(
       },
     });
 
-    revalidate(["/vendor/portofolio", "/vendor"]);
+    revalidate(["/dashboard/vendor/portofolio", "/vendor"]);
     return { id: created.id };
   });
 }
@@ -269,7 +269,7 @@ export async function updatePortfolioAction(
       },
     });
 
-    revalidate(["/vendor/portofolio", "/vendor"]);
+    revalidate(["/dashboard/vendor/portofolio", "/vendor"]);
     return { id: input.id };
   });
 }
@@ -287,7 +287,7 @@ export async function deletePortfolioAction(input: {
     }
 
     await prisma.vendorPortfolio.delete({ where: { id: input.id } });
-    revalidate(["/vendor/portofolio", "/vendor"]);
+    revalidate(["/dashboard/vendor/portofolio", "/vendor"]);
     return { id: input.id };
   });
 }

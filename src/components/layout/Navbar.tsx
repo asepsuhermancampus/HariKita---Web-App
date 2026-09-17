@@ -102,7 +102,7 @@ export const Navbar = () => {
               </li>
               <li>
                 <Link
-                  href="/vendor"
+                  href="/dashboard/vendor"
                   className="rounded-xl px-3 py-2 text-xs font-manrope font-semibold text-hk-charcoal hover:bg-hk-ivory"
                 >
                   Portal Mitra Vendor Kebumen
@@ -200,7 +200,7 @@ export const Navbar = () => {
                 Klien
               </Link>
               <Link
-                href="/vendor"
+                href="/dashboard/vendor"
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2 rounded-xl border border-hk-champagne/50 bg-hk-ivory/60 text-center text-xs font-manrope font-semibold text-hk-charcoal hover:bg-white transition-all shadow-2xs"
               >

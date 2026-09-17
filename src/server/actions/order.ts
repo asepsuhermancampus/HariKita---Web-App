@@ -106,7 +106,7 @@ export async function createOrderAction(
       );
     });
 
-    revalidate(["/client", "/client/pesanan", "/vendor/inbox"]);
+    revalidate(["/client", "/client/pesanan", "/dashboard/vendor/inbox"]);
 
     return {
       orderId: result.orderId,
@@ -142,7 +142,7 @@ export async function vendorDecisionAction(input: {
       )
     );
 
-    revalidate(["/vendor/inbox", "/client/pesanan", "/admin/kalender"]);
+    revalidate(["/dashboard/vendor/inbox", "/client/pesanan", "/admin/kalender"]);
     return result;
   });
 }
@@ -176,7 +176,7 @@ export async function replaceRejectedItemAction(input: {
       );
     });
 
-    revalidate(["/client/pesanan", "/vendor/inbox"]);
+    revalidate(["/client/pesanan", "/dashboard/vendor/inbox"]);
     return result;
   });
 }
@@ -267,7 +267,7 @@ export async function createOrderWithAutoHoldAction(
       );
     });
 
-    revalidate(["/client", "/client/pesanan", "/vendor/inbox"]);
+    revalidate(["/client", "/client/pesanan", "/dashboard/vendor/inbox"]);
     return {
       orderId: result.orderId,
       orderNumber: result.orderNumber,

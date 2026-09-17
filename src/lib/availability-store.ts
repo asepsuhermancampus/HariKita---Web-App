@@ -1,6 +1,6 @@
 /**
  * HariKita - Multi-Vendor Availability & Blackout Dates Store
- * Mengelola kalender sibuk vendor, sinkronisasi dua arah dengan /vendor/kalender,
+ * Mengelola kalender sibuk vendor, sinkronisasi dua arah dengan /dashboard/vendor/kalender,
  * dan deteksi bentrok jadwal serentak (Multi-Vendor Availability Matrix) di /builder.
  */
 

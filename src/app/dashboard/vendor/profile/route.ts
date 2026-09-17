@@ -3,6 +3,6 @@ import type { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   const url = request.nextUrl.clone();
-  url.pathname = "/vendor/profil";
+  url.pathname = "/dashboard/vendor/profil";
   return NextResponse.redirect(url, 307);
 }

@@ -27,14 +27,15 @@ export const ROUTES = {
     UNDANGAN: '/client/undangan',
   },
 
-  // 4. Portal Mitra Vendor
+  // 4. Portal Mitra Vendor (dashboard privat)
   VENDOR: {
-    DASHBOARD: '/vendor',
-    INBOX: '/vendor/inbox',
-    PORTOFOLIO: '/vendor/portofolio',
-    PAKET: '/vendor/paket',
-    KALENDER: '/vendor/kalender',
-    DOMPET: '/vendor/dompet',
+    DASHBOARD: '/dashboard/vendor',
+    INBOX: '/dashboard/vendor/inbox',
+    PORTOFOLIO: '/dashboard/vendor/portofolio',
+    PAKET: '/dashboard/vendor/paket',
+    KALENDER: '/dashboard/vendor/kalender',
+    DOMPET: '/dashboard/vendor/dompet',
+    PROFIL: '/dashboard/vendor/profil',
   },
 
   // 5. Portal Super Admin
@@ -111,13 +112,13 @@ export const ROUTE_REGISTRY: RouteMeta[] = [
   { path: '/client/jadwal', label: 'Jadwal Fitting & Sesi', category: 'client' },
   { path: '/client/undangan', label: 'Buku Tamu Digital', category: 'client' },
 
-  // Vendor
-  { path: '/vendor', label: 'Ringkasan Toko', category: 'vendor' },
-  { path: '/vendor/inbox', label: 'Kotak Masuk Order', category: 'vendor' },
-  { path: '/vendor/portofolio', label: 'Portofolio Mandiri', category: 'vendor' },
-  { path: '/vendor/paket', label: 'Daftar Paket & Harga', category: 'vendor' },
-  { path: '/vendor/kalender', label: 'Kalender Blackout Dates', category: 'vendor' },
-  { path: '/vendor/dompet', label: 'Dompet Saldo Escrow', category: 'vendor' },
+  // Vendor (dashboard privat)
+  { path: '/dashboard/vendor', label: 'Ringkasan Toko', category: 'vendor' },
+  { path: '/dashboard/vendor/inbox', label: 'Kotak Masuk Order', category: 'vendor' },
+  { path: '/dashboard/vendor/portofolio', label: 'Portofolio Mandiri', category: 'vendor' },
+  { path: '/dashboard/vendor/paket', label: 'Daftar Paket & Harga', category: 'vendor' },
+  { path: '/dashboard/vendor/kalender', label: 'Kalender Blackout Dates', category: 'vendor' },
+  { path: '/dashboard/vendor/dompet', label: 'Dompet Saldo Escrow', category: 'vendor' },
 
   // Admin
   { path: '/admin', label: 'Executive Radar', category: 'admin' },
