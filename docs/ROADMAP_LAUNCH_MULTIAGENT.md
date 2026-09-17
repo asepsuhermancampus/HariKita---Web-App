@@ -57,16 +57,15 @@
 | 7 | Design System / UI Polish / A11y | ✅ COMPLETE (`phase-07(ui)` — agent lain) |
 | 8 | SEO / Legal / Marketing | ✅ COMPLETE (`phase-08(seo)` — agent lain) |
 | 9 | Admin Panel + Dispute | ✅ COMPLETE (`phase-09(admin)`) |
-| 10b | Deploy live + kredensial | ⏳ Menunggu keputusan user |
+| 10b | Deploy live + kredensial | 🔷 PREP COMPLETE (`phase-10b(prep)`) — Supabase/Postgres, Midtrans Snap, runbook; menunggu kredensial |
 
 ### Masih mock murni (belum DB)
-- `/builder`  → Phase 5 (rekonsiliasi)
 - `/vendor/[slug]`  → sengaja tetap katalog statis (lihat PHASE-03 doc)
 - `/hub-koordinasi`  → daftar acara kini dari DB; diagram constellation masih demo
 
 ### Belum ada
-- Phase 5 (builder/availability — rekonsiliasi)
-- Deploy produksi live + kredensial (Phase 10b — menunggu keputusan user)
+- Kredensial Supabase + Midtrans (user menyusul) → eksekusi deploy sesuai runbook
+- Phase 5 (builder/availability) — SELESAI (`phase-05(builder)`)
 
 ---
 
