@@ -4,6 +4,17 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { PwaRegister } from "@/components/pwa/PwaRegister";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
+import { Analytics } from "@/components/analytics/Analytics";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_LOCALE,
+  SITE_TAGLINE,
+  localBusinessJsonLd,
+} from "@/lib/seo";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -17,23 +28,49 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "HariKita - Platform Event Lamaran & Pernikahan Hyperlocal Kebumen",
-  description:
-    "Rangkai hari bahagiamu di Kebumen. Kurasi 11 kategori layanan terpadu: busana, MUA, dekorasi, katering, foto-video, dan website undangan digital eksklusif dengan proteksi rekening bersama.",
-  keywords: [
-    "wedding kebumen",
-    "pernikahan kebumen",
-    "undangan digital kebumen",
-    "sewa busana kebumen",
-    "katering kebumen",
-    "mua kebumen",
-    "prewedding pantai menganti",
-  ],
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} - Platform Event Lamaran & Pernikahan Hyperlocal Kebumen`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: SITE_KEYWORDS,
+  authors: [{ name: `${SITE_NAME} Kebumen` }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   manifest: "/manifest.webmanifest",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: SITE_LOCALE,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+    creator: "@harikita",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "HariKita",
+    title: SITE_NAME,
   },
   icons: {
     icon: [
@@ -63,6 +100,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col antialiased selection:bg-gold/30 selection:text-plum">
+        <JsonLd data={localBusinessJsonLd()} />
         <PwaRegister />
         <a href="#main-content" className="skip-link">
           Lewati ke konten utama
@@ -71,6 +109,7 @@ export default function RootLayout({
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
         <InstallPrompt />
+        <Analytics />
       </body>
     </html>
   );

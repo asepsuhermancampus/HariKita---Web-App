@@ -90,12 +90,24 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs font-manrope text-white/50 gap-4">
-          <p>© {new Date().getFullYear()} HariKita Kebumen. Seluruh hak cipta dilindungi.</p>
-          <div className="flex items-center gap-1.5 text-white/60">
-            <span>Dirangkai dengan</span>
-            <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
-            <span>untuk keluarga tercinta di Kebumen</span>
+        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col gap-4">
+          {/* Tautan Legal & Bantuan (SEO + internal linking) */}
+          <nav aria-label="Tautan legal dan bantuan" className="flex flex-wrap items-center gap-x-5 gap-y-2 font-manrope text-xs text-white/70">
+            <Link href="/help" className="transition-colors hover:text-white">Bantuan &amp; FAQ</Link>
+            <Link href="/contact" className="transition-colors hover:text-white">Hubungi Kami</Link>
+            <Link href="/legal/privacy" className="transition-colors hover:text-white">Kebijakan Privasi</Link>
+            <Link href="/legal/terms" className="transition-colors hover:text-white">Syarat &amp; Ketentuan</Link>
+            <Link href="/legal/cookies" className="transition-colors hover:text-white">Cookie</Link>
+            <Link href="/legal/data-processing" className="transition-colors hover:text-white">Pemrosesan Data</Link>
+          </nav>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-manrope text-white/50 gap-4">
+            <p>© {new Date().getFullYear()} HariKita Kebumen. Seluruh hak cipta dilindungi.</p>
+            <div className="flex items-center gap-1.5 text-white/60">
+              <span>Dirangkai dengan</span>
+              <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
+              <span>untuk keluarga tercinta di Kebumen</span>
+            </div>
           </div>
         </div>
       </div>
