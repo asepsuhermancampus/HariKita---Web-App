@@ -19,6 +19,8 @@
     "verify": "npm run typecheck && npm run validate && npm run test",
     "assets:manifest": "node scripts/generate_asset_manifest.js && node scripts/verify_assets_complete.js",
     "assets:verify": "node scripts/verify_assets_complete.js",
+    "audio:fetch": "node scripts/fetch-cc0-audio.mjs",
+    "audio:verify": "node scripts/fetch-cc0-audio.mjs --verify",
     "assets:watch": "node scripts/watch_assets.js",
     "db:push": "prisma db push",
     "db:push:sqlite": "prisma db push --schema prisma/schema.sqlite.prisma",
