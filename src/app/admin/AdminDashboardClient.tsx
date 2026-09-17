@@ -11,8 +11,11 @@ import {
   MapPin,
   TrendingUp,
   AlertCircle,
+  LayoutDashboard,
 } from "lucide-react";
 import { EmptyState } from "@/components/harikita/ui";
+import { AdminTrackingSuite } from "@/components/dashboard";
+
 import type { AdminCalendarEventDTO } from "@/server/queries/orders";
 
 export interface FunnelStepVM {
@@ -62,13 +65,15 @@ export function AdminDashboardClient({
   gmv,
   isAdmin,
 }: AdminDashboardClientProps) {
-  const [activeTab, setActiveTab] = useState<"funnel" | "calendar" | "escrow">("funnel");
+  const [activeTab, setActiveTab] = useState<"overview" | "funnel" | "calendar" | "escrow">("overview");
 
   const tabs = [
+    { id: "overview" as const, label: "Master Tracking & Eksekutif", icon: LayoutDashboard },
     { id: "funnel" as const, label: "Master 10-Tahapan Funnel Konversi", icon: BarChart3 },
     { id: "calendar" as const, label: "Master Kalender Multi-Vendor Se-Kebumen", icon: Calendar },
     { id: "escrow" as const, label: "Kliring & Settlement Rekening Bersama", icon: CheckCircle2 },
   ];
+
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
@@ -136,8 +141,22 @@ export function AdminDashboardClient({
         })}
       </div>
 
+      {/* TAB 0: MASTER TRACKING & OVERVIEW SUITE */}
+      {activeTab === "overview" && (
+
+        <div className="space-y-6 animate-fadeIn">
+          <AdminTrackingSuite
+            funnelSteps={funnelSteps}
+            calendarEvents={calendarEvents}
+            escrow={escrow}
+            gmv={gmv}
+          />
+        </div>
+      )}
+
       {/* TAB 1: FUNNEL */}
       {activeTab === "funnel" && (
+
         <div className="space-y-6">
           <div className="p-6 rounded-3xl bg-white border border-gold/30 shadow-sm space-y-2">
             <h3 className="font-serif-luxury text-xl font-bold text-plum">

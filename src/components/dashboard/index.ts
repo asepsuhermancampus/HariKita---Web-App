@@ -5,4 +5,6 @@ export * from "./DashboardSparkBarCard";
 export * from "./DashboardScheduleTimeline";
 export * from "./DashboardTrackingTable";
 export * from "./VendorTrackingSuite";
+export * from "./AdminTrackingSuite";
+
 
