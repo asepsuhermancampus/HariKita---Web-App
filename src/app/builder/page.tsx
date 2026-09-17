@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cartStore } from "@/lib/cart-store";
@@ -243,11 +243,16 @@ export default function MixMatchBuilderPage() {
   const checkoutDialogRef = useRef<HTMLDivElement>(null);
   const checkoutInitialFocusRef = useRef<HTMLButtonElement>(null);
 
+  // Callback stabil (useCallback) supaya perubahan referensi dari re-render
+  // (mis. saat mengetik di form) tidak me-restart focus trap & memindahkan
+  // fokus kembali ke tombol "Batal".
+  const closeCheckout = useCallback(() => setIsCheckoutOpen(false), []);
+
   // Focus trap + Escape untuk modal checkout (Phase 7 a11y).
   useFocusTrap(
     checkoutDialogRef,
     isCheckoutOpen,
-    () => setIsCheckoutOpen(false),
+    closeCheckout,
     checkoutInitialFocusRef
   );
   const [clientForm, setClientForm] = useState({
@@ -812,7 +817,7 @@ export default function MixMatchBuilderPage() {
                   <button
                     ref={checkoutInitialFocusRef}
                     type="button"
-                    onClick={() => setIsCheckoutOpen(false)}
+                    onClick={closeCheckout}
                     className="focus-ring btn btn-sm btn-ghost text-plum rounded-full min-h-[44px]"
                   >
                     Batal

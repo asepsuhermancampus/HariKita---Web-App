@@ -29,6 +29,18 @@ export function useFocusTrap(
 ) {
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
+  // Simpan callback & ref di dalam ref agar perubahan referensinya (mis. inline
+  // arrow function pada tiap render) TIDAK me-restart effect focus trap. Kalau
+  // tidak, setiap keystroke yang memicu re-render akan memindahkan fokus kembali
+  // ke elemen fokus awal (mis. tombol "Batal") — persis bug yang dilaporkan.
+  const onEscapeRef = useRef(onEscape);
+  const initialFocusRefRef = useRef(initialFocusRef);
+
+  useEffect(() => {
+    onEscapeRef.current = onEscape;
+    initialFocusRefRef.current = initialFocusRef;
+  });
+
   useEffect(() => {
     if (!active) return;
     const container = containerRef.current;
@@ -43,13 +55,13 @@ export function useFocusTrap(
       );
 
     // Fokus awal.
-    const focusTarget = initialFocusRef?.current ?? getFocusable()[0] ?? container;
+    const focusTarget = initialFocusRefRef.current?.current ?? getFocusable()[0] ?? container;
     // Beri jeda satu frame agar elemen ter-mount penuh.
     const raf = requestAnimationFrame(() => focusTarget?.focus());
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onEscape?.();
+        onEscapeRef.current?.();
         return;
       }
       if (e.key !== "Tab") return;
@@ -82,5 +94,5 @@ export function useFocusTrap(
       // Kembalikan fokus ke pemicu semula.
       previouslyFocused.current?.focus?.();
     };
-  }, [active, containerRef, onEscape, initialFocusRef]);
+  }, [active, containerRef]);
 }
