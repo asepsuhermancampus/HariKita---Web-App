@@ -33,7 +33,9 @@ import {
   ButtonGhost,
 } from "@/components/harikita/ui";
 import { VendorAnalyticsLineChart } from "@/components/vendor/VendorAnalyticsLineChart";
+import { VendorTrackingSuite } from "@/components/dashboard";
 import { VendorRouteMap } from "@/components/vendor/VendorRouteMap";
+
 import { VendorWeatherWidget } from "@/components/vendor/VendorWeatherWidget";
 import { VendorRevenueSplitCard } from "@/components/vendor/VendorRevenueSplitCard";
 import { VendorProfileForm } from "./VendorProfileForm";
@@ -233,156 +235,12 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
           3. TAB CONTENT VIEWS
          ================================================================= */}
 
-      {/* TAB 1: ANALYTICS & INTERACTIVE LINE CHART */}
+      {/* TAB 1: ANALYTICS & INTERACTIVE DASHBOARD TRACKING SUITE */}
       {activeTab === "analytics" && (
         <div className="space-y-8 animate-fadeIn">
-          {/* A. Interactive Pure SVG Bezier Line Chart */}
-          <VendorAnalyticsLineChart
-            initialTimeframe="7d"
-            viewsGuestTotal={data.viewsGuest}
-            viewsAuthTotal={data.viewsAuth}
-            builderTrialsTotal={data.builderTrials}
-            ordersTotal={totalOrders}
-          />
+          {/* Master 5-Component Tracking Suite (Spline Area, Semi-Donut Gauge, Sparkline Cards, Schedule Timeline, Tracking Table) */}
+          <VendorTrackingSuite data={data} />
 
-          {/* B. 4 Organic Multi-Tier Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {/* Card 1: Views (Guest vs Auth) */}
-            <div className="bg-white rounded-3xl p-6 border border-hk-champagne/40 shadow-xs relative overflow-hidden group hover:border-hk-champagne transition-all font-manrope">
-              <div className="flex items-center justify-between mb-4">
-                <span className="w-10 h-10 rounded-2xl bg-hk-taupe/15 text-hk-taupe flex items-center justify-center">
-                  <Eye className="w-5 h-5" />
-                </span>
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  <ArrowUpRight className="w-3 h-3" /> +18.4%
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <div className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal tabular-nums">
-                  {totalViews}
-                </div>
-                <div className="text-xs font-medium text-hk-charcoal">
-                  Total Kunjungan Portofolio
-                </div>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-hk-champagne/25 space-y-2 text-xs">
-                <div className="flex items-center justify-between text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5 text-hk-charcoal" />
-                    Tamu Belum Berakun
-                  </span>
-                  <strong className="text-hk-charcoal font-semibold tabular-nums">{data.viewsGuest}</strong>
-                </div>
-                <div className="flex items-center justify-between text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-hk-taupe" />
-                    Klien Berakun HariKita
-                  </span>
-                  <strong className="text-hk-charcoal font-semibold tabular-nums">{data.viewsAuth}</strong>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2: Builder Trials */}
-            <div className="bg-white rounded-3xl p-6 border border-hk-champagne/40 shadow-xs relative overflow-hidden group hover:border-hk-champagne transition-all font-manrope">
-              <div className="flex items-center justify-between mb-4">
-                <span className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center">
-                  <SlidersHorizontal className="w-5 h-5" />
-                </span>
-                <span className="inline-flex items-center text-[11px] font-semibold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
-                  Minat Beli Tinggi
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <div className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal tabular-nums">
-                  {data.builderTrials}
-                </div>
-                <div className="text-xs font-medium text-hk-charcoal">
-                  Percobaan Racik Paket
-                </div>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-hk-champagne/25 space-y-1 text-xs text-muted-foreground">
-                <p>
-                  Jasa dipadukan dengan vendor lain di <strong className="text-hk-charcoal">Mix-and-Match Builder</strong>.
-                </p>
-                <div className="text-[11px] text-hk-taupe font-semibold pt-1">
-                  Rasio coba: {trialRate}% dari pengunjung
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3: Wishlist & Bookmarks */}
-            <div className="bg-white rounded-3xl p-6 border border-hk-champagne/40 shadow-xs relative overflow-hidden group hover:border-hk-champagne transition-all font-manrope">
-              <div className="flex items-center justify-between mb-4">
-                <span className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
-                  <Bookmark className="w-5 h-5 fill-rose-100" />
-                </span>
-                <span className="inline-flex items-center text-[11px] font-semibold text-rose-800 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">
-                  Moodboard Pasangan
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <div className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal tabular-nums">
-                  {data.bookmarksCount}
-                </div>
-                <div className="text-xs font-medium text-hk-charcoal">
-                  Disimpan ke Favorit
-                </div>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-hk-champagne/25 space-y-1 text-xs text-muted-foreground">
-                <p>
-                  Disimpan pasangan untuk didiskusikan dalam musyawarah keluarga.
-                </p>
-                <div className="text-[11px] text-rose-800 font-semibold pt-1">
-                  Rasio wishlist: {((data.bookmarksCount / totalViews) * 100).toFixed(1)}% calon pengantin
-                </div>
-              </div>
-            </div>
-
-            {/* Card 4: Orders (Solo vs Combo) */}
-            <div className="bg-white rounded-3xl p-6 border border-hk-champagne/40 shadow-xs relative overflow-hidden group hover:border-hk-champagne transition-all font-manrope">
-              <div className="flex items-center justify-between mb-4">
-                <span className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5" />
-                </span>
-                <span className="inline-flex items-center text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  Escrow Protected
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <div className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal tabular-nums">
-                  {totalOrders}
-                </div>
-                <div className="text-xs font-medium text-hk-charcoal">
-                  Total Pesanan Terkonfirmasi
-                </div>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-hk-champagne/25 space-y-2 text-xs">
-                <div className="flex items-center justify-between text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <Store className="w-3.5 h-3.5 text-hk-taupe" />
-                    Jasa Tunggal (Solo)
-                  </span>
-                  <strong className="text-hk-charcoal font-semibold tabular-nums">{data.ordersSolo}</strong>
-                </div>
-                <div className="flex items-center justify-between text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <Layers className="w-3.5 h-3.5 text-hk-taupe" />
-                    Paket Kombinasi (Combo)
-                  </span>
-                  <strong className="text-hk-charcoal font-semibold tabular-nums">{data.ordersCombo}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* C. Decorative Divider */}
           <DecorativeDivider variant="botanical" color="champagne" className="py-2" />
