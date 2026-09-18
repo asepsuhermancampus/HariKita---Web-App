@@ -16,6 +16,8 @@ export interface CartVendorItem {
   callTime?: string; // e.g. "05:00 WIB"
   notes?: string;
   iconName?: string;
+  unitLabel?: string; // "per pax" | "per paket" | "per pcs" | "per porsi"
+  productSlug?: string; // slug produk di katalog (untuk deep-link)
 }
 
 export interface CartState {
@@ -105,17 +107,22 @@ export const cartStore = {
   },
 
   addItem(item: Omit<CartVendorItem, "id">) {
+    // Multi-produk per vendor: identitas baris = kombinasi vendorId + packageId.
+    // Produk berbeda dari vendor yang sama menjadi baris terpisah; produk yang
+    // sama (vendor + paket) di-upsert dengan quantity diakumulasi.
     const existingIndex = memoryState.items.findIndex(
-      (i) => i.categoryId === item.categoryId
+      (i) => i.vendorId === item.vendorId && i.packageId === item.packageId
     );
 
     let updatedItems: CartVendorItem[];
     if (existingIndex >= 0) {
-      // Ganti layanan di kategori yang sama (1 kategori = 1 vendor terpilih dalam 1 paket)
+      const existing = memoryState.items[existingIndex];
       updatedItems = [...memoryState.items];
       updatedItems[existingIndex] = {
+        ...existing,
         ...item,
-        id: `item_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+        quantity: existing.quantity + item.quantity,
+        id: existing.id,
       };
     } else {
       updatedItems = [
