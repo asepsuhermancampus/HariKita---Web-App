@@ -42,18 +42,24 @@ jobs:
         run: npx prisma generate
 
       - name: Prisma generate (SQLite client — tests)
+        env:
+          DATABASE_URL: "file:./dev.db"
         run: npx prisma generate --schema prisma/schema.sqlite.prisma
 
       - name: Prisma validate
         run: npx prisma validate
 
       - name: Push schema to test DB (SQLite)
+        env:
+          DATABASE_URL: "file:./dev.db"
         run: npx prisma db push --schema prisma/schema.sqlite.prisma --skip-generate
 
       - name: Typecheck
         run: npm run typecheck
 
       - name: Test
+        env:
+          DATABASE_URL: "file:./dev.db"
         run: npm test
 
       - name: Build
