@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { MULTI_VENDOR_CATALOG, type VendorProfile, type VendorPackage } from "@/data/multi-vendor-catalog";
+import { MULTI_VENDOR_CATALOG, type VendorProfile, type VendorProduct } from "@/data/multi-vendor-catalog";
 import { DomainError } from "@/server/services/errors";
 import type { Prisma } from "@prisma/client";
 
@@ -34,7 +34,7 @@ export interface ResolvedCatalogItem {
 function findCatalogPackage(
   vendorId: string,
   packageId: string
-): { vendor: VendorProfile; pkg: VendorPackage } {
+): { vendor: VendorProfile; pkg: VendorProduct } {
   const vendor = MULTI_VENDOR_CATALOG.find((v) => v.id === vendorId);
   if (!vendor) {
     throw new DomainError(
@@ -42,7 +42,7 @@ function findCatalogPackage(
       `Vendor katalog "${vendorId}" tidak ditemukan di katalog.`
     );
   }
-  const pkg = vendor.packages.find((p) => p.id === packageId);
+  const pkg = vendor.products.find((p) => p.id === packageId);
   if (!pkg) {
     throw new DomainError(
       "ITEM_PACKAGE_MISMATCH",

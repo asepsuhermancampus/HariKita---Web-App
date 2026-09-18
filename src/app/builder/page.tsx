@@ -251,7 +251,7 @@ export default function MixMatchBuilderPage() {
   const catalogIdByVendorName = React.useMemo(() => {
     const map: Record<string, { catalogVendorId: string; catalogPackageId: string }> = {};
     for (const v of MULTI_VENDOR_CATALOG) {
-      map[v.name] = { catalogVendorId: v.id, catalogPackageId: v.packages[0]?.id ?? "" };
+      map[v.name] = { catalogVendorId: v.id, catalogPackageId: v.products[0]?.id ?? "" };
     }
     return map;
   }, []);

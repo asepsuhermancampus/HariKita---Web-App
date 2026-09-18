@@ -22,7 +22,7 @@ after(async () => {
 
 // Ambil vendor & paket katalog pertama untuk dijadikan basis uji.
 const CATALOG_VENDOR = MULTI_VENDOR_CATALOG[0];
-const CATALOG_PACKAGE = CATALOG_VENDOR.packages[0];
+const CATALOG_PACKAGE = CATALOG_VENDOR.products[0];
 
 /** Seed VendorProfile + ServicePackage yang namanya cocok dengan katalog. */
 async function seedMatchingVendor() {
@@ -71,7 +71,7 @@ test("catalog-bridge falls back to v1 marker package when present", async () => 
   // Use a dedicated catalog package so the marker does not contaminate
   // other tests that rely on name-matching resolution.
   const markerVendor = MULTI_VENDOR_CATALOG[3];
-  const markerPackage = markerVendor.packages[0];
+  const markerPackage = markerVendor.products[0];
 
   const u = await prisma.user.create({
     data: { name: markerVendor.name, phone: `0814${Math.floor(Math.random() * 1e8).toString().padStart(8, "0")}`, role: "VENDOR" },
@@ -100,7 +100,7 @@ test("catalog-bridge falls back to v1 marker package when present", async () => 
 test("catalog-bridge resolves many items preserving order", async () => {
   await seedMatchingVendor();
   const vendor2 = MULTI_VENDOR_CATALOG[1];
-  const pkg2 = vendor2.packages[0];
+  const pkg2 = vendor2.products[0];
   // Seed the second catalog vendor too.
   const u2 = await prisma.user.create({
     data: { name: vendor2.name, phone: `0813${Math.floor(Math.random() * 1e8).toString().padStart(8, "0")}`, role: "VENDOR" },
