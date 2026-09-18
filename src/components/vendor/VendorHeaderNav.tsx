@@ -110,7 +110,7 @@ export function VendorHeaderNav({
 
           <div className="flex items-center gap-2">
             <Link
-              href="/kategori"
+              href="/vendor"
               className="text-xs font-manrope font-semibold text-hk-charcoal hover:text-hk-taupe transition-colors px-3 py-1.5 rounded-full border border-hk-champagne/40 bg-hk-ivory/50 flex items-center gap-1.5"
             >
               <ExternalLink className="w-3 h-3 text-hk-taupe" />

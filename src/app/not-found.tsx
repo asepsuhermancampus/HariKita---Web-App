@@ -32,7 +32,7 @@ export default function NotFound() {
           Ke Beranda
         </Link>
         <Link
-          href="/kategori"
+          href="/vendor"
           className="focus-ring inline-flex min-h-[44px] items-center justify-center rounded-full border border-hk-champagne bg-white px-6 py-3 font-manrope text-sm font-semibold text-hk-taupe transition-colors hover:bg-hk-ivory"
         >
           Jelajahi 11 Layanan

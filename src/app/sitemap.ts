@@ -15,7 +15,7 @@ const PUBLIC_STATIC_ROUTES: Array<{
   priority: number;
 }> = [
   { path: "/", changeFrequency: "weekly", priority: 1.0 },
-  { path: "/kategori", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/vendor", changeFrequency: "weekly", priority: 0.9 },
   { path: "/undangan", changeFrequency: "weekly", priority: 0.9 },
   { path: "/builder", changeFrequency: "monthly", priority: 0.8 },
   { path: "/help", changeFrequency: "monthly", priority: 0.6 },
@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const categoryEntries: MetadataRoute.Sitemap = CATEGORY_SLUGS.map((slug) => ({
-    url: absoluteUrl(`/kategori/${slug}`),
+    url: absoluteUrl(`/vendor/kategori/${slug}`),
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.7,

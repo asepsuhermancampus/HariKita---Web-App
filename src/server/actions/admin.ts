@@ -51,7 +51,7 @@ export async function approveVendorAction(input: {
       data: { verificationStatus: "APPROVED", isVerified: true, verificationNote: null },
     });
 
-    revalidate(["/admin/verifikasi", "/kategori"]);
+    revalidate(["/admin/verifikasi", "/vendor"]);
     return { id: input.vendorId };
   });
 }
@@ -75,7 +75,7 @@ export async function rejectVendorAction(input: {
       },
     });
 
-    revalidate(["/admin/verifikasi", "/kategori"]);
+    revalidate(["/admin/verifikasi", "/vendor"]);
     return { id: input.vendorId };
   });
 }

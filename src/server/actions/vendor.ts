@@ -120,7 +120,7 @@ export async function createPackageAction(
       },
     });
 
-    revalidate(["/dashboard/vendor/paket", "/kategori"]);
+    revalidate(["/dashboard/vendor/paket", "/vendor"]);
     return { id: created.id };
   });
 }
@@ -154,7 +154,7 @@ export async function updatePackageAction(
       },
     });
 
-    revalidate(["/dashboard/vendor/paket", "/kategori"]);
+    revalidate(["/dashboard/vendor/paket", "/vendor"]);
     return { id: input.id };
   });
 }
@@ -183,7 +183,7 @@ export async function deletePackageAction(input: {
     }
 
     await prisma.servicePackage.delete({ where: { id: input.id } });
-    revalidate(["/dashboard/vendor/paket", "/kategori"]);
+    revalidate(["/dashboard/vendor/paket", "/vendor"]);
     return { id: input.id };
   });
 }

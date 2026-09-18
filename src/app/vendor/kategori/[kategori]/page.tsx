@@ -21,13 +21,23 @@ export default function VendorCategoryDetailPage({ params }: PageProps) {
   const vendors = getVendorsByCategory(kategori);
 
   const [selectedDistrict, setSelectedDistrict] = useState<string>("all");
+  const [selectedTag, setSelectedTag] = useState<string>("all");
   const [pendingSwap, setPendingSwap] = useState<VendorProfile | null>(null);
 
   const { items, addItem } = useCart();
 
+  const allTags = Array.from(
+    new Set(vendors.flatMap((v) => v.products.flatMap((p) => p.productTags)))
+  ).sort();
+
   const filteredVendors = vendors.filter((v) => {
-    if (selectedDistrict === "all") return true;
-    return v.district.toLowerCase() === selectedDistrict.toLowerCase();
+    const districtOk =
+      selectedDistrict === "all" ||
+      v.district.toLowerCase() === selectedDistrict.toLowerCase();
+    const tagOk =
+      selectedTag === "all" ||
+      v.products.some((p) => p.productTags.includes(selectedTag));
+    return districtOk && tagOk;
   });
 
   const plannedCount = items.length;
@@ -35,20 +45,22 @@ export default function VendorCategoryDetailPage({ params }: PageProps) {
     items.some((i) => i.vendorId === vendorId);
 
   const addVendorToPlan = (vendor: VendorProfile) => {
-    const pkg = vendor.packages[0];
-    if (!pkg) return;
+    const product = vendor.products[0];
+    if (!product) return;
     addItem({
       categoryId: vendor.categoryId,
       categoryTitle: vendor.categoryTitle,
       vendorId: vendor.id,
       vendorName: vendor.name,
       district: vendor.district,
-      packageId: pkg.id,
-      packageName: pkg.name,
-      unitPrice: pkg.price,
-      quantity: 1,
-      callTime: pkg.callTime,
-      notes: pkg.desc,
+      packageId: product.id,
+      packageName: product.name,
+      unitPrice: product.price,
+      quantity: product.unitType === "package" ? 1 : (product.minQuantity ?? 1),
+      callTime: product.callTime,
+      notes: product.desc,
+      unitLabel: product.unitLabel,
+      productSlug: product.slug,
     });
   };
 
@@ -107,7 +119,7 @@ export default function VendorCategoryDetailPage({ params }: PageProps) {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
           <Filter className="w-4 h-4 text-hk-taupe" />
           <select
             value={selectedDistrict}
@@ -117,6 +129,18 @@ export default function VendorCategoryDetailPage({ params }: PageProps) {
             <option value="all">Semua Kecamatan di Kebumen</option>
             {KEBUMEN_DISTRICTS.map((d) => (
               <option key={d} value={d}>Kecamatan {d}</option>
+            ))}
+          </select>
+
+          <select
+            value={selectedTag}
+            onChange={(e) => setSelectedTag(e.target.value)}
+            className="rounded-full border border-hk-champagne/60 bg-white px-4 py-2 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs focus:outline-hidden focus:ring-2 focus:ring-hk-taupe"
+            aria-label="Filter jenis produk"
+          >
+            <option value="all">Semua Jenis</option>
+            {allTags.map((tag) => (
+              <option key={tag} value={tag}>#{tag}</option>
             ))}
           </select>
         </div>
@@ -177,22 +201,22 @@ export default function VendorCategoryDetailPage({ params }: PageProps) {
                         </span>
                       </div>
                       <span className="text-hk-charcoal/60 text-[11px]">
-                        {vendor.packages.length} Pilihan Paket
+                        {vendor.products.length} Pilihan Produk
                       </span>
                     </div>
                     <p className="font-manrope text-xs text-hk-charcoal/70 leading-relaxed line-clamp-2">
                       {vendor.bio}
                     </p>
-                    {vendor.packages[0] && (
+                    {vendor.products[0] && (
                       <div className="pt-3 border-t border-hk-champagne/30 flex items-center justify-between text-xs font-manrope">
                         <div>
                           <span className="text-[10px] text-hk-charcoal/60 block">Mulai dari:</span>
                           <span className="font-mono font-bold text-hk-charcoal">
-                            Rp {vendor.packages[0].price.toLocaleString("id-ID")}
+                            Rp {vendor.products[0].price.toLocaleString("id-ID")}
                           </span>
                         </div>
                         <span className="text-[10px] text-hk-taupe font-semibold bg-hk-soft-beige/70 px-2 py-0.5 rounded-full">
-                          Call Time: {vendor.packages[0].callTime}
+                          Call Time: {vendor.products[0].callTime}
                         </span>
                       </div>
                     )}

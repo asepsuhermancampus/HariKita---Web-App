@@ -18,9 +18,11 @@ import {
   ChevronLeft,
   Check,
 } from "lucide-react";
-import { MULTI_VENDOR_CATALOG, VendorProfile } from "@/data/multi-vendor-catalog";
+import { MULTI_VENDOR_CATALOG } from "@/data/multi-vendor-catalog";
+import type { VendorProduct } from "@/data/product-types";
+import { getVendorBySlug } from "@/lib/vendor-categories";
 import { useCart } from "@/lib/cart-store";
-import { isReservedVendorSlug } from "@/lib/routes";
+import { isReservedVendorSlug, ROUTES } from "@/lib/routes";
 import { usePortfolio } from "@/lib/portfolio-store";
 
 interface PageProps {
@@ -32,7 +34,7 @@ export default function PublicVendorProfilePage({ params }: PageProps) {
   const vendorSlug = resolvedParams.slug;
 
   const vendor =
-    MULTI_VENDOR_CATALOG.find((v) => v.slug === vendorSlug) ||
+    (isReservedVendorSlug(vendorSlug) ? undefined : getVendorBySlug(vendorSlug)) ||
     MULTI_VENDOR_CATALOG[0]; // fallback for demo
 
   const dynamicPosts = usePortfolio(vendorSlug);
@@ -48,28 +50,30 @@ export default function PublicVendorProfilePage({ params }: PageProps) {
     ...vendor.portfolio.filter((p) => !dynamicPosts.some((dp) => dp.id === p.id)),
   ];
 
-  const [activeTab, setActiveTab] = useState<"portfolio" | "packages">("portfolio");
+  const [activeTab, setActiveTab] = useState<"portfolio" | "produk">("portfolio");
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
-  const [addedPkgId, setAddedPkgId] = useState<string | null>(null);
+  const [addedProductId, setAddedProductId] = useState<string | null>(null);
 
   const { addItem } = useCart();
 
-  const handleAddPackage = (pkg: any) => {
+  const handleAddProduct = (product: VendorProduct) => {
     addItem({
       categoryId: vendor.categoryId,
       categoryTitle: vendor.categoryTitle,
       vendorId: vendor.id,
       vendorName: vendor.name,
       district: vendor.district,
-      packageId: pkg.id,
-      packageName: pkg.name,
-      unitPrice: pkg.price,
-      quantity: 1,
-      callTime: pkg.callTime,
-      notes: pkg.desc,
+      packageId: product.id,
+      packageName: product.name,
+      unitPrice: product.price,
+      quantity: product.unitType === "package" ? 1 : (product.minQuantity ?? 1),
+      callTime: product.callTime,
+      notes: product.desc,
+      unitLabel: product.unitLabel,
+      productSlug: product.slug,
     });
-    setAddedPkgId(pkg.id);
-    setTimeout(() => setAddedPkgId(null), 2500);
+    setAddedProductId(product.id);
+    setTimeout(() => setAddedProductId(null), 2500);
   };
 
   const waContactMessage = encodeURIComponent(
@@ -93,7 +97,7 @@ export default function PublicVendorProfilePage({ params }: PageProps) {
         {/* Back Link */}
         <div className="absolute top-4 left-4 sm:left-8 z-10">
           <Link
-            href={`/kategori/${vendor.categoryId}`}
+            href={ROUTES.KATEGORI_DETAIL(vendor.categoryId)}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 text-white text-xs font-manrope font-semibold backdrop-blur-md hover:bg-black/80 transition-all"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -190,14 +194,14 @@ export default function PublicVendorProfilePage({ params }: PageProps) {
               Galeri Portofolio Hasil Karya ({vendor.portfolio.length})
             </button>
             <button
-              onClick={() => setActiveTab("packages")}
+              onClick={() => setActiveTab("produk")}
               className={`px-5 py-2.5 text-xs font-manrope font-bold border-b-2 transition-all ${
-                activeTab === "packages"
+                activeTab === "produk"
                   ? "border-hk-taupe text-hk-charcoal"
                   : "border-transparent text-hk-charcoal/60 hover:text-hk-charcoal"
               }`}
             >
-              Pilihan Paket Layanan ({vendor.packages.length})
+              Pilihan Produk Layanan ({vendor.products.length})
             </button>
           </div>
         </div>
@@ -261,51 +265,55 @@ export default function PublicVendorProfilePage({ params }: PageProps) {
           </div>
         )}
 
-        {/* TAB 2: PACKAGES & PRICING */}
-        {activeTab === "packages" && (
+        {/* TAB 2: PRODUCTS & PRICING */}
+        {activeTab === "produk" && (
           <div className="space-y-6">
             <div>
               <h3 className="font-editorial text-2xl font-bold text-hk-charcoal">
-                Daftar Paket Harga Resmi
+                Daftar Produk &amp; Harga Resmi
               </h3>
               <p className="font-manrope text-xs text-hk-charcoal/70">
-                Pilih paket untuk langsung dimasukkan ke racikan acara Anda.
+                Pilih produk untuk diatur jumlahnya, atau langsung masukkan ke racikan acara Anda.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {vendor.packages.map((pkg) => {
-                const isAdded = addedPkgId === pkg.id;
+              {vendor.products.map((product) => {
+                const isAdded = addedProductId === product.id;
+                const locked = product.unitType === "package";
                 return (
                   <div
-                    key={pkg.id}
+                    key={product.id}
                     className="p-6 rounded-3xl bg-white border border-hk-champagne/60 shadow-xs space-y-4 hover:border-hk-taupe hover:shadow-md transition-all flex flex-col justify-between"
                   >
-                    <div className="space-y-3">
+                    <Link
+                      href={ROUTES.PRODUCT(vendor.slug, product.slug)}
+                      className="space-y-3 group"
+                    >
                       <div className="flex items-center justify-between">
                         <span className="px-3 py-1 rounded-full text-[10px] font-manrope font-bold uppercase tracking-wider bg-hk-soft-beige text-hk-taupe border border-hk-champagne/40">
-                          {vendor.categoryTitle}
+                          {product.unitLabel}
                         </span>
                         <span className="text-xs font-mono font-semibold text-hk-taupe flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5" />
-                          <span>Call Time: {pkg.callTime}</span>
+                          <span>Call Time: {product.callTime}</span>
                         </span>
                       </div>
 
-                      <h4 className="font-editorial text-2xl font-bold text-hk-charcoal">
-                        {pkg.name}
+                      <h4 className="font-editorial text-2xl font-bold text-hk-charcoal group-hover:text-hk-taupe transition-colors">
+                        {product.name}
                       </h4>
 
                       <p className="font-manrope text-xs text-hk-charcoal/75 leading-relaxed">
-                        {pkg.desc}
+                        {product.desc}
                       </p>
 
                       <div className="p-3 rounded-2xl bg-hk-ivory/60 border border-hk-champagne/40 space-y-2">
                         <span className="text-[10px] font-manrope font-bold text-hk-charcoal/70 uppercase tracking-wider block">
-                          Kelengkapan Paket (Inclusions):
+                          Kelengkapan Produk (Inclusions):
                         </span>
                         <div className="space-y-1.5">
-                          {pkg.features.map((feat, i) => (
+                          {product.features.map((feat, i) => (
                             <div key={i} className="flex items-start gap-2 text-xs font-manrope text-hk-charcoal/80">
                               <CheckCircle2 className="w-3.5 h-3.5 text-hk-taupe shrink-0 mt-0.5" />
                               <span>{feat}</span>
@@ -313,19 +321,21 @@ export default function PublicVendorProfilePage({ params }: PageProps) {
                           ))}
                         </div>
                       </div>
-                    </div>
+                    </Link>
 
                     <div className="pt-4 border-t border-hk-champagne/40 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-manrope text-hk-charcoal/60 block">Harga Paket:</span>
+                        <span className="text-[10px] font-manrope text-hk-charcoal/60 block">
+                          Harga {locked ? "Paket" : "Satuan"}:
+                        </span>
                         <span className="font-mono text-xl font-bold text-hk-charcoal">
-                          Rp {pkg.price.toLocaleString("id-ID")}
+                          Rp {product.price.toLocaleString("id-ID")}
                         </span>
                       </div>
 
                       <button
                         type="button"
-                        onClick={() => handleAddPackage(pkg)}
+                        onClick={() => handleAddProduct(product)}
                         className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-manrope font-bold transition-all shadow-xs ${
                           isAdded
                             ? "bg-emerald-600 text-white"

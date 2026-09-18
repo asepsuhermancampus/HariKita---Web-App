@@ -401,17 +401,17 @@ export default function MixMatchBuilderPage() {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-12 font-manrope">
       {/* Header */}
       <div className="text-center space-y-3 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-gold/15 text-plum-dark text-xs uppercase tracking-widest font-semibold border border-gold/30">
-          <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
+        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-hk-champagne/15 text-hk-charcoal text-xs uppercase tracking-widest font-semibold border border-hk-champagne/40">
+          <Sparkles className="w-3.5 h-3.5 text-hk-taupe" />
           <span>Interactive Mix-and-Match Builder</span>
         </div>
-        <h1 className="font-serif-luxury text-3xl sm:text-5xl text-plum font-bold tracking-tight">
+        <h1 className="font-editorial text-4xl sm:text-5xl text-hk-charcoal font-normal tracking-tight">
           Simulator Racik Paket Pernikahan Kebumen
         </h1>
-        <p className="text-sm text-plum-light leading-relaxed">
+        <p className="text-sm text-hk-charcoal/70 leading-relaxed">
           Pilih vendor dan atur jumlah pax, baki, atau tema undangan sesuka Anda. Harga dan termin pembayaran DP 30% akan terkalkulasi secara otomatis dan transparan.
         </p>
       </div>
@@ -420,10 +420,10 @@ export default function MixMatchBuilderPage() {
         {/* Left Column: List of 11 Services */}
         <div className="lg:col-span-8 space-y-4">
           <div className="flex items-center justify-between px-2">
-            <span className="text-xs uppercase tracking-wider font-bold text-plum-light">
+            <span className="text-xs uppercase tracking-wider font-bold text-hk-taupe">
               Pilihan 11 Kategori Vendor Kebumen
             </span>
-            <span className="text-xs font-semibold text-gold-dark">
+            <span className="text-xs font-semibold text-hk-charcoal">
               {Object.keys(selectedItems).length} Layanan Dipilih
             </span>
           </div>
@@ -438,15 +438,15 @@ export default function MixMatchBuilderPage() {
                 key={service.id}
                 className={`p-5 rounded-3xl border transition-all ${
                   isSelected
-                    ? "bg-white border-gold shadow-md"
-                    : "bg-white/60 border-gold/20 hover:border-gold/40"
+                    ? "bg-white border-hk-champagne shadow-md"
+                    : "bg-white/60 border-hk-champagne/30 hover:border-hk-champagne/60"
                 }`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3.5">
                     <div
                       className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-colors ${
-                        isSelected ? "gold-gradient-bg text-plum-dark" : "bg-gold/10 text-plum-light"
+                        isSelected ? "bg-hk-taupe text-white" : "bg-hk-soft-beige/60 text-hk-taupe"
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -454,10 +454,10 @@ export default function MixMatchBuilderPage() {
 
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-gold-dark bg-gold/15 px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-hk-taupe bg-hk-soft-beige px-2 py-0.5 rounded-full">
                           {service.category}
                         </span>
-                        <span className="text-xs text-plum-light font-medium">• {service.vendor}</span>
+                        <span className="text-xs text-hk-charcoal/60 font-medium">• {service.vendor}</span>
                         {availabilityStore.checkMatrix(clientForm.eventDate, [service.vendor]).isAllAvailable ? (
                           <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
                             ✓ Siap Hadir
@@ -468,10 +468,10 @@ export default function MixMatchBuilderPage() {
                           </span>
                         )}
                       </div>
-                      <h3 className="font-serif-luxury text-lg font-bold text-plum">
+                      <h3 className="font-editorial text-lg font-bold text-hk-charcoal">
                         {service.name}
                       </h3>
-                      <p className="text-xs text-plum-light leading-relaxed max-w-xl">
+                      <p className="text-xs text-hk-charcoal/70 leading-relaxed max-w-xl">
                         {service.description}
                       </p>
                     </div>
@@ -482,8 +482,8 @@ export default function MixMatchBuilderPage() {
                     onClick={() => toggleItem(service.id, service.defaultUnit || 1)}
                     className={`p-2.5 rounded-full border transition-all ${
                       isSelected
-                        ? "gold-gradient-bg text-plum-dark border-gold shadow-xs"
-                        : "border-gold/40 text-plum-light hover:bg-gold/15"
+                        ? "bg-hk-taupe text-white border-hk-taupe shadow-xs"
+                        : "border-hk-champagne/60 text-hk-taupe hover:bg-hk-soft-beige/60"
                     }`}
                     aria-label="Pilih layanan ini"
                   >
@@ -493,11 +493,11 @@ export default function MixMatchBuilderPage() {
 
                 {/* Sub-selectors (Pax / Baki / Theme Selector) */}
                 {isSelected && (
-                  <div className="mt-4 pt-4 border-t border-gold/20 flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div className="mt-4 pt-4 border-t border-hk-champagne/30 flex flex-wrap items-center justify-between gap-3 text-xs">
                     {/* Unit Slider for Pax Catering */}
                     {service.unitType === "pax" && (
                       <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <label htmlFor={`pax-${service.id}`} className="font-bold text-plum">Jumlah Tamu (Pax):</label>
+                        <label htmlFor={`pax-${service.id}`} className="font-bold text-hk-charcoal">Jumlah Tamu (Pax):</label>
                         <input
                           id={`pax-${service.id}`}
                           type="range"
@@ -507,9 +507,9 @@ export default function MixMatchBuilderPage() {
                           value={currentItem?.count || 100}
                           onChange={(e) => updateCount(service.id, parseInt(e.target.value, 10))}
                           aria-valuetext={`${currentItem?.count || 100} pax`}
-                          className="range range-xs range-primary w-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-plum"
+                          className="range range-xs range-primary w-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hk-taupe"
                         />
-                        <span className="font-mono font-bold text-plum bg-gold/15 px-2.5 py-1 rounded-lg" aria-hidden="true">
+                        <span className="font-mono font-bold text-hk-charcoal bg-hk-soft-beige px-2.5 py-1 rounded-lg" aria-hidden="true">
                           {currentItem?.count || 100} Pax
                         </span>
                       </div>
@@ -518,15 +518,15 @@ export default function MixMatchBuilderPage() {
                     {/* Unit Selector for Baki Seserahan */}
                     {service.unitType === "baki" && (
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-plum">Jumlah Baki:</span>
+                        <span className="font-bold text-hk-charcoal">Jumlah Baki:</span>
                         {[5, 7, 9, 11].map((bakiCount) => (
                           <button
                             key={bakiCount}
                             onClick={() => updateCount(service.id, bakiCount)}
                             className={`px-3 py-1 rounded-lg text-xs font-bold border transition-colors ${
                               (currentItem?.count || 7) === bakiCount
-                                ? "gold-gradient-bg text-plum-dark border-gold"
-                                : "bg-[#FAF8F5] border-gold/20 text-plum-light"
+                                ? "bg-hk-taupe text-white border-hk-taupe"
+                                : "bg-hk-canvas border-hk-champagne/40 text-hk-charcoal/70"
                             }`}
                           >
                             {bakiCount} Kotak
@@ -538,11 +538,11 @@ export default function MixMatchBuilderPage() {
                     {/* Theme Picker for Undangan Digital */}
                     {service.category === "Undangan Digital & Amplop" && (
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-plum">Pilihan Desain:</span>
+                        <span className="font-bold text-hk-charcoal">Pilihan Desain:</span>
                         <select
                           value={selectedThemeId}
                           onChange={(e) => setSelectedThemeId(e.target.value)}
-                          className="select select-xs bg-[#FAF8F5] border-gold/30 text-plum font-semibold rounded-lg max-w-[200px]"
+                          className="select select-xs bg-hk-canvas border-hk-champagne/50 text-hk-charcoal font-semibold rounded-lg max-w-[200px]"
                         >
                           <option value="" disabled>
                             -- Pilih desain undangan --
@@ -556,7 +556,7 @@ export default function MixMatchBuilderPage() {
                         <Link
                           href={`/undangan/demo?theme=${selectedThemeId || "autumnelle"}`}
                           target="_blank"
-                          className="text-[11px] text-gold-dark hover:underline font-bold"
+                          className="text-[11px] text-hk-taupe hover:underline font-bold"
                         >
                           Pratinjau
                         </Link>
@@ -564,7 +564,7 @@ export default function MixMatchBuilderPage() {
                     )}
 
                     {/* Subtotal Calculation */}
-                    <div className="ml-auto font-mono text-sm font-bold text-plum">
+                    <div className="ml-auto font-mono text-sm font-bold text-hk-charcoal">
                       {service.unitType === "pax"
                         ? formatRupiah((currentItem?.count || 100) * (service.unitPrice || 45000))
                         : service.unitType === "baki"
@@ -582,28 +582,28 @@ export default function MixMatchBuilderPage() {
 
         {/* Right Column: Sticky Summary & Checkout Card */}
         <div className="lg:col-span-4 sticky top-24 space-y-4">
-          <div className="p-6 rounded-3xl bg-white border border-gold/40 shadow-xl space-y-6">
-            <div className="border-b border-gold/20 pb-4 space-y-1">
-              <span className="text-[11px] uppercase tracking-wider font-bold text-gold-dark">
+          <div className="p-6 rounded-3xl bg-white border border-hk-champagne/50 shadow-xl space-y-6">
+            <div className="border-b border-hk-champagne/30 pb-4 space-y-1">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-hk-taupe">
                 Rincian Estimasi Acara
               </span>
-              <h3 className="font-serif-luxury text-2xl font-bold text-plum">
+              <h3 className="font-editorial text-2xl font-bold text-hk-charcoal">
                 Paket Impian Hari H
               </h3>
             </div>
 
             {/* Multi-Vendor Availability Matrix Box */}
-            <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-gold/30 space-y-2.5 text-xs">
+            <div className="p-3.5 rounded-2xl bg-hk-canvas border border-hk-champagne/40 space-y-2.5 text-xs">
               <div className="flex items-center justify-between gap-2">
-                <label className="font-bold text-plum flex items-center gap-1.5 shrink-0">
-                  <Calendar className="w-3.5 h-3.5 text-gold-dark" />
+                <label className="font-bold text-hk-charcoal flex items-center gap-1.5 shrink-0">
+                  <Calendar className="w-3.5 h-3.5 text-hk-taupe" />
                   <span>Tanggal Acara:</span>
                 </label>
                 <input
                   type="date"
                   value={clientForm.eventDate}
                   onChange={(e) => setClientForm((prev) => ({ ...prev, eventDate: e.target.value }))}
-                  className="p-1.5 rounded-lg border border-gold/40 text-xs font-mono font-bold text-plum bg-white focus:outline-none focus:border-gold w-36"
+                  className="p-1.5 rounded-lg border border-hk-champagne/50 text-xs font-mono font-bold text-hk-charcoal bg-white focus:outline-none focus:border-hk-taupe w-36"
                 />
               </div>
 
@@ -631,12 +631,12 @@ export default function MixMatchBuilderPage() {
             {/* Selected Breakdown */}
             <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1 text-xs">
               {Object.keys(selectedItems).length === 0 ? (
-                <p className="text-plum-light text-center py-4 italic">
+                <p className="text-hk-charcoal/60 text-center py-4 italic">
                   Belum ada layanan yang dipilih. Silakan pilih dari daftar 11 kategori di sebelah kiri.
                 </p>
               ) : (
                 KEBUMEN_SERVICES.filter((s) => selectedItems[s.id]).map((item) => (
-                  <div key={item.id} className="flex items-center justify-between text-plum">
+                  <div key={item.id} className="flex items-center justify-between text-hk-charcoal">
                     <span className="truncate max-w-[180px]">{item.name}</span>
                     <span className="font-mono font-bold">
                       {item.unitType === "pax"
@@ -653,25 +653,25 @@ export default function MixMatchBuilderPage() {
             </div>
 
             {/* Escrow Terms & Totals */}
-            <div className="pt-4 border-t border-gold/20 space-y-3 bg-[#FAF8F5] p-4 rounded-2xl">
-              <div className="flex items-center justify-between text-xs text-plum-light">
+            <div className="pt-4 border-t border-hk-champagne/30 space-y-3 bg-hk-canvas p-4 rounded-2xl">
+              <div className="flex items-center justify-between text-xs text-hk-charcoal/70">
                 <span>Total Estimasi Paket:</span>
-                <span className="font-mono text-base font-bold text-plum">{formatRupiah(totalAmount)}</span>
+                <span className="font-mono text-base font-bold text-hk-charcoal">{formatRupiah(totalAmount)}</span>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-emerald-800 font-bold pt-1 border-t border-gold/15">
+              <div className="flex items-center justify-between text-xs text-emerald-800 font-bold pt-1 border-t border-hk-champagne/20">
                 <span>DP 30% (Kunci Tanggal):</span>
                 <span className="font-mono text-sm">{formatRupiah(dpAmount)}</span>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-plum-light">
+              <div className="flex items-center justify-between text-[11px] text-hk-charcoal/70">
                 <span>Pelunasan 70% (H-7):</span>
                 <span className="font-mono font-medium">{formatRupiah(settlementAmount)}</span>
               </div>
             </div>
 
             {/* Escrow Trust Tag */}
-            <div className="flex items-start gap-2 text-[11px] text-plum-light leading-snug">
+            <div className="flex items-start gap-2 text-[11px] text-hk-charcoal/70 leading-snug">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <span>
                 Proteksi Rekening Bersama. DP dicairkan H-3 acara, pelunasan 70% baru dicairkan H+2 pasca-acara sukses di Kebumen.
@@ -682,7 +682,7 @@ export default function MixMatchBuilderPage() {
             <button
               onClick={() => setIsCheckoutOpen(true)}
               disabled={totalAmount === 0}
-              className="btn w-full gold-gradient-bg text-plum-dark font-bold text-sm rounded-full border-none shadow-md hover:brightness-105"
+              className="btn w-full bg-hk-taupe text-white font-bold text-sm rounded-full border-none shadow-md hover:bg-hk-charcoal"
             >
               Ajukan Pesanan & Booking Tanggal
             </button>
@@ -700,21 +700,21 @@ export default function MixMatchBuilderPage() {
         >
           <div
             ref={checkoutDialogRef}
-            className="w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl border border-gold/40 space-y-6 animate-fadeIn max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-lg bg-white rounded-3xl p-8 shadow-2xl border border-hk-champagne/50 space-y-6 animate-fadeIn max-h-[90vh] overflow-y-auto"
           >
             {isOrderSubmitted ? (
               <div className="text-center space-y-4 py-4">
                 <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" aria-hidden="true" />
-                <h3 id="builder-checkout-title" className="font-serif-luxury text-2xl font-bold text-plum">
+                <h3 id="builder-checkout-title" className="font-editorial text-2xl font-bold text-hk-charcoal">
                   Pesanan Berhasil Diajukan!
                 </h3>
-                <p className="text-xs text-plum-light leading-relaxed">
+                <p className="text-xs text-hk-charcoal/70 leading-relaxed">
                   Terima kasih, <strong>{clientForm.name}</strong>. Invoice DP 30% ({formatRupiah(dpAmount)}) dan jadwal sesi fitting telah dibuat. Tim Concierge HariKita Kebumen akan segera menghubungi nomor WhatsApp Anda (<strong>{clientForm.phone}</strong>) untuk validasi jadwal.
                 </p>
                 <div className="pt-4 flex items-center justify-center gap-3">
                   <Link
                     href="/client"
-                    className="btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-full border-none"
+                    className="btn btn-sm bg-hk-taupe text-white font-bold rounded-full border-none hover:bg-hk-charcoal"
                   >
                     Buka Portal Klien
                   </Link>
@@ -723,7 +723,7 @@ export default function MixMatchBuilderPage() {
                       setIsCheckoutOpen(false);
                       setIsOrderSubmitted(false);
                     }}
-                    className="btn btn-sm btn-ghost text-plum"
+                    className="btn btn-sm btn-ghost text-hk-charcoal"
                   >
                     Tutup
                   </button>
@@ -732,20 +732,20 @@ export default function MixMatchBuilderPage() {
             ) : (
               <form onSubmit={handleCheckoutSubmit} className="space-y-4">
                 <div className="space-y-1">
-                  <span className="text-[10px] uppercase tracking-wider text-gold-dark font-bold">
+                  <span className="text-[10px] uppercase tracking-wider text-hk-taupe font-bold">
                     Pemesanan Praktis (Lazy Registration)
                   </span>
-                  <h3 id="builder-checkout-title" className="font-serif-luxury text-2xl font-bold text-plum">
+                  <h3 id="builder-checkout-title" className="font-editorial text-2xl font-bold text-hk-charcoal">
                     Lengkapi Kontak Acara
                   </h3>
-                  <p className="text-xs text-plum-light">
+                  <p className="text-xs text-hk-charcoal/70">
                     Tidak perlu kata sandi. Cukup nama dan nomor WhatsApp aktif.
                   </p>
                 </div>
 
                 <div className="space-y-3 pt-2">
                   <div className="space-y-1">
-                    <label htmlFor="builder-name" className="text-xs font-bold text-plum">Nama Calon Pengantin / Keluarga</label>
+                    <label htmlFor="builder-name" className="text-xs font-bold text-hk-charcoal">Nama Calon Pengantin / Keluarga</label>
                     <input
                       id="builder-name"
                       type="text"
@@ -754,12 +754,12 @@ export default function MixMatchBuilderPage() {
                       autoComplete="name"
                       value={clientForm.name}
                       onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
-                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-hk-canvas border-hk-champagne/50 rounded-xl text-hk-charcoal"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label htmlFor="builder-phone" className="text-xs font-bold text-plum">Nomor WhatsApp Aktif</label>
+                    <label htmlFor="builder-phone" className="text-xs font-bold text-hk-charcoal">Nomor WhatsApp Aktif</label>
                     <input
                       id="builder-phone"
                       type="tel"
@@ -769,36 +769,36 @@ export default function MixMatchBuilderPage() {
                       inputMode="tel"
                       value={clientForm.phone}
                       onChange={(e) => setClientForm({ ...clientForm, phone: e.target.value })}
-                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-hk-canvas border-hk-champagne/50 rounded-xl text-hk-charcoal"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label htmlFor="builder-event-date" className="text-xs font-bold text-plum">Tanggal Acara</label>
+                      <label htmlFor="builder-event-date" className="text-xs font-bold text-hk-charcoal">Tanggal Acara</label>
                       <input
                         id="builder-event-date"
                         type="date"
                         required
                         value={clientForm.eventDate}
                         onChange={(e) => setClientForm({ ...clientForm, eventDate: e.target.value })}
-                        className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum text-xs"
+                        className="focus-ring input input-sm w-full bg-hk-canvas border-hk-champagne/50 rounded-xl text-hk-charcoal text-xs"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label htmlFor="builder-city" className="text-xs font-bold text-plum">Kota Pelaksanaan</label>
+                      <label htmlFor="builder-city" className="text-xs font-bold text-hk-charcoal">Kota Pelaksanaan</label>
                       <input
                         id="builder-city"
                         type="text"
                         disabled
                         value="Kabupaten Kebumen"
-                        className="input input-sm w-full bg-gray-100 border-gray-300 rounded-xl text-plum text-xs"
+                        className="input input-sm w-full bg-hk-soft-beige/40 border-hk-champagne/40 rounded-xl text-hk-charcoal/60 text-xs"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-1">
-                    <label htmlFor="builder-venue" className="text-xs font-bold text-plum">Lokasi Acara (Gedung / Kediaman)</label>
+                    <label htmlFor="builder-venue" className="text-xs font-bold text-hk-charcoal">Lokasi Acara (Gedung / Kediaman)</label>
                     <input
                       id="builder-venue"
                       type="text"
@@ -806,17 +806,17 @@ export default function MixMatchBuilderPage() {
                       placeholder="Contoh: Gedung Setda Kebumen"
                       value={clientForm.venueAddress}
                       onChange={(e) => setClientForm({ ...clientForm, venueAddress: e.target.value })}
-                      className="focus-ring input input-sm w-full bg-[#FAF8F5] border-gold/30 rounded-xl text-plum"
+                      className="focus-ring input input-sm w-full bg-hk-canvas border-hk-champagne/50 rounded-xl text-hk-charcoal"
                     />
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-gold/25 space-y-1 text-xs">
-                  <div className="flex justify-between font-bold text-plum">
+                <div className="p-3.5 rounded-2xl bg-hk-canvas border border-hk-champagne/40 space-y-1 text-xs">
+                  <div className="flex justify-between font-bold text-hk-charcoal">
                     <span>Invoice DP 30%:</span>
                     <span className="font-mono text-emerald-800">{formatRupiah(dpAmount)}</span>
                   </div>
-                  <p className="text-[10px] text-plum-light">
+                  <p className="text-[10px] text-hk-charcoal/60">
                     Pembayaran DP dilakukan setelah jadwal diverifikasi oleh mitra vendor.
                   </p>
                 </div>
@@ -826,13 +826,13 @@ export default function MixMatchBuilderPage() {
                     ref={checkoutInitialFocusRef}
                     type="button"
                     onClick={closeCheckout}
-                    className="focus-ring btn btn-sm btn-ghost text-plum rounded-full min-h-[44px]"
+                    className="focus-ring btn btn-sm btn-ghost text-hk-charcoal rounded-full min-h-[44px]"
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
-                    className="focus-ring btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-sm min-h-[44px]"
+                    className="focus-ring btn btn-sm bg-hk-taupe text-white font-bold rounded-full border-none shadow-sm min-h-[44px] hover:bg-hk-charcoal"
                   >
                     Konfirmasi Booking Tanggal
                   </button>
