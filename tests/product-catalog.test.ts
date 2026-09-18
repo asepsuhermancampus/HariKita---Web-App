@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { UnitType, VendorProduct } from "../src/data/product-types";
 import { generateCatalog } from "../src/data/catalog-generator";
+import { MULTI_VENDOR_CATALOG } from "../src/data/multi-vendor-catalog";
 
 test("VendorProduct type accepts a valid pax product", () => {
   const p: VendorProduct = {
@@ -42,4 +43,10 @@ test("generateCatalog covers all 11 categories, 20 vendors each", () => {
   for (const v of catalog) byCat.set(v.categoryId, (byCat.get(v.categoryId) ?? 0) + 1);
   assert.equal(byCat.size, 11);
   for (const [cat, n] of byCat) assert.equal(n, 20, `category ${cat} should have 20 vendors`);
+});
+
+test("catalog vendors expose products (not packages)", () => {
+  assert.equal(MULTI_VENDOR_CATALOG.length, 220);
+  assert.ok(MULTI_VENDOR_CATALOG.every((v) => Array.isArray(v.products)));
+  assert.ok(MULTI_VENDOR_CATALOG.every((v) => (v as { packages?: unknown }).packages === undefined));
 });
