@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import type { UnitType, VendorProduct } from "../src/data/product-types";
 import { generateCatalog } from "../src/data/catalog-generator";
 import { MULTI_VENDOR_CATALOG } from "../src/data/multi-vendor-catalog";
+import { getVendorBySlug, getProduct } from "../src/lib/vendor-categories";
 
 test("VendorProduct type accepts a valid pax product", () => {
   const p: VendorProduct = {
@@ -49,4 +50,23 @@ test("catalog vendors expose products (not packages)", () => {
   assert.equal(MULTI_VENDOR_CATALOG.length, 220);
   assert.ok(MULTI_VENDOR_CATALOG.every((v) => Array.isArray(v.products)));
   assert.ok(MULTI_VENDOR_CATALOG.every((v) => (v as { packages?: unknown }).packages === undefined));
+});
+
+test("getVendorBySlug finds dapur-bahagia", () => {
+  const v = getVendorBySlug("dapur-bahagia");
+  assert.ok(v);
+  assert.equal(v.categoryId, "katering");
+});
+
+test("getProduct resolves stall-bakso under its vendor", () => {
+  const v = getVendorBySlug("dapur-bahagia");
+  assert.ok(v);
+  const p = getProduct("dapur-bahagia", "stall-bakso");
+  assert.ok(p);
+  assert.equal(p.unitType, "pax");
+  assert.equal(p.unitLabel, "per pax");
+});
+
+test("getProduct returns undefined for unknown product", () => {
+  assert.equal(getProduct("dapur-bahagia", "tidak-ada"), undefined);
 });

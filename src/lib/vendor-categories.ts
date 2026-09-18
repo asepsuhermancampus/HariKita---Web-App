@@ -1,4 +1,5 @@
 import { MULTI_VENDOR_CATALOG, type VendorProfile } from "@/data/multi-vendor-catalog";
+import type { VendorProduct } from "@/data/product-types";
 
 export type VendorCategoryId =
   | "prewed"
@@ -45,4 +46,18 @@ export function getVendorCategory(id: string): VendorCategory | undefined {
 
 export function getVendorsByCategory(id: string): VendorProfile[] {
   return MULTI_VENDOR_CATALOG.filter((v) => v.categoryId === id);
+}
+
+/** Cari profil vendor berdasarkan slug publiknya (`/vendor/[slug]`). */
+export function getVendorBySlug(slug: string): VendorProfile | undefined {
+  return MULTI_VENDOR_CATALOG.find((v) => v.slug === slug);
+}
+
+/** Cari produk tertentu di dalam vendor (`/vendor/[slug]/produk/[productSlug]`). */
+export function getProduct(
+  vendorSlug: string,
+  productSlug: string
+): VendorProduct | undefined {
+  const vendor = getVendorBySlug(vendorSlug);
+  return vendor?.products.find((p) => p.slug === productSlug);
 }
