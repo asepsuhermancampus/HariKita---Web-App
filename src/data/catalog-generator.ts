@@ -64,8 +64,33 @@ export interface GeneratorVendor {
   blackoutDates: string[];
 }
 
-/** Unsplash photo-id deterministik (tanpa Math.random). */
-const IMG = (n: number) => `https://images.unsplash.com/photo-${1500000000000 + n}?q=80&w=800`;
+const VALID_UNSPLASH_IDS = [
+  "1519741497674-611481863552",
+  "1511285560929-80b456fea0bc",
+  "1583939003579-730e3918a45a",
+  "1522337360788-8b13dee7a37e",
+  "1522673607200-164d1b6ce486",
+  "1465495976277-4387d4b0b4c6",
+  "1537633552985-df8429e8048b",
+  "1509927083803-4bd519298ac4",
+  "1492684223066-81342ee5ff30",
+  "1518895949257-7621c3c786d7",
+  "1529636798458-92182e662485",
+  "1606800052052-a08af7148866",
+  "1519225421980-715cb0215aed",
+  "1520854221256-17451cc331bf",
+  "1564507592333-c60657eea523",
+  "1542838132-92c53300491e",
+  "1507003211169-0a1dd7228f2d",
+  "1534528741775-53994a69daeb",
+];
+
+/** Unsplash photo-id terkurasi deterministik (valid 100% tanpa 404). */
+const IMG = (n: number) => {
+  const id = VALID_UNSPLASH_IDS[Math.abs(n) % VALID_UNSPLASH_IDS.length];
+  return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=800&q=80`;
+};
+
 
 const PKG = "per paket";
 const PAX = "per pax";
