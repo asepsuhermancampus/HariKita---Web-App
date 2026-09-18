@@ -47,6 +47,9 @@ prisma/dev.db.backup*
 # superpowers sdd scratch
 .superpowers/
 
+# git worktrees
+.worktrees/
+
 # temporary scratch and local assets
 scratch/
 public/refactor_dir_sementara/
