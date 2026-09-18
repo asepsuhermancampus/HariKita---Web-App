@@ -56,20 +56,19 @@ const nextConfig: NextConfig = {
         ? { exclude: ["error", "warn"] }
         : false,
   },
-  experimental: {
-    optimizePackageImports: [
-      "lucide-react",
-      "clsx",
-      "tailwind-merge",
-      "daisyui",
-    ],
-  },
   async headers() {
+
     return [
       {
         source: "/:path*",
         headers: securityHeaders,
       },
+    ];
+  },
+  async redirects() {
+    return [
+      { source: "/kategori", destination: "/vendor", permanent: true },
+      { source: "/kategori/:slug", destination: "/vendor/kategori/:slug", permanent: true },
     ];
   },
 };
