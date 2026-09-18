@@ -4,6 +4,7 @@ import type { UnitType, VendorProduct } from "../src/data/product-types";
 import { generateCatalog } from "../src/data/catalog-generator";
 import { MULTI_VENDOR_CATALOG } from "../src/data/multi-vendor-catalog";
 import { getVendorBySlug, getProduct } from "../src/lib/vendor-categories";
+import { RESERVED_VENDOR_SLUGS, isReservedVendorSlug, ROUTES } from "../src/lib/routes";
 
 test("VendorProduct type accepts a valid pax product", () => {
   const p: VendorProduct = {
@@ -69,4 +70,19 @@ test("getProduct resolves stall-bakso under its vendor", () => {
 
 test("getProduct returns undefined for unknown product", () => {
   assert.equal(getProduct("dapur-bahagia", "tidak-ada"), undefined);
+});
+
+test("reserved slugs include kategori and produk", () => {
+  assert.ok(RESERVED_VENDOR_SLUGS.has("kategori"));
+  assert.ok(RESERVED_VENDOR_SLUGS.has("produk"));
+  assert.equal(isReservedVendorSlug("produk"), true);
+});
+
+test("ROUTES exposes vendor category and product paths", () => {
+  assert.equal(ROUTES.KATEGORI, "/vendor");
+  assert.equal(ROUTES.KATEGORI_DETAIL("katering"), "/vendor/kategori/katering");
+  assert.equal(
+    ROUTES.PRODUCT("dapur-bahagia", "stall-bakso"),
+    "/vendor/dapur-bahagia/produk/stall-bakso"
+  );
 });

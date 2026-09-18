@@ -6,9 +6,11 @@
 export const ROUTES = {
   // 1. Publik & Katalog Hyperlocal
   HOME: '/',
-  KATEGORI: '/kategori',
-  KATEGORI_DETAIL: (slug: string) => `/kategori/${slug}`,
+  KATEGORI: '/vendor',
+  KATEGORI_DETAIL: (slug: string) => `/vendor/kategori/${slug}`,
   VENDOR_PROFILE: (slug: string) => `/vendor/${slug}`,
+  PRODUCT: (vendorSlug: string, productSlug: string) =>
+    `/vendor/${vendorSlug}/produk/${productSlug}`,
   UNDANGAN: '/undangan',
   UNDANGAN_DETAIL: (slug: string) => `/undangan/${slug}`,
   BUILDER: '/builder',
@@ -63,6 +65,8 @@ export const ROUTES = {
  * Mencegah tabrakan rute statis portal vendor dengan slug toko vendor
  */
 export const RESERVED_VENDOR_SLUGS = new Set([
+  'kategori',
+  'produk',
   'inbox',
   'portofolio',
   'paket',
@@ -98,7 +102,7 @@ export interface RouteMeta {
 export const ROUTE_REGISTRY: RouteMeta[] = [
   // Public
   { path: '/', label: 'Beranda', category: 'public' },
-  { path: '/kategori', label: '11 Kategori Layanan', category: 'public' },
+  { path: '/vendor', label: '11 Kategori Layanan', category: 'public' },
   { path: '/undangan', label: 'Undangan Digital', category: 'public' },
   { path: '/builder', label: 'Racik Sendiri (Builder)', category: 'public' },
   { path: '/hub-koordinasi', label: 'Hub Koordinasi', category: 'public', badge: '9Router' },
