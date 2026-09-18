@@ -16,6 +16,7 @@ import {
 import { useAvailability, availabilityStore } from "@/lib/availability-store";
 import { addBlackoutAction, removeBlackoutAction } from "@/server/actions/vendor";
 import type { VendorBlackoutDTO } from "@/server/queries/vendor";
+import { DatePicker, Calendar as DayPickerCalendar } from "@/components/harikita/ui";
 
 /**
  * Kalender Blackout Vendor (client component).
@@ -123,15 +124,14 @@ export function VendorKalenderClient({
 
           <form onSubmit={handleAddDate} className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
-              <label className="block text-[#4A2E35] font-semibold mb-1">
-                Pilih Tanggal:
-              </label>
-              <input
-                type="date"
-                value={newDate}
-                onChange={(e) => setNewDate(e.target.value)}
+              <DatePicker
+                label="Pilih Tanggal:"
                 required
-                className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
+                value={newDate}
+                onChange={(d) => setNewDate(d)}
+                placeholder="Pilih tanggal..."
+                blackoutDates={blackouts.map((b) => b.date)}
+                displayFormat="EEEE, dd MMMM yyyy"
               />
             </div>
             <div>
@@ -167,18 +167,36 @@ export function VendorKalenderClient({
           )}
         </div>
 
-        {/* Current Blackout Dates List */}
-        <div className="bg-white rounded-2xl border border-[#C5A880]/30 shadow-sm p-5 sm:p-6 space-y-4">
-          <div className="flex justify-between items-center border-b border-[#FAF8F5] pb-3">
-            <h3 className="font-serif text-base font-bold text-[#4A2E35]">
-              Daftar Tanggal Terkunci ({blackouts.length} Tanggal)
-            </h3>
-            <span className="text-xs text-[#6B5E62]">
-              Calon pengantin tidak dapat memesan jadwal pada tanggal ini.
-            </span>
+        {/* Visual Interactive Month Calendar & Blackout Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1 flex flex-col items-center">
+            <DayPickerCalendar
+              selected={newDate}
+              onSelect={(d) => setNewDate(d)}
+              blackoutDates={blackouts.map((b) => b.date)}
+              className="w-full"
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="lg:col-span-2 space-y-4">
+            <div className="bg-white rounded-2xl border border-[#C5A880]/30 shadow-sm p-5 space-y-4">
+              <div className="flex justify-between items-center border-b border-[#FAF8F5] pb-3">
+                <div>
+                  <h3 className="font-serif text-base font-bold text-[#4A2E35]">
+                    Daftar Tanggal Terkunci ({blackouts.length} Tanggal)
+                  </h3>
+                  <span className="text-xs text-[#6B5E62]">
+                    Calon pengantin tidak dapat memesan jadwal pada tanggal ini.
+                  </span>
+                </div>
+              </div>
+
+              {blackouts.length === 0 ? (
+                <div className="text-center py-8 text-xs text-[#6B5E62]">
+                  Belum ada tanggal yang dikunci offline. Seluruh tanggal di kalender terbuka untuk pemesanan klien.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-1">
             {blackouts.map((item) => (
               <div
                 key={`${item.date}`}
@@ -205,6 +223,9 @@ export function VendorKalenderClient({
                 </button>
               </div>
             ))}
+              </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

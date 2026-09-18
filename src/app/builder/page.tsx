@@ -16,6 +16,7 @@ import { availabilityStore } from "@/lib/availability-store";
 import { useFocusTrap } from "@/lib/hooks/useFocusTrap";
 import { checkAvailabilityMatrixAction, type MatrixResult } from "@/server/actions/availability-matrix";
 import { MULTI_VENDOR_CATALOG } from "@/data/multi-vendor-catalog";
+import { DatePicker } from "@/components/harikita/ui";
 import {
   Sparkles,
   Check,
@@ -594,17 +595,21 @@ export default function MixMatchBuilderPage() {
 
             {/* Multi-Vendor Availability Matrix Box */}
             <div className="p-3.5 rounded-2xl bg-hk-canvas border border-hk-champagne/40 space-y-2.5 text-xs">
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <label className="font-bold text-hk-charcoal flex items-center gap-1.5 shrink-0">
                   <Calendar className="w-3.5 h-3.5 text-hk-taupe" />
                   <span>Tanggal Acara:</span>
                 </label>
-                <input
-                  type="date"
-                  value={clientForm.eventDate}
-                  onChange={(e) => setClientForm((prev) => ({ ...prev, eventDate: e.target.value }))}
-                  className="p-1.5 rounded-lg border border-hk-champagne/50 text-xs font-mono font-bold text-hk-charcoal bg-white focus:outline-none focus:border-hk-taupe w-36"
-                />
+                <div className="w-full sm:w-56">
+                  <DatePicker
+                    value={clientForm.eventDate}
+                    onChange={(newDate) => setClientForm((prev) => ({ ...prev, eventDate: newDate }))}
+                    placeholder="Pilih tanggal acara..."
+                    size="sm"
+                    displayFormat="d MMMM yyyy"
+                    align="right"
+                  />
+                </div>
               </div>
 
               {selectedVendors.length > 0 && (
@@ -776,13 +781,14 @@ export default function MixMatchBuilderPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <label htmlFor="builder-event-date" className="text-xs font-bold text-hk-charcoal">Tanggal Acara</label>
-                      <input
+                      <DatePicker
                         id="builder-event-date"
-                        type="date"
                         required
                         value={clientForm.eventDate}
-                        onChange={(e) => setClientForm({ ...clientForm, eventDate: e.target.value })}
-                        className="focus-ring input input-sm w-full bg-hk-canvas border-hk-champagne/50 rounded-xl text-hk-charcoal text-xs"
+                        onChange={(newDate) => setClientForm({ ...clientForm, eventDate: newDate })}
+                        size="sm"
+                        placeholder="Pilih tanggal..."
+                        displayFormat="d MMMM yyyy"
                       />
                     </div>
                     <div className="space-y-1">

@@ -24,6 +24,7 @@ import {
   KEBUMEN_DISTRICTS,
   EVENT_THEMES,
 } from "@/lib/validations/client-profile";
+import { DatePicker } from "@/components/harikita/ui";
 
 interface ClientProfileFormProps {
   initialData: ClientProfileData;
@@ -309,29 +310,26 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
 
           {/* Tanggal Hari H Acara */}
           <div>
-            <label htmlFor="cpf-event-date" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
-              Tanggal Pelaksanaan Acara
-            </label>
-            <input
+            <DatePicker
               id="cpf-event-date"
-              type="date"
               name="eventDate"
+              label="Tanggal Pelaksanaan Acara"
               value={formData.eventDate}
-              onChange={handleChange}
-              className={`w-full py-2.5 px-3.5 rounded-xl border text-xs text-hk-charcoal font-manrope tabular-nums transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal ${
-                fieldErrors.eventDate
-                  ? "border-red-400 bg-red-50/50"
-                  : "border-hk-champagne/60 focus:border-hk-taupe bg-hk-ivory/50 focus:bg-white"
-              }`}
+              onChange={(newDate) => {
+                setFormData((prev) => ({ ...prev, eventDate: newDate }));
+                if (fieldErrors.eventDate) {
+                  setFieldErrors((prev) => {
+                    const next = { ...prev };
+                    delete next.eventDate;
+                    return next;
+                  });
+                }
+              }}
+              error={fieldErrors.eventDate?.[0]}
+              helperText="Digunakan untuk mengecek blackout dates & jadwal ketersediaan seluruh vendor di Kebumen."
+              placeholder="Pilih tanggal pelaksanaan acara..."
+              displayFormat="EEEE, dd MMMM yyyy"
             />
-            {fieldErrors.eventDate && (
-              <p className="text-[11px] text-red-600 mt-1 font-manrope">
-                {fieldErrors.eventDate[0]}
-              </p>
-            )}
-            <p className="text-[10px] text-hk-charcoal/60 mt-1 font-manrope">
-              Digunakan untuk mengecek blackout dates &amp; jadwal ketersediaan seluruh vendor di Kebumen.
-            </p>
           </div>
 
           {/* Lokasi / Gedung / Rumah */}

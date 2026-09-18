@@ -43,6 +43,9 @@ import {
   LiveContentData,
 } from '@/types/invitation-studio';
 import { SANDBOX_STUDIO_DEFAULTS } from '@/app/design-system-showcase/data/mock-invitation-sandbox';
+import { DatePicker } from '@/components/harikita/ui';
+import { format } from 'date-fns';
+import { id as localeId } from 'date-fns/locale';
 import { StudioColorPalettePicker } from './StudioColorPalettePicker';
 import { StudioPlacementPicker } from './StudioPlacementPicker';
 import { StudioEffectsController } from './StudioEffectsController';
@@ -829,15 +832,22 @@ export function InvitationStudioBuilder() {
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-manrope font-semibold text-hk-charcoal/80 mb-1">
-                        Tanggal Pernikahan:
-                      </label>
-                      <input
-                        type="text"
+                      <DatePicker
+                        label="Tanggal Pernikahan:"
                         value={content.weddingDate}
-                        onChange={(e) => handleUpdateContentField('weddingDate', e.target.value)}
-                        className="w-full rounded-lg border border-hk-champagne/60 bg-white px-3 py-1.5 text-xs font-manrope text-hk-charcoal focus:border-hk-charcoal focus:outline-none shadow-2xs"
-                        placeholder="Sabtu, 24 Oktober 2026"
+                        onChange={(d) => {
+                          if (d && /^\d{4}-\d{2}-\d{2}$/.test(d)) {
+                            const [y, m, day] = d.split('-').map(Number);
+                            const dt = new Date(y, m - 1, day);
+                            const formatted = format(dt, "EEEE, dd MMMM yyyy", { locale: localeId });
+                            handleUpdateContentField('weddingDate', formatted);
+                          } else {
+                            handleUpdateContentField('weddingDate', d);
+                          }
+                        }}
+                        placeholder="Pilih tanggal pernikahan..."
+                        size="sm"
+                        displayFormat="EEEE, dd MMMM yyyy"
                       />
                     </div>
                     <div>

@@ -18,6 +18,7 @@ import {
 import { useCart } from "@/lib/cart-store";
 import { KEBUMEN_DISTRICTS } from "@/data/multi-vendor-catalog";
 import { createOrderWithAutoHoldAction } from "@/server/actions/order";
+import { DatePicker } from "@/components/harikita/ui";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -149,15 +150,15 @@ export default function CheckoutPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="space-y-1">
-                <label className="text-xs font-manrope font-semibold text-hk-charcoal block">
-                  Tanggal Acara Hari H: *
-                </label>
-                <input
-                  type="date"
+                <DatePicker
+                  label="Tanggal Acara Hari H:"
                   required
                   value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full p-3 rounded-2xl border border-hk-champagne/60 text-xs font-manrope focus:outline-hidden focus:ring-2 focus:ring-hk-taupe"
+                  onChange={(newDate) => setSelectedDate(newDate)}
+                  placeholder="Pilih tanggal acara..."
+                  minDate={new Date()}
+                  displayFormat="EEEE, dd MMMM yyyy"
+                  triggerClassName="rounded-2xl"
                 />
               </div>
 

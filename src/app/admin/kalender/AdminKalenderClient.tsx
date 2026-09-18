@@ -9,7 +9,7 @@ import {
   Search,
   ShieldCheck,
 } from "lucide-react";
-import { EmptyState } from "@/components/harikita/ui";
+import { EmptyState, DatePicker } from "@/components/harikita/ui";
 import { formatRupiah } from "@/lib/utils";
 import type { AdminCalendarEventDTO } from "@/server/queries/orders";
 
@@ -61,6 +61,7 @@ export function AdminMasterKalenderPage({
 }) {
   const [selectedDistrict, setSelectedDistrict] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   // Sumber tunggal: event dari DATABASE (admin-only). Tidak ada data demo/baseline
   // yang disuntikkan agar panel governance ini tidak menampilkan acara fiktif.
@@ -85,7 +86,8 @@ export function AdminMasterKalenderPage({
       ev.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ev.venue.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ev.id.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesDistrict && matchesSearch;
+    const matchesDate = !selectedDate || ev.date === selectedDate;
+    return matchesDistrict && matchesSearch && matchesDate;
   });
 
   const totalEscrowManaged = allEvents.reduce((acc, ev) => acc + ev.totalAmount, 0);
@@ -159,22 +161,34 @@ export function AdminMasterKalenderPage({
 
         {/* Filter by District & Search */}
         <div className="bg-white p-4 rounded-2xl border border-[#C5A880]/30 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Filter className="w-4 h-4 text-[#C5A880]" aria-hidden="true" />
-            <label htmlFor="district-filter" className="text-xs font-semibold text-[#4A2E35]">Wilayah:</label>
-            <select
-              id="district-filter"
-              value={selectedDistrict}
-              onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="focus-ring text-xs p-2 rounded-xl border border-[#E5D7C7] bg-[#FAF8F5] text-[#4A2E35] focus:outline-none focus:border-[#C5A880]"
-            >
-              <option value="all">Semua 26 Kecamatan di Kebumen</option>
-              {ALL_26_KEBUMEN_DISTRICTS.map((d) => (
-                <option key={d} value={d}>
-                  Kecamatan {d}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Filter className="w-4 h-4 text-[#C5A880]" aria-hidden="true" />
+              <label htmlFor="district-filter" className="text-xs font-semibold text-[#4A2E35]">Wilayah:</label>
+              <select
+                id="district-filter"
+                value={selectedDistrict}
+                onChange={(e) => setSelectedDistrict(e.target.value)}
+                className="focus-ring text-xs p-2 rounded-xl border border-[#E5D7C7] bg-[#FAF8F5] text-[#4A2E35] focus:outline-none focus:border-[#C5A880]"
+              >
+                <option value="all">Semua 26 Kecamatan di Kebumen</option>
+                {ALL_26_KEBUMEN_DISTRICTS.map((d) => (
+                  <option key={d} value={d}>
+                    Kecamatan {d}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="w-full sm:w-52">
+              <DatePicker
+                value={selectedDate}
+                onChange={setSelectedDate}
+                placeholder="Filter tanggal acara..."
+                size="sm"
+                displayFormat="d MMMM yyyy"
+              />
+            </div>
           </div>
 
           <div className="relative w-full sm:w-64">

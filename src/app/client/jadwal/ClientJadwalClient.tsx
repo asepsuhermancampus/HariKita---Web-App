@@ -12,7 +12,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useOrders } from "@/lib/order-store";
-import { Modal } from "@/components/harikita/ui";
+import { Modal, DatePicker } from "@/components/harikita/ui";
 import type { PhysicalSessionDTO, RundownRowDTO } from "@/server/queries/orders";
 
 interface PhysicalSession {
@@ -476,18 +476,17 @@ export function ClientJadwalClient({
       >
         <form onSubmit={handleSubmitReschedule} className="space-y-4 text-xs font-manrope">
           <div>
-            <label htmlFor="reschedule-date" className="block text-hk-charcoal font-semibold mb-1">
-              Pilih Tanggal Baru:
-            </label>
-            <input
+            <DatePicker
               id="reschedule-date"
-              type="date"
+              label="Pilih Tanggal Baru:"
               required
               value={rescheduleModal.newDate}
-              onChange={(e) =>
-                setRescheduleModal((prev) => ({ ...prev, newDate: e.target.value }))
+              onChange={(newDate) =>
+                setRescheduleModal((prev) => ({ ...prev, newDate }))
               }
-              className="focus-ring w-full p-3 rounded-xl border border-hk-champagne/60 focus:outline-none focus:border-hk-taupe bg-hk-ivory/50"
+              placeholder="Pilih tanggal pengganti..."
+              minDate={new Date()}
+              displayFormat="EEEE, dd MMMM yyyy"
             />
           </div>
 

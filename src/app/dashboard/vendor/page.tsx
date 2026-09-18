@@ -14,6 +14,7 @@ import {
   Sparkles,
   TrendingUp,
 } from "lucide-react";
+import { DatePicker } from "@/components/harikita/ui";
 
 export default function VendorPortalPage() {
   const [activeTab, setActiveTab] = useState<"calendar" | "package" | "wallet">("calendar");
@@ -126,16 +127,20 @@ export default function VendorPortalPage() {
             </div>
 
             {/* Quick add date */}
-            <form onSubmit={addCustomDate} className="flex items-center gap-3 pt-2">
-              <input
-                type="date"
-                value={newDateInput}
-                onChange={(e) => setNewDateInput(e.target.value)}
-                className="input input-sm bg-[#FAF8F5] border-gold/30 rounded-xl text-plum text-xs"
-              />
+            <form onSubmit={addCustomDate} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+              <div className="w-full sm:w-64">
+                <DatePicker
+                  value={newDateInput}
+                  onChange={(d) => setNewDateInput(d)}
+                  placeholder="Pilih tanggal offline..."
+                  size="sm"
+                  blackoutDates={blackoutDates}
+                  displayFormat="EEEE, dd MMMM yyyy"
+                />
+              </div>
               <button
                 type="submit"
-                className="btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-xl border-none"
+                className="btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-xl border-none min-h-[40px] shrink-0"
               >
                 <Lock className="w-3.5 h-3.5 mr-1" />
                 Kunci Tanggal Ini

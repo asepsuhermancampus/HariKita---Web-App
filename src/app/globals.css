@@ -1,4 +1,5 @@
 @import "../styles/harikita-tokens.css";
+@import "react-day-picker/style.css";
 
 @tailwind base;
 @tailwind components;
@@ -318,5 +319,91 @@ summary:focus-visible,
 .touch-target {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* HariKita DayPicker Theme Customization */
+.rdp-root {
+  --rdp-accent-color: #88735B;
+  --rdp-accent-background-color: #F8F6F1;
+  --rdp-today-color: #88735B;
+  --rdp-day-height: 42px;
+  --rdp-day-width: 42px;
+  --rdp-day_button-height: 40px;
+  --rdp-day_button-width: 40px;
+  --rdp-day_button-border-radius: 12px;
+  font-family: 'Manrope', system-ui, sans-serif;
+  color: #2B2B2B;
+}
+
+.rdp-caption_label,
+.rdp-month_caption {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  color: #2B2B2B;
+  font-size: 0.95rem;
+}
+
+.rdp-nav_button {
+  border-radius: 9999px;
+  color: #2B2B2B;
+  background-color: #F8F6F1;
+  border: 1px solid rgba(201, 168, 138, 0.4);
+  transition: all 0.2s ease;
+}
+
+.rdp-nav_button:hover {
+  background-color: #E8DED1;
+  color: #2B2B2B;
+}
+
+.rdp-weekday {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #88735B;
+  padding: 0.5rem 0;
+}
+
+.rdp-day_button {
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+
+.rdp-day_button:hover:not([disabled]) {
+  background-color: #F8F6F1;
+  border-color: #C9A88A;
+}
+
+.rdp-selected .rdp-day_button {
+  background-color: #88735B !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 4px 12px -2px rgba(136, 115, 91, 0.35);
+}
+
+.rdp-today:not(.rdp-selected) .rdp-day_button {
+  border: 1.5px solid #C9A88A !important;
+  color: #88735B;
+  font-weight: 700;
+}
+
+.rdp-disabled .rdp-day_button {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Modifiers for Blackout / Locked Dates */
+.rdp-day.day-blackout .rdp-day_button {
+  background-color: #FEE2E2 !important;
+  color: #991B1B !important;
+  border: 1px dashed #F87171 !important;
+}
+
+.rdp-day.day-blackout .rdp-day_button:hover {
+  background-color: #FECACA !important;
 }
 
