@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useRef } from "react";
-import { Calendar, ChevronDown } from "lucide-react";
+import { Calendar, ChevronDown, TrendingUp } from "lucide-react";
 import { calculateBezierSplinePath, formatCompactNumber } from "./dashboard-utils";
 
 export interface SplinePoint {
@@ -174,6 +174,9 @@ export function DashboardSplineChart({
           <h3 className="font-manrope font-semibold text-base sm:text-lg lg:text-xl text-hk-charcoal tracking-tight">
             {title}
           </h3>
+          <p className="text-[11px] text-muted-foreground font-manrope mt-0.5">
+            Interaksi trafik &amp; minat kunjungan pengantin ke etalase Anda
+          </p>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-2.5 self-stretch sm:self-auto justify-between sm:justify-end">
@@ -351,22 +354,34 @@ export function DashboardSplineChart({
             className="absolute pointer-events-none transition-all duration-150 z-20"
             style={tooltipStyle}
           >
-            <div className="bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 border border-hk-champagne/70 shadow-lg min-w-[105px] sm:min-w-[125px] text-center font-manrope animate-in fade-in-50 zoom-in-95">
-              <div className="text-[10px] text-hk-taupe font-semibold uppercase tracking-wider mb-0.5">
-                {activePoint.point.date}
+            <div className="bg-white/98 backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 border border-hk-champagne/70 shadow-xl min-w-[130px] sm:min-w-[150px] text-center font-manrope animate-in fade-in-50 zoom-in-95">
+              {/* Row 1: Tanggal dengan Icon Kalender Halus */}
+              <div className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-hk-taupe font-semibold uppercase tracking-wider mb-1">
+                <Calendar className="w-3 h-3 text-hk-taupe/80 shrink-0" />
+                <span className="truncate">{activePoint.point.date}</span>
               </div>
-              <div className="flex items-center justify-center gap-1.5">
-                <span className="font-bold text-sm sm:text-base text-hk-charcoal tabular-nums">
+
+              {/* Row 2: Angka Total Kunjungan & Satuan */}
+              <div className="flex items-baseline justify-center gap-1.5 mb-1.5">
+                <span className="font-editorial text-2xl sm:text-3xl font-bold text-hk-charcoal tabular-nums leading-none">
                   {unitPrefix}
                   {formatCompactNumber(activePoint.point.value)}
-                  {unitSuffix}
                 </span>
-                {activePoint.point.deltaPct && (
-                  <span className="inline-flex items-center text-[9px] sm:text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200">
-                    ↗ {activePoint.point.deltaPct}
-                  </span>
-                )}
+                <span className="text-xs font-semibold text-hk-charcoal/70 tracking-tight">
+                  {unitSuffix.trim() || "Kunjungan"}
+                </span>
               </div>
+
+              {/* Row 3: Badge Status Minat / Tren Pertumbuhan dengan Lucide SVG */}
+              {activePoint.point.deltaPct && (
+                <div className="flex items-center justify-center">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 shadow-2xs whitespace-nowrap">
+                    <TrendingUp className="w-3 h-3 text-emerald-600 shrink-0" />
+                    <span>{activePoint.point.deltaPct}</span>
+                    <span className="text-[9px] font-medium text-emerald-600/80">minat</span>
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}

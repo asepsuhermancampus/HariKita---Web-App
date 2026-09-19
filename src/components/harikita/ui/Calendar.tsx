@@ -18,6 +18,8 @@ export interface CalendarProps {
   minDate?: string | Date;
   /** Batas tanggal maksimal yang bisa dipilih ("YYYY-MM-DD" atau Date) */
   maxDate?: string | Date;
+  /** Render tanpa wrapper card bawaan (agar bisa ditanam di dalam container kustom). */
+  bare?: boolean;
   className?: string;
 }
 
@@ -41,6 +43,7 @@ export function Calendar({
   bookedDates = [],
   minDate,
   maxDate,
+  bare = false,
   className = "",
 }: CalendarProps) {
   const selectedDate = selected

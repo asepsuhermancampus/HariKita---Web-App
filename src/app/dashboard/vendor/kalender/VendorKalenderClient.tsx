@@ -165,59 +165,68 @@ export function VendorKalenderClient({
             </h3>
           </div>
 
-          <form onSubmit={handleAddDate} className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div>
-              <label className="block text-[#4A2E35] font-semibold mb-1">
-                Tanggal Terpilih: <span className="text-red-500">*</span>
-              </label>
-              <div
-                className={`w-full flex items-center justify-between gap-2 rounded-xl border p-2.5 min-h-[44px] ${
-                  newDate
-                    ? "border-[#C5A880]/60 bg-white text-[#4A2E35]"
-                    : "border-dashed border-[#E5D7C7] bg-[#FAF8F5] text-[#6B5E62]"
-                }`}
-                aria-live="polite"
-              >
-                <span className="flex items-center gap-2 font-medium">
-                  <Calendar className="w-4 h-4 text-[#C5A880] shrink-0" />
-                  {newDate ? (
-                    <span className="font-mono">{newDate}</span>
-                  ) : (
-                    <span className="italic">Pilih tanggal di kalender →</span>
-                  )}
-                </span>
-                {newDate && (
-                  <button
-                    type="button"
-                    onClick={() => setNewDate("")}
-                    className="text-[#6B5E62] hover:text-[#4A2E35] transition-colors"
-                    title="Kosongkan pilihan tanggal"
-                    aria-label="Kosongkan pilihan tanggal"
-                  >
-                    ✕
-                  </button>
+          <form onSubmit={handleAddDate} className="grid grid-cols-1 lg:grid-cols-3 gap-5 text-xs items-start">
+            {/* Kalender pemilih tanggal (daypicker) — menggantikan slot "Tanggal Terpilih" */}
+            <div className="lg:col-span-2">
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-[#4A2E35] font-semibold">
+                  Pilih Tanggal: <span className="text-red-500">*</span>
+                </label>
+                {newDate ? (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#4A2E35] bg-[#FAF8F5] border border-[#C5A880]/40 px-2.5 py-1 rounded-lg">
+                    <Calendar className="w-3.5 h-3.5 text-[#C5A880]" />
+                    {newDate}
+                    <button
+                      type="button"
+                      onClick={() => setNewDate("")}
+                      className="text-[#6B5E62] hover:text-[#4A2E35] transition-colors"
+                      title="Kosongkan pilihan tanggal"
+                      aria-label="Kosongkan pilihan tanggal"
+                    >
+                      ✕
+                    </button>
+                  </span>
+                ) : (
+                  <span className="text-[11px] italic text-[#6B5E62]">
+                    Belum ada tanggal dipilih
+                  </span>
                 )}
               </div>
+              <div className="flex justify-center rounded-2xl border border-[#E5D7C7] bg-[#FAF8F5] p-2">
+                <DayPickerCalendar
+                  selected={newDate}
+                  onSelect={(d) => setNewDate(d)}
+                  blackoutDates={blackouts.map((b) => b.date)}
+                  minDate={today}
+                  className="w-full max-w-md !bg-transparent !border-0 !shadow-none"
+                />
+              </div>
+              <p className="mt-2 text-[11px] text-[#6B5E62] leading-relaxed">
+                Klik tanggal untuk dipilih. Tanggal merah sudah terkunci; tanggal lampau
+                (redup) hanya sebagai riwayat dan tidak bisa dikunci.
+              </p>
             </div>
-            <div>
-              <label className="block text-[#4A2E35] font-semibold mb-1">
-                Alasan Penguncian:
-              </label>
-              <select
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
-              >
-                <option value="Sudah Dipesan Offline">Sudah Dipesan Offline</option>
-                <option value="Libur Kru / Istirahat">Libur Kru / Istirahat</option>
-                <option value="Acara Keluarga Internal">Acara Keluarga Internal</option>
-              </select>
-            </div>
-            <div className="flex items-end">
+
+            {/* Panel alasan + aksi */}
+            <div className="lg:col-span-1 space-y-3">
+              <div>
+                <label className="block text-[#4A2E35] font-semibold mb-1">
+                  Alasan Penguncian:
+                </label>
+                <select
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
+                >
+                  <option value="Sudah Dipesan Offline">Sudah Dipesan Offline</option>
+                  <option value="Libur Kru / Istirahat">Libur Kru / Istirahat</option>
+                  <option value="Acara Keluarga Internal">Acara Keluarga Internal</option>
+                </select>
+              </div>
               <button
                 type="submit"
-                disabled={isPending}
-                className="w-full py-2.5 px-4 rounded-xl bg-[#4A2E35] text-white font-semibold hover:bg-[#6B5E62] transition-colors flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50"
+                disabled={isPending || !newDate}
+                className="w-full py-3 px-4 rounded-xl bg-[#4A2E35] text-white font-semibold hover:bg-[#6B5E62] transition-colors flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Lock className="w-3.5 h-3.5 text-[#C5A880]" />
                 {isPending ? "Menyimpan..." : "Kunci Tanggal Ini"}
@@ -230,30 +239,6 @@ export function VendorKalenderClient({
               <span>{message}</span>
             </div>
           )}
-
-          {/* Kalender pemilih tanggal (daypicker) — terintegrasi dalam card yang sama */}
-          <div className="pt-4 border-t border-[#FAF8F5]">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h4 className="font-serif text-base font-bold text-[#4A2E35]">
-                  Pilih Tanggal
-                </h4>
-                <p className="text-[11px] text-[#6B5E62]">
-                  Klik tanggal untuk mengisi formulir di atas. Tanggal merah sudah terkunci;
-                  tanggal lampau (redup) hanya sebagai riwayat dan tidak bisa dikunci.
-                </p>
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <DayPickerCalendar
-                selected={newDate}
-                onSelect={(d) => setNewDate(d)}
-                blackoutDates={blackouts.map((b) => b.date)}
-                minDate={today}
-                className="w-full max-w-md"
-              />
-            </div>
-          </div>
         </div>
 
         {/* Daftar Tanggal Terkunci */}
