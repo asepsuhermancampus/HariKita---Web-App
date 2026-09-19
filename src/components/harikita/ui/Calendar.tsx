@@ -67,8 +67,12 @@ export function Calendar({
   if (minDateObj) disabledMatchers.push({ before: minDateObj });
   if (maxDateObj) disabledMatchers.push({ after: maxDateObj });
 
+  const wrapperClass = bare
+    ? `w-full ${className}`
+    : `p-4 bg-white rounded-3xl border border-hk-champagne/40 shadow-xs inline-block w-full max-w-sm ${className}`;
+
   return (
-    <div className={`p-4 bg-white rounded-3xl border border-hk-champagne/40 shadow-xs inline-block w-full max-w-sm ${className}`}>
+    <div className={wrapperClass}>
       <DayPicker
         mode="single"
         selected={selectedDate}
@@ -90,7 +94,7 @@ export function Calendar({
       />
 
       {(blackoutDates.length > 0 || bookedDates.length > 0) && (
-        <div className="mt-3 pt-3 border-t border-hk-champagne/30 flex flex-wrap items-center gap-3 text-[11px] font-manrope">
+        <div className="mt-3 pt-3 border-t border-hk-champagne/30 flex flex-wrap items-center justify-center gap-3 text-[11px] font-manrope">
           {blackoutDates.length > 0 && (
             <div className="flex items-center gap-1.5 text-red-700">
               <span className="w-2.5 h-2.5 rounded-full bg-red-100 border border-red-400 inline-block" />
