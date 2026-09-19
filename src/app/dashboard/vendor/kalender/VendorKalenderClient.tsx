@@ -128,7 +128,7 @@ export function VendorKalenderClient({
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#4A2E35] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header Breadcrumb */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -165,9 +165,9 @@ export function VendorKalenderClient({
             </h3>
           </div>
 
-          <form onSubmit={handleAddDate} className="grid grid-cols-1 lg:grid-cols-3 gap-5 text-xs items-start">
+          <form onSubmit={handleAddDate} className="grid grid-cols-1 lg:grid-cols-[minmax(0,420px)_1fr] gap-5 text-xs items-start">
             {/* Kalender pemilih tanggal (daypicker) — menggantikan slot "Tanggal Terpilih" */}
-            <div className="lg:col-span-2">
+            <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-[#4A2E35] font-semibold">
                   Pilih Tanggal: <span className="text-red-500">*</span>
@@ -199,7 +199,7 @@ export function VendorKalenderClient({
                   onSelect={(d) => setNewDate(d)}
                   blackoutDates={blackouts.map((b) => b.date)}
                   minDate={today}
-                  className="max-w-md"
+                  className="w-full"
                 />
               </div>
               <p className="mt-2 text-[11px] text-[#6B5E62] leading-relaxed">
@@ -209,7 +209,7 @@ export function VendorKalenderClient({
             </div>
 
             {/* Panel alasan + aksi */}
-            <div className="lg:col-span-1 space-y-3">
+            <div className="space-y-3">
               <div>
                 <label className="block text-[#4A2E35] font-semibold mb-1">
                   Alasan Penguncian:
