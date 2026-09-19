@@ -106,3 +106,28 @@ export async function listAmbassadors() {
     recruitedCount: b._count.recruitedVendors,
   }));
 }
+
+/**
+ * Daftar penarikan dompet BA (default: PENDING) untuk panel admin.
+ * Menyertakan identitas BA agar admin dapat memverifikasi tujuan transfer.
+ */
+export async function listAmbassadorWithdrawals(status: "PENDING" | "PAID" | "REJECTED" | "ALL" = "PENDING") {
+  const rows = await prisma.ambassadorWithdrawal.findMany({
+    where: status === "ALL" ? {} : { status },
+    include: { ambassador: true },
+    orderBy: { createdAt: "asc" },
+  });
+  return rows.map((w) => ({
+    id: w.id,
+    amount: w.amount,
+    status: w.status,
+    bankName: w.bankName,
+    bankAccount: w.bankAccount,
+    bankHolder: w.bankHolder,
+    createdAt: w.createdAt.toISOString().split("T")[0],
+    ambassadorId: w.ambassadorId,
+    ambassadorName: w.ambassador.displayName,
+    referralCode: w.ambassador.referralCode,
+    walletBalance: w.ambassador.walletBalance,
+  }));
+}
