@@ -6,14 +6,20 @@ import { prisma } from "@/lib/prisma";
 import {
   setSessionCookie,
   clearSessionCookie,
+  getSession,
   getDashboardPath,
+  getLoginPath,
   SessionData,
 } from "@/lib/session";
 import { attributeVendorToReferral } from "@/server/services/ambassador-service";
 
 /**
  * Login action — verifikasi nomor HP + PIN, set session cookie.
- * FormData keys: "phone", "pin", "callbackUrl" (opsional)
+ * FormData keys: "phone", "pin", "callbackUrl" (opsional), "allowedRoles" (opsional, CSV)
+ *
+ * `allowedRoles` membatasi portal login mana yang boleh masuk dari halaman tertentu
+ * (mis. /auth/login hanya CLIENT+VENDOR, /auth/login/ba hanya BA, dst). Bila kosong,
+ * semua role diizinkan (kompatibilitas mundur).
  */
 export async function loginAction(
   formData: FormData
@@ -22,6 +28,10 @@ export async function loginAction(
     const phone = (formData.get("phone") as string)?.trim();
     const pin = (formData.get("pin") as string)?.trim();
     const callbackUrl = (formData.get("callbackUrl") as string) || null;
+    const allowedRoles = (formData.get("allowedRoles") as string)
+      ?.split(",")
+      .map((r) => r.trim().toUpperCase())
+      .filter(Boolean);
 
     // Validasi input dasar
     if (!phone || !pin) {
@@ -37,6 +47,16 @@ export async function loginAction(
       return {
         success: false,
         error: "Nomor HP tidak terdaftar atau belum memiliki PIN.",
+      };
+    }
+
+    // Batasi role sesuai portal login. Pesan generik agar tidak membocorkan
+    // keberadaan halaman login khusus ke publik.
+    if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+      return {
+        success: false,
+        error:
+          "Akun ini tidak dapat masuk dari halaman ini. Silakan gunakan tautan login yang sesuai.",
       };
     }
 
@@ -80,11 +100,15 @@ export async function loginAction(
 }
 
 /**
- * Logout action — hapus session cookie lalu redirect ke login.
+ * Logout action — hapus session cookie lalu redirect ke halaman login
+ * sesuai peran user (CLIENT/VENDOR → /auth/login, BA → /auth/login/ba,
+ * ADMIN → /auth/login/admin).
  */
 export async function logoutAction(): Promise<void> {
+  const session = await getSession();
+  const target = session ? getLoginPath(session.role) : "/auth/login";
   await clearSessionCookie();
-  redirect("/auth/login");
+  redirect(target);
 }
 
 /**

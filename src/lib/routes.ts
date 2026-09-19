@@ -61,6 +61,8 @@ export const ROUTES = {
   // 6. Autentikasi
   AUTH: {
     LOGIN: '/auth/login',
+    LOGIN_BA: '/auth/login/ba',
+    LOGIN_ADMIN: '/auth/login/admin',
     REGISTER: '/auth/register',
     REGISTER_VENDOR: '/auth/register-vendor',
   },

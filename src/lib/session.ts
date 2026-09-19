@@ -68,3 +68,22 @@ export function getDashboardPath(role: string): string {
       return "/client/profil";
   }
 }
+
+/**
+ * Helper: dapatkan halaman login sesuai role.
+ *  - CLIENT / VENDOR → /auth/login (portal publik klien & mitra)
+ *  - BA              → /auth/login/ba (portal Brand Ambassador, tidak ditautkan publik)
+ *  - ADMIN           → /auth/login/admin (portal Super Admin, tidak ditautkan publik)
+ */
+export function getLoginPath(role: string): string {
+  switch (role) {
+    case "ADMIN":
+      return "/auth/login/admin";
+    case "BA":
+      return "/auth/login/ba";
+    case "CLIENT":
+    case "VENDOR":
+    default:
+      return "/auth/login";
+  }
+}

@@ -37,6 +37,12 @@ function getDashboardPath(role: string): string {
   return "/client/profil";
 }
 
+function getLoginPath(role: string): string {
+  if (role === "ADMIN") return "/auth/login/admin";
+  if (role === "BA") return "/auth/login/ba";
+  return "/auth/login";
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const rawCookie = request.cookies.get(COOKIE_NAME)?.value;
@@ -63,7 +69,7 @@ export function middleware(request: NextRequest) {
   // ── 2. Proteksi /admin/* → hanya ADMIN ──
   if (pathname.startsWith("/admin")) {
     if (!session) {
-      const url = new URL("/auth/login", request.url);
+      const url = new URL("/auth/login/admin", request.url);
       url.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(url);
     }
@@ -96,7 +102,7 @@ export function middleware(request: NextRequest) {
   //    Portal Brand Ambassador: dashboard, vendor, komisi, dan dompet BA.
   if (pathname === "/dashboard/ba" || pathname.startsWith("/dashboard/ba/")) {
     if (!session) {
-      const url = new URL("/auth/login", request.url);
+      const url = new URL("/auth/login/ba", request.url);
       url.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(url);
     }
