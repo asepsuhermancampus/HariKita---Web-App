@@ -275,7 +275,7 @@ export function VendorPaketClient({
                           />
 
                           {/* Floating Popover Container */}
-                          <div className="absolute left-0 top-full mt-2 z-40 w-[350px] sm:w-[395px] max-w-[calc(100vw-2rem)] rounded-2xl bg-white border border-[#E5D7C7] shadow-xl shadow-[#4A2E35]/10 p-3.5 space-y-2 text-xs animate-in fade-in zoom-in-95 duration-150">
+                          <div className="absolute left-0 top-full mt-2 z-40 w-[335px] sm:w-[370px] max-w-[calc(100vw-2.5rem)] rounded-2xl bg-white border border-[#E5D7C7] shadow-xl shadow-[#4A2E35]/10 p-3.5 space-y-2 text-xs animate-in fade-in zoom-in-95 duration-150">
                             <div className="flex items-center justify-between pb-2 border-b border-[#FAF8F5]">
                               <div className="flex items-center gap-1.5 text-[#4A2E35] font-semibold text-xs">
                                 <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
@@ -305,9 +305,9 @@ export function VendorPaketClient({
                                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                                   <span
                                     className="truncate"
-                                    title="Biaya admin & transfer beda bank pencairan dana vendor 100% ditanggung oleh platform HariKita tanpa memotong hak vendor"
+                                    title="Termasuk biaya transfer beda bank saat pencairan saldo ke rekening vendor, 100% ditanggung oleh HariKita tanpa potongan tambahan"
                                   >
-                                    Escrow &amp; Biaya Transfer Ditanggung HariKita
+                                    Semua Admin Ditanggung HariKita
                                   </span>
                                 </span>
                                 <span className="w-11 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
