@@ -206,3 +206,45 @@ test("runPayoutSweep SETTLEMENT_PAYOUT triggers BA commission", async () => {
   assert.equal(wallet!.walletBalance, 50_000);
 });
 
+test("runPayoutSweep DP_DISBURSEMENT does NOT trigger BA commission", async () => {
+  const ba = await seedAmbassador(prisma, { commissionPct: 5.0 });
+  const v = await seedVendorWithRecruiter(prisma, { ambassadorId: ba.ambassadorId, commissionPct: 5.0, price: 1_000_000 });
+  const { order } = await makeOrder(v.vendorId, v.packageId, 1_000_000);
+
+  // Order masih dalam proses (bukan terminal) + event H-1 (dalam window H-3 DP).
+  await prisma.order.update({
+    where: { id: order.id },
+    data: { status: "IN_PROGRESS", eventDate: new Date(Date.now() + 24 * 60 * 60 * 1000) },
+  });
+
+  // Sumber jurnal ESCROW_DP_IN (prasyarat eligibility DP).
+  await recordJournal(
+    {
+      type: "ESCROW_DP_IN",
+      description: "DP diterima",
+      orderId: order.id,
+      entries: [
+        { accountId: "1010_CASH_GATEWAY", debit: 300_000, credit: 0 },
+        { accountId: "2010_CLIENT_ESCROW", debit: 0, credit: 300_000 },
+      ],
+    },
+    prisma
+  );
+
+  // Installment DP_30 PAID agar guard pembayaran DP lolos.
+  await prisma.paymentInstallment.create({
+    data: { orderId: order.id, type: "DP_30", amount: 300_000, status: "PAID", paidAt: new Date() },
+  });
+
+  const sweep = await runPayoutSweep([{ orderId: order.id, tranche: "DP_DISBURSEMENT" }], prisma);
+  // Guard benar-benar lolos: payout DP benar-benar dieksekusi.
+  assert.deepEqual(sweep.executed, [order.id]);
+
+  // Aturan inti task: komisi HANYA pada SETTLEMENT_PAYOUT, bukan DP.
+  const commissionCount = await prisma.ambassadorCommission.count();
+  assert.equal(commissionCount, 0, "tidak boleh ada komisi BA pada DP_DISBURSEMENT");
+
+  const wallet = await prisma.brandAmbassador.findUnique({ where: { id: ba.ambassadorId } });
+  assert.equal(wallet!.walletBalance, 0);
+});
+
