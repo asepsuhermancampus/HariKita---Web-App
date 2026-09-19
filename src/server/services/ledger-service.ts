@@ -356,6 +356,7 @@ export const LEDGER_ACCOUNTS = {
   VENDOR_PAYABLE: "2020_VENDOR_PAYABLE",
   PLATFORM_FEE: "4010_PLATFORM_FEE",
   REFUND_PAYABLE: "2030_REFUND_PAYABLE",
+  AMBASSADOR_PAYABLE: "2030_AMBASSADOR_PAYABLE",
 } as const;
 
 /**
@@ -364,6 +365,11 @@ export const LEDGER_ACCOUNTS = {
  */
 export function payoutJournalNumber(orderId: string, tranche: PayoutTranche): string {
   return `PAYOUT-${orderId}-${tranche}`;
+}
+
+/** journalNumber deterministik komisi BA → exact-once per OrderItem. */
+export function ambassadorJournalNumber(orderItemId: string): string {
+  return `ADVCOM-${orderItemId}`;
 }
 
 /** Menghitung split tranche integer dengan Largest Remainder Method. */
