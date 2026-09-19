@@ -168,7 +168,10 @@ export interface WithdrawalInput {
   bankHolder?: string;
 }
 
-/** Mengajukan penarikan: menahan saldo (wallet -= amount) & membuat record PENDING. */
+/**
+ * Mengajukan penarikan: menahan saldo (wallet -= amount) & membuat record PENDING.
+ * Menulis 3 statement (create + update); panggil dengan `tx` (transaksi) agar atomik.
+ */
 export async function requestWithdrawal(
   input: WithdrawalInput,
   tx?: AmbassadorTx
