@@ -12,6 +12,7 @@ export default function AuthRegisterVendorPage() {
   const [category, setCategory] = useState("dokumentasi-foto-video");
   const [district, setDistrict] = useState("Kebumen Kota");
   const [whatsapp, setWhatsapp] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [ktpNumber, setKtpNumber] = useState("");
   const [portfolioLink, setPortfolioLink] = useState("");
   const [isAgreed, setIsAgreed] = useState(true);
@@ -191,6 +192,23 @@ export default function AuthRegisterVendorPage() {
                   required
                   className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#4A2E35] mb-1">
+                  Kode Referral BA (opsional)
+                </label>
+                <input
+                  type="text"
+                  name="referralCode"
+                  value={referralCode}
+                  onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                  placeholder="Contoh: BA-KEBUMEN-7X3A"
+                  className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
+                />
+                <p className="text-[11px] text-[#6B5E62] mt-1">
+                  Kosongkan bila mendaftar tanpa Brand Ambassador.
+                </p>
               </div>
 
               {/* Terms Agreement */}

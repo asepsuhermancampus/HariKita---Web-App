@@ -51,6 +51,35 @@ export function attributionBaLocked(vendorUserId: string, ambassadorUserId: stri
 }
 
 /**
+ * Menetapkan recruiter BA pada vendor berdasarkan kode. Aman bila kode invalid
+ * (diabaikan). Bila vendor sudah punya recruiter, tidak diubah (terkunci).
+ */
+export async function attributeVendorToReferral(
+  vendorId: string,
+  code: string | null | undefined,
+  tx?: AmbassadorTx
+): Promise<void> {
+  const db = tx ?? prisma;
+  const resolved = await resolveReferral(code, db);
+  if (!resolved) return;
+
+  const vendor = await db.vendorProfile.findUnique({
+    where: { id: vendorId },
+    include: { user: true },
+  });
+  if (!vendor || vendor.recruitedById) return;
+
+  // Blokir self-referral.
+  const ba = await db.brandAmbassador.findUnique({ where: { id: resolved.ambassadorId } });
+  if (!ba || attributionBaLocked(vendor.userId, ba.userId)) return;
+
+  await db.vendorProfile.update({
+    where: { id: vendorId },
+    data: { recruitedById: resolved.ambassadorId },
+  });
+}
+
+/**
  * Mengkredit komisi BA untuk semua OrderItem pada satu order.
  * Exact-once via AmbassadorCommission.@@unique([orderItemId]) + journalNumber
  * deterministik "ADVCOM-{orderItemId}".

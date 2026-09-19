@@ -9,6 +9,7 @@ import {
   getDashboardPath,
   SessionData,
 } from "@/lib/session";
+import { attributeVendorToReferral } from "@/server/services/ambassador-service";
 
 /**
  * Login action — verifikasi nomor HP + PIN, set session cookie.
@@ -151,6 +152,7 @@ export async function registerVendorAction(
     const businessName = (formData.get("businessName") as string)?.trim();
     const category = (formData.get("category") as string)?.trim();
     const address = (formData.get("address") as string)?.trim();
+    const referralCode = (formData.get("referralCode") as string)?.trim() || null;
 
     if (!name || !phone || !pin || !businessName || !category || !address) {
       return { success: false, error: "Semua field wajib diisi." };
@@ -184,6 +186,12 @@ export async function registerVendorAction(
         },
       },
     });
+
+    // Atribusi referral BA (opsional, aman bila kode invalid).
+    const createdVendor = await prisma.vendorProfile.findUnique({ where: { userId: newUser.id } });
+    if (createdVendor && referralCode) {
+      await attributeVendorToReferral(createdVendor.id, referralCode);
+    }
 
     // Auto-login setelah register
     await setSessionCookie({
