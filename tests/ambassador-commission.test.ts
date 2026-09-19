@@ -1,20 +1,59 @@
 import { test, before, after, beforeEach } from "node:test";
 import assert from "node:assert/strict";
+import path from "node:path";
 import { createTestDb, seedAmbassador, seedVendorWithRecruiter, seedClient, type TestDb } from "./helpers/test-db";
 import type { PrismaClient } from "@prisma/client";
-import { creditCommissionForOrder } from "../src/server/services/ambassador-service";
+import {
+  creditCommissionForOrder,
+  requestWithdrawal,
+  resolveWithdrawal,
+} from "../src/server/services/ambassador-service";
 import { runPayoutSweep } from "../src/server/services/payment-service";
 import { recordJournal } from "../src/server/services/ledger-service";
 
 let ctx: TestDb;
 let prisma: PrismaClient;
+let servicePrismaRebound: { $disconnect: () => Promise<void> } | null = null;
 
 before(async () => {
   ctx = await createTestDb();
   prisma = ctx.prisma;
+  // Task 6: requestWithdrawal/resolveWithdrawal dipanggil TANPA `tx` oleh brief,
+  // sehingga service memakai singleton `@/lib/prisma`. Arahkan singleton itu ke
+  // DB SQLite temporer agar test tidak menulis ke prisma/dev.db. Modul service
+  // diimpor lebih dulu supaya singleton sudah ter-instantiate saat di-rebind.
+  await import("../src/server/services/ambassador-service");
+  const { prisma: servicePrisma } = await import("../src/lib/prisma");
+  const dbPath = path.join(process.env.HARIKITA_TEST_DB_DIR!, "test.db");
+
+  const { PrismaClient: SqlitePrismaClient } = await import("../generated/sqlite-client");
+  type ClientLike = Record<string, unknown> & {
+    $connect: () => Promise<void>;
+    $disconnect: () => Promise<void>;
+  };
+  const original = servicePrisma as unknown as ClientLike;
+  const ReboundClient = SqlitePrismaClient as unknown as new (opts: unknown) => ClientLike;
+  const rebound = new ReboundClient({
+    datasources: { db: { url: `file:${dbPath.replace(/\\/g, "/")}` } },
+  });
+
+  for (const key of Object.keys(rebound)) {
+    if (key === "$connect" || key === "$disconnect") continue;
+    try {
+      original[key] = rebound[key];
+    } catch {
+      // properti read-only (mis. _clientVersion) → abaikan.
+    }
+  }
+  original.$connect = () => rebound.$connect();
+  original.$disconnect = () => rebound.$disconnect();
+  await rebound.$connect();
+  servicePrismaRebound = rebound;
 });
 
 after(async () => {
+  // Lepas handle file SQLite temporer sebelum cleanup menghapus direktorinya.
+  if (servicePrismaRebound) await servicePrismaRebound.$disconnect();
   await ctx.cleanup();
 });
 
@@ -246,5 +285,32 @@ test("runPayoutSweep DP_DISBURSEMENT does NOT trigger BA commission", async () =
 
   const wallet = await prisma.brandAmbassador.findUnique({ where: { id: ba.ambassadorId } });
   assert.equal(wallet!.walletBalance, 0);
+});
+
+// ── Task 6: penarikan dompet BA ────────────────────────────────────────────
+
+test("requestWithdrawal deducts wallet balance", async () => {
+  const ba = await seedAmbassador(prisma);
+  await prisma.brandAmbassador.update({ where: { id: ba.ambassadorId }, data: { walletBalance: 100_000 } });
+
+  await requestWithdrawal({ ambassadorId: ba.ambassadorId, amount: 40_000 });
+  const wallet = await prisma.brandAmbassador.findUnique({ where: { id: ba.ambassadorId } });
+  assert.equal(wallet!.walletBalance, 60_000);
+});
+
+test("requestWithdrawal rejects amount above balance", async () => {
+  const ba = await seedAmbassador(prisma);
+  await prisma.brandAmbassador.update({ where: { id: ba.ambassadorId }, data: { walletBalance: 10_000 } });
+  await assert.rejects(() => requestWithdrawal({ ambassadorId: ba.ambassadorId, amount: 20_000 }));
+});
+
+test("resolveWithdrawal REJECTED restores balance", async () => {
+  const ba = await seedAmbassador(prisma);
+  await prisma.brandAmbassador.update({ where: { id: ba.ambassadorId }, data: { walletBalance: 50_000 } });
+  const { withdrawalId } = await requestWithdrawal({ ambassadorId: ba.ambassadorId, amount: 50_000 });
+
+  await resolveWithdrawal(withdrawalId, "REJECTED", prisma);
+  const wallet = await prisma.brandAmbassador.findUnique({ where: { id: ba.ambassadorId } });
+  assert.equal(wallet!.walletBalance, 50_000);
 });
 

@@ -58,6 +58,10 @@ export async function createTestDb(): Promise<TestDb> {
   });
   const prisma = sqliteClient as unknown as PrismaClient;
 
+  // Diekspor agar test dapat mengarahkan ulang singleton `@/lib/prisma`
+  // (yang dipakai service saat `tx` tidak diberikan) ke DB temporer yang sama.
+  process.env.HARIKITA_TEST_DB_DIR = tempDir;
+
   return {
     prisma,
     cleanup: async () => {

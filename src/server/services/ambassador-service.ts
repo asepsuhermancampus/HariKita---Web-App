@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { ambassadorJournalNumber, LEDGER_ACCOUNTS } from "./ledger-service";
+import { DomainError } from "./errors";
 
 export type AmbassadorTx = Prisma.TransactionClient;
 
@@ -157,4 +158,68 @@ export async function creditCommissionForOrder(
   }
 
   return { created, skipped };
+}
+
+export interface WithdrawalInput {
+  ambassadorId: string;
+  amount: number;
+  bankName?: string;
+  bankAccount?: string;
+  bankHolder?: string;
+}
+
+/** Mengajukan penarikan: menahan saldo (wallet -= amount) & membuat record PENDING. */
+export async function requestWithdrawal(
+  input: WithdrawalInput,
+  tx?: AmbassadorTx
+): Promise<{ withdrawalId: string }> {
+  if (!Number.isInteger(input.amount) || input.amount <= 0) {
+    throw new DomainError("INVALID_WITHDRAWAL_AMOUNT", "Nominal penarikan harus lebih dari 0.");
+  }
+  const db = tx ?? prisma;
+  const ba = await db.brandAmbassador.findUnique({ where: { id: input.ambassadorId } });
+  if (!ba) throw new DomainError("BA_NOT_FOUND", "Brand Ambassador tidak ditemukan.");
+  if (input.amount > ba.walletBalance) {
+    throw new DomainError("INSUFFICIENT_BALANCE", "Saldo tidak mencukupi.");
+  }
+
+  const withdrawal = await db.ambassadorWithdrawal.create({
+    data: {
+      ambassadorId: ba.id,
+      amount: input.amount,
+      status: "PENDING",
+      bankName: input.bankName ?? ba.bankName,
+      bankAccount: input.bankAccount ?? ba.bankAccount,
+      bankHolder: input.bankHolder ?? ba.bankHolder,
+    },
+  });
+  await db.brandAmbassador.update({
+    where: { id: ba.id },
+    data: { walletBalance: { decrement: input.amount } },
+  });
+  return { withdrawalId: withdrawal.id };
+}
+
+/** Menyelesaikan penarikan. REJECTED → saldo dikembalikan. */
+export async function resolveWithdrawal(
+  withdrawalId: string,
+  decision: "PAID" | "REJECTED",
+  tx?: AmbassadorTx
+): Promise<void> {
+  const db = tx ?? prisma;
+  const w = await db.ambassadorWithdrawal.findUnique({ where: { id: withdrawalId } });
+  if (!w) throw new DomainError("WITHDRAWAL_NOT_FOUND", "Penarikan tidak ditemukan.");
+  if (w.status !== "PENDING") {
+    throw new DomainError("WITHDRAWAL_ALREADY_RESOLVED", "Penarikan sudah diproses sebelumnya.");
+  }
+  await db.ambassadorWithdrawal.update({
+    where: { id: w.id },
+    data: { status: decision, processedAt: new Date() },
+  });
+  if (decision === "REJECTED") {
+    await db.brandAmbassador.update({
+      where: { id: w.ambassadorId },
+      data: { walletBalance: { increment: w.amount } },
+    });
+  }
 }
