@@ -73,8 +73,8 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
             <div className="flex sm:contents items-center gap-3.5 sm:gap-6 w-full sm:w-auto">
               {/* Visual Atelier Crest (Clean and Unobstructed Branding) */}
               <div className="shrink-0">
-                <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40 transition-transform hover:scale-[1.02]">
-                  <Store className="w-10 h-10 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-hk-champagne" />
+                <div className="w-16 h-16 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40 transition-transform hover:scale-[1.02]">
+                  <Store className="w-8 h-8 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-hk-champagne" />
                 </div>
               </div>
 
