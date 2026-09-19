@@ -21,8 +21,15 @@ async function main() {
   await prisma.ambassadorCommission.deleteMany();
   await prisma.ambassadorWithdrawal.deleteMany();
   await prisma.brandAmbassador.deleteMany();
+  await prisma.otpCode.deleteMany();
+  await prisma.pinChangeLog.deleteMany();
   await prisma.vendorProfile.deleteMany();
   await prisma.user.deleteMany();
+
+  /** Mencatat log perubahan PIN awal untuk seorang user (untuk kebijakan 14 hari). */
+  async function logPin(userId: string) {
+    await prisma.pinChangeLog.create({ data: { userId } });
+  }
 
   // 1. Users (Admin, Client, and Vendors)
   const adminUser = await prisma.user.create({
@@ -34,6 +41,7 @@ async function main() {
       role: "ADMIN",
     },
   });
+  await logPin(adminUser.id);
 
   const clientUser = await prisma.user.create({
     data: {
@@ -44,6 +52,7 @@ async function main() {
       role: "CLIENT",
     },
   });
+  await logPin(clientUser.id);
 
   // Brand Ambassador (BA) demo — merekrut vendor lewat kode referral.
   const baUserId = "ba-demo-001";
@@ -132,6 +141,11 @@ async function main() {
       bankHolder: "Sari Karanganyar Ambassador",
     },
   });
+
+  // Log perubahan PIN awal untuk ketiga BA.
+  await logPin(baUser.id);
+  await logPin(ba2User.id);
+  await logPin(ba3User.id);
 
   // 2. Vendors across 11 Categories in Kebumen
   const vendorsData = [
@@ -375,6 +389,7 @@ async function main() {
         role: "VENDOR",
       },
     });
+    await logPin(user.id);
 
     const vendor = await prisma.vendorProfile.create({
       data: {
