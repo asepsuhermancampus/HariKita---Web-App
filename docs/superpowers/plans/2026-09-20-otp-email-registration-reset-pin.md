@@ -1,6 +1,6 @@
 # Registrasi & Reset PIN dengan OTP via Email — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Menambahkan verifikasi OTP via email (Resend) pada registrasi semua role (selain ADMIN) dan fitur Reset PIN, dengan kebijakan rate-limit per-email.
 
@@ -65,7 +65,7 @@
 **Interfaces:**
 - Produces: model `OtpCode` (`id, email, codeHash, purpose, status, attempts, expiresAt, lockedUntil, verifiedAt, createdAt`), `PinChangeLog` (`id, userId, changedAt`). Relasi `User.pinChangeLogs PinChangeLog[]`.
 
-- [ ] **Step 1: Tambah model ke `prisma/schema.prisma`**
+- [x] **Step 1: Tambah model ke `prisma/schema.prisma`**
 
 Tambahkan sebelum blok `model Notification`:
 
@@ -102,11 +102,11 @@ Lalu pada `model User`, tambahkan relasi (setelah `brandAmbassador BrandAmbassad
   pinChangeLogs     PinChangeLog[]
 ```
 
-- [ ] **Step 2: Salin perubahan identik ke `prisma/schema.sqlite.prisma`**
+- [x] **Step 2: Salin perubahan identik ke `prisma/schema.sqlite.prisma`**
 
 Terapkan blok model & relasi yang sama. Pastikan `datasource` tetap `provider = "sqlite"`.
 
-- [ ] **Step 3: Validasi & push skema**
+- [x] **Step 3: Validasi & push skema**
 
 Run: `npm run validate`
 Expected: "The schema is valid".
@@ -117,17 +117,17 @@ Expected: database postgres ter-update tanpa error.
 Run: `npm run db:push:sqlite`
 Expected: `prisma/dev.db` ter-update tanpa error.
 
-- [ ] **Step 4: Regenerate clients**
+- [x] **Step 4: Regenerate clients**
 
 Run: `npm run generate; if ($?) { npm run generate:sqlite }`
 Expected: kedua client ter-generate tanpa error.
 
-- [ ] **Step 5: Verifikasi typecheck**
+- [x] **Step 5: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih (exit 0).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add prisma/schema.prisma prisma/schema.sqlite.prisma
@@ -146,7 +146,7 @@ git commit -m "feat(auth): add OtpCode and PinChangeLog models"
 **Interfaces:**
 - Produces: `OTP_ERROR_CODES` (`INVALID_EMAIL`, `INVALID_PHONE`, `EMAIL_ALREADY_USED`, `PHONE_ALREADY_USED`, `OTP_NOT_FOUND`, `OTP_EXPIRED`, `OTP_INVALID`, `OTP_LOCKED`, `OTP_COOLDOWN`, `OTP_DAILY_LIMIT`, `PIN_TOO_RECENT`, `EMAIL_SEND_FAILED`), tipe `OtpErrorCode`, dan penambahan ke union `AnyDomainErrorCode`/`AppDomainErrorCode`.
 
-- [ ] **Step 1: Tambah kode error di `src/types/errors.ts`**
+- [x] **Step 1: Tambah kode error di `src/types/errors.ts`**
 
 Setelah blok `AMBASSADOR_ERROR_CODES`, tambahkan:
 
@@ -182,7 +182,7 @@ export type AppDomainErrorCode =
   | OtpErrorCode;
 ```
 
-- [ ] **Step 2: Tambah ke union di `src/server/services/errors.ts`**
+- [x] **Step 2: Tambah ke union di `src/server/services/errors.ts`**
 
 Ubah import & union:
 
@@ -206,7 +206,7 @@ export type AnyDomainErrorCode =
   | OtpErrorCode;
 ```
 
-- [ ] **Step 3: Dokumentasikan env baru di `.env.example`**
+- [x] **Step 3: Dokumentasikan env baru di `.env.example`**
 
 Tambahkan di akhir file:
 
@@ -219,12 +219,12 @@ OTP_EMAIL_FROM="HariKita <onboarding@resend.dev>"
 OTP_DEV_MODE="true"
 ```
 
-- [ ] **Step 4: Verifikasi typecheck**
+- [x] **Step 4: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/types/errors.ts src/server/services/errors.ts .env.example
@@ -246,12 +246,12 @@ git commit -m "feat(auth): add OTP domain error codes and email env docs"
   - `sendPinChangedEmail(to: string, name: string): Promise<{ sent: boolean; devMode: boolean }>`
   - `isDevMode(): boolean`
 
-- [ ] **Step 1: Install Resend SDK**
+- [x] **Step 1: Install Resend SDK**
 
 Run: `npm install resend`
 Expected: ditambahkan ke `dependencies`.
 
-- [ ] **Step 2: Write the failing test**
+- [x] **Step 2: Write the failing test**
 
 Buat `tests/email-service.test.ts`:
 
@@ -290,12 +290,12 @@ test("sendPinChangedEmail in dev mode returns devMode true", async () => {
 });
 ```
 
-- [ ] **Step 3: Run test to verify it fails**
+- [x] **Step 3: Run test to verify it fails**
 
 Run: `npx tsx --test tests/email-service.test.ts`
 Expected: FAIL — module `../src/server/services/email-service` belum ada.
 
-- [ ] **Step 4: Implementasi `src/server/services/email-service.ts`**
+- [x] **Step 4: Implementasi `src/server/services/email-service.ts`**
 
 ```ts
 import { Resend } from "resend";
@@ -398,12 +398,12 @@ export async function sendPinChangedEmail(to: string, name: string): Promise<Sen
 }
 ```
 
-- [ ] **Step 5: Run test to verify it passes**
+- [x] **Step 5: Run test to verify it passes**
 
 Run: `npx tsx --test tests/email-service.test.ts`
 Expected: PASS (2 test).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add package.json package-lock.json src/server/services/email-service.ts tests/email-service.test.ts
@@ -427,7 +427,7 @@ git commit -m "feat(auth): email service with Resend and dev fallback"
   - `WIB_DAY_START(date: Date): Date` — helper batas hari WIB (untuk test).
   - `checkSendAllowed(email, tx?): Promise<void>` — throw `OTP_COOLDOWN` bila masih ada lock.
 
-- [ ] **Step 1: Tambah helper test `seedOtpCode`**
+- [x] **Step 1: Tambah helper test `seedOtpCode`**
 
 Tambahkan di akhir `tests/helpers/test-db.ts`:
 
@@ -464,7 +464,7 @@ export async function seedOtpCode(
 }
 ```
 
-- [ ] **Step 2: Write the failing test**
+- [x] **Step 2: Write the failing test**
 
 Buat `tests/otp-service.test.ts`:
 
@@ -528,12 +528,12 @@ test("checkSendAllowed passes when lock expired", async () => {
 });
 ```
 
-- [ ] **Step 3: Run test to verify it fails**
+- [x] **Step 3: Run test to verify it fails**
 
 Run: `npx tsx --test tests/otp-service.test.ts`
 Expected: FAIL — module `../src/server/services/otp-service` belum ada.
 
-- [ ] **Step 4: Implementasi `src/server/services/otp-service.ts`**
+- [x] **Step 4: Implementasi `src/server/services/otp-service.ts`**
 
 ```ts
 import { prisma } from "@/lib/prisma";
@@ -607,12 +607,12 @@ export async function issueOtp(
 export const _otpConfig = { OTP_TTL_MS, MAX_ATTEMPTS, LOCK_MS, DAILY_LIMIT };
 ```
 
-- [ ] **Step 5: Run test to verify it passes**
+- [x] **Step 5: Run test to verify it passes**
 
 Run: `npx tsx --test tests/otp-service.test.ts`
 Expected: PASS (4 test).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/server/services/otp-service.ts tests/otp-service.test.ts tests/helpers/test-db.ts
@@ -634,7 +634,7 @@ git commit -m "feat(auth): OTP issue and cooldown rate limiting"
   - `countDailyAttempts(email, now?, tx?): Promise<number>` — total attempts hari WIB.
   - `assertDailyLimit(email, tx?): Promise<void>` — throw `OTP_DAILY_LIMIT` bila ≥ 9.
 
-- [ ] **Step 1: Tambah test**
+- [x] **Step 1: Tambah test**
 
 Tambahkan ke `tests/otp-service.test.ts`:
 
@@ -678,12 +678,12 @@ test("assertDailyLimit throws at 9 attempts within WIB day", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/otp-service.test.ts`
 Expected: FAIL — `verifyOtp`/`countDailyAttempts`/`assertDailyLimit` belum ada.
 
-- [ ] **Step 3: Tambah implementasi ke `src/server/services/otp-service.ts`**
+- [x] **Step 3: Tambah implementasi ke `src/server/services/otp-service.ts`**
 
 Tambahkan setelah `issueOtp`:
 
@@ -768,12 +768,12 @@ export async function verifyOtp(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx --test tests/otp-service.test.ts`
 Expected: PASS (semua test).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/otp-service.ts tests/otp-service.test.ts
@@ -791,7 +791,7 @@ git commit -m "feat(auth): OTP verify with lock and daily limit"
 **Interfaces:**
 - Produces: `assertPinChangeAllowed(userId, tx?): Promise<void>` — throw `PIN_TOO_RECENT` bila `< 14 hari`. Tipe `AmbassadorTx`-style `OtpTx` sudah ada.
 
-- [ ] **Step 1: Tambah test**
+- [x] **Step 1: Tambah test**
 
 Tambahkan ke `tests/otp-service.test.ts`:
 
@@ -811,12 +811,12 @@ test("assertPinChangeAllowed passes after 14 days", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/otp-service.test.ts`
 Expected: FAIL — `assertPinChangeAllowed` belum ada.
 
-- [ ] **Step 3: Tambah implementasi**
+- [x] **Step 3: Tambah implementasi**
 
 Tambahkan konstanta `const PIN_COOLDOWN_MS = 14 * 24 * 60 * 60 * 1000;` di dekat konstanta lain, dan tambahkan fungsi:
 
@@ -843,12 +843,12 @@ Tambahkan juga `PIN_COOLDOWN_MS` ke `_otpConfig`:
 export const _otpConfig = { OTP_TTL_MS, MAX_ATTEMPTS, LOCK_MS, DAILY_LIMIT, PIN_COOLDOWN_MS };
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx --test tests/otp-service.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/otp-service.ts tests/otp-service.test.ts
@@ -865,7 +865,7 @@ git commit -m "feat(auth): enforce 14-day PIN change cooldown"
 **Interfaces:**
 - Produces: `setOtpCookie(otpId: string): Promise<void>`, `readOtpCookie(): Promise<string | null>`, `clearOtpCookie(): Promise<void>` — cookie httpOnly `hk_otp`, maxAge 10 menit.
 
-- [ ] **Step 1: Tambah helper ke `src/lib/session.ts`**
+- [x] **Step 1: Tambah helper ke `src/lib/session.ts`**
 
 Tambahkan di akhir file:
 
@@ -897,12 +897,12 @@ export async function clearOtpCookie(): Promise<void> {
 }
 ```
 
-- [ ] **Step 2: Verifikasi typecheck**
+- [x] **Step 2: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/lib/session.ts
@@ -924,7 +924,7 @@ git commit -m "feat(auth): temporary httpOnly OTP cookie helpers"
   - `completeRegistrationAction(input: { name; phone; email; pin; role; referralCode? }): Promise<ActionResult<{ redirectTo: string }>>`
   - Hapus `registerClientAction` & `registerVendorAction` lama (digantikan).
 
-- [ ] **Step 1: Ganti isi `src/server/actions/auth.ts`**
+- [x] **Step 1: Ganti isi `src/server/actions/auth.ts`**
 
 Ganti fungsi `registerClientAction` & `registerVendorAction` dengan tiga action baru, dan tambahkan import:
 
@@ -1114,12 +1114,12 @@ export async function resetPinAction(input: {
 
 > Catatan: `sendResetOtpAction` & `resetPinAction` boleh ditempatkan di file yang sama. Pastikan `runAction` & `ActionResult` diimpor dari `./_shared`.
 
-- [ ] **Step 2: Verifikasi typecheck**
+- [x] **Step 2: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih (perbaiki bila ada `ActionResult` import yang belum dipakai).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/server/actions/auth.ts
@@ -1141,7 +1141,7 @@ git commit -m "feat(auth): OTP server actions for registration and PIN reset"
 - Consumes: `sendOtpAction`, `verifyOtpAction`, `completeRegistrationAction`, `sendResetOtpAction`, `resetPinAction`.
 - Produces: komponen `OtpStepper` dengan props `{ role: "CLIENT" | "VENDOR"; withReferral?: boolean; title: string; onDone: (redirectTo: string) => void }`.
 
-- [ ] **Step 1: Buat `src/components/auth/OtpStepper.tsx`**
+- [x] **Step 1: Buat `src/components/auth/OtpStepper.tsx`**
 
 Komponen client dengan 3 tahap (`identity` → `otp` → `pin`) memakai token `hk-*` & `font-editorial`/`font-manrope`:
 - Tahap 1: input nama, phone, email (+referral bila `withReferral`); tombol "Kirim Kode OTP" → `sendOtpAction`; simpan `devCode` bila ada.
@@ -1270,7 +1270,7 @@ export function OtpStepper({
 }
 ```
 
-- [ ] **Step 2: Ganti `src/app/auth/register/page.tsx`**
+- [x] **Step 2: Ganti `src/app/auth/register/page.tsx`**
 
 ```tsx
 "use client";
@@ -1298,7 +1298,7 @@ export default function AuthRegisterPage() {
 }
 ```
 
-- [ ] **Step 3: Ganti `src/app/auth/register-vendor/page.tsx`**
+- [x] **Step 3: Ganti `src/app/auth/register-vendor/page.tsx`**
 
 ```tsx
 "use client";
@@ -1326,11 +1326,11 @@ export default function AuthRegisterVendorPage() {
 }
 ```
 
-- [ ] **Step 4: Buat `src/app/auth/reset-pin/page.tsx`**
+- [x] **Step 4: Buat `src/app/auth/reset-pin/page.tsx`**
 
 Halaman client 3 tahap (email → OTP → PIN baru) memakai `sendResetOtpAction`, `verifyOtpAction({ purpose: "RESET_PIN" })`, `resetPinAction`. Setelah sukses → tampilkan notif hijau lalu tombol "Masuk" ke `/auth/login`. Ikuti pola `OtpStepper` (boleh inline, tidak wajib komponen terpisah).
 
-- [ ] **Step 5: Tambah link "Lupa PIN?" di `src/components/auth/LoginCard.tsx`**
+- [x] **Step 5: Tambah link "Lupa PIN?" di `src/components/auth/LoginCard.tsx`**
 
 Di bawah tombol submit, tambahkan:
 
@@ -1344,12 +1344,12 @@ Di bawah tombol submit, tambahkan:
 
 (Pastikan `Link` sudah diimpor.)
 
-- [ ] **Step 6: Verifikasi typecheck**
+- [x] **Step 6: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/components/auth/OtpStepper.tsx src/app/auth/register/page.tsx src/app/auth/register-vendor/page.tsx src/app/auth/reset-pin/page.tsx src/components/auth/LoginCard.tsx
@@ -1366,24 +1366,24 @@ git commit -m "feat(auth): OTP registration stepper and reset PIN page"
 **Interfaces:**
 - Consumes: model Task 1.
 
-- [ ] **Step 1: Pastikan semua user demo punya email & PIN**
+- [x] **Step 1: Pastikan semua user demo punya email & PIN**
 
 - Admin, client, BA1/BA2/BA3 sudah punya email → **verifikasi** tidak ada yang null.
 - Vendor loop: tambahkan `email` (sudah ada `vendor${i+1}@harikita.id`) — pastikan tetap.
 - Tambahkan `${prisma.otpCode.deleteMany()}` & `${prisma.pinChangeLog.deleteMany()}` pada blok cleanup (di awal `main()`), SEBELUM `user.deleteMany()`.
 
-- [ ] **Step 2: Tambahkan `PinChangeLog` awal untuk tiap user demo**
+- [x] **Step 2: Tambahkan `PinChangeLog` awal untuk tiap user demo**
 
 Setelah setiap `user.create`, tambahkan `await prisma.pinChangeLog.create({ data: { userId: <user>.id } })`. (Bisa dibungkus helper lokal `seedUserWithPin`.)
 
 > Alternatif minimal: buat helper `async function logPin(userId: string)` dan panggil untuk admin, client, BA, dan tiap vendor.
 
-- [ ] **Step 3: Jalankan seeder terhadap DB lokal**
+- [x] **Step 3: Jalankan seeder terhadap DB lokal**
 
 Run: `npm run db:push:sqlite; if ($?) { npm run db:seed }`
 Expected: seed sukses tanpa error; log menampilkan akun demo.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add prisma/seed.ts
@@ -1400,20 +1400,20 @@ git commit -m "test(auth): seed demo users with email and PIN"
 **Interfaces:**
 - Consumes: `prisma`.
 
-- [ ] **Step 1: Buat script backfill**
+- [x] **Step 1: Buat script backfill**
 
 Script mengisi `email` yang kosong untuk user nyata di DB aktif (mis. `phone@harikita.id`) dan memastikan ada `PinChangeLog` bila belum ada. Idempotent.
 
-- [ ] **Step 2: Jalankan terhadap DB dev aktif**
+- [x] **Step 2: Jalankan terhadap DB dev aktif**
 
 Run: `npx tsx scripts/backfill-user-emails.ts`
 Expected: log jumlah user yang di-update.
 
-- [ ] **Step 3: Verifikasi login admin/client/vendor/BA tetap bekerja (HP+PIN)**
+- [x] **Step 3: Verifikasi login admin/client/vendor/BA tetap bekerja (HP+PIN)**
 
 Run: `npx tsx -e "..."` yang mengecek `user.findMany` semua punya email.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add scripts/backfill-user-emails.ts
@@ -1426,27 +1426,27 @@ git commit -m "chore(auth): backfill emails for existing demo users"
 
 **Files:** tidak ada file baru.
 
-- [ ] **Step 1: Jalankan seluruh test**
+- [x] **Step 1: Jalankan seluruh test**
 
 Run: `npm test`
 Expected: semua hijau (termasuk `otp-service.test.ts`, `email-service.test.ts`, 218 test lama).
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 3: Build produksi (dev server mati + `.next` bersih)**
+- [x] **Step 3: Build produksi (dev server mati + `.next` bersih)**
 
 Run: `npm run clean; if ($?) { npm run build }`
 Expected: sukses tanpa error.
 
-- [ ] **Step 4: Verifikasi skema sinkron**
+- [x] **Step 4: Verifikasi skema sinkron**
 
 Run: `npm run validate; npx prisma validate --schema prisma/schema.sqlite.prisma`
 Expected: keduanya "The schema is valid".
 
-- [ ] **Step 5: Checklist manual (dev, `OTP_DEV_MODE=true`)**
+- [x] **Step 5: Checklist manual (dev, `OTP_DEV_MODE=true`)**
 
 - Registrasi CLIENT: Nama+HP+Email → OTP (banner dev) → PIN → auto-login `/client`.
 - Registrasi VENDOR + kode referral valid → vendor dibuat & terkait BA.
@@ -1455,7 +1455,7 @@ Expected: keduanya "The schema is valid".
 - Coba ganti PIN lagi dalam 14 hari → ditolak.
 - Login tetap HP+PIN.
 
-- [ ] **Step 6: Commit sisa (bila ada perbaikan)**
+- [x] **Step 6: Commit sisa (bila ada perbaikan)**
 
 ```bash
 git add -A
