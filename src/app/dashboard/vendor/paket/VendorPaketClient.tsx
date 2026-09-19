@@ -275,7 +275,7 @@ export function VendorPaketClient({
                           />
 
                           {/* Floating Popover Container */}
-                          <div className="absolute left-0 top-full mt-2 z-40 w-[335px] sm:w-[370px] max-w-[calc(100vw-2.5rem)] rounded-2xl bg-white border border-[#E5D7C7] shadow-xl shadow-[#4A2E35]/10 p-3.5 space-y-2 text-xs animate-in fade-in zoom-in-95 duration-150">
+                          <div className="absolute left-0 top-full mt-2 z-40 w-[350px] sm:w-[385px] max-w-[calc(100vw-2rem)] rounded-2xl bg-white border border-[#E5D7C7] shadow-xl shadow-[#4A2E35]/10 p-3.5 space-y-2 text-xs animate-in fade-in zoom-in-95 duration-150">
                             <div className="flex items-center justify-between pb-2 border-b border-[#FAF8F5]">
                               <div className="flex items-center gap-1.5 text-[#4A2E35] font-semibold text-xs">
                                 <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
@@ -290,12 +290,12 @@ export function VendorPaketClient({
                               <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
                                 <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
                                   <Server className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
-                                  <span className="truncate">Server Cloud &amp; Portofolio HD</span>
+                                  <span className="whitespace-nowrap">Server Cloud &amp; Portofolio HD</span>
                                 </span>
-                                <span className="w-11 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
+                                <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
                                   3.5%
                                 </span>
-                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0 min-w-[75px]">
+                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
                                   {formatRupiah(Math.round(pkg.basePrice * 0.035))}
                                 </span>
                               </div>
@@ -304,16 +304,16 @@ export function VendorPaketClient({
                                 <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
                                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                                   <span
-                                    className="truncate"
+                                    className="whitespace-nowrap"
                                     title="Termasuk biaya transfer beda bank saat pencairan saldo ke rekening vendor, 100% ditanggung oleh HariKita tanpa potongan tambahan"
                                   >
-                                    Semua Admin Ditanggung HariKita
+                                    Semua Admin Ditanggung
                                   </span>
                                 </span>
-                                <span className="w-11 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
+                                <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
                                   3.0%
                                 </span>
-                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0 min-w-[75px]">
+                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
                                   {formatRupiah(Math.round(pkg.basePrice * 0.030))}
                                 </span>
                               </div>
@@ -321,12 +321,12 @@ export function VendorPaketClient({
                               <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
                                 <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
                                   <Sparkles className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
-                                  <span className="truncate">Pemasaran &amp; SEO Kebumen</span>
+                                  <span className="whitespace-nowrap">Pemasaran &amp; SEO Kebumen</span>
                                 </span>
-                                <span className="w-11 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
+                                <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
                                   2.0%
                                 </span>
-                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0 min-w-[75px]">
+                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
                                   {formatRupiah(Math.round(pkg.basePrice * 0.020))}
                                 </span>
                               </div>
@@ -334,12 +334,12 @@ export function VendorPaketClient({
                               <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
                                 <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
                                   <Headphones className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                                  <span className="truncate">Bantuan CS &amp; Mediasi Jadwal</span>
+                                  <span className="whitespace-nowrap">Bantuan CS &amp; Mediasi Jadwal</span>
                                 </span>
-                                <span className="w-11 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
+                                <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
                                   1.5%
                                 </span>
-                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0 min-w-[75px]">
+                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
                                   {formatRupiah(Math.round(pkg.basePrice * 0.015))}
                                 </span>
                               </div>
