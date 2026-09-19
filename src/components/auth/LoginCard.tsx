@@ -276,6 +276,15 @@ export function LoginCard({
             </button>
           </form>
 
+          <div className="text-center">
+            <Link
+              href="/auth/reset-pin"
+              className="text-[11px] font-manrope text-hk-taupe hover:text-hk-charcoal underline"
+            >
+              Lupa PIN?
+            </Link>
+          </div>
+
           {hint && (
             <div className="rounded-xl bg-hk-ivory border border-hk-soft-beige px-3 py-2 text-[11px] text-hk-charcoal/70 font-manrope">
               {hint}

@@ -9,9 +9,21 @@ import {
   getSession,
   getDashboardPath,
   getLoginPath,
+  setOtpCookie,
+  readOtpCookie,
+  clearOtpCookie,
   SessionData,
 } from "@/lib/session";
 import { attributeVendorToReferral } from "@/server/services/ambassador-service";
+import { runAction, type ActionResult } from "./_shared";
+import { DomainError } from "@/server/services/errors";
+import {
+  issueOtp,
+  verifyOtp,
+  assertPinChangeAllowed,
+  type OtpPurpose,
+} from "@/server/services/otp-service";
+import { sendOtpEmail, sendPinChangedEmail } from "@/server/services/email-service";
 
 /**
  * Login action — verifikasi nomor HP + PIN, set session cookie.
@@ -111,126 +123,169 @@ export async function logoutAction(): Promise<void> {
   redirect(target);
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^08\d{8,12}$/;
+
 /**
- * Register action untuk Calon Pengantin (CLIENT).
- * FormData keys: "name", "phone", "pin"
+ * Mengirim OTP ke email. Untuk REGISTER, memastikan email & HP belum terpakai.
+ * Untuk RESET_PIN, email harus terdaftar (pesan generik bila tidak).
  */
-export async function registerClientAction(
-  formData: FormData
-): Promise<{ success: boolean; error?: string }> {
-  try {
-    const name = (formData.get("name") as string)?.trim();
-    const phone = (formData.get("phone") as string)?.trim();
-    const pin = (formData.get("pin") as string)?.trim();
-
-    if (!name || !phone || !pin) {
-      return { success: false, error: "Nama, nomor HP, dan PIN wajib diisi." };
-    }
-    if (!/^\d{6}$/.test(pin)) {
-      return { success: false, error: "PIN harus 6 digit angka." };
+export async function sendOtpAction(input: {
+  name?: string;
+  phone?: string;
+  email: string;
+  purpose: OtpPurpose;
+  role?: string;
+}): Promise<ActionResult<{ devCode?: string }>> {
+  return runAction(async () => {
+    const email = input.email?.trim().toLowerCase();
+    if (!email || !EMAIL_RE.test(email)) {
+      throw new DomainError("INVALID_EMAIL", "Format email tidak valid.");
     }
 
-    // Cek apakah nomor HP sudah terdaftar
-    const existing = await prisma.user.findUnique({ where: { phone } });
-    if (existing) {
-      return {
-        success: false,
-        error: "Nomor HP sudah terdaftar. Silakan login.",
-      };
+    if (input.purpose === "REGISTER") {
+      const name = input.name?.trim();
+      const phone = input.phone?.trim();
+      if (!name) throw new DomainError("INVALID_PHONE", "Nama lengkap wajib diisi.");
+      if (!phone || !PHONE_RE.test(phone)) {
+        throw new DomainError("INVALID_PHONE", "Nomor HP tidak valid (contoh: 081234567890).");
+      }
+      const byPhone = await prisma.user.findUnique({ where: { phone } });
+      if (byPhone) throw new DomainError("PHONE_ALREADY_USED", "Nomor HP sudah terdaftar.");
+      const byEmail = await prisma.user.findUnique({ where: { email } });
+      if (byEmail) throw new DomainError("EMAIL_ALREADY_USED", "Email sudah terdaftar.");
+    } else {
+      const user = await prisma.user.findUnique({ where: { email } });
+      // Pesan generik agar tidak membocorkan status email.
+      if (!user) {
+        throw new DomainError("INVALID_EMAIL", "Jika email terdaftar, kode akan dikirim.");
+      }
     }
 
-    const hashedPin = await bcrypt.hash(pin, 10);
-    const newUser = await prisma.user.create({
-      data: { name, phone, pin: hashedPin, role: "CLIENT" },
-    });
-
-    // Auto-login setelah register
-    await setSessionCookie({
-      userId: newUser.id,
-      role: newUser.role,
-      name: newUser.name,
-      phone: newUser.phone,
-    });
-
-    return { success: true };
-  } catch (error) {
-    console.error("[registerClientAction] Error:", error);
-    return {
-      success: false,
-      error: "Gagal memproses pendaftaran. Silakan periksa koneksi dan coba lagi.",
-    };
-  }
+    const { code } = await issueOtp(email, input.purpose);
+    const result = await sendOtpEmail(email, code, input.purpose);
+    if (!result.sent && !result.devMode) {
+      throw new DomainError("EMAIL_SEND_FAILED", "Gagal mengirim email. Coba lagi.");
+    }
+    return result.devCode ? { devCode: result.devCode } : {};
+  });
 }
 
-/**
- * Register action untuk Mitra Vendor (VENDOR).
- * FormData keys: "name", "phone", "pin", "businessName", "category", "address"
- */
-export async function registerVendorAction(
-  formData: FormData
-): Promise<{ success: boolean; error?: string }> {
-  try {
-    const name = (formData.get("name") as string)?.trim();
-    const phone = (formData.get("phone") as string)?.trim();
-    const pin = (formData.get("pin") as string)?.trim();
-    const businessName = (formData.get("businessName") as string)?.trim();
-    const category = (formData.get("category") as string)?.trim();
-    const address = (formData.get("address") as string)?.trim();
-    const referralCode = (formData.get("referralCode") as string)?.trim() || null;
+/** Memverifikasi kode OTP; menyimpan otpId di cookie bila valid. */
+export async function verifyOtpAction(input: {
+  email: string;
+  purpose: OtpPurpose;
+  code: string;
+}): Promise<ActionResult<{ verified: true }>> {
+  return runAction(async () => {
+    const email = input.email?.trim().toLowerCase();
+    const { otpId } = await verifyOtp({ email, purpose: input.purpose, code: input.code?.trim() });
+    await setOtpCookie(otpId);
+    return { verified: true as const };
+  });
+}
 
-    if (!name || !phone || !pin || !businessName || !category || !address) {
-      return { success: false, error: "Semua field wajib diisi." };
-    }
-    if (!/^\d{6}$/.test(pin)) {
-      return { success: false, error: "PIN harus 6 digit angka." };
-    }
+/** Menyelesaikan registrasi (butuh OTP VERIFIED via cookie). */
+export async function completeRegistrationAction(input: {
+  name: string;
+  phone: string;
+  email: string;
+  pin: string;
+  role: string;
+  referralCode?: string;
+}): Promise<ActionResult<{ redirectTo: string }>> {
+  return runAction(async () => {
+    const email = input.email?.trim().toLowerCase();
+    const name = input.name?.trim();
+    const phone = input.phone?.trim();
+    const pin = input.pin?.trim();
 
-    const existing = await prisma.user.findUnique({ where: { phone } });
-    if (existing) {
-      return {
-        success: false,
-        error: "Nomor HP sudah terdaftar. Silakan login.",
-      };
+    const otpId = await readOtpCookie();
+    if (!otpId) throw new DomainError("OTP_NOT_FOUND", "Verifikasi OTP belum selesai.");
+    const otp = await prisma.otpCode.findUnique({ where: { id: otpId } });
+    if (!otp || otp.status !== "VERIFIED" || otp.email !== email || otp.purpose !== "REGISTER") {
+      throw new DomainError("OTP_NOT_FOUND", "Verifikasi OTP tidak valid. Ulangi.");
     }
+    if (!name || !phone || !PHONE_RE.test(phone)) {
+      throw new DomainError("INVALID_PHONE", "Data identitas tidak valid.");
+    }
+    if (!/^\d{6}$/.test(pin)) throw new DomainError("PIN_TOO_RECENT", "PIN harus 6 digit.");
 
+    const role = ["CLIENT", "VENDOR"].includes(input.role) ? input.role : "CLIENT";
     const hashedPin = await bcrypt.hash(pin, 10);
-    const newUser = await prisma.user.create({
-      data: {
-        name,
-        phone,
-        pin: hashedPin,
-        role: "VENDOR",
-        vendorProfile: {
-          create: {
-            businessName,
-            category,
-            address,
-            city: "Kebumen",
-          },
+
+    const newUser = await prisma.$transaction(async (tx) => {
+      const u = await tx.user.create({
+        data: {
+          name,
+          phone,
+          email,
+          pin: hashedPin,
+          role,
+          ...(role === "VENDOR"
+            ? {
+                vendorProfile: {
+                  create: { businessName: name, category: "katering", address: "-", city: "Kebumen" },
+                },
+              }
+            : {}),
         },
-      },
+      });
+      await tx.pinChangeLog.create({ data: { userId: u.id } });
+      await tx.otpCode.update({ where: { id: otpId }, data: { status: "CONSUMED" } });
+      return u;
     });
 
-    // Atribusi referral BA (opsional, aman bila kode invalid).
-    const createdVendor = await prisma.vendorProfile.findUnique({ where: { userId: newUser.id } });
-    if (createdVendor && referralCode) {
-      await attributeVendorToReferral(createdVendor.id, referralCode);
+    if (role === "VENDOR" && input.referralCode) {
+      const vp = await prisma.vendorProfile.findUnique({ where: { userId: newUser.id } });
+      if (vp) await attributeVendorToReferral(vp.id, input.referralCode);
     }
 
-    // Auto-login setelah register
+    await clearOtpCookie();
     await setSessionCookie({
       userId: newUser.id,
       role: newUser.role,
       name: newUser.name,
       phone: newUser.phone,
     });
+    return { redirectTo: getDashboardPath(newUser.role) };
+  });
+}
 
-    return { success: true };
-  } catch (error) {
-    console.error("[registerVendorAction] Error:", error);
-    return {
-      success: false,
-      error: "Gagal mendaftarkan vendor. Silakan periksa koneksi dan coba lagi.",
-    };
-  }
+/** Kirim OTP untuk reset PIN. */
+export async function sendResetOtpAction(
+  email: string
+): Promise<ActionResult<{ devCode?: string }>> {
+  return sendOtpAction({ email, purpose: "RESET_PIN" });
+}
+
+/** Set PIN baru setelah OTP VERIFIED (reset). */
+export async function resetPinAction(input: {
+  email: string;
+  pin: string;
+}): Promise<ActionResult<{ ok: true }>> {
+  return runAction(async () => {
+    const email = input.email?.trim().toLowerCase();
+    const pin = input.pin?.trim();
+    const otpId = await readOtpCookie();
+    if (!otpId) throw new DomainError("OTP_NOT_FOUND", "Verifikasi OTP belum selesai.");
+    const otp = await prisma.otpCode.findUnique({ where: { id: otpId } });
+    if (!otp || otp.status !== "VERIFIED" || otp.email !== email || otp.purpose !== "RESET_PIN") {
+      throw new DomainError("OTP_NOT_FOUND", "Verifikasi OTP tidak valid. Ulangi.");
+    }
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) throw new DomainError("OTP_NOT_FOUND", "Akun tidak ditemukan.");
+    await assertPinChangeAllowed(user.id);
+    if (!/^\d{6}$/.test(pin)) throw new DomainError("PIN_TOO_RECENT", "PIN harus 6 digit.");
+
+    const hashedPin = await bcrypt.hash(pin, 10);
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({ where: { id: user.id }, data: { pin: hashedPin } });
+      await tx.pinChangeLog.create({ data: { userId: user.id } });
+      await tx.otpCode.update({ where: { id: otpId }, data: { status: "CONSUMED" } });
+    });
+    await clearOtpCookie();
+    await sendPinChangedEmail(email, user.name);
+    return { ok: true as const };
+  });
 }
