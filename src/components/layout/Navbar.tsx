@@ -7,7 +7,7 @@ import { HariKitaLogo } from "@/components/brand/HariKitaLogo";
 import { Sparkles, Compass, Mail, UserCheck, Menu, X, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const Navbar = () => {
+export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -76,14 +76,16 @@ export const Navbar = () => {
 
         {/* Sisi Kanan: Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Login Button */}
-          <Link
-            href="/auth/login"
-            className="flex h-8 items-center gap-1.5 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:border-hk-taupe hover:bg-hk-ivory transition-all"
-          >
-            <UserCheck className="h-3.5 w-3.5 text-hk-taupe" />
-            <span>Login</span>
-          </Link>
+          {/* Login Button — hanya tampil bila belum login */}
+          {!isLoggedIn && (
+            <Link
+              href="/auth/login"
+              className="flex h-8 items-center gap-1.5 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:border-hk-taupe hover:bg-hk-ivory transition-all"
+            >
+              <UserCheck className="h-3.5 w-3.5 text-hk-taupe" />
+              <span>Login</span>
+            </Link>
+          )}
 
           {/* Builder CTA Button */}
           <Link
@@ -143,17 +145,19 @@ export const Navbar = () => {
             })}
           </div>
 
-          {/* Login Link */}
-          <div className="pt-2 border-t border-hk-champagne/40">
-            <Link
-              href="/auth/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full rounded-xl border border-hk-champagne/60 bg-white py-2.5 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:bg-hk-ivory transition-all"
-            >
-              <UserCheck className="h-4 w-4 text-hk-taupe" />
-              <span>Login</span>
-            </Link>
-          </div>
+          {/* Login Link — hanya tampil bila belum login */}
+          {!isLoggedIn && (
+            <div className="pt-2 border-t border-hk-champagne/40">
+              <Link
+                href="/auth/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full rounded-xl border border-hk-champagne/60 bg-white py-2.5 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:bg-hk-ivory transition-all"
+              >
+                <UserCheck className="h-4 w-4 text-hk-taupe" />
+                <span>Login</span>
+              </Link>
+            </div>
+          )}
 
           {/* Full-width Builder Button */}
           <div className="pt-1">
