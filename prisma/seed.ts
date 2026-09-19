@@ -46,8 +46,10 @@ async function main() {
   });
 
   // Brand Ambassador (BA) demo — merekrut vendor lewat kode referral.
+  const baUserId = "ba-demo-001";
   const baUser = await prisma.user.create({
     data: {
+      id: baUserId,
       name: "Rina Brand Ambassador",
       phone: "081200000001",
       email: "ba@harikita.id",
@@ -56,7 +58,29 @@ async function main() {
     },
   });
 
-  await prisma.brandAmbassador.create({
+  const ba2User = await prisma.user.create({
+    data: {
+      id: "ba-demo-002",
+      name: "Dwi Gombong Ambassador",
+      phone: "081200000002",
+      email: "dwi.ba@harikita.id",
+      pin: DEFAULT_PIN,
+      role: "BA",
+    },
+  });
+
+  const ba3User = await prisma.user.create({
+    data: {
+      id: "ba-demo-003",
+      name: "Sari Karanganyar Ambassador",
+      phone: "081200000003",
+      email: "sari.ba@harikita.id",
+      pin: DEFAULT_PIN,
+      role: "BA",
+    },
+  });
+
+  const ba1 = await prisma.brandAmbassador.create({
     data: {
       userId: baUser.id,
       referralCode: "BA-KEBUMEN-2026",
@@ -66,10 +90,45 @@ async function main() {
       district: "Kebumen Kota",
       commissionPct: 5.0,
       isActive: true,
-      walletBalance: 0,
+      // Saldo = total komisi (150.000) - penarikan yang sudah diproses (100.000).
+      walletBalance: 50000,
       bankName: "BCA",
       bankAccount: "1234567890",
       bankHolder: "Rina Brand Ambassador",
+    },
+  });
+
+  const ba2 = await prisma.brandAmbassador.create({
+    data: {
+      userId: ba2User.id,
+      referralCode: "BA-GOMBONG-2026",
+      displayName: "Dwi BA Gombong",
+      phone: "081200000002",
+      city: "Kebumen",
+      district: "Gombong",
+      commissionPct: 7.0,
+      isActive: true,
+      walletBalance: 140000,
+      bankName: "Mandiri",
+      bankAccount: "136000998877",
+      bankHolder: "Dwi Gombong Ambassador",
+    },
+  });
+
+  await prisma.brandAmbassador.create({
+    data: {
+      userId: ba3User.id,
+      referralCode: "BA-KARANGANYAR-2026",
+      displayName: "Sari BA Karanganyar",
+      phone: "081200000003",
+      city: "Kebumen",
+      district: "Karanganyar",
+      commissionPct: 5.0,
+      isActive: false, // Contoh BA nonaktif.
+      walletBalance: 0,
+      bankName: "BRI",
+      bankAccount: "003921829381",
+      bankHolder: "Sari Karanganyar Ambassador",
     },
   });
 
@@ -284,6 +343,21 @@ async function main() {
     },
   ];
 
+  // Vendor yang direkrut BA (berdasarkan indeks vendorsData):
+  //   0 = Menganti (BA-1), 4 = Pradana Cinema (BA-1), 6 = Dapur Rasa Boga (BA-2)
+  const recruiterByIndex: Record<number, string> = {
+    0: ba1.id,
+    4: ba1.id,
+    6: ba2.id,
+  };
+
+  const createdVendors: Array<{
+    id: string;
+    businessName: string;
+    packageId: string;
+    basePrice: number;
+  }> = [];
+
   for (let i = 0; i < vendorsData.length; i++) {
     const item = vendorsData[i];
     const user = await prisma.user.create({
@@ -310,10 +384,11 @@ async function main() {
         bankAccount: item.bankAccount,
         bankHolder: item.bankHolder,
         walletBalance: 1500000,
+        recruitedById: recruiterByIndex[i] ?? null,
       },
     });
 
-    await prisma.servicePackage.create({
+    const pkg = await prisma.servicePackage.create({
       data: {
         vendorId: vendor.id,
         category: item.category,
@@ -328,7 +403,112 @@ async function main() {
         imageUrl: item.imageUrl,
       },
     });
+
+    createdVendors.push({
+      id: vendor.id,
+      businessName: item.businessName,
+      packageId: pkg.id,
+      basePrice: item.basePrice,
+    });
   }
+
+  // 2b. Riwayat komisi BA — order tuntas dari vendor rekrutan.
+  //     Komisi = floor(subtotal * commissionPct / 100), exact-once per OrderItem.
+  const commissionSeeds: Array<{
+    ambassadorId: string;
+    pct: number;
+    vendorIndex: number;
+    subtotal: number;
+    status: string;
+  }> = [
+    // BA-1 (5%) — 2 komisi dari Menganti & Pradana.
+    { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 0, subtotal: 3500000, status: "CREDITED" }, // 175.000
+    { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 4, subtotal: 4200000, status: "CREDITED" }, // 210.000
+    // BA-2 (7%) — komisi dari Dapur Rasa Boga.
+    { ambassadorId: ba2.id, pct: 7.0, vendorIndex: 6, subtotal: 4500000, status: "CREDITED" }, // 315.000
+  ];
+
+  for (let i = 0; i < commissionSeeds.length; i++) {
+    const seed = commissionSeeds[i];
+    const vendor = createdVendors[seed.vendorIndex];
+    const commissionAmount = Math.floor((seed.subtotal * seed.pct) / 100);
+
+    const order = await prisma.order.create({
+      data: {
+        orderNumber: `HKB-BA-${(i + 1).toString().padStart(3, "0")}`,
+        userId: clientUser.id,
+        clientName: "Bima & Citra",
+        clientPhone: "081987654321",
+        eventDate: new Date(`2026-1${(i % 2) + 1}-15T09:00:00Z`),
+        city: "Kebumen",
+        totalAmount: seed.subtotal,
+        status: "COMPLETED",
+      },
+    });
+
+    const orderItem = await prisma.orderItem.create({
+      data: {
+        orderId: order.id,
+        vendorId: vendor.id,
+        packageId: vendor.packageId,
+        vendorNameSnapshot: vendor.businessName,
+        categorySlug: vendor.businessName.toLowerCase().replace(/\s+/g, "-"),
+        serviceName: vendor.businessName,
+        unitType: "all_in",
+        quantity: 1,
+        unitPrice: seed.subtotal,
+        subtotal: seed.subtotal,
+        status: "ACCEPTED",
+      },
+    });
+
+    await prisma.ambassadorCommission.create({
+      data: {
+        ambassadorId: seed.ambassadorId,
+        orderId: order.id,
+        orderItemId: orderItem.id,
+        vendorId: vendor.id,
+        baseAmount: seed.subtotal,
+        commissionPct: seed.pct,
+        commissionAmount,
+        status: seed.status,
+      },
+    });
+  }
+
+  // 2c. Riwayat penarikan dompet BA.
+  await prisma.ambassadorWithdrawal.createMany({
+    data: [
+      {
+        ambassadorId: ba1.id,
+        amount: 100000,
+        status: "PAID",
+        bankName: "BCA",
+        bankAccount: "1234567890",
+        bankHolder: "Rina Brand Ambassador",
+        processedAt: new Date("2026-09-10T10:00:00Z"),
+        note: "Transfer berhasil.",
+      },
+      {
+        ambassadorId: ba1.id,
+        amount: 50000,
+        status: "PENDING",
+        bankName: "BCA",
+        bankAccount: "1234567890",
+        bankHolder: "Rina Brand Ambassador",
+      },
+      {
+        ambassadorId: ba2.id,
+        amount: 75000,
+        status: "REJECTED",
+        bankName: "Mandiri",
+        bankAccount: "136000998877",
+        bankHolder: "Dwi Gombong Ambassador",
+        processedAt: new Date("2026-09-12T14:30:00Z"),
+        note: "Nomor rekening tidak valid.",
+      },
+    ],
+  });
 
   // 3. Mock Digital Invitation (Autumnelle preset as initial demonstration)
   const invitation = await prisma.digitalInvitation.create({
@@ -413,6 +593,15 @@ async function main() {
   });
 
   console.log("Seeding finished successfully! 11 Kebumen categories seeded.");
+  console.log("");
+  console.log("=== AKUN DEMO HARI KITA (PIN semua: 123456) ===");
+  console.log("Super Admin : 081234567890  -> /auth/login/admin");
+  console.log("Pengantin   : 081987654321  -> /auth/login");
+  console.log("Vendor      : 081300000001  -> /auth/login");
+  console.log("Brand Ambassador:");
+  console.log("  [AKTIF]   : 081200000001  (Rina BA Kebumen, komisi 5%, kode BA-KEBUMEN-2026) -> /auth/login/ba");
+  console.log("  [AKTIF]   : 081200000002  (Dwi BA Gombong, komisi 7%, kode BA-GOMBONG-2026) -> /auth/login/ba");
+  console.log("  [NONAKTIF]: 081200000003  (Sari BA Karanganyar, komisi 5%, kode BA-KARANGANYAR-2026) -> /auth/login/ba");
 }
 
 main()
