@@ -87,3 +87,29 @@ export function getLoginPath(role: string): string {
       return "/auth/login";
   }
 }
+
+const OTP_COOKIE_NAME = "hk_otp";
+const OTP_COOKIE_MAX_AGE = 60 * 10; // 10 menit
+
+/** Menyimpan id OTP terverifikasi sementara (anti-bypass). */
+export async function setOtpCookie(otpId: string): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(OTP_COOKIE_NAME, otpId, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: OTP_COOKIE_MAX_AGE,
+  });
+}
+
+/** Membaca id OTP dari cookie (atau null). */
+export async function readOtpCookie(): Promise<string | null> {
+  const cookieStore = await cookies();
+  return cookieStore.get(OTP_COOKIE_NAME)?.value ?? null;
+}
+
+/** Menghapus cookie OTP. */
+export async function clearOtpCookie(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete(OTP_COOKIE_NAME);
+}
