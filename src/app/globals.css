@@ -407,3 +407,30 @@ summary:focus-visible,
   background-color: #FECACA !important;
 }
 
+/* Utility: buat kalender daypicker mengisi lebar container secara merata.
+   Dipakai saat kalender ditanam penuh di dalam card (mis. kalender blackout
+   vendor), agar 7 kolom hari meregang mengisi lebar dan tidak menyisakan
+   ruang kosong di kiri/kanan. Scope via kelas pembungkus `.hk-daypicker-fill`
+   sehingga tidak memengaruhi pemakaian lain (mis. popover DatePicker). */
+.hk-daypicker-fill .rdp-root,
+.hk-daypicker-fill .rdp-months,
+.hk-daypicker-fill .rdp-month {
+  width: 100%;
+}
+
+.hk-daypicker-fill .rdp-month_grid {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.hk-daypicker-fill .rdp-weekday,
+.hk-daypicker-fill .rdp-day {
+  width: auto;
+}
+
+.hk-daypicker-fill .rdp-day_button {
+  width: 100%;
+  max-width: var(--rdp-day_button-width, 40px);
+  margin-inline: auto;
+}
+
