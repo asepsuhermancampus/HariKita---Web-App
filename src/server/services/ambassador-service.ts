@@ -4,6 +4,23 @@ import { ambassadorJournalNumber, LEDGER_ACCOUNTS } from "./ledger-service";
 
 export type AmbassadorTx = Prisma.TransactionClient;
 
+/**
+ * Deteksi pelanggaran unique constraint Prisma (P2002) pada field tertentu.
+ * Mirror idiom module-private `isUniqueConstraintOn` di ledger-service.
+ */
+function isUniqueConstraintOn(error: unknown, ...fields: string[]): boolean {
+  if (!error || typeof error !== "object") return false;
+  const e = error as { code?: unknown; meta?: { target?: unknown } };
+  if (e.code !== "P2002") return false;
+  const target = e.meta?.target;
+  const matches = (t: string) => fields.some((field) => t.includes(field));
+  if (Array.isArray(target)) return target.some((t) => typeof t === "string" && matches(t));
+  if (typeof target === "string") return matches(target);
+  // Sebagian driver tidak menyertakan meta.target; perlakukan P2002 tanpa target
+  // sebagai collision yang perlu di-*reread* (aman: reread memutuskan no-op).
+  return target === undefined;
+}
+
 /** Membuat kode referral unik format BA-<KOTA>-<4 char>. */
 export function generateReferralCode(city: string = "Kebumen"): string {
   const cityPart = (city || "Kebumen")
@@ -82,34 +99,54 @@ export async function creditCommissionForOrder(
     }
 
     const journalNumber = ambassadorJournalNumber(item.id);
-    const journal = await tx.ledgerJournal.create({
-      data: {
-        journalNumber,
-        type: "AMBASSADOR_COMMISSION",
-        description: `Komisi BA ${ba.commissionPct}% untuk item ${item.id}`,
-        orderId,
-        entries: {
-          create: [
-            { accountId: LEDGER_ACCOUNTS.PLATFORM_FEE, debit: commissionAmount, credit: 0 },
-            { accountId: LEDGER_ACCOUNTS.AMBASSADOR_PAYABLE, debit: 0, credit: commissionAmount, entityId: ba.id },
-          ],
+    try {
+      const journal = await tx.ledgerJournal.create({
+        data: {
+          journalNumber,
+          type: "AMBASSADOR_COMMISSION",
+          description: `Komisi BA ${ba.commissionPct}% untuk item ${item.id}`,
+          orderId,
+          entries: {
+            create: [
+              { accountId: LEDGER_ACCOUNTS.PLATFORM_FEE, debit: commissionAmount, credit: 0 },
+              { accountId: LEDGER_ACCOUNTS.AMBASSADOR_PAYABLE, debit: 0, credit: commissionAmount, entityId: ba.id },
+            ],
+          },
         },
-      },
-    });
+      });
 
-    await tx.ambassadorCommission.create({
-      data: {
-        ambassadorId: ba.id,
-        orderId,
-        orderItemId: item.id,
-        vendorId: item.vendorId,
-        baseAmount,
-        commissionPct: ba.commissionPct,
-        commissionAmount,
-        status: "CREDITED",
-        ledgerJournalId: journal.id,
-      },
-    });
+      await tx.ambassadorCommission.create({
+        data: {
+          ambassadorId: ba.id,
+          orderId,
+          orderItemId: item.id,
+          vendorId: item.vendorId,
+          baseAmount,
+          commissionPct: ba.commissionPct,
+          commissionAmount,
+          status: "CREDITED",
+          ledgerJournalId: journal.id,
+        },
+      });
+    } catch (error) {
+      // Dua pemanggil concurrent / retry → P2002 pada journalNumber atau orderItemId.
+      // Idiom ledger-service.executePayout: reread lalu perlakukan sebagai no-op
+      // idempotent. Tidak menulis wallet, sehingga state tetap konsisten (tidak
+      // ada double-credit maupun orphan journal dari pemanggilan ini).
+      if (isUniqueConstraintOn(error, "journalNumber", "orderItemId")) {
+        const racedCommission = await tx.ambassadorCommission.findUnique({
+          where: { orderItemId: item.id },
+        });
+        const racedJournal = racedCommission
+          ? null
+          : await tx.ledgerJournal.findUnique({ where: { journalNumber } });
+        if (racedCommission || racedJournal) {
+          skipped++;
+          continue;
+        }
+      }
+      throw error;
+    }
 
     await tx.brandAmbassador.update({
       where: { id: ba.id },

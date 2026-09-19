@@ -97,3 +97,63 @@ test("does not credit for inactive ambassador", async () => {
   const res = await creditCommissionForOrder(order.id, prisma);
   assert.equal(res.created, 0);
 });
+
+test("idempotent no-op when journalNumber already exists (concurrent collision)", async () => {
+  const ba = await seedAmbassador(prisma, { commissionPct: 5.0 });
+  const v = await seedVendorWithRecruiter(prisma, { ambassadorId: ba.ambassadorId, commissionPct: 5.0, price: 1_000_000 });
+  const { order, item } = await makeOrder(v.vendorId, v.packageId, 1_000_000);
+
+  // Simulasi pemanggil concurrent yang lebih dulu menulis jurnal deterministik
+  // (ADVCOM-{item.id}) tanpa (belum) menulis AmbassadorCommission.
+  await prisma.ledgerJournal.create({
+    data: {
+      journalNumber: `ADVCOM-${item.id}`,
+      type: "AMBASSADOR_COMMISSION",
+      description: "concurrent winner",
+      orderId: order.id,
+      entries: {
+        create: [
+          { accountId: "4010_PLATFORM_FEE", debit: 50_000, credit: 0 },
+          { accountId: "2040_AMBASSADOR_PAYABLE", debit: 0, credit: 50_000 },
+        ],
+      },
+    },
+  });
+
+  // Harus tidak throw (P2002 pada journalNumber tertangkap → no-op), tidak double-credit.
+  const res = await creditCommissionForOrder(order.id, prisma);
+  assert.equal(res.created, 0);
+  assert.equal(res.skipped, 1);
+
+  const wallet = await prisma.brandAmbassador.findUnique({ where: { id: ba.ambassadorId } });
+  assert.equal(wallet!.walletBalance, 0);
+  const commissions = await prisma.ambassadorCommission.count();
+  assert.equal(commissions, 0);
+});
+
+test("idempotent no-op when AmbassadorCommission already exists", async () => {
+  const ba = await seedAmbassador(prisma, { commissionPct: 5.0 });
+  const v = await seedVendorWithRecruiter(prisma, { ambassadorId: ba.ambassadorId, commissionPct: 5.0, price: 1_000_000 });
+  const { order, item } = await makeOrder(v.vendorId, v.packageId, 1_000_000);
+
+  // Simulasi exact-once: commission untuk item ini sudah tercatat.
+  await prisma.ambassadorCommission.create({
+    data: {
+      ambassadorId: ba.ambassadorId,
+      orderId: order.id,
+      orderItemId: item.id,
+      vendorId: v.vendorId,
+      baseAmount: 1_000_000,
+      commissionPct: 5.0,
+      commissionAmount: 50_000,
+      status: "CREDITED",
+    },
+  });
+
+  const res = await creditCommissionForOrder(order.id, prisma);
+  assert.equal(res.created, 0);
+
+  const wallet = await prisma.brandAmbassador.findUnique({ where: { id: ba.ambassadorId } });
+  assert.equal(wallet!.walletBalance, 0);
+});
+
