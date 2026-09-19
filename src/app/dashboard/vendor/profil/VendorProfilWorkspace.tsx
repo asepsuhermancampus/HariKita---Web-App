@@ -69,34 +69,62 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
 
         <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8">
           {/* Studio Profile & Badges */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6">
-            {/* Visual Atelier Crest with WaxSeal Badge */}
-            <div className="relative shrink-0">
-              <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-4 ring-hk-champagne/30">
-                <Store className="w-10 h-10 sm:w-12 sm:h-12" />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 flex-1 min-w-0">
+            {/* Top Row on Mobile: Avatar + Badges beside it. On Desktop: Just the Avatar */}
+            <div className="flex sm:contents items-center gap-4 w-full sm:w-auto">
+              {/* Visual Atelier Crest with WaxSeal Badge */}
+              <div className="relative shrink-0">
+                <div className="w-18 h-18 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/30">
+                  <Store className="w-9 h-9 sm:w-11 sm:h-11 lg:w-12 lg:h-12" />
+                </div>
+                <div className="absolute -bottom-2 -right-2">
+                  <WaxSealBadge size="sm" title="Mitra Terkurasi HariKita Kebumen" />
+                </div>
               </div>
-              <div className="absolute -bottom-2 -right-2">
-                <WaxSealBadge size="sm" title="Mitra Terkurasi HariKita Kebumen" />
+
+              {/* Mobile-only Badges positioned next to Avatar (fills the empty right space!) */}
+              <div className="flex sm:hidden flex-col gap-1.5 min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <BadgePremium
+                    label={data.category.toUpperCase()}
+                    variant="pill"
+                    className="bg-white/90 border-hk-champagne text-hk-taupe text-[10px] px-2.5 py-0.5"
+                  />
+                  {data.isVerified && (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-semibold border border-emerald-200 shrink-0">
+                      <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
+                      <span>Mitra Terverifikasi</span>
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <span className="inline-flex items-center gap-1 text-[11px] text-amber-800 bg-amber-50/90 px-2.5 py-0.5 rounded-full border border-amber-200 font-manrope shrink-0">
+                    <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0" />
+                    <strong className="font-semibold">{data.rating.toFixed(1)}</strong>
+                    <span className="text-muted-foreground">({data.reviewCount} ulasan)</span>
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* Studio Identity Information */}
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
+            <div className="space-y-2 flex-1 min-w-0 w-full sm:w-auto">
+              {/* Desktop-only Badges (clean single row above title) */}
+              <div className="hidden sm:flex flex-wrap items-center gap-2">
                 <BadgePremium
                   label={data.category.toUpperCase()}
                   variant="pill"
-                  className="bg-white/90 border-hk-champagne text-hk-taupe text-[11px] sm:text-xs"
+                  className="bg-white/90 border-hk-champagne text-hk-taupe text-xs"
                 />
 
                 {data.isVerified && (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] sm:text-xs font-semibold border border-emerald-200">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     <span>Mitra Terverifikasi</span>
                   </span>
                 )}
 
-                <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs text-amber-800 bg-amber-50/90 px-2.5 sm:px-3 py-1 rounded-full border border-amber-200 font-manrope">
+                <span className="inline-flex items-center gap-1 text-xs text-amber-800 bg-amber-50/90 px-3 py-1 rounded-full border border-amber-200 font-manrope">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
                   <strong className="font-semibold">{data.rating.toFixed(1)}</strong>
                   <span className="text-muted-foreground">({data.reviewCount} ulasan)</span>
