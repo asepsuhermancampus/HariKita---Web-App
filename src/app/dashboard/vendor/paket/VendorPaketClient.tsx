@@ -250,7 +250,6 @@ export function VendorPaketClient({
                           className={`inline-flex items-center justify-center w-5 h-5 rounded-md bg-[#EDE6DC] hover:bg-[#E2D8CC] text-[#4A2E35] transition-all cursor-pointer shadow-xs ${
                             expandedFeeIds.includes(pkg.id) ? "bg-[#E2D8CC]" : ""
                           }`}
-                          title="Klik untuk melihat alokasi komisi 10%"
                           aria-label="Rincian alokasi komisi platform 10%"
                         >
                           <ChevronDown
@@ -303,10 +302,7 @@ export function VendorPaketClient({
                               <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
                                 <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
                                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                  <span
-                                    className="whitespace-nowrap"
-                                    title="Termasuk biaya transfer beda bank saat pencairan saldo ke rekening vendor, 100% ditanggung oleh HariKita tanpa potongan tambahan"
-                                  >
+                                  <span className="whitespace-nowrap">
                                     Semua Admin Ditanggung
                                   </span>
                                 </span>
