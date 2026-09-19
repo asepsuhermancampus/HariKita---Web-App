@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 export interface SessionData {
   userId: string;
-  role: string; // "CLIENT" | "VENDOR" | "ADMIN"
+  role: string; // "CLIENT" | "VENDOR" | "ADMIN" | "BA"
   name: string;
   phone: string;
 }
