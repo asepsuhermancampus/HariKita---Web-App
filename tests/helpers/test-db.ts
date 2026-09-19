@@ -172,3 +172,34 @@ export async function seedVendorWithRecruiter(
   });
   return { userId: user.id, vendorId: vendor.id, packageId: pkg.id, ambassadorId: opts.ambassadorId };
 }
+
+/** Membuat record OtpCode uji (kode default "123456"). */
+export async function seedOtpCode(
+  prisma: PrismaClient,
+  opts: {
+    email: string;
+    purpose?: "REGISTER" | "RESET_PIN";
+    status?: string;
+    attempts?: number;
+    expiresAt?: Date;
+    lockedUntil?: Date | null;
+    code?: string;
+    createdAt?: Date;
+  }
+) {
+  const bcrypt = (await import("bcryptjs")).default;
+  const code = opts.code ?? "123456";
+  const codeHash = await bcrypt.hash(code, 10);
+  return prisma.otpCode.create({
+    data: {
+      email: opts.email.toLowerCase(),
+      codeHash,
+      purpose: opts.purpose ?? "REGISTER",
+      status: opts.status ?? "PENDING",
+      attempts: opts.attempts ?? 0,
+      expiresAt: opts.expiresAt ?? new Date(Date.now() + 5 * 60 * 1000),
+      lockedUntil: opts.lockedUntil ?? null,
+      createdAt: opts.createdAt ?? new Date(),
+    },
+  });
+}
