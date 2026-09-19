@@ -199,7 +199,7 @@ export function VendorKalenderClient({
                   onSelect={(d) => setNewDate(d)}
                   blackoutDates={blackouts.map((b) => b.date)}
                   minDate={today}
-                  className="w-full"
+                  className="w-full [&_.rdp-root]:w-full [&_.rdp-months]:w-full [&_.rdp-month]:w-full [&_.rdp-month_grid]:w-full [&_.rdp-weekdays]:w-full [&_.rdp-week]:w-full [&_.rdp-day]:flex-1 [&_.rdp-day_button]:w-full"
                 />
               </div>
               <p className="mt-2 text-[11px] text-hk-charcoal/60 leading-relaxed">
