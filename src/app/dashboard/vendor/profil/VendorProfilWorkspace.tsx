@@ -69,37 +69,23 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
         <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8">
           {/* Studio Profile & Badges */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 flex-1 min-w-0">
-            {/* Top Row on Mobile: Avatar + Badges beside it. On Desktop: Just the Avatar */}
+            {/* Top Row on Mobile: Avatar + Title & Tagline beside it! On Desktop: Just the Avatar */}
             <div className="flex sm:contents items-center gap-3.5 sm:gap-6 w-full sm:w-auto">
-              {/* Visual Atelier Crest (Enlarged and Clean - Wax Seal removed for unobstructed branding) */}
+              {/* Visual Atelier Crest (Clean and Unobstructed Branding) */}
               <div className="shrink-0">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40 transition-transform hover:scale-[1.02]">
-                  <Store className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-hk-champagne" />
+                <div className="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40 transition-transform hover:scale-[1.02]">
+                  <Store className="w-10 h-10 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-hk-champagne" />
                 </div>
               </div>
 
-              {/* Mobile-only Badges positioned next to Avatar (fills the empty right space!) */}
-              <div className="flex sm:hidden flex-col justify-center gap-1.5 min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <BadgePremium
-                    label={data.category.toUpperCase()}
-                    variant="pill"
-                    className="bg-white/90 border-hk-champagne text-hk-taupe text-[10px] px-2.5 py-0.5"
-                  />
-                  {data.isVerified && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-semibold border border-emerald-200 shrink-0">
-                      <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
-                      <span>Mitra Terverifikasi</span>
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <span className="inline-flex items-center gap-1 text-[11px] text-amber-800 bg-amber-50/90 px-2.5 py-0.5 rounded-full border border-amber-200 font-manrope shrink-0">
-                    <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0" />
-                    <strong className="font-semibold">{data.rating.toFixed(1)}</strong>
-                    <span className="text-muted-foreground">({data.reviewCount} ulasan)</span>
-                  </span>
-                </div>
+              {/* Mobile-only: Title & Tagline directly beside the Logo! */}
+              <div className="min-w-0 flex-1 sm:hidden">
+                <h1 className="font-editorial text-2xl font-normal text-hk-charcoal tracking-tight leading-tight">
+                  {data.businessName}
+                </h1>
+                <p className="mt-0.5 font-editorial text-xs italic text-hk-taupe leading-snug">
+                  "Menyelaraskan Restu &amp; Impian di Tanah Kebumen"
+                </p>
               </div>
             </div>
 
@@ -127,8 +113,9 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
                 </span>
               </div>
 
-              <div>
-                <h1 className="font-editorial text-2xl sm:text-4xl lg:text-5xl font-normal text-hk-charcoal tracking-tight leading-tight">
+              {/* Desktop-only Title & Tagline */}
+              <div className="hidden sm:block">
+                <h1 className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-normal text-hk-charcoal tracking-tight leading-tight">
                   {data.businessName}
                 </h1>
                 <p className="mt-1 font-editorial text-base sm:text-lg lg:text-xl italic text-hk-taupe">
@@ -136,7 +123,8 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-y-1 gap-x-5 text-xs sm:text-sm text-hk-charcoal/80 font-manrope pt-0.5">
+              {/* Location & Penanggung Jawab */}
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-y-1 gap-x-5 text-xs sm:text-sm text-hk-charcoal/80 font-manrope pt-0.5 sm:pt-0">
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-hk-taupe shrink-0" />
                   Kecamatan {data.district}, Kabupaten {data.city}
@@ -144,6 +132,26 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
                 <span className="inline-flex items-center gap-1.5">
                   <Building2 className="w-3.5 h-3.5 text-hk-taupe shrink-0" />
                   Penanggung Jawab: <strong className="font-semibold text-hk-charcoal">{data.picName}</strong>
+                </span>
+              </div>
+
+              {/* Mobile-only Badges positioned cleanly BELOW Penanggung Jawab */}
+              <div className="flex sm:hidden flex-wrap items-center gap-1.5 pt-1.5">
+                <BadgePremium
+                  label={data.category.toUpperCase()}
+                  variant="pill"
+                  className="bg-white/90 border-hk-champagne text-hk-taupe text-[10px] px-2.5 py-0.5 shadow-2xs"
+                />
+                {data.isVerified && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-semibold border border-emerald-200 shrink-0 shadow-2xs">
+                    <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
+                    <span>Mitra Terverifikasi</span>
+                  </span>
+                )}
+                <span className="inline-flex items-center gap-1 text-[11px] text-amber-800 bg-amber-50/90 px-2.5 py-0.5 rounded-full border border-amber-200 font-manrope shrink-0 shadow-2xs">
+                  <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0" />
+                  <strong className="font-semibold">{data.rating.toFixed(1)}</strong>
+                  <span className="text-muted-foreground">({data.reviewCount} ulasan)</span>
                 </span>
               </div>
             </div>
