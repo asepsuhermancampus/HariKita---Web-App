@@ -127,40 +127,40 @@ export function VendorKalenderClient({
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#4A2E35] py-8">
+    <div className="min-h-screen bg-hk-canvas text-hk-charcoal py-8 font-manrope">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Header Breadcrumb */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="text-xs text-[#6B5E62] flex items-center gap-1 mb-1">
-              <Link href="/dashboard/vendor" className="hover:text-[#4A2E35]">
+            <div className="text-xs text-hk-charcoal/70 flex items-center gap-1 mb-1">
+              <Link href="/dashboard/vendor" className="hover:text-hk-charcoal">
                 Portal Mitra Vendor
               </Link>
               <span>/</span>
-              <span className="text-[#4A2E35] font-medium">Kalender Blackout</span>
+              <span className="text-hk-charcoal font-medium">Kalender Blackout</span>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A2E35]">
+            <h1 className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal">
               Kalender Blackout Dates
             </h1>
-            <p className="text-xs text-[#6B5E62] mt-0.5">
+            <p className="text-xs text-hk-charcoal/70 mt-0.5">
               Kunci tanggal di mana jadwal Anda sudah terisi di luar platform HariKita atau saat libur operasional.
             </p>
           </div>
 
           <Link
             href="/hub-koordinasi"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4A2E35] text-white text-xs font-semibold hover:bg-[#6B5E62] transition-colors shadow-sm self-start"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-hk-taupe text-white text-xs font-semibold hover:bg-hk-charcoal transition-colors shadow-sm self-start"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#C5A880]" />
+            <Sparkles className="w-3.5 h-3.5 text-hk-champagne" />
             Cek Matriks Ketersediaan
           </Link>
         </div>
 
         {/* Lock Date Form Card */}
-        <div className="bg-white rounded-2xl border border-[#C5A880]/30 shadow-sm p-5 sm:p-6 space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#FAF8F5] pb-3">
-            <Lock className="w-5 h-5 text-[#C5A880]" />
-            <h3 className="font-serif text-base font-bold text-[#4A2E35]">
+        <div className="bg-white rounded-2xl border border-hk-champagne/40 shadow-sm p-5 sm:p-6 space-y-4">
+          <div className="flex items-center gap-2 border-b border-hk-soft-beige pb-3">
+            <Lock className="w-5 h-5 text-hk-champagne" />
+            <h3 className="font-editorial text-lg font-bold text-hk-charcoal">
               Kunci Tanggal Offline Baru
             </h3>
           </div>
@@ -169,17 +169,17 @@ export function VendorKalenderClient({
             {/* Kalender pemilih tanggal (daypicker) — menggantikan slot "Tanggal Terpilih" */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-[#4A2E35] font-semibold">
+                <label className="block text-hk-charcoal font-semibold">
                   Pilih Tanggal: <span className="text-red-500">*</span>
                 </label>
                 {newDate ? (
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#4A2E35] bg-[#FAF8F5] border border-[#C5A880]/40 px-2.5 py-1 rounded-lg">
-                    <Calendar className="w-3.5 h-3.5 text-[#C5A880]" />
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-hk-charcoal bg-hk-canvas border border-hk-champagne/40 px-2.5 py-1 rounded-lg">
+                    <Calendar className="w-3.5 h-3.5 text-hk-taupe" />
                     {newDate}
                     <button
                       type="button"
                       onClick={() => setNewDate("")}
-                      className="text-[#6B5E62] hover:text-[#4A2E35] transition-colors"
+                      className="text-hk-charcoal/60 hover:text-hk-charcoal transition-colors"
                       title="Kosongkan pilihan tanggal"
                       aria-label="Kosongkan pilihan tanggal"
                     >
@@ -187,12 +187,12 @@ export function VendorKalenderClient({
                     </button>
                   </span>
                 ) : (
-                  <span className="text-[11px] italic text-[#6B5E62]">
+                  <span className="text-[11px] italic text-hk-charcoal/60">
                     Belum ada tanggal dipilih
                   </span>
                 )}
               </div>
-              <div className="flex justify-center rounded-2xl border border-[#E5D7C7] bg-[#FAF8F5] p-2">
+              <div className="flex justify-center rounded-2xl border border-hk-champagne/40 bg-hk-canvas p-2">
                 <DayPickerCalendar
                   bare
                   selected={newDate}
@@ -202,7 +202,7 @@ export function VendorKalenderClient({
                   className="w-full"
                 />
               </div>
-              <p className="mt-2 text-[11px] text-[#6B5E62] leading-relaxed">
+              <p className="mt-2 text-[11px] text-hk-charcoal/60 leading-relaxed">
                 Klik tanggal untuk dipilih. Tanggal merah sudah terkunci; tanggal lampau
                 (redup) hanya sebagai riwayat dan tidak bisa dikunci.
               </p>
@@ -211,13 +211,13 @@ export function VendorKalenderClient({
             {/* Panel alasan + aksi */}
             <div className="space-y-3">
               <div>
-                <label className="block text-[#4A2E35] font-semibold mb-1">
+                <label className="block text-hk-charcoal font-semibold mb-1">
                   Alasan Penguncian:
                 </label>
                 <select
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-[#E5D7C7] focus:outline-none focus:border-[#C5A880]"
+                  className="w-full p-2.5 rounded-xl border border-hk-champagne/50 bg-white text-hk-charcoal focus:outline-none focus:border-hk-taupe"
                 >
                   <option value="Sudah Dipesan Offline">Sudah Dipesan Offline</option>
                   <option value="Libur Kru / Istirahat">Libur Kru / Istirahat</option>
@@ -227,9 +227,9 @@ export function VendorKalenderClient({
               <button
                 type="submit"
                 disabled={isPending || !newDate}
-                className="w-full py-3 px-4 rounded-xl bg-[#4A2E35] text-white font-semibold hover:bg-[#6B5E62] transition-colors flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 px-4 rounded-xl bg-hk-taupe text-white font-semibold hover:bg-hk-charcoal transition-colors flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Lock className="w-3.5 h-3.5 text-[#C5A880]" />
+                <Lock className="w-3.5 h-3.5 text-hk-champagne" />
                 {isPending ? "Menyimpan..." : "Kunci Tanggal Ini"}
               </button>
             </div>
@@ -243,22 +243,22 @@ export function VendorKalenderClient({
         </div>
 
         {/* Daftar Tanggal Terkunci */}
-        <div className="bg-white rounded-2xl border border-[#C5A880]/30 shadow-sm p-5 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b border-[#FAF8F5] pb-3">
+        <div className="bg-white rounded-2xl border border-hk-champagne/40 shadow-sm p-5 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b border-hk-soft-beige pb-3">
             <div>
-              <h3 className="font-serif text-base font-bold text-[#4A2E35]">
+              <h3 className="font-editorial text-lg font-bold text-hk-charcoal">
                 Daftar Tanggal Terkunci ({filteredBlackouts.length} Tanggal)
               </h3>
-              <span className="text-xs text-[#6B5E62]">
+              <span className="text-xs text-hk-charcoal/70">
                 Calon pengantin tidak dapat memesan jadwal pada tanggal ini.
               </span>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <Filter className="w-3.5 h-3.5 text-[#6B5E62]" />
+              <Filter className="w-3.5 h-3.5 text-hk-charcoal/60" />
               <select
                 value={listFilter}
                 onChange={(e) => setListFilter(e.target.value as ListFilter)}
-                className="p-2 rounded-xl border border-[#E5D7C7] text-xs text-[#4A2E35] focus:outline-none focus:border-[#C5A880]"
+                className="p-2 rounded-xl border border-hk-champagne/50 bg-white text-xs text-hk-charcoal focus:outline-none focus:border-hk-taupe"
                 aria-label="Filter daftar tanggal terkunci"
               >
                 <option value="all">Semua ({sortedBlackouts.length})</option>
@@ -269,7 +269,7 @@ export function VendorKalenderClient({
           </div>
 
           {filteredBlackouts.length === 0 ? (
-            <div className="text-center py-8 text-xs text-[#6B5E62]">
+            <div className="text-center py-8 text-xs text-hk-charcoal/60">
               {listFilter === "history"
                 ? "Belum ada riwayat tanggal terkunci yang terlewat."
                 : "Belum ada tanggal yang dikunci offline. Seluruh tanggal di kalender terbuka untuk pemesanan klien."}
@@ -283,26 +283,26 @@ export function VendorKalenderClient({
                     key={`${item.date}`}
                     className={`flex items-center justify-between p-3.5 rounded-xl border text-xs ${
                       past
-                        ? "bg-[#F3EFEA] border-[#E5D7C7] opacity-80"
-                        : "bg-[#FAF8F5] border-[#E5D7C7]"
+                        ? "bg-hk-soft-beige/40 border-hk-champagne/30 opacity-80"
+                        : "bg-hk-canvas border-hk-champagne/40"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
                       <div
                         className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                          past ? "bg-[#E5D7C7] text-[#6B5E62]" : "bg-red-100 text-red-800"
+                          past ? "bg-hk-soft-beige text-hk-charcoal/60" : "bg-red-100 text-red-800"
                         }`}
                       >
                         <Lock className="w-4 h-4" />
                       </div>
                       <div>
-                        <strong className="text-[#4A2E35] block font-mono text-sm">
+                        <strong className="text-hk-charcoal block font-mono text-sm">
                           {item.date}
                         </strong>
-                        <span className="text-[11px] text-[#6B5E62]">
+                        <span className="text-[11px] text-hk-charcoal/70">
                           {item.reason}
                           {past && (
-                            <span className="ml-1.5 inline-flex items-center gap-0.5 text-[10px] text-[#8A7A66]">
+                            <span className="ml-1.5 inline-flex items-center gap-0.5 text-[10px] text-hk-charcoal/50">
                               <History className="w-3 h-3" /> Riwayat
                             </span>
                           )}
@@ -312,7 +312,7 @@ export function VendorKalenderClient({
 
                     {past ? (
                       <span
-                        className="p-1.5 rounded-lg text-[#8A7A66] text-[11px] cursor-default"
+                        className="p-1.5 rounded-lg text-hk-charcoal/50 text-[11px] cursor-default"
                         title="Tanggal lampau tidak dapat dibuka kuncinya"
                       >
                         Terlewat
@@ -345,7 +345,7 @@ export function VendorKalenderClient({
             <button
               type="button"
               onClick={() => setConfirmRemoveDate(null)}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#E5D7C7] text-[#4A2E35] text-sm font-semibold hover:bg-[#FAF8F5] transition-colors"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-hk-champagne/50 text-hk-charcoal text-sm font-semibold hover:bg-hk-ivory transition-colors"
             >
               Batal
             </button>
@@ -359,11 +359,11 @@ export function VendorKalenderClient({
           </>
         }
       >
-        <p className="text-sm text-[#4A2E35] leading-relaxed">
+        <p className="text-sm text-hk-charcoal leading-relaxed">
           Buka kunci tanggal{" "}
           <strong className="font-mono">{confirmRemoveDate}</strong>?
         </p>
-        <p className="mt-2 text-xs text-[#6B5E62] leading-relaxed">
+        <p className="mt-2 text-xs text-hk-charcoal/70 leading-relaxed">
           Setelah dibuka, tanggal ini akan tersedia kembali dan dapat dipesan oleh calon
           pengantin di platform HariKita.
         </p>

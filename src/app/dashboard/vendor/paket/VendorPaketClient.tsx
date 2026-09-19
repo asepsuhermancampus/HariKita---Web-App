@@ -232,143 +232,113 @@ export function VendorPaketClient({
 
                   <p className="text-xs text-[#6B5E62] leading-relaxed">{pkg.description}</p>
 
-                  {/* Calculation Breakdown Box with Expandable Transparency Accordion */}
-                  <div className="rounded-xl bg-[#FAF8F5] border border-[#E5D7C7] p-3.5 text-xs transition-all">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div>
-                        <span className="text-[#6B5E62] block text-[11px]">Harga Publik (Klien Bayar):</span>
-                        <strong className="font-mono text-sm text-[#4A2E35]">
-                          {formatRupiah(pkg.basePrice)}
-                        </strong>
-                      </div>
-                      <div>
+                  {/* Calculation Breakdown Box with Floating Transparency Dropdown */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E5D7C7] text-xs">
+                    <div>
+                      <span className="text-[#6B5E62] block text-[11px]">Harga Publik (Klien Bayar):</span>
+                      <strong className="font-mono text-sm text-[#4A2E35]">
+                        {formatRupiah(pkg.basePrice)}
+                      </strong>
+                    </div>
+
+                    {/* Komisi Column with Floating Dropdown */}
+                    <div className="relative">
+                      <div className="flex items-center gap-1">
+                        <span className="text-[#6B5E62] text-[11px]">Komisi Platform HariKita (10%):</span>
                         <button
                           type="button"
                           onClick={() => toggleFeeBreakdown(pkg.id)}
-                          className="group inline-flex items-center gap-1.5 text-left cursor-pointer focus:outline-hidden"
-                          title="Klik untuk melihat rincian alokasi komisi platform 10%"
+                          className="p-0.5 rounded-md hover:bg-[#E8DED1]/60 text-[#C5A880] hover:text-[#4A2E35] transition-colors cursor-pointer"
+                          title="Klik untuk melihat alokasi komisi 10%"
                         >
-                          <span className="text-[#6B5E62] block text-[11px] group-hover:text-[#4A2E35] transition-colors underline decoration-dotted decoration-[#C5A880] underline-offset-2">
-                            Komisi Platform HariKita (10%):
-                          </span>
-                          <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#E8DED1]/60 group-hover:bg-[#C5A880]/20 transition-colors">
-                            <ChevronDown
-                              className={`w-3 h-3 text-[#C5A880] transition-transform duration-200 ${
-                                expandedFeeIds.includes(pkg.id) ? "rotate-180 text-[#4A2E35]" : "group-hover:translate-y-0.5"
-                              }`}
-                            />
-                          </span>
+                          <ChevronDown
+                            className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                              expandedFeeIds.includes(pkg.id) ? "rotate-180 text-[#4A2E35]" : ""
+                            }`}
+                          />
                         </button>
-                        <div className="font-mono text-sm text-red-700 font-semibold">
-                          - {formatRupiah(platformFee)}
-                        </div>
                       </div>
-                      <div>
-                        <span className="text-emerald-800 block text-[11px] font-semibold">Estimasi Bersih Vendor (90%):</span>
-                        <strong className="font-mono text-base text-emerald-700">
-                          {formatRupiah(netIncome)}
-                        </strong>
+
+                      <div className="font-mono text-sm text-red-700 font-semibold mt-0.5">
+                        - {formatRupiah(platformFee)}
                       </div>
+
+                      {/* Sleek Floating Dropdown Menu */}
+                      {expandedFeeIds.includes(pkg.id) && (
+                        <>
+                          {/* Backdrop to close on outside click */}
+                          <div
+                            className="fixed inset-0 z-30 cursor-default"
+                            onClick={() => toggleFeeBreakdown(pkg.id)}
+                          />
+
+                          {/* Floating Popover Container */}
+                          <div className="absolute left-0 top-full mt-2 z-40 w-72 sm:w-80 rounded-2xl bg-white border border-[#E5D7C7] shadow-xl shadow-[#4A2E35]/10 p-3.5 space-y-2 text-xs animate-in fade-in zoom-in-95 duration-150">
+                            <div className="flex items-center justify-between pb-2 border-b border-[#FAF8F5]">
+                              <div className="flex items-center gap-1.5 text-[#4A2E35] font-semibold text-xs">
+                                <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
+                                <span>Alokasi Komisi 10%</span>
+                              </div>
+                              <span className="font-mono font-bold text-xs text-red-700">
+                                - {formatRupiah(platformFee)}
+                              </span>
+                            </div>
+
+                            <div className="space-y-1.5 text-[11px]">
+                              <div className="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
+                                <span className="flex items-center gap-2 text-[#4A2E35]">
+                                  <Server className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
+                                  <span>Server Cloud &amp; Portofolio HD</span>
+                                </span>
+                                <span className="font-mono text-[10.5px] text-[#6B5E62]">3.5%</span>
+                              </div>
+
+                              <div className="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
+                                <span className="flex items-center gap-2 text-[#4A2E35]">
+                                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                  <span>Escrow &amp; Bebas Admin Bank</span>
+                                </span>
+                                <span className="font-mono text-[10.5px] text-[#6B5E62]">3.0%</span>
+                              </div>
+
+                              <div className="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
+                                <span className="flex items-center gap-2 text-[#4A2E35]">
+                                  <Sparkles className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
+                                  <span>Pemasaran &amp; SEO Kebumen</span>
+                                </span>
+                                <span className="font-mono text-[10.5px] text-[#6B5E62]">2.0%</span>
+                              </div>
+
+                              <div className="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
+                                <span className="flex items-center gap-2 text-[#4A2E35]">
+                                  <Headphones className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                                  <span>Bantuan CS &amp; Mediasi Jadwal</span>
+                                </span>
+                                <span className="font-mono text-[10.5px] text-[#6B5E62]">1.5%</span>
+                              </div>
+                            </div>
+
+                            {/* Net Income footer */}
+                            <div className="pt-2 border-t border-[#FAF8F5] flex items-center justify-between bg-emerald-50/80 px-2.5 py-1.5 rounded-xl">
+                              <span className="flex items-center gap-1.5 text-emerald-900 text-[11px] font-semibold">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                <span>Untung Bersih (90%)</span>
+                              </span>
+                              <strong className="font-mono text-emerald-700 text-xs font-bold">
+                                {formatRupiah(netIncome)}
+                              </strong>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
 
-                    {/* Expandable Transparency Breakdown Container */}
-                    {expandedFeeIds.includes(pkg.id) && (
-                      <div className="mt-3.5 pt-3.5 border-t border-[#E5D7C7]/70 space-y-3 animate-in fade-in-50 duration-200">
-                        <div className="flex items-center justify-between gap-2 flex-wrap">
-                          <div className="flex items-center gap-1.5 text-[#4A2E35] font-semibold text-xs">
-                            <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
-                            <span>Transparansi Alokasi Komisi 10% ({formatRupiah(platformFee)})</span>
-                          </div>
-                          <span className="text-[10px] text-[#6B5E62] bg-white px-2 py-0.5 rounded-full border border-[#E5D7C7]">
-                            Investasi Layanan &amp; Proteksi Mitra
-                          </span>
-                        </div>
-
-                        <p className="text-[11px] text-[#6B5E62] leading-relaxed">
-                          Komisi 10% dialokasikan secara transparan untuk membiayai operasional sistem, proteksi rekening bersama, pemasaran lokal Kebumen, dan pendampingan vendor tanpa biaya bulanan:
-                        </p>
-
-                        {/* 4 Pillars of Transparency Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-                          {/* 1. Cloud & Server Infrastructure */}
-                          <div className="p-2.5 rounded-lg bg-white border border-[#E5D7C7]/80 flex items-start gap-2">
-                            <div className="w-6 h-6 rounded-md bg-[#FAF8F5] border border-[#E5D7C7] flex items-center justify-center shrink-0 text-[#C5A880] mt-0.5">
-                              <Server className="w-3.5 h-3.5" />
-                            </div>
-                            <div className="space-y-0.5 min-w-0">
-                              <div className="flex items-center justify-between gap-1">
-                                <strong className="text-[#4A2E35] font-semibold text-[11px]">Server &amp; Cloud Uptime (3.5%)</strong>
-                                <span className="font-mono text-[10px] text-[#6B5E62]">{formatRupiah(Math.round(pkg.basePrice * 0.035))}</span>
-                              </div>
-                              <p className="text-[10.5px] text-[#6B5E62] leading-tight">
-                                Infrastruktur cloud Next.js uptime 99.9%, penyimpanan foto &amp; video portofolio HD, serta sertifikasi enkripsi data transaksi.
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* 2. Escrow Protection & Free Bank Transfer */}
-                          <div className="p-2.5 rounded-lg bg-white border border-[#E5D7C7]/80 flex items-start gap-2">
-                            <div className="w-6 h-6 rounded-md bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0 text-emerald-700 mt-0.5">
-                              <ShieldCheck className="w-3.5 h-3.5" />
-                            </div>
-                            <div className="space-y-0.5 min-w-0">
-                              <div className="flex items-center justify-between gap-1">
-                                <strong className="text-[#4A2E35] font-semibold text-[11px]">Proteksi Escrow &amp; QRIS (3.0%)</strong>
-                                <span className="font-mono text-[10px] text-[#6B5E62]">{formatRupiah(Math.round(pkg.basePrice * 0.030))}</span>
-                              </div>
-                              <p className="text-[10.5px] text-[#6B5E62] leading-tight">
-                                Jaminan uang muka (DP 30% H-3) &amp; pelunasan (70% H+2) aman di rekening bersama, proteksi anti-fraud, dan gratis biaya admin transfer bank.
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* 3. Hyperlocal Marketing Kebumen */}
-                          <div className="p-2.5 rounded-lg bg-white border border-[#E5D7C7]/80 flex items-start gap-2">
-                            <div className="w-6 h-6 rounded-md bg-[#FAF8F5] border border-[#E5D7C7] flex items-center justify-center shrink-0 text-[#C5A880] mt-0.5">
-                              <Sparkles className="w-3.5 h-3.5" />
-                            </div>
-                            <div className="space-y-0.5 min-w-0">
-                              <div className="flex items-center justify-between gap-1">
-                                <strong className="text-[#4A2E35] font-semibold text-[11px]">Promosi Wilayah Kebumen (2.0%)</strong>
-                                <span className="font-mono text-[10px] text-[#6B5E62]">{formatRupiah(Math.round(pkg.basePrice * 0.020))}</span>
-                              </div>
-                              <p className="text-[10.5px] text-[#6B5E62] leading-tight">
-                                Penempatan portofolio pada etalase katalog publik, optimasi SEO calon pengantin Kebumen, dan promosi paket simulator mix-and-match.
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* 4. Customer Care & Event Mediation */}
-                          <div className="p-2.5 rounded-lg bg-white border border-[#E5D7C7]/80 flex items-start gap-2">
-                            <div className="w-6 h-6 rounded-md bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 text-amber-700 mt-0.5">
-                              <Headphones className="w-3.5 h-3.5" />
-                            </div>
-                            <div className="space-y-0.5 min-w-0">
-                              <div className="flex items-center justify-between gap-1">
-                                <strong className="text-[#4A2E35] font-semibold text-[11px]">Mediasi &amp; Dukungan CS (1.5%)</strong>
-                                <span className="font-mono text-[10px] text-[#6B5E62]">{formatRupiah(Math.round(pkg.basePrice * 0.015))}</span>
-                              </div>
-                              <p className="text-[10.5px] text-[#6B5E62] leading-tight">
-                                Bantuan koordinasi jadwal fitting &amp; tes fisik, tim resolusi independen jika ada revisi, dan customer service siaga H-30 hingga Hari H.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Net Income Assurance Banner */}
-                        <div className="p-2.5 rounded-lg bg-emerald-50/90 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                          <div className="flex items-center gap-1.5 text-emerald-900 text-xs">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                            <span>
-                              <strong>Untung Bersih Hak Studio (90%):</strong> 100% hak Anda tanpa potongan tersembunyi lainnya.
-                            </span>
-                          </div>
-                          <span className="font-mono font-bold text-sm text-emerald-800 shrink-0 self-end sm:self-auto">
-                            = {formatRupiah(netIncome)}
-                          </span>
-                        </div>
-                      </div>
-                    )}
+                    <div>
+                      <span className="text-emerald-800 block text-[11px] font-semibold">Estimasi Bersih Vendor (90%):</span>
+                      <strong className="font-mono text-base text-emerald-700">
+                        {formatRupiah(netIncome)}
+                      </strong>
+                    </div>
                   </div>
 
                   <div className="flex justify-end gap-2 pt-1">
