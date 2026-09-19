@@ -18,6 +18,9 @@ async function main() {
   await prisma.order.deleteMany();
   await prisma.servicePackage.deleteMany();
   await prisma.blackoutDate.deleteMany();
+  await prisma.ambassadorCommission.deleteMany();
+  await prisma.ambassadorWithdrawal.deleteMany();
+  await prisma.brandAmbassador.deleteMany();
   await prisma.vendorProfile.deleteMany();
   await prisma.user.deleteMany();
 
@@ -39,6 +42,34 @@ async function main() {
       email: "bima.citra@gmail.com",
       pin: DEFAULT_PIN,
       role: "CLIENT",
+    },
+  });
+
+  // Brand Ambassador (BA) demo — merekrut vendor lewat kode referral.
+  const baUser = await prisma.user.create({
+    data: {
+      name: "Rina Brand Ambassador",
+      phone: "081200000001",
+      email: "ba@harikita.id",
+      pin: DEFAULT_PIN,
+      role: "BA",
+    },
+  });
+
+  await prisma.brandAmbassador.create({
+    data: {
+      userId: baUser.id,
+      referralCode: "BA-KEBUMEN-2026",
+      displayName: "Rina BA Kebumen",
+      phone: "081200000001",
+      city: "Kebumen",
+      district: "Kebumen Kota",
+      commissionPct: 5.0,
+      isActive: true,
+      walletBalance: 0,
+      bankName: "BCA",
+      bankAccount: "1234567890",
+      bankHolder: "Rina Brand Ambassador",
     },
   });
 

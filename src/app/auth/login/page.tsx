@@ -7,6 +7,7 @@ import {
   Heart,
   Store,
   ShieldAlert,
+  Megaphone,
   ArrowRight,
   ChevronLeft,
   Eye,
@@ -14,24 +15,25 @@ import {
 } from "lucide-react";
 import { loginAction } from "@/server/actions/auth";
 
+type LoginRole = "client" | "vendor" | "admin" | "ba";
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "";
 
-  const [selectedRole, setSelectedRole] = useState<
-    "client" | "vendor" | "admin"
-  >("client");
+  const [selectedRole, setSelectedRole] = useState<LoginRole>("client");
   const [phone, setPhone] = useState("");
   const [pin, setPin] = useState("");
   const [showPin, setShowPin] = useState(false);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  const DEMO_ACCOUNTS = {
+  const DEMO_ACCOUNTS: Record<LoginRole, { phone: string; pin: string; label: string }> = {
     client: { phone: "081987654321", pin: "123456", label: "Pengantin (Bima & Citra)" },
     vendor: { phone: "081300000001", pin: "123456", label: "Vendor (Menganti Studio)" },
     admin: { phone: "081234567890", pin: "123456", label: "Super Admin HariKita" },
+    ba: { phone: "081200000001", pin: "123456", label: "Brand Ambassador (Kebumen)" },
   };
 
   const executeLogin = (loginPhone: string, loginPin: string) => {
@@ -62,7 +64,7 @@ function LoginForm() {
     executeLogin(phone, pin);
   };
 
-  const handleSelectRole = (role: "client" | "vendor" | "admin") => {
+  const handleSelectRole = (role: LoginRole) => {
     setSelectedRole(role);
     setError("");
     const demo = DEMO_ACCOUNTS[role];
@@ -70,7 +72,7 @@ function LoginForm() {
     setPin(demo.pin);
   };
 
-  const handleDirectLogin = (role: "client" | "vendor" | "admin") => {
+  const handleDirectLogin = (role: LoginRole) => {
     setSelectedRole(role);
     const demo = DEMO_ACCOUNTS[role];
     setPhone(demo.phone);
@@ -104,20 +106,24 @@ function LoginForm() {
             <span className="block text-xs font-semibold text-[#4A2E35]" id="role-group-label">
               Pilih Peran Akun:
             </span>
-            <div className="grid grid-cols-3 gap-2" role="group" aria-labelledby="role-group-label">
-              {(["client", "vendor", "admin"] as const).map((role) => {
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="group" aria-labelledby="role-group-label">
+              {(["client", "vendor", "admin", "ba"] as const).map((role) => {
                 const Icon =
                   role === "client"
                     ? Heart
                     : role === "vendor"
                     ? Store
-                    : ShieldAlert;
+                    : role === "admin"
+                    ? ShieldAlert
+                    : Megaphone;
                 const label =
                   role === "client"
                     ? "Pengantin"
                     : role === "vendor"
                     ? "Mitra Vendor"
-                    : "Super Admin";
+                    : role === "admin"
+                    ? "Super Admin"
+                    : "Brand Ambassador";
                 return (
                   <button
                     key={role}
@@ -131,7 +137,7 @@ function LoginForm() {
                     }`}
                   >
                     <Icon className="w-4 h-4 text-[#C5A880]" />
-                    <span>{label}</span>
+                    <span className="text-center leading-tight">{label}</span>
                   </button>
                 );
               })}
@@ -240,14 +246,24 @@ function LoginForm() {
               </span>
               <span className="text-[10px] text-[#C5A880] font-mono">PIN: 123456</span>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              {(["client", "vendor", "admin"] as const).map((role) => {
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {(["client", "vendor", "admin", "ba"] as const).map((role) => {
                 const label =
                   role === "client"
                     ? "Pengantin"
                     : role === "vendor"
                     ? "Vendor"
-                    : "Admin";
+                    : role === "admin"
+                    ? "Admin"
+                    : "BA";
+                const sub =
+                  role === "client"
+                    ? "Bima & Citra"
+                    : role === "vendor"
+                    ? "Menganti"
+                    : role === "admin"
+                    ? "Super Admin"
+                    : "Brand Ambassador";
                 return (
                   <button
                     key={role}
@@ -257,8 +273,8 @@ function LoginForm() {
                     className="focus-ring py-2 px-1 rounded-xl bg-[#FAF8F5] border border-[#E5D7C7] hover:border-[#C5A880] hover:bg-white text-[#4A2E35] font-semibold text-[11px] transition-all flex flex-col items-center gap-0.5 shadow-sm active:scale-95 disabled:opacity-50 min-h-[44px]"
                   >
                     <span>Masuk {label}</span>
-                    <span className="text-[9px] text-[#6B5E62]/70 font-normal">
-                      {role === "client" ? "Bima & Citra" : role === "vendor" ? "Menganti" : "Super Admin"}
+                    <span className="text-[9px] text-[#6B5E62]/70 font-normal text-center leading-tight">
+                      {sub}
                     </span>
                   </button>
                 );
