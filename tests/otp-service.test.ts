@@ -2,7 +2,7 @@ import { test, before, after, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { createTestDb, seedOtpCode, type TestDb } from "./helpers/test-db";
 import type { PrismaClient } from "@prisma/client";
-import { generateOtp, issueOtp, checkSendAllowed, verifyOtp, countDailyAttempts, assertDailyLimit } from "../src/server/services/otp-service";
+import { generateOtp, issueOtp, checkSendAllowed, verifyOtp, countDailyAttempts, assertDailyLimit, assertPinChangeAllowed } from "../src/server/services/otp-service";
 let ctx: TestDb;
 let prisma: PrismaClient;
 
@@ -100,4 +100,16 @@ test("assertDailyLimit throws at 9 attempts within WIB day", async () => {
   }
   assert.equal(await countDailyAttempts("d@b.com", new Date(), prisma), 9);
   await assert.rejects(() => assertDailyLimit("d@b.com", prisma), /OTP_DAILY_LIMIT/);
+});
+
+test("assertPinChangeAllowed throws PIN_TOO_RECENT within 14 days", async () => {
+  const user = await prisma.user.create({ data: { name: "U", phone: "081100000001", role: "CLIENT" } });
+  await prisma.pinChangeLog.create({ data: { userId: user.id, changedAt: new Date(Date.now() - 3 * 86400000) } });
+  await assert.rejects(() => assertPinChangeAllowed(user.id, prisma), /PIN_TOO_RECENT/);
+});
+
+test("assertPinChangeAllowed passes after 14 days", async () => {
+  const user = await prisma.user.create({ data: { name: "V", phone: "081100000002", role: "CLIENT" } });
+  await prisma.pinChangeLog.create({ data: { userId: user.id, changedAt: new Date(Date.now() - 15 * 86400000) } });
+  await assertPinChangeAllowed(user.id, prisma); // tidak throw
 });

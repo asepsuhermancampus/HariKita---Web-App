@@ -145,5 +145,20 @@ export async function verifyOtp(
   return { otpId: row.id };
 }
 
+/** Throw PIN_TOO_RECENT bila PIN terakhir diubah < 14 hari lalu. */
+export async function assertPinChangeAllowed(userId: string, tx?: OtpTx): Promise<void> {
+  const db = tx ?? prisma;
+  const last = await db.pinChangeLog.findFirst({
+    where: { userId },
+    orderBy: { changedAt: "desc" },
+  });
+  if (last && Date.now() - last.changedAt.getTime() < PIN_COOLDOWN_MS) {
+    throw new DomainError(
+      "PIN_TOO_RECENT",
+      "PIN hanya dapat diubah setiap 14 hari sekali."
+    );
+  }
+}
+
 /** Helper internal: konfigurasi untuk test. */
 export const _otpConfig = { OTP_TTL_MS, MAX_ATTEMPTS, LOCK_MS, DAILY_LIMIT, PIN_COOLDOWN_MS };
