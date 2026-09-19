@@ -247,12 +247,15 @@ export function VendorPaketClient({
                         <button
                           type="button"
                           onClick={() => toggleFeeBreakdown(pkg.id)}
-                          className="p-0.5 rounded-md hover:bg-[#E8DED1]/60 text-[#C5A880] hover:text-[#4A2E35] transition-colors cursor-pointer"
+                          className={`inline-flex items-center justify-center w-5 h-5 rounded-md bg-[#EDE6DC] hover:bg-[#E2D8CC] text-[#4A2E35] transition-all cursor-pointer shadow-xs ${
+                            expandedFeeIds.includes(pkg.id) ? "bg-[#E2D8CC]" : ""
+                          }`}
                           title="Klik untuk melihat alokasi komisi 10%"
+                          aria-label="Rincian alokasi komisi platform 10%"
                         >
                           <ChevronDown
-                            className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                              expandedFeeIds.includes(pkg.id) ? "rotate-180 text-[#4A2E35]" : ""
+                            className={`w-3.5 h-3.5 stroke-[2.2] transition-transform duration-200 ${
+                              expandedFeeIds.includes(pkg.id) ? "rotate-180" : ""
                             }`}
                           />
                         </button>
