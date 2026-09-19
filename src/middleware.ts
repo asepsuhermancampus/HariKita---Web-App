@@ -33,6 +33,7 @@ function parseSession(cookieValue: string | undefined): SessionPayload | null {
 function getDashboardPath(role: string): string {
   if (role === "ADMIN") return "/admin";
   if (role === "VENDOR") return "/dashboard/vendor/profil";
+  if (role === "BA") return "/dashboard/ba";
   return "/client/profil";
 }
 
@@ -84,6 +85,22 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
     if (session.role !== "VENDOR" && session.role !== "ADMIN") {
+      return NextResponse.redirect(
+        new URL(getDashboardPath(session.role), request.url)
+      );
+    }
+    return NextResponse.next();
+  }
+
+  // ── 4. Proteksi /dashboard/ba/* → hanya BA atau ADMIN ──
+  //    Portal Brand Ambassador: dashboard, vendor, komisi, dan dompet BA.
+  if (pathname === "/dashboard/ba" || pathname.startsWith("/dashboard/ba/")) {
+    if (!session) {
+      const url = new URL("/auth/login", request.url);
+      url.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(url);
+    }
+    if (session.role !== "BA" && session.role !== "ADMIN") {
       return NextResponse.redirect(
         new URL(getDashboardPath(session.role), request.url)
       );

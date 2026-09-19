@@ -61,6 +61,8 @@ export function getDashboardPath(role: string): string {
       return "/admin";
     case "VENDOR":
       return "/dashboard/vendor/profil";
+    case "BA":
+      return "/dashboard/ba";
     case "CLIENT":
     default:
       return "/client/profil";
