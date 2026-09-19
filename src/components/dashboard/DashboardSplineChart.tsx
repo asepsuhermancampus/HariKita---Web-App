@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useRef } from "react";
-import { Calendar, ChevronDown, TrendingUp, Sparkles } from "lucide-react";
+import { Calendar, ChevronDown } from "lucide-react";
 import { calculateBezierSplinePath, formatCompactNumber } from "./dashboard-utils";
 
 export interface SplinePoint {
@@ -51,13 +51,13 @@ export function DashboardSplineChart({
     "90d": "3 Bulan Terakhir",
   };
 
-  // Dimensions
+  // Geometry dimensions tailored for both laptop and mobile responsiveness
   const svgWidth = 700;
-  const svgHeight = 270;
-  const paddingLeft = 45;
-  const paddingRight = 30;
-  const paddingTop = 45;
-  const paddingBottom = 40;
+  const svgHeight = 280;
+  const paddingLeft = 42;
+  const paddingRight = 28;
+  const paddingTop = 48;
+  const paddingBottom = 42;
 
   const chartW = svgWidth - paddingLeft - paddingRight;
   const chartH = svgHeight - paddingTop - paddingBottom;
@@ -102,13 +102,11 @@ export function DashboardSplineChart({
     });
   }, [maxValue, paddingTop, chartH]);
 
-  // Mouse hover event handler
-  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!containerRef.current || coordinates.length === 0) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mouseX = ((e.clientX - rect.left) / rect.width) * svgWidth;
+  // Helper to select nearest point by X position
+  const selectNearestPoint = (clientX: number, targetRect: DOMRect) => {
+    if (coordinates.length === 0) return;
+    const mouseX = ((clientX - targetRect.left) / targetRect.width) * svgWidth;
 
-    // Find nearest point
     let nearestIdx = 0;
     let minDistance = Infinity;
     coordinates.forEach((pt, i) => {
@@ -122,33 +120,74 @@ export function DashboardSplineChart({
     setHoveredIdx(nearestIdx);
   };
 
+  // Mouse hover event handler
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    selectNearestPoint(e.clientX, e.currentTarget.getBoundingClientRect());
+  };
+
+  // Touch event handler for mobile screens
+  const handleTouchMove = (e: React.TouchEvent<SVGSVGElement>) => {
+    if (e.touches.length === 0) return;
+    selectNearestPoint(e.touches[0].clientX, e.currentTarget.getBoundingClientRect());
+  };
+
   const activePoint = hoveredIdx !== null && coordinates[hoveredIdx] ? coordinates[hoveredIdx] : null;
+
+  // Smart tooltip positioning: 100% immune to edge clipping on left, right, and top borders
+  const tooltipStyle = useMemo(() => {
+    if (!activePoint) return { left: "50%", top: "50%", transform: "translate(-50%, -50%)" };
+
+    const xRatio = activePoint.x / svgWidth;
+    let translateX = "-50%";
+    let leftPct = (activePoint.x / svgWidth) * 100;
+
+    if (xRatio < 0.20) {
+      // Near left boundary: anchor left edge inside card
+      translateX = "0%";
+      leftPct = Math.max(2, (activePoint.x / svgWidth) * 100 - 1.5);
+    } else if (xRatio > 0.80) {
+      // Near right boundary: anchor right edge inside card
+      translateX = "-100%";
+      leftPct = Math.min(98, (activePoint.x / svgWidth) * 100 + 1.5);
+    }
+
+    const translateY =
+      activePoint.y < 95
+        ? "14px"
+        : "calc(-100% - 14px)";
+
+    return {
+      left: `${leftPct}%`,
+      top: `${(activePoint.y / svgHeight) * 100}%`,
+      transform: `translate(${translateX}, ${translateY})`,
+    };
+  }, [activePoint, svgWidth, svgHeight]);
 
   return (
     <div
       ref={containerRef}
-      className={`bg-white rounded-3xl p-6 sm:p-7 border border-hk-champagne/40 shadow-xs flex flex-col justify-between relative transition-all ${className}`}
+      className={`bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 border border-hk-champagne/40 shadow-xs flex flex-col justify-between relative transition-all ${className}`}
     >
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
         <div>
-          <h3 className="font-manrope font-semibold text-lg sm:text-xl text-hk-charcoal tracking-tight">
+          <h3 className="font-manrope font-semibold text-base sm:text-lg lg:text-xl text-hk-charcoal tracking-tight">
             {title}
           </h3>
         </div>
 
-        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+        <div className="flex items-center gap-2 sm:gap-2.5 self-stretch sm:self-auto justify-between sm:justify-end">
           {/* Date Range Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-hk-ivory border border-hk-champagne/50 text-xs font-manrope font-medium text-hk-charcoal">
-            <Calendar className="w-3.5 h-3.5 text-hk-taupe" />
-            <span>{dateRangeLabel}</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-hk-ivory border border-hk-champagne/50 text-[11px] sm:text-xs font-manrope font-medium text-hk-charcoal">
+            <Calendar className="w-3.5 h-3.5 text-hk-taupe shrink-0" />
+            <span className="truncate">{dateRangeLabel}</span>
           </div>
 
           {/* Timeframe Dropdown */}
-          <div className="relative">
+          <div className="relative shrink-0">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-hk-ivory border border-hk-champagne/50 text-xs font-manrope font-medium text-hk-charcoal hover:bg-white transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-hk-ivory border border-hk-champagne/50 text-[11px] sm:text-xs font-manrope font-medium text-hk-charcoal hover:bg-white transition-colors"
               aria-expanded={dropdownOpen}
             >
               <span>{timeframeLabels[timeframe]}</span>
@@ -156,7 +195,7 @@ export function DashboardSplineChart({
             </button>
 
             {dropdownOpen && (
-              <div className="absolute right-0 mt-1.5 w-40 bg-white rounded-2xl border border-hk-champagne/60 shadow-lg py-1.5 z-20 font-manrope text-xs animate-in fade-in-50 zoom-in-95">
+              <div className="absolute right-0 mt-1.5 w-38 sm:w-40 bg-white rounded-2xl border border-hk-champagne/60 shadow-lg py-1.5 z-30 font-manrope text-xs animate-in fade-in-50 zoom-in-95">
                 {(["7d", "30d", "90d"] as const).map((tf) => (
                   <button
                     key={tf}
@@ -180,11 +219,13 @@ export function DashboardSplineChart({
       </div>
 
       {/* SVG Chart Area */}
-      <div className="relative w-full overflow-visible select-none pt-3">
+      <div className="relative w-full overflow-visible select-none pt-2 sm:pt-3">
         <svg
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-          className="w-full h-auto overflow-visible cursor-crosshair"
+          className="w-full h-auto overflow-visible cursor-crosshair touch-none"
           onMouseMove={handleMouseMove}
+          onTouchStart={handleTouchMove}
+          onTouchMove={handleTouchMove}
           onMouseLeave={() => {}}
         >
           <defs>
@@ -214,10 +255,10 @@ export function DashboardSplineChart({
                 strokeDasharray="4 4"
               />
               <text
-                x={paddingLeft - 10}
+                x={paddingLeft - 8}
                 y={tick.y + 4}
                 textAnchor="end"
-                className="text-[11px] font-manrope fill-hk-charcoal/60"
+                className="text-[10.5px] font-manrope fill-hk-charcoal/60"
               >
                 {formatCompactNumber(tick.val)}
               </text>
@@ -261,18 +302,18 @@ export function DashboardSplineChart({
               <circle
                 cx={activePoint.x}
                 cy={activePoint.y}
-                r="7"
+                r="6.5"
                 fill={lineColor}
-                fillOpacity="0.2"
+                fillOpacity="0.22"
               />
               {/* Center Dot */}
               <circle
                 cx={activePoint.x}
                 cy={activePoint.y}
-                r="4.5"
+                r="4"
                 fill="#FFFFFF"
                 stroke={lineColor}
-                strokeWidth="2.5"
+                strokeWidth="2"
               />
             </g>
           )}
@@ -294,7 +335,7 @@ export function DashboardSplineChart({
                 x={c.x}
                 y={svgHeight - 12}
                 textAnchor="middle"
-                className={`text-[11px] font-manrope ${
+                className={`text-[10.5px] font-manrope ${
                   hoveredIdx === idx ? "fill-hk-charcoal font-bold" : "fill-hk-charcoal/60 font-medium"
                 }`}
               >
@@ -304,31 +345,24 @@ export function DashboardSplineChart({
           })}
         </svg>
 
-        {/* Floating Tooltip Card (Positioned intelligently with auto-flip to never truncate) */}
+        {/* Floating Tooltip Card (Adaptive alignment: 100% immune to clipping on left/right/top edges) */}
         {activePoint && (
           <div
             className="absolute pointer-events-none transition-all duration-150 z-20"
-            style={{
-              left: `${(activePoint.x / svgWidth) * 100}%`,
-              top: `${(activePoint.y / svgHeight) * 100}%`,
-              transform:
-                activePoint.y < 90
-                  ? "translate(-50%, 14px)"
-                  : "translate(-50%, calc(-100% - 14px))",
-            }}
+            style={tooltipStyle}
           >
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-3 border border-hk-champagne/60 shadow-xl min-w-[130px] text-center font-manrope animate-in fade-in-50 zoom-in-95">
-              <div className="text-[10px] text-muted-foreground font-medium mb-0.5">
+            <div className="bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl px-3 py-2 sm:px-3.5 sm:py-2.5 border border-hk-champagne/70 shadow-lg min-w-[105px] sm:min-w-[125px] text-center font-manrope animate-in fade-in-50 zoom-in-95">
+              <div className="text-[10px] text-hk-taupe font-semibold uppercase tracking-wider mb-0.5">
                 {activePoint.point.date}
               </div>
               <div className="flex items-center justify-center gap-1.5">
-                <span className="font-semibold text-base text-hk-charcoal tabular-nums">
+                <span className="font-bold text-sm sm:text-base text-hk-charcoal tabular-nums">
                   {unitPrefix}
                   {formatCompactNumber(activePoint.point.value)}
                   {unitSuffix}
                 </span>
                 {activePoint.point.deltaPct && (
-                  <span className="inline-flex items-center text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200">
+                  <span className="inline-flex items-center text-[9px] sm:text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200">
                     ↗ {activePoint.point.deltaPct}
                   </span>
                 )}

@@ -61,11 +61,11 @@ export function DashboardSemiDonutGauge({
 
   return (
     <div
-      className={`bg-white rounded-3xl p-6 sm:p-7 border border-hk-champagne/40 shadow-xs flex flex-col justify-between transition-all ${className}`}
+      className={`bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 border border-hk-champagne/40 shadow-xs flex flex-col justify-between transition-all ${className}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between gap-2 mb-2">
-        <h3 className="font-manrope font-semibold text-lg sm:text-xl text-hk-charcoal tracking-tight">
+        <h3 className="font-manrope font-semibold text-base sm:text-lg lg:text-xl text-hk-charcoal tracking-tight">
           {title}
         </h3>
         {actionLabel && (
