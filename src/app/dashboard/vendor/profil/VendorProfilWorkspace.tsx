@@ -24,7 +24,6 @@ import {
   Info,
 } from "lucide-react";
 import {
-  WaxSealBadge,
   VintageStampBadge,
   DecorativeDivider,
   BadgePremium,
@@ -72,13 +71,10 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 flex-1 min-w-0">
             {/* Top Row on Mobile: Avatar + Badges beside it. On Desktop: Just the Avatar */}
             <div className="flex sm:contents items-center gap-4 w-full sm:w-auto">
-              {/* Visual Atelier Crest with WaxSeal Badge */}
-              <div className="relative shrink-0">
-                <div className="w-18 h-18 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/30">
-                  <Store className="w-9 h-9 sm:w-11 sm:h-11 lg:w-12 lg:h-12" />
-                </div>
-                <div className="absolute -bottom-2 -right-2">
-                  <WaxSealBadge size="sm" title="Mitra Terkurasi HariKita Kebumen" />
+              {/* Visual Atelier Crest (Enlarged and Clean - Wax Seal removed for unobstructed branding) */}
+              <div className="shrink-0">
+                <div className="w-22 h-22 sm:w-26 sm:h-26 lg:w-28 lg:h-28 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40">
+                  <Store className="w-11 h-11 sm:w-13 sm:h-13 lg:w-14 lg:h-14" />
                 </div>
               </div>
 
