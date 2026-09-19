@@ -8,7 +8,6 @@ import {
   Plus,
   Edit2,
   Trash2,
-  CheckCircle2,
   Calculator,
   Percent,
   Clock,
@@ -273,7 +272,7 @@ export function VendorPaketClient({
                           />
 
                           {/* Floating Popover Container */}
-                          <div className="absolute left-0 top-full mt-2 z-40 w-72 sm:w-80 rounded-2xl bg-white border border-[#E5D7C7] shadow-xl shadow-[#4A2E35]/10 p-3.5 space-y-2 text-xs animate-in fade-in zoom-in-95 duration-150">
+                          <div className="absolute left-0 top-full mt-2 z-40 w-[310px] sm:w-[350px] max-w-[calc(100vw-2.5rem)] rounded-2xl bg-white border border-[#E5D7C7] shadow-xl shadow-[#4A2E35]/10 p-3.5 space-y-2 text-xs animate-in fade-in zoom-in-95 duration-150">
                             <div className="flex items-center justify-between pb-2 border-b border-[#FAF8F5]">
                               <div className="flex items-center gap-1.5 text-[#4A2E35] font-semibold text-xs">
                                 <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
@@ -290,7 +289,10 @@ export function VendorPaketClient({
                                   <Server className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
                                   <span>Server Cloud &amp; Portofolio HD</span>
                                 </span>
-                                <span className="font-mono text-[10.5px] text-[#6B5E62]">3.5%</span>
+                                <span className="flex items-center gap-1.5 font-mono text-[11px] shrink-0 ml-2">
+                                  <span className="text-[#6B5E62] text-[10.5px]">3.5%</span>
+                                  <span className="font-semibold text-[#4A2E35]">{formatRupiah(Math.round(pkg.basePrice * 0.035))}</span>
+                                </span>
                               </div>
 
                               <div className="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
@@ -298,7 +300,10 @@ export function VendorPaketClient({
                                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                                   <span>Escrow &amp; Bebas Admin Bank</span>
                                 </span>
-                                <span className="font-mono text-[10.5px] text-[#6B5E62]">3.0%</span>
+                                <span className="flex items-center gap-1.5 font-mono text-[11px] shrink-0 ml-2">
+                                  <span className="text-[#6B5E62] text-[10.5px]">3.0%</span>
+                                  <span className="font-semibold text-[#4A2E35]">{formatRupiah(Math.round(pkg.basePrice * 0.030))}</span>
+                                </span>
                               </div>
 
                               <div className="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
@@ -306,7 +311,10 @@ export function VendorPaketClient({
                                   <Sparkles className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
                                   <span>Pemasaran &amp; SEO Kebumen</span>
                                 </span>
-                                <span className="font-mono text-[10.5px] text-[#6B5E62]">2.0%</span>
+                                <span className="flex items-center gap-1.5 font-mono text-[11px] shrink-0 ml-2">
+                                  <span className="text-[#6B5E62] text-[10.5px]">2.0%</span>
+                                  <span className="font-semibold text-[#4A2E35]">{formatRupiah(Math.round(pkg.basePrice * 0.020))}</span>
+                                </span>
                               </div>
 
                               <div className="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
@@ -314,19 +322,11 @@ export function VendorPaketClient({
                                   <Headphones className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                                   <span>Bantuan CS &amp; Mediasi Jadwal</span>
                                 </span>
-                                <span className="font-mono text-[10.5px] text-[#6B5E62]">1.5%</span>
+                                <span className="flex items-center gap-1.5 font-mono text-[11px] shrink-0 ml-2">
+                                  <span className="text-[#6B5E62] text-[10.5px]">1.5%</span>
+                                  <span className="font-semibold text-[#4A2E35]">{formatRupiah(Math.round(pkg.basePrice * 0.015))}</span>
+                                </span>
                               </div>
-                            </div>
-
-                            {/* Net Income footer */}
-                            <div className="pt-2 border-t border-[#FAF8F5] flex items-center justify-between bg-emerald-50/80 px-2.5 py-1.5 rounded-xl">
-                              <span className="flex items-center gap-1.5 text-emerald-900 text-[11px] font-semibold">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                <span>Untung Bersih (90%)</span>
-                              </span>
-                              <strong className="font-mono text-emerald-700 text-xs font-bold">
-                                {formatRupiah(netIncome)}
-                              </strong>
                             </div>
                           </div>
                         </>
