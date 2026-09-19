@@ -61,7 +61,7 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
       {/* =================================================================
           1. HERO ATELIER: Luxury Organic Studio Header (Brand Hub Living)
          ================================================================= */}
-      <section className="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-linear-to-br from-white via-hk-ivory to-hk-soft-beige/40 border border-hk-champagne/50 p-5 sm:p-8 lg:p-10 shadow-sm">
+      <section className="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-linear-to-br from-white via-hk-ivory to-hk-soft-beige/40 border border-hk-champagne/50 p-4 sm:p-8 lg:p-10 shadow-sm">
         {/* Soft Decorative Ambient Gradients */}
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-hk-champagne/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/4 translate-y-16 w-80 h-80 bg-hk-taupe/10 rounded-full blur-2xl pointer-events-none" />
@@ -70,17 +70,17 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
           {/* Studio Profile & Badges */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 flex-1 min-w-0">
             {/* Top Row on Mobile: Avatar + Title & Tagline beside it! On Desktop: Just the Avatar */}
-            <div className="flex sm:contents items-center gap-3.5 sm:gap-6 w-full sm:w-auto">
+            <div className="flex sm:contents items-center gap-3 sm:gap-6 w-full sm:w-auto">
               {/* Visual Atelier Crest (Clean and Unobstructed Branding) */}
               <div className="shrink-0">
-                <div className="w-16 h-16 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40 transition-transform hover:scale-[1.02]">
-                  <Store className="w-8 h-8 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-hk-champagne" />
+                <div className="w-14 h-14 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40 transition-transform hover:scale-[1.02]">
+                  <Store className="w-7 h-7 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-hk-champagne" />
                 </div>
               </div>
 
               {/* Mobile-only: Title & Tagline directly beside the Logo! */}
               <div className="min-w-0 flex-1 sm:hidden">
-                <h1 className="font-editorial text-2xl font-normal text-hk-charcoal tracking-tight leading-tight">
+                <h1 className="font-editorial text-[19px] font-normal text-hk-charcoal tracking-tight leading-tight">
                   {data.businessName}
                 </h1>
                 <p className="mt-0.5 font-editorial text-xs italic text-hk-taupe leading-snug">
@@ -135,20 +135,20 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
                 </span>
               </div>
 
-              {/* Mobile-only Badges positioned cleanly BELOW Penanggung Jawab */}
-              <div className="flex sm:hidden flex-wrap items-center gap-1.5 pt-1.5">
+              {/* Mobile-only Badges positioned cleanly BELOW Penanggung Jawab - Strictly Inline Row */}
+              <div className="flex sm:hidden items-center gap-1.5 pt-1.5 flex-nowrap overflow-x-auto no-scrollbar">
                 <BadgePremium
                   label={data.category.toUpperCase()}
                   variant="pill"
-                  className="bg-white/90 border-hk-champagne text-hk-taupe text-[10px] px-2.5 py-0.5 shadow-2xs"
+                  className="bg-white/90 border-hk-champagne text-hk-taupe text-[10px] px-2 py-0.5 shadow-2xs shrink-0 whitespace-nowrap"
                 />
                 {data.isVerified && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-semibold border border-emerald-200 shrink-0 shadow-2xs">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-semibold border border-emerald-200 shrink-0 shadow-2xs whitespace-nowrap">
                     <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
                     <span>Mitra Terverifikasi</span>
                   </span>
                 )}
-                <span className="inline-flex items-center gap-1 text-[11px] text-amber-800 bg-amber-50/90 px-2.5 py-0.5 rounded-full border border-amber-200 font-manrope shrink-0 shadow-2xs">
+                <span className="inline-flex items-center gap-1 text-[10.5px] text-amber-800 bg-amber-50/90 px-2 py-0.5 rounded-full border border-amber-200 font-manrope shrink-0 shadow-2xs whitespace-nowrap">
                   <Star className="w-3 h-3 fill-amber-400 text-amber-400 shrink-0" />
                   <strong className="font-semibold">{data.rating.toFixed(1)}</strong>
                   <span className="text-muted-foreground">({data.reviewCount} ulasan)</span>
