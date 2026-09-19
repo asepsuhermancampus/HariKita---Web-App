@@ -17,6 +17,7 @@ import type {
   AvailabilityErrorCode,
   LedgerErrorCode,
   OrderErrorCode,
+  OtpErrorCode,
   PaymentErrorCode,
 } from "@/types/errors";
 
@@ -25,7 +26,8 @@ export type AnyDomainErrorCode =
   | OrderErrorCode
   | PaymentErrorCode
   | LedgerErrorCode
-  | AmbassadorErrorCode;
+  | AmbassadorErrorCode
+  | OtpErrorCode;
 
 /**
  * Error domain yang merepresentasikan penolakan business-rule yang bersifat
