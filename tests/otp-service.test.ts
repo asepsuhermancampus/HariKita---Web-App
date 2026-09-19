@@ -2,8 +2,7 @@ import { test, before, after, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { createTestDb, seedOtpCode, type TestDb } from "./helpers/test-db";
 import type { PrismaClient } from "@prisma/client";
-import { generateOtp, issueOtp, checkSendAllowed } from "../src/server/services/otp-service";
-
+import { generateOtp, issueOtp, checkSendAllowed, verifyOtp, countDailyAttempts, assertDailyLimit } from "../src/server/services/otp-service";
 let ctx: TestDb;
 let prisma: PrismaClient;
 
@@ -54,4 +53,51 @@ test("checkSendAllowed passes when lock expired", async () => {
     lockedUntil: new Date(Date.now() - 1000),
   });
   await checkSendAllowed("free@b.com", prisma); // tidak throw
+});
+
+test("verifyOtp marks VERIFIED for correct code", async () => {
+  await seedOtpCode(prisma, { email: "v@b.com", code: "654321", status: "PENDING" });
+  const res = await verifyOtp({ email: "v@b.com", purpose: "REGISTER", code: "654321" }, prisma);
+  const row = await prisma.otpCode.findUnique({ where: { id: res.otpId } });
+  assert.equal(row!.status, "VERIFIED");
+  assert.ok(row!.verifiedAt);
+});
+
+test("verifyOtp increments attempts and locks after 3 wrong", async () => {
+  await seedOtpCode(prisma, { email: "w@b.com", code: "111111", status: "PENDING", attempts: 2 });
+  await assert.rejects(
+    () => verifyOtp({ email: "w@b.com", purpose: "REGISTER", code: "999999" }, prisma),
+    /OTP_LOCKED/
+  );
+  const row = await prisma.otpCode.findFirst({ where: { email: "w@b.com" } });
+  assert.equal(row!.status, "LOCKED");
+  assert.equal(row!.attempts, 3);
+  assert.ok(row!.lockedUntil && row!.lockedUntil.getTime() > Date.now());
+});
+
+test("verifyOtp throws OTP_INVALID (not lock) on first wrong attempt", async () => {
+  await seedOtpCode(prisma, { email: "w2@b.com", code: "111111", status: "PENDING", attempts: 0 });
+  await assert.rejects(
+    () => verifyOtp({ email: "w2@b.com", purpose: "REGISTER", code: "999999" }, prisma),
+    /OTP_INVALID/
+  );
+  const row = await prisma.otpCode.findFirst({ where: { email: "w2@b.com" } });
+  assert.equal(row!.attempts, 1);
+  assert.equal(row!.status, "PENDING");
+});
+
+test("verifyOtp rejects expired code", async () => {
+  await seedOtpCode(prisma, { email: "e@b.com", code: "222222", expiresAt: new Date(Date.now() - 1000) });
+  await assert.rejects(
+    () => verifyOtp({ email: "e@b.com", purpose: "REGISTER", code: "222222" }, prisma),
+    /OTP_EXPIRED/
+  );
+});
+
+test("assertDailyLimit throws at 9 attempts within WIB day", async () => {
+  for (let i = 0; i < 3; i++) {
+    await seedOtpCode(prisma, { email: "d@b.com", attempts: 3, createdAt: new Date() });
+  }
+  assert.equal(await countDailyAttempts("d@b.com", new Date(), prisma), 9);
+  await assert.rejects(() => assertDailyLimit("d@b.com", prisma), /OTP_DAILY_LIMIT/);
 });
