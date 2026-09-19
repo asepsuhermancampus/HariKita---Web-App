@@ -40,6 +40,14 @@ export const ROUTES = {
     PROFIL: '/dashboard/vendor/profil',
   },
 
+  // 4b. Portal Brand Ambassador
+  BA: {
+    DASHBOARD: '/dashboard/ba',
+    VENDOR: '/dashboard/ba/vendor',
+    KOMISI: '/dashboard/ba/komisi',
+    DOMPET: '/dashboard/ba/dompet',
+  },
+
   // 5. Portal Super Admin
   ADMIN: {
     DASHBOARD: '/admin',
@@ -47,11 +55,14 @@ export const ROUTES = {
     VERIFIKASI: '/admin/verifikasi',
     ESCROW: '/admin/escrow',
     AUDIT_KONTEN: '/admin/audit-konten',
+    BA: '/admin/ba',
   },
 
   // 6. Autentikasi
   AUTH: {
     LOGIN: '/auth/login',
+    LOGIN_BA: '/auth/login/ba',
+    LOGIN_ADMIN: '/auth/login/admin',
     REGISTER: '/auth/register',
     REGISTER_VENDOR: '/auth/register-vendor',
   },

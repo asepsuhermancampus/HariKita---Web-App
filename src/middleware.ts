@@ -13,7 +13,7 @@ const COOKIE_NAME = "hk_session";
 
 interface SessionPayload {
   userId: string;
-  role: string; // "CLIENT" | "VENDOR" | "ADMIN"
+  role: string; // "CLIENT" | "VENDOR" | "ADMIN" | "BA"
   name: string;
   phone: string;
 }
@@ -33,7 +33,14 @@ function parseSession(cookieValue: string | undefined): SessionPayload | null {
 function getDashboardPath(role: string): string {
   if (role === "ADMIN") return "/admin";
   if (role === "VENDOR") return "/dashboard/vendor/profil";
+  if (role === "BA") return "/dashboard/ba";
   return "/client/profil";
+}
+
+function getLoginPath(role: string): string {
+  if (role === "ADMIN") return "/auth/login/admin";
+  if (role === "BA") return "/auth/login/ba";
+  return "/auth/login";
 }
 
 export function middleware(request: NextRequest) {
@@ -62,7 +69,7 @@ export function middleware(request: NextRequest) {
   // ── 2. Proteksi /admin/* → hanya ADMIN ──
   if (pathname.startsWith("/admin")) {
     if (!session) {
-      const url = new URL("/auth/login", request.url);
+      const url = new URL("/auth/login/admin", request.url);
       url.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(url);
     }
@@ -91,7 +98,23 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // ── 6. Proteksi /client/* → hanya CLIENT atau ADMIN ──
+  // ── 4. Proteksi /dashboard/ba/* → hanya BA atau ADMIN ──
+  //    Portal Brand Ambassador: dashboard, vendor, komisi, dan dompet BA.
+  if (pathname === "/dashboard/ba" || pathname.startsWith("/dashboard/ba/")) {
+    if (!session) {
+      const url = new URL("/auth/login/ba", request.url);
+      url.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(url);
+    }
+    if (session.role !== "BA" && session.role !== "ADMIN") {
+      return NextResponse.redirect(
+        new URL(getDashboardPath(session.role), request.url)
+      );
+    }
+    return NextResponse.next();
+  }
+
+  // ── 5. Proteksi /client/* → hanya CLIENT atau ADMIN ──
   if (pathname.startsWith("/client")) {
     if (!session) {
       const url = new URL("/auth/login", request.url);

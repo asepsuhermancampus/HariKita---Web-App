@@ -4,13 +4,19 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HariKitaLogo } from "@/components/brand/HariKitaLogo";
-import { ShieldCheck, MapPin, Heart, Phone } from "lucide-react";
+import { ShieldCheck, MapPin, Heart, Phone, Download } from "lucide-react";
 
 export const Footer = () => {
   const pathname = usePathname();
   const isInvitationDetailPage =
     pathname && pathname.startsWith("/undangan/") && pathname !== "/undangan";
   const isDesignSystemShowcase = pathname === "/design-system-showcase";
+
+  const handleDownloadApps = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("harikita:pwa-install"));
+    }
+  };
 
   if (isInvitationDetailPage || isDesignSystemShowcase) {
     return null;
@@ -81,11 +87,22 @@ export const Footer = () => {
                 href="https://wa.me/6281234567890?text=Halo%20HariKita%20Kebumen%2C%20saya%20ingin%20konsultasi%20acara"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full rounded-full bg-hk-taupe py-2 text-xs font-manrope font-bold text-white shadow-xs hover:bg-white hover:text-hk-charcoal transition-all mt-2"
+                className="flex items-center justify-center gap-2 w-full rounded-full bg-hk-taupe py-2 text-xs font-manrope font-bold text-white shadow-xs hover:bg-white hover:text-hk-charcoal transition-all mt-2 min-h-[44px]"
               >
                 <Phone className="w-3.5 h-3.5 mr-1" />
                 <span>Konsultasi WhatsApp</span>
               </a>
+
+              {/* Fitur Download Apps dengan tanda panah ke bawah */}
+              <button
+                type="button"
+                onClick={handleDownloadApps}
+                className="flex items-center justify-center gap-2 w-full rounded-full bg-white/10 hover:bg-hk-taupe/20 border border-hk-champagne/40 py-2.5 px-4 text-xs font-manrope font-bold text-hk-champagne hover:text-white transition-all mt-2 min-h-[44px] group"
+                aria-label="Download Aplikasi HariKita"
+              >
+                <Download className="w-4 h-4 text-hk-taupe group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
+                <span>Download Apps</span>
+              </button>
             </div>
           </div>
         </div>
@@ -99,6 +116,17 @@ export const Footer = () => {
             <Link href="/legal/terms" className="transition-colors hover:text-white">Syarat &amp; Ketentuan</Link>
             <Link href="/legal/cookies" className="transition-colors hover:text-white">Cookie</Link>
             <Link href="/legal/data-processing" className="transition-colors hover:text-white">Pemrosesan Data</Link>
+            
+            {/* Download Apps Quick Action */}
+            <button
+              type="button"
+              onClick={handleDownloadApps}
+              className="inline-flex items-center gap-1.5 text-hk-champagne hover:text-white transition-colors font-medium ml-auto"
+              aria-label="Download Apps HariKita"
+            >
+              <Download className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Download Apps</span>
+            </button>
           </nav>
 
           <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-manrope text-white/50 gap-4">

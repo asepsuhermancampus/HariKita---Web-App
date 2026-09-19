@@ -21,3 +21,4 @@ export * from './ErrorState';
 export * from './Modal';
 export * from './DatePicker';
 export * from './Calendar';
+export * from './Dropdown';

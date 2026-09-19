@@ -7,7 +7,7 @@ import { HariKitaLogo } from "@/components/brand/HariKitaLogo";
 import { Sparkles, Compass, Mail, UserCheck, Menu, X, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const Navbar = () => {
+export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -74,59 +74,18 @@ export const Navbar = () => {
           })}
         </nav>
 
-        {/* Sisi Kanan: Action Buttons & Portal Access */}
+        {/* Sisi Kanan: Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Quick Role Switcher Dropdown */}
-          <div className="dropdown dropdown-end">
-            <label
-              tabIndex={0}
-              className="flex h-8 items-center gap-1.5 rounded-full border border-hk-champagne/60 bg-white px-3.5 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:border-hk-taupe hover:bg-hk-ivory cursor-pointer transition-all"
+          {/* Login Button — hanya tampil bila belum login */}
+          {!isLoggedIn && (
+            <Link
+              href="/auth/login"
+              className="flex h-8 items-center gap-1.5 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:border-hk-taupe hover:bg-hk-ivory transition-all"
             >
               <UserCheck className="h-3.5 w-3.5 text-hk-taupe" />
-              <span>Akses Portal</span>
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu p-2 shadow-xl bg-white rounded-2xl w-56 border border-hk-champagne/60 mt-2 z-50 animate-in fade-in zoom-in-95 duration-150"
-            >
-              <li className="menu-title px-3 py-1 text-[10px] font-manrope font-bold text-hk-taupe uppercase tracking-wider">
-                Pilih Hak Akses:
-              </li>
-              <li>
-                <Link
-                  href="/client/profil"
-                  className="rounded-xl px-3 py-2 text-xs font-manrope font-semibold text-hk-charcoal hover:bg-hk-ivory"
-                >
-                  Portal Klien (Profil &amp; Pesanan)
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/dashboard/vendor"
-                  className="rounded-xl px-3 py-2 text-xs font-manrope font-semibold text-hk-charcoal hover:bg-hk-ivory"
-                >
-                  Portal Mitra Vendor Kebumen
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/admin"
-                  className="rounded-xl px-3 py-2 text-xs font-manrope font-semibold text-hk-charcoal hover:bg-hk-ivory"
-                >
-                  Super Admin (Master Kalender)
-                </Link>
-              </li>
-              <li className="border-t border-hk-champagne/30 mt-1 pt-1">
-                <Link
-                  href="/auth/login"
-                  className="rounded-xl px-3 py-2 text-xs font-manrope font-bold text-hk-taupe hover:bg-hk-ivory flex items-center justify-between"
-                >
-                  <span>Masuk / Daftar Akun</span>
-                  <ArrowRight className="w-3 h-3 text-hk-taupe" />
-                </Link>
-              </li>
-            </ul>
-          </div>
+              <span>Login</span>
+            </Link>
+          )}
 
           {/* Builder CTA Button */}
           <Link
@@ -186,35 +145,19 @@ export const Navbar = () => {
             })}
           </div>
 
-          {/* Portal Role Grid */}
-          <div className="pt-2 border-t border-hk-champagne/40 space-y-2">
-            <span className="text-[10px] uppercase font-manrope font-bold text-hk-taupe tracking-wider px-1 block">
-              Pilih Akses Masuk:
-            </span>
-            <div className="grid grid-cols-3 gap-2">
+          {/* Login Link — hanya tampil bila belum login */}
+          {!isLoggedIn && (
+            <div className="pt-2 border-t border-hk-champagne/40">
               <Link
-                href="/client/profil"
+                href="/auth/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-xl border border-hk-champagne/50 bg-hk-ivory/60 text-center text-xs font-manrope font-semibold text-hk-charcoal hover:bg-white transition-all shadow-2xs"
+                className="flex items-center justify-center gap-2 w-full rounded-xl border border-hk-champagne/60 bg-white py-2.5 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:bg-hk-ivory transition-all"
               >
-                Klien
-              </Link>
-              <Link
-                href="/dashboard/vendor"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-xl border border-hk-champagne/50 bg-hk-ivory/60 text-center text-xs font-manrope font-semibold text-hk-charcoal hover:bg-white transition-all shadow-2xs"
-              >
-                Vendor
-              </Link>
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-xl border border-hk-champagne/50 bg-hk-ivory/60 text-center text-xs font-manrope font-semibold text-hk-charcoal hover:bg-white transition-all shadow-2xs"
-              >
-                Admin
+                <UserCheck className="h-4 w-4 text-hk-taupe" />
+                <span>Login</span>
               </Link>
             </div>
-          </div>
+          )}
 
           {/* Full-width Builder Button */}
           <div className="pt-1">

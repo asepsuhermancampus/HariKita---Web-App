@@ -16,6 +16,7 @@ export default async function UserProfileBadge() {
     ADMIN: "Super Admin",
     VENDOR: "Mitra Vendor",
     CLIENT: "Pengantin",
+    BA: "Brand Ambassador",
   };
 
   return (

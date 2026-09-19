@@ -21,6 +21,7 @@ import {
 import { getStartOfDayWIB, diffCalendarDaysWIB, getEndOfDayWIB } from "@/lib/date-utils";
 import { generateOperationalArtifacts } from "./order-lifecycle";
 import { notifyDpPaid } from "./notification-templates";
+import { creditCommissionForOrder } from "./ambassador-service";
 
 /**
  * HariKita - PaymentService
@@ -474,8 +475,14 @@ export async function runPayoutSweep(
       },
       tx
     );
-    if (result.created) executed.push(cand.orderId);
-    else skipped.push({ ...cand, reason: "ALREADY_PAID_OUT" });
+    if (result.created) {
+      executed.push(cand.orderId);
+      // Komisi Brand Ambassador baru dikreditkan saat pelunasan 70% (settlement)
+      // benar-benar cair ke vendor. Exact-once dijamin creditCommissionForOrder.
+      if (cand.tranche === "SETTLEMENT_PAYOUT") {
+        await creditCommissionForOrder(cand.orderId, tx);
+      }
+    } else skipped.push({ ...cand, reason: "ALREADY_PAID_OUT" });
   }
 
   return { eligible, executed, skipped };

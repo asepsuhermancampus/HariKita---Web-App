@@ -108,7 +108,7 @@ export function AdminDashboardClient({
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
           <span>
             Anda belum masuk sebagai Super Admin — sebagian data mungkin kosong.{" "}
-            <Link href="/auth/login" className="font-semibold underline">
+            <Link href="/auth/login/admin" className="font-semibold underline">
               Masuk sebagai Admin
             </Link>
           </span>

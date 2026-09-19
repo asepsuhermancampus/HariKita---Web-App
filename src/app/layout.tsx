@@ -6,6 +6,7 @@ import { PwaRegister } from "@/components/pwa/PwaRegister";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { Analytics } from "@/components/analytics/Analytics";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { getSession } from "@/lib/session";
 import {
   SITE_URL,
   SITE_NAME,
@@ -84,11 +85,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
   return (
     <html lang="id" data-theme="harikita">
       <head>
@@ -105,7 +108,7 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">
           Lewati ke konten utama
         </a>
-        <Navbar />
+        <Navbar isLoggedIn={Boolean(session)} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
         <InstallPrompt />

@@ -12,10 +12,12 @@
  */
 
 import type {
+  AmbassadorErrorCode,
   AppDomainErrorCode,
   AvailabilityErrorCode,
   LedgerErrorCode,
   OrderErrorCode,
+  OtpErrorCode,
   PaymentErrorCode,
 } from "@/types/errors";
 
@@ -23,7 +25,9 @@ export type AnyDomainErrorCode =
   | AvailabilityErrorCode
   | OrderErrorCode
   | PaymentErrorCode
-  | LedgerErrorCode;
+  | LedgerErrorCode
+  | AmbassadorErrorCode
+  | OtpErrorCode;
 
 /**
  * Error domain yang merepresentasikan penolakan business-rule yang bersifat

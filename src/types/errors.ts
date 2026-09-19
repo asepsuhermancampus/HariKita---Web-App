@@ -52,9 +52,41 @@ export const LEDGER_ERROR_CODES = [
 
 export type LedgerErrorCode = (typeof LEDGER_ERROR_CODES)[number];
 
-// ── 5. CONSOLIDATED APPLICATION ERROR UNION ────────────────────────────────
+// ── 5. BRAND AMBASSADOR ERROR CODES ────────────────────────────────────────
+export const AMBASSADOR_ERROR_CODES = [
+  'BA_NOT_FOUND',
+  'INSUFFICIENT_BALANCE',
+  'INVALID_WITHDRAWAL_AMOUNT',
+  'WITHDRAWAL_NOT_FOUND',
+  'WITHDRAWAL_ALREADY_RESOLVED',
+  'INVALID_AMBASSADOR_INPUT',
+] as const;
+
+export type AmbassadorErrorCode = (typeof AMBASSADOR_ERROR_CODES)[number];
+
+// ── 6. AUTH / OTP ERROR CODES ──────────────────────────────────────────────
+export const OTP_ERROR_CODES = [
+  'INVALID_EMAIL',
+  'INVALID_PHONE',
+  'EMAIL_ALREADY_USED',
+  'PHONE_ALREADY_USED',
+  'OTP_NOT_FOUND',
+  'OTP_EXPIRED',
+  'OTP_INVALID',
+  'OTP_LOCKED',
+  'OTP_COOLDOWN',
+  'OTP_DAILY_LIMIT',
+  'PIN_TOO_RECENT',
+  'EMAIL_SEND_FAILED',
+] as const;
+
+export type OtpErrorCode = (typeof OTP_ERROR_CODES)[number];
+
+// ── 7. CONSOLIDATED APPLICATION ERROR UNION ────────────────────────────────
 export type AppDomainErrorCode =
   | AvailabilityErrorCode
   | OrderErrorCode
   | PaymentErrorCode
-  | LedgerErrorCode;
+  | LedgerErrorCode
+  | AmbassadorErrorCode
+  | OtpErrorCode;

@@ -107,3 +107,99 @@ export async function seedClient(prisma: PrismaClient, name: string) {
   });
   return { userId: user.id };
 }
+
+/** Membuat user BA + BrandAmbassador uji. */
+export async function seedAmbassador(
+  prisma: PrismaClient,
+  opts?: { commissionPct?: number; isActive?: boolean; displayName?: string }
+) {
+  const user = await prisma.user.create({
+    data: {
+      name: opts?.displayName ?? "BA Uji",
+      phone: `0855${Math.floor(Math.random() * 1e8).toString().padStart(8, "0")}`,
+      role: "BA",
+    },
+  });
+  const ambassador = await prisma.brandAmbassador.create({
+    data: {
+      userId: user.id,
+      referralCode: `BA-TEST-${Math.floor(Math.random() * 1e6).toString(36).toUpperCase()}`,
+      displayName: opts?.displayName ?? "BA Uji",
+      commissionPct: opts?.commissionPct ?? 5.0,
+      isActive: opts?.isActive ?? true,
+    },
+  });
+  return { userId: user.id, ambassadorId: ambassador.id, referralCode: ambassador.referralCode };
+}
+
+/** Membuat vendor yang direkrut seorang BA + paket uji. */
+export async function seedVendorWithRecruiter(
+  prisma: PrismaClient,
+  opts: { ambassadorId: string; commissionPct: number; price: number; businessName?: string }
+) {
+  const ba = await prisma.brandAmbassador.findUnique({ where: { id: opts.ambassadorId } });
+  if (ba) {
+    await prisma.brandAmbassador.update({
+      where: { id: ba.id },
+      data: { commissionPct: opts.commissionPct },
+    });
+  }
+  const user = await prisma.user.create({
+    data: {
+      name: opts.businessName ?? "Vendor Rekrutan",
+      phone: `0813${Math.floor(Math.random() * 1e8).toString().padStart(8, "0")}`,
+      role: "VENDOR",
+    },
+  });
+  const vendor = await prisma.vendorProfile.create({
+    data: {
+      userId: user.id,
+      businessName: opts.businessName ?? "Vendor Rekrutan",
+      category: "katering",
+      address: "Jl. Test, Kebumen",
+      recruitedById: opts.ambassadorId,
+    },
+  });
+  const pkg = await prisma.servicePackage.create({
+    data: {
+      vendorId: vendor.id,
+      category: "katering",
+      name: "Paket Rekrutan",
+      description: "Paket uji",
+      basePrice: opts.price,
+      unitType: "all_in",
+    },
+  });
+  return { userId: user.id, vendorId: vendor.id, packageId: pkg.id, ambassadorId: opts.ambassadorId };
+}
+
+/** Membuat record OtpCode uji (kode default "123456"). */
+export async function seedOtpCode(
+  prisma: PrismaClient,
+  opts: {
+    email: string;
+    purpose?: "REGISTER" | "RESET_PIN";
+    status?: string;
+    attempts?: number;
+    expiresAt?: Date;
+    lockedUntil?: Date | null;
+    code?: string;
+    createdAt?: Date;
+  }
+) {
+  const bcrypt = (await import("bcryptjs")).default;
+  const code = opts.code ?? "123456";
+  const codeHash = await bcrypt.hash(code, 10);
+  return prisma.otpCode.create({
+    data: {
+      email: opts.email.toLowerCase(),
+      codeHash,
+      purpose: opts.purpose ?? "REGISTER",
+      status: opts.status ?? "PENDING",
+      attempts: opts.attempts ?? 0,
+      expiresAt: opts.expiresAt ?? new Date(Date.now() + 5 * 60 * 1000),
+      lockedUntil: opts.lockedUntil ?? null,
+      createdAt: opts.createdAt ?? new Date(),
+    },
+  });
+}

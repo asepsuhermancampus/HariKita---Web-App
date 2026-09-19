@@ -22,6 +22,8 @@ model User {
   role              String               @default("CLIENT") // "CLIENT", "VENDOR", "ADMIN"
   vendorProfile     VendorProfile?
   clientProfile     ClientProfile?
+  brandAmbassador   BrandAmbassador?
+  pinChangeLogs     PinChangeLog[]
   orders            Order[]
   heldSlots         VendorAvailability[] @relation("UserAvailabilityHolds")
   createdAt         DateTime             @default(now())
@@ -82,6 +84,9 @@ model VendorProfile {
   availabilities VendorAvailability[]
   orderItems     OrderItem[]
   portfolios     VendorPortfolio[]
+  recruitedById  String?
+  recruitedBy    BrandAmbassador? @relation("VendorRecruiter", fields: [recruitedById], references: [id], onDelete: SetNull)
+  vendorCommissions AmbassadorCommission[] @relation("VendorCommissionSource")
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
 }
@@ -187,6 +192,7 @@ model Order {
   contract            DigitalContract?
   sessions            PhysicalSession[]
   rundowns            EventRundown[]
+  ambassadorCommissions AmbassadorCommission[]
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
 }
@@ -227,6 +233,7 @@ model OrderItem {
   availability        VendorAvailability?     // Relasi 1-to-1 ke slot ketersediaan
   disputes            Dispute[]               // Sengketa spesifik pada item ini
   statusHistories     OrderItemStatusHistory[]
+  ambassadorCommissions AmbassadorCommission[]
 
   createdAt           DateTime                @default(now())
   updatedAt           DateTime                @updatedAt
@@ -494,6 +501,102 @@ model AnalyticsTelemetry {
   path      String
   metadata  String?  // JSON string
   timestamp DateTime @default(now())
+}
+
+model BrandAmbassador {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  referralCode  String   @unique
+  displayName   String
+  phone         String?
+  city          String   @default("Kebumen")
+  district      String?
+
+  commissionPct Float    @default(5.0)
+  isActive      Boolean  @default(true)
+
+  walletBalance Int      @default(0)
+  bankName      String?
+  bankAccount   String?
+  bankHolder    String?
+
+  recruitedVendors VendorProfile[]        @relation("VendorRecruiter")
+  commissions      AmbassadorCommission[]
+  withdrawals      AmbassadorWithdrawal[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model AmbassadorCommission {
+  id               String           @id @default(cuid())
+  ambassadorId     String
+  ambassador       BrandAmbassador  @relation(fields: [ambassadorId], references: [id], onDelete: Cascade)
+
+  orderId          String
+  order            Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderItemId      String
+  orderItem        OrderItem        @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  vendorId         String
+  vendor           VendorProfile    @relation("VendorCommissionSource", fields: [vendorId], references: [id], onDelete: Cascade)
+
+  baseAmount       Int
+  commissionPct    Float
+  commissionAmount Int
+
+  status           String           @default("CREDITED")
+  ledgerJournalId  String?
+
+  createdAt        DateTime         @default(now())
+
+  @@unique([orderItemId])
+  @@index([ambassadorId, createdAt])
+  @@index([vendorId])
+}
+
+model AmbassadorWithdrawal {
+  id             String          @id @default(cuid())
+  ambassadorId   String
+  ambassador     BrandAmbassador @relation(fields: [ambassadorId], references: [id], onDelete: Cascade)
+  amount         Int
+  status         String          @default("PENDING")
+  bankName       String?
+  bankAccount    String?
+  bankHolder     String?
+  processedAt    DateTime?
+  note           String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([ambassadorId, status])
+}
+
+model OtpCode {
+  id          String    @id @default(cuid())
+  email       String
+  codeHash    String
+  purpose     String    @default("REGISTER") // "REGISTER" | "RESET_PIN"
+  status      String    @default("PENDING")  // "PENDING" | "VERIFIED" | "LOCKED" | "CONSUMED"
+  attempts    Int       @default(0)
+  expiresAt   DateTime
+  lockedUntil DateTime?
+  verifiedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([email, purpose, status])
+  @@index([email, createdAt])
+}
+
+model PinChangeLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  changedAt DateTime @default(now())
+
+  @@index([userId, changedAt])
 }
 
 model Notification {
