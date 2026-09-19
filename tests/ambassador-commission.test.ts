@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { createTestDb, seedAmbassador, seedVendorWithRecruiter, seedClient, type TestDb } from "./helpers/test-db";
 import type { PrismaClient } from "@prisma/client";
 import { creditCommissionForOrder } from "../src/server/services/ambassador-service";
+import { runPayoutSweep } from "../src/server/services/payment-service";
+import { recordJournal } from "../src/server/services/ledger-service";
 
 let ctx: TestDb;
 let prisma: PrismaClient;
@@ -155,5 +157,52 @@ test("idempotent no-op when AmbassadorCommission already exists", async () => {
 
   const wallet = await prisma.brandAmbassador.findUnique({ where: { id: ba.ambassadorId } });
   assert.equal(wallet!.walletBalance, 0);
+});
+
+test("runPayoutSweep SETTLEMENT_PAYOUT triggers BA commission", async () => {
+  const ba = await seedAmbassador(prisma, { commissionPct: 5.0 });
+  const v = await seedVendorWithRecruiter(prisma, { ambassadorId: ba.ambassadorId, commissionPct: 5.0, price: 1_000_000 });
+  const { order } = await makeOrder(v.vendorId, v.packageId, 1_000_000);
+
+  // Sumber jurnal SETTLEMENT_IN (prasyarat eligibility).
+  await recordJournal(
+    {
+      type: "SETTLEMENT_IN",
+      description: "Pelunasan diterima",
+      orderId: order.id,
+      entries: [
+        { accountId: "1010_CASH_GATEWAY", debit: 700_000, credit: 0 },
+        { accountId: "2010_CLIENT_ESCROW", debit: 0, credit: 700_000 },
+      ],
+    },
+    prisma
+  );
+
+  // Installment SETTLEMENT_70 PAID agar guard pembayaran lolos.
+  await prisma.paymentInstallment.create({
+    data: { orderId: order.id, type: "SETTLEMENT_70", amount: 700_000, status: "PAID", paidAt: new Date() },
+  });
+
+  // Guard H+2 memakai SSOT OrderStatusHistory (toStatus COMPLETED), bukan
+  // order.updatedAt. Seed riwayat COMPLETED >= 48 jam lalu agar window terlewati.
+  await prisma.orderStatusHistory.create({
+    data: {
+      orderId: order.id,
+      fromStatus: "WAITING_SETTLEMENT",
+      toStatus: "COMPLETED",
+      changedBy: "SYSTEM",
+      createdAt: new Date(Date.now() - 72 * 60 * 60 * 1000),
+    },
+  });
+
+  const sweep = await runPayoutSweep([{ orderId: order.id, tranche: "SETTLEMENT_PAYOUT" }], prisma);
+  assert.deepEqual(sweep.executed, [order.id]);
+
+  const commission = await prisma.ambassadorCommission.findFirst({ where: { orderId: order.id } });
+  assert.ok(commission, "komisi BA harus tercatat setelah settlement payout");
+  assert.equal(commission!.commissionAmount, 50_000);
+
+  const wallet = await prisma.brandAmbassador.findUnique({ where: { id: ba.ambassadorId } });
+  assert.equal(wallet!.walletBalance, 50_000);
 });
 
