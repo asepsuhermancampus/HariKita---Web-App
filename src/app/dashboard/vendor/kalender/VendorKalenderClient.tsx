@@ -194,11 +194,12 @@ export function VendorKalenderClient({
               </div>
               <div className="flex justify-center rounded-2xl border border-[#E5D7C7] bg-[#FAF8F5] p-2">
                 <DayPickerCalendar
+                  bare
                   selected={newDate}
                   onSelect={(d) => setNewDate(d)}
                   blackoutDates={blackouts.map((b) => b.date)}
                   minDate={today}
-                  className="w-full max-w-md !bg-transparent !border-0 !shadow-none"
+                  className="max-w-md"
                 />
               </div>
               <p className="mt-2 text-[11px] text-[#6B5E62] leading-relaxed">

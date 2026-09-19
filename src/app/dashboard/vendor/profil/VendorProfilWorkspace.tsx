@@ -58,22 +58,22 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
   const orderRate = data.builderTrials > 0 ? ((totalOrders / data.builderTrials) * 100).toFixed(1) : "0";
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
+    <div className="py-6 sm:py-8 px-3.5 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 sm:space-y-10">
       {/* =================================================================
           1. HERO ATELIER: Luxury Organic Studio Header (Brand Hub Living)
          ================================================================= */}
-      <section className="relative overflow-hidden rounded-[2.5rem] bg-linear-to-br from-white via-hk-ivory to-hk-soft-beige/40 border border-hk-champagne/50 p-6 sm:p-10 shadow-sm">
+      <section className="relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] bg-linear-to-br from-white via-hk-ivory to-hk-soft-beige/40 border border-hk-champagne/50 p-5 sm:p-8 lg:p-10 shadow-sm">
         {/* Soft Decorative Ambient Gradients */}
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-hk-champagne/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-1/4 translate-y-16 w-80 h-80 bg-hk-taupe/10 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+        <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-8">
           {/* Studio Profile & Badges */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6">
             {/* Visual Atelier Crest with WaxSeal Badge */}
             <div className="relative shrink-0">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-4 ring-hk-champagne/30">
-                <Store className="w-12 h-12" />
+              <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-4 ring-hk-champagne/30">
+                <Store className="w-10 h-10 sm:w-12 sm:h-12" />
               </div>
               <div className="absolute -bottom-2 -right-2">
                 <WaxSealBadge size="sm" title="Mitra Terkurasi HariKita Kebumen" />
@@ -81,53 +81,54 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
             </div>
 
             {/* Studio Identity Information */}
-            <div className="space-y-2.5">
-              <div className="flex flex-wrap items-center gap-2.5">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <BadgePremium
                   label={data.category.toUpperCase()}
                   variant="pill"
-                  className="bg-white/90 border-hk-champagne text-hk-taupe"
+                  className="bg-white/90 border-hk-champagne text-hk-taupe text-[11px] sm:text-xs"
                 />
 
                 {data.isVerified && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    Mitra Terverifikasi
+                  <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] sm:text-xs font-semibold border border-emerald-200">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Mitra Terverifikasi</span>
                   </span>
                 )}
 
-                <span className="inline-flex items-center gap-1 text-xs text-amber-800 bg-amber-50/90 px-3 py-1 rounded-full border border-amber-200 font-manrope">
-                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs text-amber-800 bg-amber-50/90 px-2.5 sm:px-3 py-1 rounded-full border border-amber-200 font-manrope">
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
                   <strong className="font-semibold">{data.rating.toFixed(1)}</strong>
                   <span className="text-muted-foreground">({data.reviewCount} ulasan)</span>
                 </span>
               </div>
 
               <div>
-                <h1 className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-normal text-hk-charcoal tracking-tight">
+                <h1 className="font-editorial text-2xl sm:text-4xl lg:text-5xl font-normal text-hk-charcoal tracking-tight leading-tight">
                   {data.businessName}
                 </h1>
-                <p className="mt-1 font-editorial text-lg sm:text-xl italic text-hk-taupe">
+                <p className="mt-1 font-editorial text-base sm:text-lg lg:text-xl italic text-hk-taupe">
                   "Menyelaraskan Restu &amp; Impian di Tanah Kebumen"
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-y-1 gap-x-5 text-xs sm:text-sm text-hk-charcoal/80 font-manrope">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-y-1 gap-x-5 text-xs sm:text-sm text-hk-charcoal/80 font-manrope pt-0.5">
                 <span className="inline-flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-hk-taupe" />
+                  <MapPin className="w-3.5 h-3.5 text-hk-taupe shrink-0" />
                   Kecamatan {data.district}, Kabupaten {data.city}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-hk-taupe" />
+                  <Building2 className="w-3.5 h-3.5 text-hk-taupe shrink-0" />
                   Penanggung Jawab: <strong className="font-semibold text-hk-charcoal">{data.picName}</strong>
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Right Side: Vintage Stamp & Saldo Escrow Card */}
-          <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-4 shrink-0">
-            <div className="hidden sm:flex items-center gap-4">
+          {/* Right Side: Saldo Escrow Panel & Action Buttons */}
+          <div className="flex flex-col items-stretch sm:items-end gap-3 w-full lg:w-auto shrink-0 pt-2 lg:pt-0">
+            {/* Vintage Stamp Badge - Desktop only */}
+            <div className="hidden lg:flex items-center gap-4 self-end">
               <VintageStampBadge
                 size="sm"
                 date="EST. 2026"
@@ -137,38 +138,45 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
             </div>
 
             {/* Saldo Escrow Card */}
-            <div className="w-full sm:w-auto bg-white/95 backdrop-blur-xs border border-hk-champagne/60 rounded-2xl p-4 shadow-xs min-w-[240px]">
-              <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground mb-1 font-manrope">
-                <span className="inline-flex items-center gap-1.5">
-                  <Wallet className="w-4 h-4 text-emerald-600" />
+            <div className="w-full sm:w-[320px] lg:w-[340px] bg-white/95 backdrop-blur-xs border border-hk-champagne/60 rounded-2xl p-4 sm:p-5 shadow-xs space-y-2">
+              <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground font-manrope">
+                <span className="inline-flex items-center gap-1.5 font-semibold text-hk-charcoal">
+                  <Wallet className="w-4 h-4 text-emerald-600 shrink-0" />
                   Saldo Siap Tarik
                 </span>
-                <span className="text-[10px] text-emerald-800 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                <span className="text-[10px] text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                   Escrow H+2
                 </span>
               </div>
-              <div className="font-editorial text-2xl sm:text-3xl font-normal text-hk-charcoal tabular-nums">
+              <div className="font-editorial text-2xl sm:text-3xl lg:text-4xl font-normal text-hk-charcoal tabular-nums">
                 {formatRupiah(data.walletBalance)}
               </div>
-              <p className="text-[11px] text-hk-charcoal/70 mt-1 flex items-center gap-1.5 font-manrope">
+              <p className="text-[11px] text-hk-charcoal/70 flex items-center gap-1.5 font-manrope pt-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                 Pencairan otomatis via rekening {data.bankName.split(" ")[0]} (Maks. 1x24 jam kerja)
               </p>
             </div>
 
-            {/* Quick Link Navigation */}
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <Link href="/dashboard/vendor/kalender" className="w-full sm:w-auto">
-                <ButtonPrimary size="sm" className="w-full justify-center">
-                  <Calendar className="w-3.5 h-3.5 mr-1.5" />
-                  Kalender Booking
-                </ButtonPrimary>
+            {/* Quick Link Navigation Buttons (Matched Height, Perfectly Balanced) */}
+            <div className="grid grid-cols-2 gap-2.5 w-full sm:w-[320px] lg:w-[340px]">
+              <Link
+                href="/dashboard/vendor/kalender"
+                className="h-11 px-3 rounded-xl bg-hk-charcoal hover:bg-[#382228] text-white border border-hk-charcoal shadow-2xs font-manrope text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] select-none"
+              >
+                <Calendar className="w-3.5 h-3.5 text-hk-champagne shrink-0" />
+                <span className="truncate">Kalender Booking</span>
               </Link>
-              <Link href="/catalog" className="w-full sm:w-auto" target="_blank" rel="noopener noreferrer">
-                <ButtonGhost size="sm" className="w-full justify-center border border-hk-champagne/40 bg-white hover:border-hk-taupe/40">
-                  <Store className="w-3.5 h-3.5 mr-1.5 text-hk-taupe" />
-                  Lihat Etalase Publik
-                </ButtonGhost>
+
+              <Link
+                href="/catalog"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-11 px-3 rounded-xl bg-white hover:bg-hk-ivory text-hk-charcoal border border-hk-champagne/70 shadow-2xs font-manrope text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] select-none"
+              >
+                <Store className="w-3.5 h-3.5 text-hk-taupe shrink-0" />
+                <span className="truncate">
+                  <span className="hidden sm:inline">Lihat </span>Etalase Publik
+                </span>
               </Link>
             </div>
           </div>
