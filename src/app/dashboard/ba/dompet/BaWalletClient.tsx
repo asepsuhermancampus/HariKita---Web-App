@@ -9,9 +9,12 @@ import {
   AlertCircle,
   Building2,
   Coins,
+  Smartphone,
 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { requestWithdrawalAction } from "@/server/actions/ambassador";
+import { PAYOUT_GROUPS, isEwallet, payoutLabel } from "@/lib/indonesian-banks";
+import { Dropdown } from "@/components/harikita/ui";
 import type { getAmbassadorSummary, getAmbassadorWithdrawals } from "@/server/queries/ambassador";
 
 type Summary = NonNullable<Awaited<ReturnType<typeof getAmbassadorSummary>>>;
@@ -38,6 +41,8 @@ export function BaWalletClient({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const isEwalletSelected = isEwallet(bankName);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -49,6 +54,22 @@ export function BaWalletClient({
     }
     if (parsed > summary.walletBalance) {
       setError("Nominal melebihi saldo dompet Anda.");
+      return;
+    }
+    if (!bankName) {
+      setError("Silakan pilih bank atau e-wallet tujuan.");
+      return;
+    }
+    if (!bankAccount.trim()) {
+      setError(
+        isEwalletSelected
+          ? "Nomor HP / ID akun e-wallet wajib diisi."
+          : "Nomor rekening wajib diisi."
+      );
+      return;
+    }
+    if (!bankHolder.trim()) {
+      setError("Nama pemilik rekening / akun wajib diisi.");
       return;
     }
     startTransition(async () => {
@@ -153,42 +174,63 @@ export function BaWalletClient({
 
           <div>
             <label htmlFor="wd-bank" className="block text-hk-charcoal font-semibold mb-1">
-              Nama Bank
+              Bank / E-Wallet Tujuan
             </label>
-            <input
+            <Dropdown
               id="wd-bank"
-              type="text"
-              placeholder="Contoh: BCA"
               value={bankName}
-              onChange={(e) => setBankName(e.target.value)}
-              className="focus-ring w-full p-2.5 rounded-xl border border-hk-soft-beige focus:outline-none focus:border-hk-champagne"
+              onChange={setBankName}
+              placeholder="— Pilih bank atau e-wallet —"
+              ariaLabel="Pilih bank atau e-wallet tujuan"
+              groups={PAYOUT_GROUPS.map((g) => ({
+                label: g.group,
+                options: g.options.map((o) => ({ value: o.value, label: o.label })),
+              }))}
             />
+            {bankName && (
+              <p className="text-[10px] text-hk-charcoal/60 font-manrope mt-1 flex items-center gap-1">
+                {isEwalletSelected ? (
+                  <>
+                    <Smartphone className="w-3 h-3 text-hk-taupe" aria-hidden="true" />
+                    E-Wallet — masukkan nomor HP / ID akun e-wallet Anda.
+                  </>
+                ) : (
+                  <>
+                    <Building2 className="w-3 h-3 text-hk-taupe" aria-hidden="true" />
+                    Bank — masukkan nomor rekening Anda.
+                  </>
+                )}
+              </p>
+            )}
           </div>
 
           <div>
             <label htmlFor="wd-account" className="block text-hk-charcoal font-semibold mb-1">
-              Nomor Rekening
+              {isEwalletSelected ? "Nomor HP / ID Akun E-Wallet" : "Nomor Rekening"}
             </label>
             <input
               id="wd-account"
               type="text"
-              placeholder="Contoh: 8277019233"
+              inputMode={isEwalletSelected ? "tel" : "numeric"}
+              placeholder={isEwalletSelected ? "Contoh: 081234567890" : "Contoh: 8277019233"}
               value={bankAccount}
               onChange={(e) => setBankAccount(e.target.value)}
+              required
               className="focus-ring w-full p-2.5 rounded-xl border border-hk-soft-beige focus:outline-none focus:border-hk-champagne"
             />
           </div>
 
           <div>
             <label htmlFor="wd-holder" className="block text-hk-charcoal font-semibold mb-1">
-              Nama Pemilik Rekening
+              {isEwalletSelected ? "Nama Pemilik Akun" : "Nama Pemilik Rekening"}
             </label>
             <input
               id="wd-holder"
               type="text"
-              placeholder="Sesuai buku tabungan"
+              placeholder={isEwalletSelected ? "Sesuai akun e-wallet" : "Sesuai buku tabungan"}
               value={bankHolder}
               onChange={(e) => setBankHolder(e.target.value)}
+              required
               className="focus-ring w-full p-2.5 rounded-xl border border-hk-soft-beige focus:outline-none focus:border-hk-champagne"
             />
           </div>
@@ -237,8 +279,16 @@ export function BaWalletClient({
                       <span className="text-hk-charcoal/60">• {w.createdAt}</span>
                     </div>
                     <p className="text-[11px] text-hk-charcoal/60 font-manrope mt-0.5 flex items-center gap-1">
-                      <Building2 className="w-3 h-3 text-hk-taupe" aria-hidden="true" />
-                      Penarikan saldo komisi
+                      {isEwallet(w.bankName ?? "") ? (
+                        <Smartphone className="w-3 h-3 text-hk-taupe" aria-hidden="true" />
+                      ) : (
+                        <Building2 className="w-3 h-3 text-hk-taupe" aria-hidden="true" />
+                      )}
+                      {w.bankName
+                        ? `${payoutLabel(w.bankName)}${
+                            w.bankAccount ? ` • ${w.bankAccount}` : ""
+                          }`
+                        : "Penarikan saldo komisi"}
                     </p>
                   </div>
                   <div className="sm:text-right">

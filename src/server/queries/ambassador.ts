@@ -87,6 +87,9 @@ export async function getAmbassadorWithdrawals() {
     id: w.id,
     amount: w.amount,
     status: w.status,
+    bankName: w.bankName,
+    bankAccount: w.bankAccount,
+    bankHolder: w.bankHolder,
     createdAt: w.createdAt.toISOString().split("T")[0],
   }));
 }

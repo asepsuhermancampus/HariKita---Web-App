@@ -90,8 +90,8 @@ async function main() {
       district: "Kebumen Kota",
       commissionPct: 5.0,
       isActive: true,
-      // Saldo = total komisi (150.000) - penarikan yang sudah diproses (100.000).
-      walletBalance: 50000,
+      // Total komisi terkumpul Rp1.237.500 - penarikan diproses Rp100.000.
+      walletBalance: 1137500,
       bankName: "BCA",
       bankAccount: "1234567890",
       bankHolder: "Rina Brand Ambassador",
@@ -108,7 +108,8 @@ async function main() {
       district: "Gombong",
       commissionPct: 7.0,
       isActive: true,
-      walletBalance: 140000,
+      // Total komisi terkumpul Rp910.000 (belum ada penarikan sukses).
+      walletBalance: 910000,
       bankName: "Mandiri",
       bankAccount: "136000998877",
       bankHolder: "Dwi Gombong Ambassador",
@@ -344,10 +345,15 @@ async function main() {
   ];
 
   // Vendor yang direkrut BA (berdasarkan indeks vendorsData):
-  //   0 = Menganti (BA-1), 4 = Pradana Cinema (BA-1), 6 = Dapur Rasa Boga (BA-2)
+  //   BA-1 (Rina): 0=Menganti, 1=Rarasati, 2=Alula MUA, 3=Hantaran, 4=Pradana
+  //   BA-2 (Dwi) : 6=Dapur Rasa Boga, 5=Asmara Flora
   const recruiterByIndex: Record<number, string> = {
     0: ba1.id,
+    1: ba1.id,
+    2: ba1.id,
+    3: ba1.id,
     4: ba1.id,
+    5: ba2.id,
     6: ba2.id,
   };
 
@@ -421,11 +427,18 @@ async function main() {
     subtotal: number;
     status: string;
   }> = [
-    // BA-1 (5%) — 2 komisi dari Menganti & Pradana.
+    // ── BA-1 Rina (5%) ────────────────────────────────────────────
     { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 0, subtotal: 3500000, status: "CREDITED" }, // 175.000
     { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 4, subtotal: 4200000, status: "CREDITED" }, // 210.000
-    // BA-2 (7%) — komisi dari Dapur Rasa Boga.
+    { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 1, subtotal: 2800000, status: "CREDITED" }, // 140.000
+    { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 2, subtotal: 2200000, status: "CREDITED" }, // 110.000
+    { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 3, subtotal: 1050000, status: "CREDITED" }, //  52.500
+    { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 0, subtotal: 5000000, status: "CREDITED" }, // 250.000
+    { ambassadorId: ba1.id, pct: 5.0, vendorIndex: 4, subtotal: 6000000, status: "CREDITED" }, // 300.000
+    // ── BA-2 Dwi (7%) ─────────────────────────────────────────────
     { ambassadorId: ba2.id, pct: 7.0, vendorIndex: 6, subtotal: 4500000, status: "CREDITED" }, // 315.000
+    { ambassadorId: ba2.id, pct: 7.0, vendorIndex: 5, subtotal: 5500000, status: "CREDITED" }, // 385.000
+    { ambassadorId: ba2.id, pct: 7.0, vendorIndex: 6, subtotal: 3000000, status: "CREDITED" }, // 210.000
   ];
 
   for (let i = 0; i < commissionSeeds.length; i++) {
@@ -479,6 +492,7 @@ async function main() {
   // 2c. Riwayat penarikan dompet BA.
   await prisma.ambassadorWithdrawal.createMany({
     data: [
+      // ── Rina (BA-1) ──
       {
         ambassadorId: ba1.id,
         amount: 100000,
@@ -493,10 +507,11 @@ async function main() {
         ambassadorId: ba1.id,
         amount: 50000,
         status: "PENDING",
-        bankName: "BCA",
-        bankAccount: "1234567890",
+        bankName: "GoPay",
+        bankAccount: "081200000001",
         bankHolder: "Rina Brand Ambassador",
       },
+      // ── Dwi (BA-2) ──
       {
         ambassadorId: ba2.id,
         amount: 75000,
@@ -506,6 +521,14 @@ async function main() {
         bankHolder: "Dwi Gombong Ambassador",
         processedAt: new Date("2026-09-12T14:30:00Z"),
         note: "Nomor rekening tidak valid.",
+      },
+      {
+        ambassadorId: ba2.id,
+        amount: 200000,
+        status: "PENDING",
+        bankName: "DANA",
+        bankAccount: "081200000002",
+        bankHolder: "Dwi Gombong Ambassador",
       },
     ],
   });
@@ -599,9 +622,9 @@ async function main() {
   console.log("Pengantin   : 081987654321  -> /auth/login");
   console.log("Vendor      : 081300000001  -> /auth/login");
   console.log("Brand Ambassador:");
-  console.log("  [AKTIF]   : 081200000001  (Rina BA Kebumen, komisi 5%, kode BA-KEBUMEN-2026) -> /auth/login/ba");
-  console.log("  [AKTIF]   : 081200000002  (Dwi BA Gombong, komisi 7%, kode BA-GOMBONG-2026) -> /auth/login/ba");
-  console.log("  [NONAKTIF]: 081200000003  (Sari BA Karanganyar, komisi 5%, kode BA-KARANGANYAR-2026) -> /auth/login/ba");
+  console.log("  [AKTIF]   : 081200000001  (Rina BA Kebumen, komisi 5%, saldo Rp1.137.500, kode BA-KEBUMEN-2026) -> /auth/login/ba");
+  console.log("  [AKTIF]   : 081200000002  (Dwi BA Gombong, komisi 7%, saldo Rp910.000, kode BA-GOMBONG-2026) -> /auth/login/ba");
+  console.log("  [NONAKTIF]: 081200000003  (Sari BA Karanganyar, komisi 5%, saldo Rp0, kode BA-KARANGANYAR-2026) -> /auth/login/ba");
 }
 
 main()
