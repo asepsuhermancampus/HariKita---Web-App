@@ -26,6 +26,7 @@ model User {
   vendorProfile     VendorProfile?
   clientProfile     ClientProfile?
   brandAmbassador   BrandAmbassador?
+  pinChangeLogs     PinChangeLog[]
   orders            Order[]
   heldSlots         VendorAvailability[] @relation("UserAvailabilityHolds")
   createdAt         DateTime             @default(now())
@@ -574,6 +575,31 @@ model AmbassadorWithdrawal {
   updatedAt      DateTime        @updatedAt
 
   @@index([ambassadorId, status])
+}
+
+model OtpCode {
+  id          String    @id @default(cuid())
+  email       String
+  codeHash    String
+  purpose     String    @default("REGISTER") // "REGISTER" | "RESET_PIN"
+  status      String    @default("PENDING")  // "PENDING" | "VERIFIED" | "LOCKED" | "CONSUMED"
+  attempts    Int       @default(0)
+  expiresAt   DateTime
+  lockedUntil DateTime?
+  verifiedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([email, purpose, status])
+  @@index([email, createdAt])
+}
+
+model PinChangeLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  changedAt DateTime @default(now())
+
+  @@index([userId, changedAt])
 }
 
 model Notification {
