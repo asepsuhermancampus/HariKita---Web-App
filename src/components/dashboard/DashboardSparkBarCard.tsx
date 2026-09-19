@@ -71,7 +71,7 @@ export function DashboardSparkBarCard({
 
   return (
     <div
-      className={`bg-white rounded-3xl p-6 sm:p-7 border border-hk-champagne/40 shadow-xs flex flex-col justify-between transition-all ${className}`}
+      className={`bg-white rounded-3xl p-5 sm:p-6 border border-hk-champagne/40 shadow-xs flex flex-col justify-between transition-all ${className}`}
     >
       {/* Top Header Row */}
       <div className="flex items-center justify-between gap-2 mb-1">
@@ -81,7 +81,7 @@ export function DashboardSparkBarCard({
         {actionLabel && (
           <button
             onClick={onActionClick}
-            className="text-xs font-manrope font-medium text-hk-charcoal/60 hover:text-hk-taupe transition-colors px-2 py-1 rounded-lg hover:bg-hk-ivory"
+            className="text-xs font-manrope font-medium text-hk-charcoal/60 hover:text-hk-taupe transition-colors px-2 py-0.5 rounded-lg hover:bg-hk-ivory"
           >
             {actionLabel}
           </button>
@@ -89,7 +89,7 @@ export function DashboardSparkBarCard({
       </div>
 
       {/* Main Metric Value */}
-      <div className="my-2">
+      <div className="my-1.5">
         <div className="font-manrope font-bold text-2xl sm:text-3xl text-hk-charcoal tracking-tight tabular-nums">
           {value}
         </div>
@@ -109,7 +109,7 @@ export function DashboardSparkBarCard({
       </div>
 
       {/* 6 to 7 Vertical Rounded Micro Bars */}
-      <div className="relative pt-6 pb-1">
+      <div className="relative pt-3 pb-1">
         <div className="h-20 sm:h-24 flex items-end justify-between gap-2 px-1">
           {bars.map((bar, i) => {
             const heightPct = Math.max(16, Math.round((bar.value / maxVal) * 100));

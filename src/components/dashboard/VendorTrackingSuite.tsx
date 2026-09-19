@@ -259,6 +259,7 @@ export function VendorTrackingSuite({ data, className = "" }: VendorTrackingSuit
           }}
           bars={revenueBars}
           barTone="emerald"
+          className="h-[350px] lg:h-[355px]"
         />
 
         {/* Card B: Dana Escrow Tertahan */}
@@ -273,6 +274,7 @@ export function VendorTrackingSuite({ data, className = "" }: VendorTrackingSuit
           }}
           bars={escrowBars}
           barTone="amber"
+          className="h-[350px] lg:h-[355px]"
         />
 
         {/* Card C: Schedule Agenda Timeline */}
@@ -287,6 +289,7 @@ export function VendorTrackingSuite({ data, className = "" }: VendorTrackingSuit
           onPrevDate={() => setCurrentDateIndex((prev) => (prev > 0 ? prev - 1 : datesList.length - 1))}
           onNextDate={() => setCurrentDateIndex((prev) => (prev < datesList.length - 1 ? prev + 1 : 0))}
           events={filteredEvents}
+          className="h-[350px] lg:h-[355px]"
         />
       </div>
 
