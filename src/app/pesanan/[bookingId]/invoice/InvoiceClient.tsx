@@ -19,7 +19,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { useOrders, OrderRecord } from "@/lib/order-store";
-import { DecorativeDivider, WaxSealBadge, VintageStampBadge } from "@/components/harikita/ui";
+import { DecorativeDivider, VintageStampBadge } from "@/components/harikita/ui";
 import type { OrderViewModel } from "@/server/queries/orders";
 
 interface PageProps {

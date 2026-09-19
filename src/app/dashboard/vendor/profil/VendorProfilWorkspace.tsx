@@ -70,16 +70,16 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
           {/* Studio Profile & Badges */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 flex-1 min-w-0">
             {/* Top Row on Mobile: Avatar + Badges beside it. On Desktop: Just the Avatar */}
-            <div className="flex sm:contents items-center gap-4 w-full sm:w-auto">
+            <div className="flex sm:contents items-center gap-3.5 sm:gap-6 w-full sm:w-auto">
               {/* Visual Atelier Crest (Enlarged and Clean - Wax Seal removed for unobstructed branding) */}
               <div className="shrink-0">
-                <div className="w-22 h-22 sm:w-26 sm:h-26 lg:w-28 lg:h-28 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40">
-                  <Store className="w-11 h-11 sm:w-13 sm:h-13 lg:w-14 lg:h-14" />
+                <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-2xl sm:rounded-3xl bg-hk-charcoal text-hk-champagne flex items-center justify-center shadow-md ring-3 sm:ring-4 ring-hk-champagne/40 transition-transform hover:scale-[1.02]">
+                  <Store className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-hk-champagne" />
                 </div>
               </div>
 
               {/* Mobile-only Badges positioned next to Avatar (fills the empty right space!) */}
-              <div className="flex sm:hidden flex-col gap-1.5 min-w-0 flex-1">
+              <div className="flex sm:hidden flex-col justify-center gap-1.5 min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-1.5">
                   <BadgePremium
                     label={data.category.toUpperCase()}
