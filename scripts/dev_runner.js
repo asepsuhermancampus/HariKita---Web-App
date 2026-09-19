@@ -42,7 +42,45 @@ if (fs.existsSync(ASSET_DIR)) {
   console.warn(`[Asset Watcher] ⚠️ Directory not found: ${ASSET_DIR}`);
 }
 
-// 3. Spawn Next.js Dev Server
+// 3. Ensure .next/routes-manifest.json exists (prevents Windows ENOENT in dev mode)
+const nextDir = path.join(ROOT_DIR, '.next');
+const routesManifestPath = path.join(nextDir, 'routes-manifest.json');
+try {
+  if (!fs.existsSync(nextDir)) {
+    fs.mkdirSync(nextDir, { recursive: true });
+  }
+  if (!fs.existsSync(routesManifestPath)) {
+    fs.writeFileSync(
+      routesManifestPath,
+      JSON.stringify(
+        {
+          version: 3,
+          pages404: true,
+          caseSensitive: false,
+          basePath: '',
+          redirects: [],
+          headers: [],
+          dynamicRoutes: [],
+          staticRoutes: [],
+          dataRoutes: [],
+          rsc: {
+            header: 'RSC',
+            varyHeader: 'RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch',
+            prefetchHeader: 'Next-Router-Prefetch',
+            didPostponeHeader: 'x-nextjs-postponed',
+            contentTypeHeader: 'text/x-component',
+          },
+        },
+        null,
+        2
+      )
+    );
+  }
+} catch (manifestErr) {
+  // non-blocking
+}
+
+// 4. Spawn Next.js Dev Server
 const userArgs = process.argv.slice(2);
 const nextArgs = ['next', 'dev', ...userArgs];
 

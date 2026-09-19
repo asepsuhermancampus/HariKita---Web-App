@@ -27,6 +27,16 @@ function isSqliteUrl(url: string): boolean {
   return url.startsWith("file:");
 }
 
+function normalizeDatasourceUrl(url: string): string {
+  if (!url) return url;
+  // Jika memakai Neon pooler (PgBouncer transaction mode), wajib append pgbouncer=true
+  if (url.includes("-pooler.") && !url.includes("pgbouncer=")) {
+    const separator = url.includes("?") ? "&" : "?";
+    return `${url}${separator}pgbouncer=true&connect_timeout=15`;
+  }
+  return url;
+}
+
 function createPrismaClient(): PrismaClient {
   const url = resolveDatasourceUrl();
 
@@ -48,8 +58,10 @@ function createPrismaClient(): PrismaClient {
     }
   }
 
-  // Produksi / PostgreSQL.
+  // Produksi / PostgreSQL (termasuk Neon & Supabase)
+  const finalUrl = normalizeDatasourceUrl(url);
   return new PrismaClient({
+    datasourceUrl: finalUrl || undefined,
     log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 }

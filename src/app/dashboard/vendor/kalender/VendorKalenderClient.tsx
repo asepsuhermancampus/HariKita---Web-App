@@ -16,7 +16,7 @@ import {
 import { useAvailability, availabilityStore } from "@/lib/availability-store";
 import { addBlackoutAction, removeBlackoutAction } from "@/server/actions/vendor";
 import type { VendorBlackoutDTO } from "@/server/queries/vendor";
-import { DatePicker, Calendar as DayPickerCalendar } from "@/components/harikita/ui";
+import { Calendar as DayPickerCalendar } from "@/components/harikita/ui";
 
 /**
  * Kalender Blackout Vendor (client component).
@@ -124,15 +124,37 @@ export function VendorKalenderClient({
 
           <form onSubmit={handleAddDate} className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div>
-              <DatePicker
-                label="Pilih Tanggal:"
-                required
-                value={newDate}
-                onChange={(d) => setNewDate(d)}
-                placeholder="Pilih tanggal..."
-                blackoutDates={blackouts.map((b) => b.date)}
-                displayFormat="EEEE, dd MMMM yyyy"
-              />
+              <label className="block text-[#4A2E35] font-semibold mb-1">
+                Tanggal Terpilih: <span className="text-red-500">*</span>
+              </label>
+              <div
+                className={`w-full flex items-center justify-between gap-2 rounded-xl border p-2.5 min-h-[44px] ${
+                  newDate
+                    ? "border-[#C5A880]/60 bg-white text-[#4A2E35]"
+                    : "border-dashed border-[#E5D7C7] bg-[#FAF8F5] text-[#6B5E62]"
+                }`}
+                aria-live="polite"
+              >
+                <span className="flex items-center gap-2 font-medium">
+                  <Calendar className="w-4 h-4 text-[#C5A880] shrink-0" />
+                  {newDate ? (
+                    <span className="font-mono">{newDate}</span>
+                  ) : (
+                    <span className="italic">Pilih tanggal di kalender →</span>
+                  )}
+                </span>
+                {newDate && (
+                  <button
+                    type="button"
+                    onClick={() => setNewDate("")}
+                    className="text-[#6B5E62] hover:text-[#4A2E35] transition-colors"
+                    title="Kosongkan pilihan tanggal"
+                    aria-label="Kosongkan pilihan tanggal"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
             </div>
             <div>
               <label className="block text-[#4A2E35] font-semibold mb-1">
@@ -169,7 +191,15 @@ export function VendorKalenderClient({
 
         {/* Visual Interactive Month Calendar & Blackout Overview */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 flex flex-col items-center">
+          <div className="lg:col-span-1 flex flex-col items-center gap-2">
+            <div className="w-full text-center">
+              <h3 className="font-serif text-base font-bold text-[#4A2E35]">
+                Pilih Tanggal
+              </h3>
+              <p className="text-[11px] text-[#6B5E62]">
+                Klik tanggal untuk mengisi formulir kunci di atas. Tanggal merah sudah terkunci.
+              </p>
+            </div>
             <DayPickerCalendar
               selected={newDate}
               onSelect={(d) => setNewDate(d)}

@@ -37,17 +37,22 @@ function LoginForm() {
   const executeLogin = (loginPhone: string, loginPin: string) => {
     setError("");
     startTransition(async () => {
-      const formData = new FormData();
-      formData.set("phone", loginPhone);
-      formData.set("pin", loginPin);
-      if (callbackUrl) formData.set("callbackUrl", callbackUrl);
-      const result = await loginAction(formData);
-      if (result.success && result.redirectTo) {
-        window.location.href = result.redirectTo;
-      } else {
-        setError(
-          result.error || "Login gagal. Periksa nomor HP dan PIN Anda."
-        );
+      try {
+        const formData = new FormData();
+        formData.set("phone", loginPhone);
+        formData.set("pin", loginPin);
+        if (callbackUrl) formData.set("callbackUrl", callbackUrl);
+        const result = await loginAction(formData);
+        if (result.success && result.redirectTo) {
+          window.location.href = result.redirectTo;
+        } else {
+          setError(
+            result.error || "Login gagal. Periksa nomor HP dan PIN Anda."
+          );
+        }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        setError(msg || "Terjadi kesalahan server saat login. Silakan refresh dan coba lagi.");
       }
     });
   };

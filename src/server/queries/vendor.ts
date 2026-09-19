@@ -10,9 +10,14 @@ import { getSession } from "@/lib/session";
 
 /** Mengambil VendorProfile milik sesi yang login (atau null). */
 export async function getCurrentVendor() {
-  const session = await getSession();
-  if (!session) return null;
-  return prisma.vendorProfile.findUnique({ where: { userId: session.userId } });
+  try {
+    const session = await getSession();
+    if (!session) return null;
+    return await prisma.vendorProfile.findUnique({ where: { userId: session.userId } });
+  } catch (err) {
+    console.error("[getCurrentVendor] Query failed:", err);
+    return null;
+  }
 }
 
 export interface VendorPackageDTO {
@@ -31,28 +36,33 @@ export interface VendorPackageDTO {
 
 /** Daftar paket milik vendor yang login. */
 export async function getVendorPackages(): Promise<VendorPackageDTO[]> {
-  const vendor = await getCurrentVendor();
-  if (!vendor) return [];
+  try {
+    const vendor = await getCurrentVendor();
+    if (!vendor) return [];
 
-  const packages = await prisma.servicePackage.findMany({
-    where: { vendorId: vendor.id },
-    orderBy: { createdAt: "desc" },
-  });
+    const packages = await prisma.servicePackage.findMany({
+      where: { vendorId: vendor.id },
+      orderBy: { createdAt: "desc" },
+    });
 
-  return packages.map((p) => ({
-    id: p.id,
-    name: p.name,
-    description: p.description,
-    category: p.category,
-    basePrice: p.basePrice,
-    unitPrice: p.unitPrice,
-    unitType: p.unitType,
-    minUnit: p.minUnit,
-    maxUnit: p.maxUnit,
-    slaDays: p.slaDays,
-    // Model ServicePackage belum punya flag aktif; semua dianggap aktif.
-    isActive: true,
-  }));
+    return packages.map((p) => ({
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      category: p.category,
+      basePrice: p.basePrice,
+      unitPrice: p.unitPrice,
+      unitType: p.unitType,
+      minUnit: p.minUnit,
+      maxUnit: p.maxUnit,
+      slaDays: p.slaDays,
+      // Model ServicePackage belum punya flag aktif; semua dianggap aktif.
+      isActive: true,
+    }));
+  } catch (err) {
+    console.error("[getVendorPackages] Query failed:", err);
+    return [];
+  }
 }
 
 export interface VendorBlackoutDTO {
@@ -64,20 +74,25 @@ export interface VendorBlackoutDTO {
 
 /** Daftar blackout date milik vendor yang login (dari VendorAvailability). */
 export async function getVendorBlackouts(): Promise<VendorBlackoutDTO[]> {
-  const vendor = await getCurrentVendor();
-  if (!vendor) return [];
+  try {
+    const vendor = await getCurrentVendor();
+    if (!vendor) return [];
 
-  const slots = await prisma.vendorAvailability.findMany({
-    where: { vendorId: vendor.id, status: "BLACKED_OUT" },
-    orderBy: { date: "asc" },
-  });
+    const slots = await prisma.vendorAvailability.findMany({
+      where: { vendorId: vendor.id, status: "BLACKED_OUT" },
+      orderBy: { date: "asc" },
+    });
 
-  return slots.map((s) => ({
-    id: s.id,
-    vendorId: s.vendorId,
-    date: s.date.toISOString().split("T")[0],
-    reason: "Tanggal Terkunci (Offline)",
-  }));
+    return slots.map((s) => ({
+      id: s.id,
+      vendorId: s.vendorId,
+      date: s.date.toISOString().split("T")[0],
+      reason: "Tanggal Terkunci (Offline)",
+    }));
+  } catch (err) {
+    console.error("[getVendorBlackouts] Query failed:", err);
+    return [];
+  }
 }
 
 /** Profil vendor ringkas untuk header portal. */
