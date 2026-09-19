@@ -1,6 +1,6 @@
 # Brand Ambassador (BA) Referral & Komisi — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Menambahkan role Brand Ambassador (BA) yang merekrut vendor lewat kode referral, mencatat komisi persen ke dompet BA saat pelunasan 70% order cair, plus dashboard BA dan panel admin.
 
@@ -57,7 +57,7 @@
 **Interfaces:**
 - Produces: model `BrandAmbassador` (`id, userId, referralCode, displayName, phone, city, district, commissionPct, isActive, walletBalance, bankName, bankAccount, bankHolder`), `AmbassadorCommission` (`id, ambassadorId, orderId, orderItemId, vendorId, baseAmount, commissionPct, commissionAmount, status, ledgerJournalId`), `AmbassadorWithdrawal` (`id, ambassadorId, amount, status, bankName, bankAccount, bankHolder, processedAt, note`). Relasi `User.brandAmbassador?`, `VendorProfile.recruitedById?/recruitedBy?`, `Order.ambassadorCommissions[]`, `OrderItem.ambassadorCommissions[]`.
 
-- [ ] **Step 1: Tambah model & relasi ke `prisma/schema.prisma`**
+- [x] **Step 1: Tambah model & relasi ke `prisma/schema.prisma`**
 
 Tambahkan blok berikut (mis. sebelum berkas `model Notification`):
 
@@ -155,11 +155,11 @@ Lalu pada model yang sudah ada, tambahkan relasi:
   ambassadorCommissions AmbassadorCommission[]
   ```
 
-- [ ] **Step 2: Salin perubahan yang sama ke `prisma/schema.sqlite.prisma`**
+- [x] **Step 2: Salin perubahan yang sama ke `prisma/schema.sqlite.prisma`**
 
 Terapkan blok model & relasi yang identik pada `prisma/schema.sqlite.prisma`. Untuk SQLite, tidak ada perbedaan sintaks pada model di atas (semua tipe didukung). Pastikan `datasource` tetap `provider = "sqlite"`.
 
-- [ ] **Step 3: Validasi & push skema**
+- [x] **Step 3: Validasi & push skema**
 
 Run: `npm run validate`
 Expected: "The schema is valid" untuk schema default.
@@ -173,17 +173,17 @@ Expected: database postgres ter-update tanpa error.
 Run: `npm run db:push:sqlite`
 Expected: `prisma/dev.db` ter-update tanpa error.
 
-- [ ] **Step 4: Regenerate clients**
+- [x] **Step 4: Regenerate clients**
 
 Run: `npm run generate; if ($?) { npm run generate:sqlite }`
 Expected: kedua client ter-generate tanpa error.
 
-- [ ] **Step 5: Verifikasi typecheck**
+- [x] **Step 5: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih (exit 0).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add prisma/schema.prisma prisma/schema.sqlite.prisma
@@ -201,7 +201,7 @@ git commit -m "feat(ba): add BrandAmbassador, AmbassadorCommission, AmbassadorWi
 - Consumes: model dari Task 1.
 - Produces: `seedAmbassador(prisma, opts?): Promise<{ userId, ambassadorId, referralCode }>` dan `seedVendorWithRecruiter(prisma, opts): Promise<{ userId, vendorId, packageId, ambassadorId }>`.
 
-- [ ] **Step 1: Tambah helper `seedAmbassador`**
+- [x] **Step 1: Tambah helper `seedAmbassador`**
 
 Tambahkan di akhir `tests/helpers/test-db.ts`:
 
@@ -272,12 +272,12 @@ export async function seedVendorWithRecruiter(
 }
 ```
 
-- [ ] **Step 2: Verifikasi typecheck**
+- [x] **Step 2: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add tests/helpers/test-db.ts
@@ -299,7 +299,7 @@ git commit -m "test(ba): add seed helpers for ambassador and recruited vendor"
   - `resolveReferral(code: string | null | undefined, tx?): Promise<{ ambassadorId: string } | null>` — mengembalikan BA aktif jika kode valid, `null` bila kosong/invalid/nonaktif.
   - `attributionBaLocked(vendorUserId, ambassadorUserId): boolean` — true bila self-referral (userId BA == userId vendor).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Buat `tests/ambassador-referral.test.ts`:
 
@@ -350,12 +350,12 @@ test("resolveReferral returns null for inactive ambassador", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/ambassador-referral.test.ts`
 Expected: FAIL — module `../src/server/services/ambassador-service` belum ada.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Buat `src/server/services/ambassador-service.ts`:
 
@@ -394,12 +394,12 @@ export function attributionBaLocked(vendorUserId: string, ambassadorUserId: stri
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx --test tests/ambassador-referral.test.ts`
 Expected: PASS (4 test).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/ambassador-service.ts tests/ambassador-referral.test.ts
@@ -421,7 +421,7 @@ git commit -m "feat(ba): referral code generation and resolution"
   - Ledger: `LEDGER_ACCOUNTS.AMBASSADOR_PAYABLE = "2030_AMBASSADOR_PAYABLE"`, `ambassadorJournalNumber(orderItemId): string` = `"ADVCOM-{orderItemId}"`.
   - `creditCommissionForOrder(orderId: string, tx: AmbassadorTx): Promise<{ created: number; skipped: number }>` — untuk tiap OrderItem order tsb yang vendornya punya rekruter BA aktif, buat komisi (exact-once) + tambah `walletBalance` BA + jurnal.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Buat `tests/ambassador-commission.test.ts`:
 
@@ -527,12 +527,12 @@ test("does not credit for inactive ambassador", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/ambassador-commission.test.ts`
 Expected: FAIL — `creditCommissionForOrder` belum ada.
 
-- [ ] **Step 3: Tambah akun COA & helper jurnal di `ledger-service.ts`**
+- [x] **Step 3: Tambah akun COA & helper jurnal di `ledger-service.ts`**
 
 Di dalam objek `LEDGER_ACCOUNTS` (baris ~353), tambahkan baris:
 
@@ -549,7 +549,7 @@ export function ambassadorJournalNumber(orderItemId: string): string {
 }
 ```
 
-- [ ] **Step 4: Implementasi `creditCommissionForOrder`**
+- [x] **Step 4: Implementasi `creditCommissionForOrder`**
 
 Tambahkan ke `src/server/services/ambassador-service.ts`:
 
@@ -647,12 +647,12 @@ export async function creditCommissionForOrder(
 }
 ```
 
-- [ ] **Step 5: Run test to verify it passes**
+- [x] **Step 5: Run test to verify it passes**
 
 Run: `npx tsx --test tests/ambassador-commission.test.ts`
 Expected: PASS (4 test).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/server/services/ambassador-service.ts src/server/services/ledger-service.ts tests/ambassador-commission.test.ts
@@ -671,7 +671,7 @@ git commit -m "feat(ba): credit commission per order item with exact-once ledger
 - Consumes: `creditCommissionForOrder` dari ambassador-service; `runPayoutSweep` di payment-service.
 - Produces: setelah `executePayout` `SETTLEMENT_PAYOUT` berhasil, `creditCommissionForOrder(orderId, tx)` dipanggil.
 
-- [ ] **Step 1: Tambah test integrasi**
+- [x] **Step 1: Tambah test integrasi**
 
 Tambahkan ke `tests/ambassador-commission.test.ts`:
 
@@ -717,12 +717,12 @@ test("runPayoutSweep SETTLEMENT_PAYOUT triggers BA commission", async () => {
 
 > Catatan: bila guard waktu/`completedAt` di `checkPayoutEligibility` tidak lolos dengan skema test di atas, sesuaikan setup (lihat `checkPayoutEligibility` di `payment-service.ts` baris ~499) agar guard terpenuhi — tetapi JANGAN melemahkan guard produksi. Test harus menyesuaikan ke guard, bukan sebaliknya.
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/ambassador-commission.test.ts`
 Expected: FAIL — komisi tidak dibuat (hook belum ada).
 
-- [ ] **Step 3: Sisipkan hook di `runPayoutSweep`**
+- [x] **Step 3: Sisipkan hook di `runPayoutSweep`**
 
 Di `src/server/services/payment-service.ts`, import di atas:
 
@@ -743,12 +743,12 @@ Di dalam `runPayoutSweep`, setelah blok `if (result.created) executed.push(cand.
     }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `npx tsx --test tests/ambassador-commission.test.ts`
 Expected: PASS (semua test, termasuk integrasi).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/payment-service.ts tests/ambassador-commission.test.ts
@@ -768,7 +768,7 @@ git commit -m "feat(ba): trigger commission credit on settlement payout sweep"
   - `requestWithdrawal(input: { ambassadorId: string; amount: number; bankName?: string; bankAccount?: string; bankHolder?: string }, tx?): Promise<{ withdrawalId: string }>` — menahan saldo; error bila amount > saldo.
   - `resolveWithdrawal(withdrawalId: string, decision: "PAID" | "REJECTED", tx?): Promise<void>` — REJECTED mengembalikan saldo.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Tambahkan ke `tests/ambassador-commission.test.ts`:
 
@@ -801,12 +801,12 @@ test("resolveWithdrawal REJECTED restores balance", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/ambassador-commission.test.ts`
 Expected: FAIL — `requestWithdrawal`/`resolveWithdrawal` belum ada.
 
-- [ ] **Step 3: Implementasi**
+- [x] **Step 3: Implementasi**
 
 Tambahkan ke `src/server/services/ambassador-service.ts`:
 
@@ -880,12 +880,12 @@ export async function resolveWithdrawal(
 
 > Verifikasi nama error class: `DomainError` diimpor dari `src/server/services/errors.ts` (cek export). Bila beda nama, sesuaikan.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx --test tests/ambassador-commission.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/ambassador-service.ts tests/ambassador-commission.test.ts
@@ -905,7 +905,7 @@ git commit -m "feat(ba): ambassador wallet withdrawal request and resolution"
 - Consumes: `resolveReferral`, `attributionBaLocked`.
 - Produces: `registerVendorAction` menerima FormData key `referralCode` (opsional) dan menyetel `VendorProfile.recruitedById`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Tambahkan ke `tests/ambassador-referral.test.ts`:
 
@@ -939,12 +939,12 @@ test("attributeVendorToReferral ignores invalid code", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/ambassador-referral.test.ts`
 Expected: FAIL — `attributeVendorToReferral` belum ada.
 
-- [ ] **Step 3: Implementasi helper atribusi**
+- [x] **Step 3: Implementasi helper atribusi**
 
 Tambahkan ke `src/server/services/ambassador-service.ts`:
 
@@ -979,12 +979,12 @@ export async function attributeVendorToReferral(
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx --test tests/ambassador-referral.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Hubungkan ke `registerVendorAction`**
+- [x] **Step 5: Hubungkan ke `registerVendorAction`**
 
 Di `src/server/actions/auth.ts`, tambahkan import di atas:
 
@@ -1011,7 +1011,7 @@ Setelah `prisma.user.create({...})` sukses (tambahkan setelah variabel `newUser`
     }
 ```
 
-- [ ] **Step 6: Tambah field input di halaman registrasi vendor**
+- [x] **Step 6: Tambah field input di halaman registrasi vendor**
 
 Di `src/app/auth/register-vendor/page.tsx`, tambahkan state di atas return:
 
@@ -1041,12 +1041,12 @@ Tambahkan input (mis. setelah field whatsapp) di dalam form:
 
 > Catatan: halaman registrasi saat ini memakai `setTimeout` mock (belum memanggil action). Bila belum tersambung ke `registerVendorAction`, cukup pastikan `referralCode` ikut dikirim saat form benar-benar tersambung. Jangan mengubah perilaku lain.
 
-- [ ] **Step 7: Verifikasi typecheck**
+- [x] **Step 7: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add src/server/actions/auth.ts src/app/auth/register-vendor/page.tsx src/server/services/ambassador-service.ts tests/ambassador-referral.test.ts
@@ -1065,7 +1065,7 @@ git commit -m "feat(ba): accept referral code on vendor registration"
 **Interfaces:**
 - Produces: `getDashboardPath("BA") === "/dashboard/ba"`; rute `ROUTES.BA.*`; middleware melindungi `/dashboard/ba/*` untuk role `BA`.
 
-- [ ] **Step 1: Update `getDashboardPath`**
+- [x] **Step 1: Update `getDashboardPath`**
 
 Di `src/lib/session.ts`, pada `switch (role)` tambahkan case:
 
@@ -1074,7 +1074,7 @@ Di `src/lib/session.ts`, pada `switch (role)` tambahkan case:
       return "/dashboard/ba";
 ```
 
-- [ ] **Step 2: Tambah rute BA di `src/lib/routes.ts`**
+- [x] **Step 2: Tambah rute BA di `src/lib/routes.ts`**
 
 Tambahkan setelah blok `VENDOR: { ... }`:
 
@@ -1094,7 +1094,7 @@ Tambahkan juga ke `ADMIN`:
     BA: '/admin/ba',
 ```
 
-- [ ] **Step 3: Proteksi rute di `src/middleware.ts`**
+- [x] **Step 3: Proteksi rute di `src/middleware.ts`**
 
 Tambahkan blok proteksi (mengikuti pola `/dashboard/vendor`):
 
@@ -1112,12 +1112,12 @@ Tambahkan blok proteksi (mengikuti pola `/dashboard/vendor`):
   }
 ```
 
-- [ ] **Step 4: Verifikasi typecheck**
+- [x] **Step 4: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/session.ts src/lib/routes.ts src/middleware.ts
@@ -1140,7 +1140,7 @@ git commit -m "feat(ba): BA dashboard route, session redirect and middleware gua
   - `getAmbassadorWithdrawals(): Promise<Array<{ id, amount, status, createdAt }>>`
   - `listAmbassadors(): Promise<Array<{ id, displayName, referralCode, commissionPct, isActive, walletBalance, recruitedCount }>>`
 
-- [ ] **Step 1: Implementasi query**
+- [x] **Step 1: Implementasi query**
 
 Buat `src/server/queries/ambassador.ts`:
 
@@ -1239,12 +1239,12 @@ export async function listAmbassadors() {
 }
 ```
 
-- [ ] **Step 2: Verifikasi typecheck**
+- [x] **Step 2: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/server/queries/ambassador.ts
@@ -1267,7 +1267,7 @@ git commit -m "feat(ba): ambassador dashboard and admin query layer"
   - `createAmbassadorAction(input: { name: string; phone: string; pin: string; displayName: string; commissionPct?: number }): Promise<ActionResult<{ ambassadorId: string; referralCode: string }>>`
   - `resolveWithdrawalAction(input: { withdrawalId: string; decision: "PAID" | "REJECTED" }): Promise<ActionResult<{ id: string }>>`
 
-- [ ] **Step 1: Implementasi actions**
+- [x] **Step 1: Implementasi actions**
 
 Buat `src/server/actions/ambassador.ts`:
 
@@ -1404,12 +1404,12 @@ export async function createAmbassadorAction(input: {
 }
 ```
 
-- [ ] **Step 2: Verifikasi typecheck**
+- [x] **Step 2: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih. (Bila `DomainError` constructor signature berbeda, sesuaikan dengan `src/server/services/errors.ts`.)
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/server/actions/ambassador.ts
@@ -1430,7 +1430,7 @@ git commit -m "feat(ba): server actions for withdrawal and admin BA management"
 **Interfaces:**
 - Consumes: query layer Task 9, action `requestWithdrawalAction` Task 10, design system `hk-*` + `font-editorial`/`font-manrope`.
 
-- [ ] **Step 1: Buat layout BA**
+- [x] **Step 1: Buat layout BA**
 
 Buat `src/app/dashboard/ba/layout.tsx` dengan header/NAV (kartu brand, kode referral, menu: Ringkasan / Vendor / Komisi / Dompet), mengikuti gaya `src/app/dashboard/vendor/layout.tsx` dan memakai token `hk-*`.
 
@@ -1478,28 +1478,28 @@ export default async function BaLayout({ children }: { children: React.ReactNode
 }
 ```
 
-- [ ] **Step 2: Halaman Ringkasan `/dashboard/ba`**
+- [x] **Step 2: Halaman Ringkasan `/dashboard/ba`**
 
 Buat `src/app/dashboard/ba/page.tsx` (server component) yang menampilkan kartu: kode referral, saldo dompet, total komisi, jumlah vendor rekrutan — dari `getAmbassadorSummary()`. Gunakan `formatRupiah` dari `@/lib/utils`.
 
-- [ ] **Step 3: Halaman Vendor `/dashboard/ba/vendor`**
+- [x] **Step 3: Halaman Vendor `/dashboard/ba/vendor`**
 
 Server component yang memetakan `getAmbassadorRecruitedVendors()` ke daftar kartu (nama, kategori, tanggal bergabung). Empty state bila kosong.
 
-- [ ] **Step 4: Halaman Komisi `/dashboard/ba/komisi`**
+- [x] **Step 4: Halaman Komisi `/dashboard/ba/komisi`**
 
 Server component `getAmbassadorCommissions()` → tabel/daftar (order, vendor, nominal basis, %, nominal komisi, tanggal).
 
-- [ ] **Step 5: Halaman Dompet `/dashboard/ba/dompet`**
+- [x] **Step 5: Halaman Dompet `/dashboard/ba/dompet`**
 
 Server component + client form withdraw (`requestWithdrawalAction`). Tampilkan saldo, riwayat withdraw (`getAmbassadorWithdrawals()`), form nominal + rekening.
 
-- [ ] **Step 6: Verifikasi typecheck**
+- [x] **Step 6: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/app/dashboard/ba
@@ -1517,7 +1517,7 @@ git commit -m "feat(ba): brand ambassador dashboard pages"
 **Interfaces:**
 - Consumes: `listAmbassadors()` Task 9; actions `createAmbassadorAction`, `setAmbassadorCommissionAction`, `setAmbassadorActiveAction`, `resolveWithdrawalAction` Task 10.
 
-- [ ] **Step 1: Halaman admin BA (server + client)**
+- [x] **Step 1: Halaman admin BA (server + client)**
 
 Buat `src/app/admin/ba/page.tsx` (server) memuat `listAmbassadors()` lalu render `AdminBaClient` (client) yang menyediakan:
 - Form buat BA baru (nama, HP, PIN, displayName, persen).
@@ -1526,12 +1526,12 @@ Buat `src/app/admin/ba/page.tsx` (server) memuat `listAmbassadors()` lalu render
 
 > Gunakan komponen `Modal`/`EmptyState` dari `@/components/harikita/ui` bila perlu. Ikuti pola `src/app/admin/verifikasi/AdminVerifikasiClient.tsx`.
 
-- [ ] **Step 2: Verifikasi typecheck**
+- [x] **Step 2: Verifikasi typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/admin/ba
@@ -1544,22 +1544,22 @@ git commit -m "feat(ba): admin panel to manage brand ambassadors"
 
 **Files:** tidak ada file baru.
 
-- [ ] **Step 1: Jalankan seluruh test**
+- [x] **Step 1: Jalankan seluruh test**
 
 Run: `npm test`
 Expected: semua hijau (termasuk `ambassador-commission.test.ts`, `ambassador-referral.test.ts`, dan test lama).
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 3: Build produksi**
+- [x] **Step 3: Build produksi**
 
 Pastikan dev server MATI dulu. Run: `npm run build`
 Expected: sukses tanpa error.
 
-- [ ] **Step 4: Checklist manual (dev server)**
+- [x] **Step 4: Checklist manual (dev server)**
 
 Jalankan `npm run dev` (satu instance saja), lalu verifikasi:
 - Registrasi vendor dengan kode BA valid → vendor tercatat sebagai rekrutan BA.
@@ -1569,7 +1569,7 @@ Jalankan `npm run dev` (satu instance saja), lalu verifikasi:
 - BA ajukan withdraw → saldo berkurang; admin proses PAID/REJECTED sesuai.
 - Admin ubah persen komisi BA → komisi berikutnya memakai persen baru.
 
-- [ ] **Step 5: Commit sisa (bila ada perbaikan)**
+- [x] **Step 5: Commit sisa (bila ada perbaikan)**
 
 ```bash
 git add -A
