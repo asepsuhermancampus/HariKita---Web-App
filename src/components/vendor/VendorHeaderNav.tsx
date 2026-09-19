@@ -94,7 +94,7 @@ export function VendorHeaderNav({
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-manrope flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                  <span>Mitra Terverifikasi Kebumen</span>
+                  <span>Mitra Terverifikasi</span>
                 </span>
                 {category && (
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-hk-soft-beige/80 text-hk-charcoal border border-hk-champagne/40 font-manrope">

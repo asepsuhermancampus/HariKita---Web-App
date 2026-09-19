@@ -53,10 +53,10 @@ export function DashboardSplineChart({
 
   // Dimensions
   const svgWidth = 700;
-  const svgHeight = 260;
+  const svgHeight = 270;
   const paddingLeft = 45;
   const paddingRight = 30;
-  const paddingTop = 25;
+  const paddingTop = 45;
   const paddingBottom = 40;
 
   const chartW = svgWidth - paddingLeft - paddingRight;
@@ -180,7 +180,7 @@ export function DashboardSplineChart({
       </div>
 
       {/* SVG Chart Area */}
-      <div className="relative w-full overflow-hidden select-none">
+      <div className="relative w-full overflow-visible select-none pt-3">
         <svg
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           className="w-full h-auto overflow-visible cursor-crosshair"
@@ -304,14 +304,17 @@ export function DashboardSplineChart({
           })}
         </svg>
 
-        {/* Floating Tooltip Card (Positioned precisely over active hovered point) */}
+        {/* Floating Tooltip Card (Positioned intelligently with auto-flip to never truncate) */}
         {activePoint && (
           <div
-            className="absolute pointer-events-none transition-all duration-150 z-10"
+            className="absolute pointer-events-none transition-all duration-150 z-20"
             style={{
               left: `${(activePoint.x / svgWidth) * 100}%`,
-              top: `${Math.max(10, (activePoint.y / svgHeight) * 100 - 32)}%`,
-              transform: "translate(-50%, -100%)",
+              top: `${(activePoint.y / svgHeight) * 100}%`,
+              transform:
+                activePoint.y < 90
+                  ? "translate(-50%, 14px)"
+                  : "translate(-50%, calc(-100% - 14px))",
             }}
           >
             <div className="bg-white/95 backdrop-blur-md rounded-2xl p-3 border border-hk-champagne/60 shadow-xl min-w-[130px] text-center font-manrope animate-in fade-in-50 zoom-in-95">

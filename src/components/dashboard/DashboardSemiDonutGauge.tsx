@@ -113,17 +113,28 @@ export function DashboardSemiDonutGauge({
               className="transition-all duration-500 ease-out"
             />
           )}
-        </svg>
 
-        {/* Center Total Text Metric */}
-        <div className="absolute top-16 flex flex-col items-center text-center font-manrope">
-          <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-            {totalLabel}
-          </span>
-          <span className="font-bold text-3xl sm:text-4xl text-hk-charcoal tracking-tight tabular-nums">
-            {formatCompactNumber(total)}
-          </span>
-        </div>
+          {/* Center Total Text Metric (Native SVG coordinate system - zero collision) */}
+          <g className="select-none pointer-events-none font-manrope">
+            <text
+              x={cx}
+              y={cy - 30}
+              textAnchor="middle"
+              className="fill-muted-foreground font-semibold text-[10.5px] uppercase tracking-wider"
+              style={{ letterSpacing: "0.08em" }}
+            >
+              {totalLabel}
+            </text>
+            <text
+              x={cx}
+              y={cy + 8}
+              textAnchor="middle"
+              className="fill-hk-charcoal font-bold text-[34px] tracking-tight tabular-nums"
+            >
+              {formatCompactNumber(total)}
+            </text>
+          </g>
+        </svg>
       </div>
 
       {/* Bottom Segment Legend */}

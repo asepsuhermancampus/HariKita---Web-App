@@ -92,7 +92,7 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
                 {data.isVerified && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-semibold border border-emerald-200">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    Mitra Terverifikasi Kebumen
+                    Mitra Terverifikasi
                   </span>
                 )}
 
@@ -150,22 +150,24 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
               <div className="font-editorial text-2xl sm:text-3xl font-normal text-hk-charcoal tabular-nums">
                 {formatRupiah(data.walletBalance)}
               </div>
-              <p className="text-[11px] text-muted-foreground mt-0.5">
-                Otomatis cair via rekening {data.bankName.split(" ")[0]}
+              <p className="text-[11px] text-hk-charcoal/70 mt-1 flex items-center gap-1.5 font-manrope">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                Pencairan otomatis via rekening {data.bankName.split(" ")[0]} (Maks. 1x24 jam kerja)
               </p>
             </div>
 
             {/* Quick Link Navigation */}
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <Link href="/dashboard/vendor" className="w-full sm:w-auto">
+              <Link href="/dashboard/vendor/kalender" className="w-full sm:w-auto">
                 <ButtonPrimary size="sm" className="w-full justify-center">
                   <Calendar className="w-3.5 h-3.5 mr-1.5" />
                   Kalender Booking
                 </ButtonPrimary>
               </Link>
-              <Link href="/design-system-showcase?hub=brand" className="w-full sm:w-auto">
-                <ButtonGhost size="sm" className="w-full justify-center border border-hk-champagne/40 bg-white">
-                  Brand Hub
+              <Link href="/catalog" className="w-full sm:w-auto" target="_blank" rel="noopener noreferrer">
+                <ButtonGhost size="sm" className="w-full justify-center border border-hk-champagne/40 bg-white hover:border-hk-taupe/40">
+                  <Store className="w-3.5 h-3.5 mr-1.5 text-hk-taupe" />
+                  Lihat Etalase Publik
                 </ButtonGhost>
               </Link>
             </div>

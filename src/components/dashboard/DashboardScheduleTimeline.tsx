@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { ChevronLeft, ChevronRight, User, MapPin } from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, User, MapPin, Calendar, Clock, ExternalLink } from "lucide-react";
 
 export interface ScheduleItem {
   id: string;
@@ -17,6 +18,7 @@ export interface ScheduleItem {
 export interface DashboardScheduleTimelineProps {
   title?: string;
   actionLabel?: string;
+  actionHref?: string;
   onActionClick?: () => void;
   currentDate: string;
   tabs: string[];
@@ -31,6 +33,7 @@ export interface DashboardScheduleTimelineProps {
 export function DashboardScheduleTimeline({
   title = "Schedule",
   actionLabel = "Lihat Semua",
+  actionHref = "/dashboard/vendor/kalender",
   onActionClick,
   currentDate,
   tabs,
@@ -41,12 +44,40 @@ export function DashboardScheduleTimeline({
   events,
   className = "",
 }: DashboardScheduleTimelineProps) {
-  const accentBorderColors: Record<string, string> = {
-    emerald: "border-[#10B981]",
-    amber: "border-[#F59E0B]",
-    taupe: "border-[#88735B]",
-    rose: "border-rose-500",
-    teal: "border-teal-500",
+  const accentCardStyles: Record<
+    string,
+    { border: string; bg: string; badge: string; text: string }
+  > = {
+    emerald: {
+      border: "border-l-emerald-500",
+      bg: "hover:bg-emerald-50/40",
+      badge: "bg-emerald-50 text-emerald-800 border-emerald-200",
+      text: "text-emerald-700",
+    },
+    amber: {
+      border: "border-l-amber-500",
+      bg: "hover:bg-amber-50/40",
+      badge: "bg-amber-50 text-amber-800 border-amber-200",
+      text: "text-amber-700",
+    },
+    taupe: {
+      border: "border-l-[#88735B]",
+      bg: "hover:bg-hk-soft-beige/40",
+      badge: "bg-hk-soft-beige/60 text-hk-charcoal border-hk-champagne/60",
+      text: "text-hk-taupe",
+    },
+    rose: {
+      border: "border-l-rose-500",
+      bg: "hover:bg-rose-50/40",
+      badge: "bg-rose-50 text-rose-800 border-rose-200",
+      text: "text-rose-700",
+    },
+    teal: {
+      border: "border-l-teal-500",
+      bg: "hover:bg-teal-50/40",
+      badge: "bg-teal-50 text-teal-800 border-teal-200",
+      text: "text-teal-700",
+    },
   };
 
   return (
@@ -55,21 +86,33 @@ export function DashboardScheduleTimeline({
     >
       {/* Top Header */}
       <div className="flex items-center justify-between gap-2 mb-3">
-        <h3 className="font-manrope font-semibold text-lg sm:text-xl text-hk-charcoal tracking-tight">
+        <h3 className="font-manrope font-semibold text-lg sm:text-xl text-hk-charcoal tracking-tight flex items-center gap-2">
+          <Calendar className="w-5 h-5 text-hk-taupe" />
           {title}
         </h3>
         {actionLabel && (
-          <button
-            onClick={onActionClick}
-            className="text-xs font-manrope font-medium text-hk-charcoal/60 hover:text-hk-taupe transition-colors px-2 py-1 rounded-lg hover:bg-hk-ivory"
-          >
-            {actionLabel}
-          </button>
+          actionHref ? (
+            <Link
+              href={actionHref}
+              className="inline-flex items-center gap-1 text-xs font-manrope font-semibold text-hk-taupe hover:text-hk-charcoal transition-colors px-2.5 py-1 rounded-lg hover:bg-hk-ivory border border-transparent hover:border-hk-champagne/40"
+            >
+              <span>{actionLabel}</span>
+              <ExternalLink className="w-3 h-3" />
+            </Link>
+          ) : (
+            <button
+              onClick={onActionClick}
+              className="inline-flex items-center gap-1 text-xs font-manrope font-semibold text-hk-taupe hover:text-hk-charcoal transition-colors px-2.5 py-1 rounded-lg hover:bg-hk-ivory"
+            >
+              <span>{actionLabel}</span>
+              <ExternalLink className="w-3 h-3" />
+            </button>
+          )
         )}
       </div>
 
       {/* Date Stepper Bar */}
-      <div className="flex items-center justify-between px-2.5 py-1.5 rounded-2xl bg-hk-ivory border border-hk-champagne/50 font-manrope text-xs font-semibold text-hk-charcoal mb-4">
+      <div className="flex items-center justify-between px-3 py-1.5 rounded-2xl bg-hk-ivory border border-hk-champagne/50 font-manrope text-xs font-semibold text-hk-charcoal mb-3">
         <button
           onClick={onPrevDate}
           className="p-1 rounded-lg hover:bg-white hover:shadow-2xs text-hk-charcoal/70 hover:text-hk-charcoal transition-all"
@@ -77,7 +120,10 @@ export function DashboardScheduleTimeline({
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
-        <span className="tracking-tight">{currentDate}</span>
+        <div className="flex items-center gap-2">
+          <Calendar className="w-3.5 h-3.5 text-hk-taupe" />
+          <span className="tracking-tight font-bold">{currentDate}</span>
+        </div>
         <button
           onClick={onNextDate}
           className="p-1 rounded-lg hover:bg-white hover:shadow-2xs text-hk-charcoal/70 hover:text-hk-charcoal transition-all"
@@ -88,68 +134,72 @@ export function DashboardScheduleTimeline({
       </div>
 
       {/* Category Tabs */}
-      <div className="flex items-center gap-4 border-b border-hk-champagne/30 pb-2 mb-4 font-manrope text-xs overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-2 border-b border-hk-champagne/30 pb-2 mb-3 font-manrope text-xs overflow-x-auto no-scrollbar">
         {tabs.map((tab) => {
           const isActive = tab === activeTab;
           return (
             <button
               key={tab}
               onClick={() => onTabChange(tab)}
-              className={`relative pb-1.5 transition-colors whitespace-nowrap font-medium ${
-                isActive ? "text-hk-charcoal font-bold" : "text-muted-foreground hover:text-hk-charcoal"
+              className={`relative px-2.5 py-1 rounded-lg transition-all whitespace-nowrap text-xs font-medium ${
+                isActive
+                  ? "bg-hk-charcoal text-white font-semibold shadow-2xs"
+                  : "text-muted-foreground hover:text-hk-charcoal hover:bg-hk-ivory"
               }`}
             >
               {tab}
-              {isActive && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-hk-taupe rounded-full" />
-              )}
             </button>
           );
         })}
       </div>
 
-      {/* Timeline List Items */}
-      <div className="space-y-4 flex-1 overflow-y-auto max-h-[260px] pr-1 no-scrollbar">
+      {/* Timeline Clean Card List Items */}
+      <div className="space-y-2.5 flex-1 overflow-y-auto max-h-[270px] pr-1 no-scrollbar">
         {events.length === 0 ? (
-          <div className="py-8 text-center text-xs text-muted-foreground font-manrope">
+          <div className="py-8 text-center text-xs text-muted-foreground font-manrope bg-hk-ivory/30 rounded-2xl border border-dashed border-hk-champagne/50">
             Belum ada jadwal sesi fisik pada tanggal ini.
           </div>
         ) : (
           events.map((evt) => {
-            const borderClass = accentBorderColors[evt.accentColor || "emerald"] || "border-[#10B981]";
-            return (
-              <div key={evt.id} className="flex items-start gap-3 font-manrope text-xs group">
-                {/* Time Column */}
-                <div className="w-16 shrink-0 text-right space-y-0.5 pt-0.5">
-                  <div className="font-bold text-hk-charcoal text-[11px] tabular-nums">{evt.startTime}</div>
-                  <div className="text-[10px] text-muted-foreground tabular-nums">{evt.endTime}</div>
-                </div>
+            const style =
+              accentCardStyles[evt.accentColor || "emerald"] ||
+              accentCardStyles.emerald;
 
-                {/* Vertical Indicator Accent Line */}
-                <div className={`h-full min-h-[44px] border-l-[3px] ${borderClass} rounded-full pl-3 flex-1 space-y-1`}>
-                  {/* Category Pill / Label */}
-                  <span className="text-[10px] font-semibold text-muted-foreground block uppercase tracking-wider">
+            return (
+              <div
+                key={evt.id}
+                className={`p-3 rounded-2xl border border-hk-champagne/40 bg-white shadow-2xs border-l-4 ${style.border} ${style.bg} transition-all duration-200 font-manrope space-y-2`}
+              >
+                {/* Micro Header: Time & Category */}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-hk-charcoal tabular-nums bg-hk-ivory/80 px-2 py-0.5 rounded-md border border-hk-champagne/40">
+                    <Clock className="w-3 h-3 text-hk-taupe" />
+                    {evt.startTime} - {evt.endTime}
+                  </span>
+                  <span
+                    className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${style.badge}`}
+                  >
                     {evt.category}
                   </span>
+                </div>
 
-                  {/* Title */}
-                  <h4 className="font-bold text-hk-charcoal text-xs leading-snug group-hover:text-hk-taupe transition-colors">
-                    {evt.title}
-                  </h4>
+                {/* Event Title */}
+                <h4 className="font-semibold text-hk-charcoal text-xs leading-snug">
+                  {evt.title}
+                </h4>
 
-                  {/* Person Name & Optional Venue */}
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground pt-0.5">
-                    <span className="inline-flex items-center gap-1">
-                      <User className="w-3 h-3 text-hk-charcoal/60" />
-                      <span>{evt.personName}</span>
+                {/* Person & Venue Metadata */}
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground pt-0.5 border-t border-hk-champagne/20">
+                  <span className="inline-flex items-center gap-1 text-hk-charcoal/90 font-medium">
+                    <User className="w-3 h-3 text-hk-taupe shrink-0" />
+                    <span className="truncate">{evt.personName}</span>
+                  </span>
+                  {evt.venue && (
+                    <span className="inline-flex items-center gap-1 text-hk-charcoal/70">
+                      <MapPin className="w-3 h-3 text-hk-taupe shrink-0" />
+                      <span className="truncate">{evt.venue}</span>
                     </span>
-                    {evt.venue && (
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-hk-taupe" />
-                        <span>{evt.venue}</span>
-                      </span>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
             );

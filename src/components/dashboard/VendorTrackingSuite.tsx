@@ -278,7 +278,8 @@ export function VendorTrackingSuite({ data, className = "" }: VendorTrackingSuit
         {/* Card C: Schedule Agenda Timeline */}
         <DashboardScheduleTimeline
           title="Agenda Sesi Fisik Terdekat"
-          actionLabel="Kalender"
+          actionLabel="Buka Kalender"
+          actionHref="/dashboard/vendor/kalender"
           currentDate={currentDate}
           tabs={["Semua", "Fitting", "Test Food", "Hari H"]}
           activeTab={scheduleTab}
