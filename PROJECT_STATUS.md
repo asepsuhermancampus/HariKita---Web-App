@@ -120,6 +120,11 @@ Berikut adalah daftar prioritas pengembangan berikutnya:
 > **Penanganan Data Demo vs Data Database:**
 > Halaman `/undangan/[slug]` telah dilengkapi fallback cerdas: Jika slug dicari tidak ada di database, sistem otomatis mencocokkan dengan data katalog template 71 tema bawaan (`ALL_INVITATION_TEMPLATES`). Sehingga `/undangan/demo?theme=nama-tema` atau `/undangan/nama-tema` selalu bisa dibuka kapan saja.
 
+> [!IMPORTANT]
+> **Keamanan Sesi (Auth) — Cookie `hk_session` ditandatangani:**
+> - [x] Cookie sesi `hk_session` ditandatangani HMAC-SHA256 (env `HARIKITA_SESSION_SECRET`); cookie lama tanpa tanda tangan ditolak → login ulang.
+> - Env `HARIKITA_SESSION_SECRET` **WAJIB** di-set (fail-closed: login gagal bila kosong). Lihat `.env.example` → blok `# ── Session ──`. Generate: `openssl rand -base64 48`.
+
 ---
 
 ## 🎨 6. MASTER SVG ASSET LIBRARY (PROGRESS & HANDOVER)

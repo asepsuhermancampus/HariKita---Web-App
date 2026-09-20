@@ -1,11 +1,6 @@
 import { cookies } from "next/headers";
-
-export interface SessionData {
-  userId: string;
-  role: string; // "CLIENT" | "VENDOR" | "ADMIN" | "BA"
-  name: string;
-  phone: string;
-}
+import { signSession, verifySession, type SessionData } from "./session-token";
+export type { SessionData };
 
 const COOKIE_NAME = "hk_session";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 hari dalam detik
@@ -18,15 +13,7 @@ export async function getSession(): Promise<SessionData | null> {
   const cookieStore = await cookies();
   const raw = cookieStore.get(COOKIE_NAME)?.value;
   if (!raw) return null;
-  try {
-    const decoded = Buffer.from(raw, "base64").toString("utf-8");
-    const data = JSON.parse(decoded) as SessionData;
-    // Validasi field wajib ada
-    if (!data.userId || !data.role || !data.name || !data.phone) return null;
-    return data;
-  } catch {
-    return null;
-  }
+  return verifySession(raw);
 }
 
 /**
@@ -35,8 +22,8 @@ export async function getSession(): Promise<SessionData | null> {
  */
 export async function setSessionCookie(data: SessionData): Promise<void> {
   const cookieStore = await cookies();
-  const encoded = Buffer.from(JSON.stringify(data)).toString("base64");
-  cookieStore.set(COOKIE_NAME, encoded, {
+  const token = await signSession(data);
+  cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",

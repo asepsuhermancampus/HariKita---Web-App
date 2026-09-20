@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifySession, type SessionData } from "@/lib/session-token";
 
 /**
  * HariKita Auth Middleware — Route Guard
@@ -10,25 +11,6 @@ import type { NextRequest } from "next/server";
  */
 
 const COOKIE_NAME = "hk_session";
-
-interface SessionPayload {
-  userId: string;
-  role: string; // "CLIENT" | "VENDOR" | "ADMIN" | "BA"
-  name: string;
-  phone: string;
-}
-
-function parseSession(cookieValue: string | undefined): SessionPayload | null {
-  if (!cookieValue) return null;
-  try {
-    const decoded = Buffer.from(cookieValue, "base64").toString("utf-8");
-    const data = JSON.parse(decoded) as SessionPayload;
-    if (!data.userId || !data.role) return null;
-    return data;
-  } catch {
-    return null;
-  }
-}
 
 function getDashboardPath(role: string): string {
   if (role === "ADMIN") return "/admin";
@@ -43,10 +25,12 @@ function getLoginPath(role: string): string {
   return "/auth/login";
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const rawCookie = request.cookies.get(COOKIE_NAME)?.value;
-  const session = parseSession(rawCookie);
+  const session: SessionData | null = rawCookie
+    ? await verifySession(rawCookie)
+    : null;
 
   // ── 0. Alias redirects: /dashboard/vendor/profile → /dashboard/vendor/profil & /client/profile → /client/profil ──
   if (pathname === "/dashboard/vendor/profile") {

@@ -42,22 +42,24 @@ Kode pembaca cookie ada di dua tempat:
 | Pertanyaan | Keputusan |
 |---|---|
 | Teknologi signing | **Web Crypto API (`crypto.subtle`)** — tersedia di Edge & Node, tanpa dependency baru |
-| Format token | `<base64url(payload)>.<base64url(hmac)>` (mirip JWT, minimal) |
+| Format token | `v1.<base64url(payload)>.<base64url(hmac)>` (mirip JWT, minimal; prefix versi untuk lock-in format) |
 | Algoritma | HMAC-SHA256 |
 | Sumber secret | Env `HARIKITA_SESSION_SECRET` |
 | Secret tidak di-set | **Fail-closed**: login gagal / error jelas (tidak ada fallback dev) |
 | Cookie lama | **Ditolak** (wajib login ulang) |
+| Validasi role | **Allowlist** `["CLIENT","VENDOR","ADMIN","BA"]` di `verifySession` — role di luar set → `null` (defense-in-depth) |
 | Perbandingan signature | **Constant-time** (loop XOR manual; Web Crypto tak punya `timingSafeEqual`) |
 
 ## 4. Format Token
 
 ```
-<base64url(JSON payload)>.<base64url(HMAC-SHA256(base64url(payload), SECRET))>
+v1.<base64url(JSON payload)>.<base64url(HMAC-SHA256(base64url(payload), SECRET))>
 ```
 
+- Prefix versi `v1.` = **format lock-in pra-rilis**; rotasi secret/algoritma di masa depan menjadi eksplisit. Token tanpa prefix `v1.` → invalid (ini juga otomatis menolak token gaya lama).
 - `payload` = JSON `{ userId, role, name, phone }` (bentuk `SessionData` — tidak berubah).
 - Signature dihitung atas **string payload yang sudah di-encode base64url** (bukan JSON mentah), meniru pola `simulated-adapter.ts` yang meng-HMAC string.
-- Pemisah: satu titik (`.`). Token dengan jumlah titik ≠ 1 → invalid.
+- Pemisah: satu titik (`.`). Setelah prefix `v1.` dilepas, token harus tepat **2 bagian** (3 bagian total: `v1`, payload, signature). Jumlah bagian ≠ 3 atau tanpa prefix `v1.` → invalid.
 - Base64url: alfabet URL-safe tanpa padding (`-`, `_`, tanpa `=`).
 
 ## 5. Modul Baru: `src/lib/session-token.ts`
@@ -66,12 +68,12 @@ Modul murni string↔string, **tidak** mengimpor Next.js atau `next/headers`. In
 membuatnya dapat diuji unit tanpa konteks request.
 
 ```ts
-import type { SessionData } from "./session";
+import type { SessionData } from "./session-token";
 
 /** Mengambil secret sesi. Fail-closed: throw bila HARIKITA_SESSION_SECRET kosong. */
 export function getSessionSecret(): string;
 
-/** Menandatangani SessionData → token "payload.signature". Throw bila secret kosong. */
+/** Menandatangani SessionData → token "v1.payload.signature". Throw bila secret kosong. */
 export async function signSession(data: SessionData): Promise<string>;
 
 /** Memverifikasi token → SessionData, atau null bila invalid/kedaluwarsa format. */
@@ -91,14 +93,15 @@ Implementasi inti:
   1. `secret = getSessionSecret()` (throw bila kosong).
   2. `payload = base64url(JSON.stringify(data))`.
   3. `sig = base64url(HMAC_SHA256(payload, secret))` via `crypto.subtle.sign`.
-  4. return `${payload}.${sig}`.
+  4. return `v1.${payload}.${sig}`.
 - `verifySession`:
   1. `try { ... } catch { return null }` — **tidak pernah throw**.
-  2. Split token pada `.`; harus tepat 2 bagian.
+  2. Token wajib berawalan `v1.`; lepas prefix, lalu split pada `.` — harus tepat 2 bagian.
   3. Hitung ulang signature atas `payload` dengan secret.
   4. `safeEqual(sig, expected)` → bila tidak sama, `null`.
   5. Decode payload → parse JSON → validasi field wajib (`userId`, `role`, `name`, `phone`).
-  6. Bila semua valid → kembalikan `SessionData`; jika tidak → `null`.
+  6. Validasi `role` terhadap allowlist `["CLIENT", "VENDOR", "ADMIN", "BA"]` → di luar daftar, `null` (fail-closed).
+  7. Bila semua valid → kembalikan `SessionData`; jika tidak → `null`.
 - `safeEqual(a: string, b: string): boolean`:
   - Jika panjang berbeda → `false` (tanpa membocorkan lewat early-return yang bergantung isi).
   - Loop XOR atas seluruh byte, akumulasi perbedaan, kembalikan `diff === 0`.
@@ -152,11 +155,12 @@ Implementasi inti:
 1. `verifySession(await signSession(data))` mengembalikan payload setara `data`.
 2. Signature diubah (satu char) → `null`.
 3. Payload diubah (mis. `role` CLIENT→ADMIN) tapi signature asli → `null`.
-4. Token gaya lama: `base64(JSON)` tanpa titik → `null`.
-5. Token malformed: `""`, `"abc"`, `"a.b.c"`, `"a."`, `".b"` → `null`.
+4. Token gaya lama: `base64(JSON)` tanpa prefix `v1.` → `null`.
+5. Token malformed: `""`, `"abc"`, `"a.b.c"`, `"a."`, `".b"`, `"v1.only"`, `"v1.a.b.c"` → `null`.
 6. Secret berbeda saat verifikasi → `null`.
 7. `getSessionSecret()` throw bila env kosong (dites dengan menyimpan & memulihkan `process.env`).
 8. Payload JSON rusak setelah signature valid (sulit tanpa secret) → minimal: payload non-JSON dengan signature dihitung ulang → `null` (field validasi).
+9. Payload **ditandatangani dengan secret asli** tetapi `role` di luar allowlist (mis. `"SUPERGOD"`) → `null` (uji fail-closed role allowlist).
 
 **Verifikasi akhir (wajib):**
 - `npm run typecheck`
@@ -175,7 +179,7 @@ Implementasi inti:
 
 | File | Aksi |
 |---|---|
-| `src/lib/session-token.ts` | **Baru** — signing/verify/secret/safeEqual/base64url |
+| `src/lib/session-token.ts` | **Baru** — signing/verify/secret/safeEqual/base64url; format `v1.payload.signature`; allowlist role |
 | `src/lib/session.ts` | Ubah `setSessionCookie` & `getSession`; re-export `SessionData` |
 | `src/middleware.ts` | Ganti `parseSession` → `verifySession`; handler jadi async |
 | `tests/session-token.test.ts` | **Baru** — unit test |
