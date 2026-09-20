@@ -47,6 +47,7 @@ Kode pembaca cookie ada di dua tempat:
 | Sumber secret | Env `HARIKITA_SESSION_SECRET` |
 | Secret tidak di-set | **Fail-closed**: login gagal / error jelas (tidak ada fallback dev) |
 | Cookie lama | **Ditolak** (wajib login ulang) |
+| Validasi role | **Allowlist** `["CLIENT","VENDOR","ADMIN","BA"]` di `verifySession` — role di luar set → `null` (defense-in-depth) |
 | Perbandingan signature | **Constant-time** (loop XOR manual; Web Crypto tak punya `timingSafeEqual`) |
 
 ## 4. Format Token
@@ -67,12 +68,12 @@ Modul murni string↔string, **tidak** mengimpor Next.js atau `next/headers`. In
 membuatnya dapat diuji unit tanpa konteks request.
 
 ```ts
-import type { SessionData } from "./session";
+import type { SessionData } from "./session-token";
 
 /** Mengambil secret sesi. Fail-closed: throw bila HARIKITA_SESSION_SECRET kosong. */
 export function getSessionSecret(): string;
 
-/** Menandatangani SessionData → token "payload.signature". Throw bila secret kosong. */
+/** Menandatangani SessionData → token "v1.payload.signature". Throw bila secret kosong. */
 export async function signSession(data: SessionData): Promise<string>;
 
 /** Memverifikasi token → SessionData, atau null bila invalid/kedaluwarsa format. */
@@ -92,7 +93,7 @@ Implementasi inti:
   1. `secret = getSessionSecret()` (throw bila kosong).
   2. `payload = base64url(JSON.stringify(data))`.
   3. `sig = base64url(HMAC_SHA256(payload, secret))` via `crypto.subtle.sign`.
-  4. return `${payload}.${sig}`.
+  4. return `v1.${payload}.${sig}`.
 - `verifySession`:
   1. `try { ... } catch { return null }` — **tidak pernah throw**.
   2. Token wajib berawalan `v1.`; lepas prefix, lalu split pada `.` — harus tepat 2 bagian.
