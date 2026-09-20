@@ -43,9 +43,11 @@ test("getSessionSecret throws when secret is blank", () => {
   assert.throws(() => getSessionSecret(), /HARIKITA_SESSION_SECRET/);
 });
 
-test("signSession returns token with exactly one dot", async () => {
+test("signSession returns v1 token with exactly two dots", async () => {
   const token = await signSession(sample());
-  assert.equal(token.split(".").length, 2);
+  const parts = token.split(".");
+  assert.equal(parts.length, 3);
+  assert.equal(parts[0], "v1");
   assert.ok(token.length > 0);
 });
 
@@ -53,6 +55,11 @@ test("signSession is deterministic for the same data + secret", async () => {
   const a = await signSession(sample());
   const b = await signSession(sample());
   assert.equal(a, b);
+  const parts = a.split(".");
+  assert.equal(parts.length, 3);
+  assert.equal(parts[0], "v1");
+  assert.equal(parts[2].length, 43);
+  assert.match(parts[2], /^[A-Za-z0-9_-]{43}$/);
 });
 
 test("verifySession accepts a freshly signed token", async () => {
@@ -63,20 +70,20 @@ test("verifySession accepts a freshly signed token", async () => {
 
 test("verifySession rejects tampered signature", async () => {
   const token = await signSession(sample());
-  const [payload, sig] = token.split(".");
+  const [version, payload, sig] = token.split(".");
   const flipped = (sig[0] === "A" ? "B" : "A") + sig.slice(1);
-  assert.equal(await verifySession(`${payload}.${flipped}`), null);
+  assert.equal(await verifySession(`${version}.${payload}.${flipped}`), null);
 });
 
 test("verifySession rejects tampered payload (role escalation)", async () => {
   const token = await signSession(sample({ role: "CLIENT" }));
-  const [, sig] = token.split(".");
+  const [version, , sig] = token.split(".");
   const forgedPayload = Buffer.from(JSON.stringify(sample({ role: "ADMIN" })))
     .toString("base64url");
-  assert.equal(await verifySession(`${forgedPayload}.${sig}`), null);
+  assert.equal(await verifySession(`${version}.${forgedPayload}.${sig}`), null);
 });
 
-test("verifySession rejects legacy base64 JSON token (no dot)", async () => {
+test("verifySession rejects legacy base64 JSON token (no v1 prefix)", async () => {
   const legacy = Buffer.from(JSON.stringify(sample({ role: "ADMIN" }))).toString("base64");
   assert.equal(await verifySession(legacy), null);
 });
@@ -87,6 +94,8 @@ test("verifySession rejects malformed tokens", async () => {
   assert.equal(await verifySession("a.b.c"), null);
   assert.equal(await verifySession("a."), null);
   assert.equal(await verifySession(".b"), null);
+  assert.equal(await verifySession("v1.only"), null);
+  assert.equal(await verifySession("v1.a.b.c"), null);
 });
 
 test("verifySession rejects token signed with different secret", async () => {
@@ -109,5 +118,23 @@ test("verifySession rejects payload missing required fields", async () => {
   const sigBuf = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(badPayload));
   const sig = Buffer.from(new Uint8Array(sigBuf)).toString("base64")
     .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-  assert.equal(await verifySession(`${badPayload}.${sig}`), null);
+  assert.equal(await verifySession(`v1.${badPayload}.${sig}`), null);
+});
+
+test("verifySession rejects signed payload with a role outside the allowlist", async () => {
+  // Payload is signed with the REAL secret, so signature verification passes —
+  // only the role allowlist check can reject it (fail-closed).
+  const { getSessionSecret } = await import("../src/lib/session-token");
+  const secret = getSessionSecret();
+  const badPayload = Buffer.from(
+    JSON.stringify({ userId: "u", role: "SUPERGOD", name: "x", phone: "0800" })
+  ).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+  );
+  const sigBuf = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(badPayload));
+  const sig = Buffer.from(new Uint8Array(sigBuf)).toString("base64")
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  assert.equal(await verifySession(`v1.${badPayload}.${sig}`), null);
 });

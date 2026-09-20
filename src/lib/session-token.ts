@@ -1,10 +1,18 @@
 /**
  * HariKita - Signed Session Token
  *
- * Token format: `<base64url(JSON payload)>.<base64url(HMAC-SHA256(payload))>`
+ * Token format: `v1.<base64url(JSON payload)>.<base64url(HMAC-SHA256(payload))>`
+ * Prefix versi `v1.` mengunci format pra-rilis sehingga rotasi secret/algorithm
+ * di masa depan bersifat eksplisit (token tanpa prefix ini ditolak).
  * Memakai Web Crypto (crypto.subtle) agar jalan di Node runtime maupun Edge Runtime.
  * Modul murni string↔string — tidak mengimpor Next.js.
  */
+
+/** Prefix versi format token. Token tanpa prefix ini ditolak (fail-closed). */
+const TOKEN_VERSION = "v1";
+
+/** Role yang diizinkan. Role di luar daftar ini → verifikasi gagal (fail-closed). */
+const ALLOWED_ROLES = ["CLIENT", "VENDOR", "ADMIN", "BA"] as const;
 
 export interface SessionData {
   userId: string;
@@ -57,12 +65,12 @@ async function hmacBase64url(payload: string, secret: string): Promise<string> {
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-/** Tanda tangani SessionData → token "payload.signature". Throw bila secret kosong. */
+/** Tanda tangani SessionData → token "v1.payload.signature". Throw bila secret kosong. */
 export async function signSession(data: SessionData): Promise<string> {
   const secret = getSessionSecret();
   const payload = base64urlEncode(JSON.stringify(data));
   const signature = await hmacBase64url(payload, secret);
-  return `${payload}.${signature}`;
+  return `${TOKEN_VERSION}.${payload}.${signature}`;
 }
 
 /** Perbandingan string constant-time (panjang boleh bocor, isi tidak). */
@@ -82,7 +90,9 @@ function safeEqual(a: string, b: string): boolean {
 export async function verifySession(token: string): Promise<SessionData | null> {
   try {
     if (!token || typeof token !== "string") return null;
-    const parts = token.split(".");
+    const versionPrefix = `${TOKEN_VERSION}.`;
+    if (!token.startsWith(versionPrefix)) return null;
+    const parts = token.slice(versionPrefix.length).split(".");
     if (parts.length !== 2) return null;
     const [payload, signature] = parts;
     if (!payload || !signature) return null;
@@ -98,6 +108,9 @@ export async function verifySession(token: string): Promise<SessionData | null> 
       typeof data.name !== "string" ||
       typeof data.phone !== "string"
     ) {
+      return null;
+    }
+    if (!ALLOWED_ROLES.includes(data.role as (typeof ALLOWED_ROLES)[number])) {
       return null;
     }
     return {
