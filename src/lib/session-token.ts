@@ -64,3 +64,49 @@ export async function signSession(data: SessionData): Promise<string> {
   const signature = await hmacBase64url(payload, secret);
   return `${payload}.${signature}`;
 }
+
+/** Perbandingan string constant-time (panjang boleh bocor, isi tidak). */
+function safeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+}
+
+/**
+ * Verifikasi token → SessionData, atau null bila invalid.
+ * Tidak pernah throw.
+ */
+export async function verifySession(token: string): Promise<SessionData | null> {
+  try {
+    if (!token || typeof token !== "string") return null;
+    const parts = token.split(".");
+    if (parts.length !== 2) return null;
+    const [payload, signature] = parts;
+    if (!payload || !signature) return null;
+
+    const expected = await hmacBase64url(payload, getSessionSecret());
+    if (!safeEqual(signature, expected)) return null;
+
+    const json = base64urlDecode(payload);
+    const data = JSON.parse(json) as Partial<SessionData>;
+    if (
+      typeof data.userId !== "string" ||
+      typeof data.role !== "string" ||
+      typeof data.name !== "string" ||
+      typeof data.phone !== "string"
+    ) {
+      return null;
+    }
+    return {
+      userId: data.userId,
+      role: data.role,
+      name: data.name,
+      phone: data.phone,
+    };
+  } catch {
+    return null;
+  }
+}
