@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import {
   ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { EmptyState } from "@/components/harikita/ui";
+import { AdminPageHeader } from "@/components/admin";
 import type { OrderViewModel } from "@/server/queries/orders";
 
 export function AdminEscrowClient({
@@ -28,33 +28,19 @@ export function AdminEscrowClient({
   };
 
   return (
-    <div className="min-h-screen bg-hk-ivory text-hk-charcoal py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-8">
-        {/* Header Breadcrumb */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-hk-champagne/40 pb-6">
-          <div>
-            <div className="text-xs font-manrope text-hk-charcoal/70 flex items-center gap-1 mb-1">
-              <Link href="/admin" className="focus-ring rounded hover:text-hk-charcoal">
-                Super Admin
-              </Link>
-              <span>/</span>
-              <span className="text-hk-charcoal font-semibold">Otorisasi Escrow &amp; Notifikasi</span>
-            </div>
-            <h1 className="font-editorial text-3xl sm:text-4xl font-bold text-hk-charcoal">
-              Otorisasi Rekening Bersama &amp; Outbox Notifikasi
-            </h1>
-            <p className="text-xs font-manrope text-hk-charcoal/70 mt-0.5">
-              Persetujuan transfer dana rekber resmi HariKita ke mitra vendor Kebumen serta pemantauan pengiriman notifikasi ganda.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="px-4 py-2 rounded-full bg-emerald-50 text-emerald-800 text-xs font-manrope font-bold border border-emerald-200 flex items-center gap-1.5 shadow-2xs">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+    <div className="flex flex-col gap-6">
+      <div className="mx-auto w-full max-w-5xl space-y-8">
+        {/* Header */}
+        <AdminPageHeader
+          title="Otorisasi Rekening Bersama &amp; Outbox Notifikasi"
+          description="Persetujuan transfer dana rekber resmi HariKita ke mitra vendor Kebumen serta pemantauan pengiriman notifikasi ganda."
+          action={
+            <span className="flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-800 shadow-2xs">
+              <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
               <span>Saldo Escrow Penampung: Rp {escrowBalance.toLocaleString("id-ID")}</span>
             </span>
-          </div>
-        </div>
+          }
+        />
 
         {/* SECTION 1: OUTBOX NOTIFIKASI */}
         <div className="bg-white rounded-3xl border border-hk-champagne/60 shadow-md p-6 space-y-4 font-manrope">

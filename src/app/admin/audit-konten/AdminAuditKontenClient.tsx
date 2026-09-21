@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { ShieldAlert, AlertTriangle, CheckCircle2, Search, Lock } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
 import type { ContentAuditFinding } from "@/server/queries/admin";
 
 /**
@@ -20,27 +20,18 @@ export function AdminAuditKontenClient({ dbFindings }: { dbFindings: ContentAudi
   );
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#4A2E35] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="flex flex-col gap-6">
+      <div className="mx-auto w-full max-w-4xl space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="text-xs text-[#6B5E62] flex items-center gap-1 mb-1">
-              <Link href="/admin" className="hover:text-[#4A2E35]">Super Admin</Link>
-              <span>/</span>
-              <span className="text-[#4A2E35] font-medium">Audit Anti-Disintermediasi</span>
+        <AdminPageHeader
+          title="Log Sensor Anti-Disintermediasi"
+          description="Pemindaian otomatis teks tersimpan (deskripsi vendor &amp; caption portofolio) terhadap upaya penyelundupan kontak pribadi."
+          action={
+            <div className="rounded-xl border border-[#C5A880] bg-white px-4 py-2 text-xs font-semibold shadow-2xs">
+              Temuan Aktif: <strong className="text-amber-700">{dbFindings.length}</strong>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A2E35]">
-              Log Sensor Anti-Disintermediasi
-            </h1>
-            <p className="text-xs text-[#6B5E62] mt-0.5">
-              Pemindaian otomatis teks tersimpan (deskripsi vendor &amp; caption portofolio) terhadap upaya penyelundupan kontak pribadi.
-            </p>
-          </div>
-          <div className="px-4 py-2 rounded-xl bg-white border border-[#C5A880] text-xs font-semibold shadow-2xs">
-            Temuan Aktif: <strong className="text-amber-700">{dbFindings.length}</strong>
-          </div>
-        </div>
+          }
+        />
 
         {/* Search */}
         <div className="relative bg-white p-3 rounded-2xl border border-[#C5A880]/30 shadow-sm">

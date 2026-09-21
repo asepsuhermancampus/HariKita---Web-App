@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   UserPlus,
@@ -22,6 +21,7 @@ import {
   resolveWithdrawalAction,
 } from "@/server/actions/ambassador";
 import { Modal, ToggleSwitch, EmptyState } from "@/components/harikita/ui";
+import { AdminPageHeader } from "@/components/admin";
 import type { listAmbassadors, listAmbassadorWithdrawals } from "@/server/queries/ambassador";
 
 type Ambassador = Awaited<ReturnType<typeof listAmbassadors>>[number];
@@ -124,33 +124,22 @@ export function AdminBaClient({
   };
 
   return (
-    <div className="min-h-screen bg-hk-ivory text-hk-charcoal py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="flex flex-col gap-6">
+      <div className="mx-auto w-full max-w-6xl space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="text-xs text-hk-charcoal/60 flex items-center gap-1 mb-1 font-manrope">
-              <Link href="/admin" className="hover:text-hk-charcoal">
-                Super Admin
-              </Link>
-              <span>/</span>
-              <span className="text-hk-charcoal font-medium">Brand Ambassador</span>
-            </div>
-            <h1 className="font-editorial text-2xl sm:text-3xl font-bold text-hk-charcoal">
-              Panel Brand Ambassador
-            </h1>
-            <p className="text-xs text-hk-charcoal/70 mt-0.5 font-manrope">
-              Kelola akun BA, atur persen komisi, dan proses penarikan dompet komisi.
-            </p>
-          </div>
-          <button
-            onClick={() => setIsCreateOpen(true)}
-            className="focus-ring inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-hk-charcoal text-white text-xs font-semibold hover:bg-hk-taupe transition-colors shadow-sm min-h-[44px]"
-          >
-            <UserPlus className="w-4 h-4 text-hk-champagne" aria-hidden="true" />
-            Tambah BA Baru
-          </button>
-        </div>
+        <AdminPageHeader
+          title="Panel Brand Ambassador"
+          description="Kelola akun BA, atur persen komisi, dan proses penarikan dompet komisi."
+          action={
+            <button
+              onClick={() => setIsCreateOpen(true)}
+              className="focus-ring inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-hk-charcoal px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-hk-taupe"
+            >
+              <UserPlus className="h-4 w-4 text-hk-champagne" aria-hidden="true" />
+              Tambah BA Baru
+            </button>
+          }
+        />
 
         <div aria-live="polite" aria-atomic="true">
           {message && (

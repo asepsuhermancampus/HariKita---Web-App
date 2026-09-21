@@ -13,6 +13,7 @@ import {
   Filter,
 } from "lucide-react";
 import { resolveDisputeAction, reviewDisputeAction } from "@/server/actions/admin";
+import { AdminPageHeader } from "@/components/admin";
 import type { DisputeAdminDTO } from "@/server/queries/admin";
 
 /**
@@ -51,30 +52,21 @@ export function AdminDisputeClient({ dbDisputes }: { dbDisputes: DisputeAdminDTO
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#4A2E35] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="flex flex-col gap-6">
+      <div className="mx-auto w-full max-w-5xl space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="text-xs text-[#6B5E62] flex items-center gap-1 mb-1">
-              <Link href="/admin" className="hover:text-[#4A2E35]">Super Admin</Link>
-              <span>/</span>
-              <span className="text-[#4A2E35] font-medium">Resolution Center</span>
+        <AdminPageHeader
+          title="Pusat Penyelesaian Sengketa"
+          description="Tinjau sengketa klien/vendor, putuskan penyelesaian, dan arahkan refund melalui mekanisme escrow."
+          action={
+            <div className="rounded-xl border border-[#C5A880] bg-white px-4 py-2 text-xs font-semibold shadow-2xs">
+              Sengketa Aktif:{" "}
+              <strong className="text-amber-700">
+                {dbDisputes.filter((d) => ["OPEN", "UNDER_REVIEW"].includes(d.status)).length}
+              </strong>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A2E35]">
-              Pusat Penyelesaian Sengketa
-            </h1>
-            <p className="text-xs text-[#6B5E62] mt-0.5">
-              Tinjau sengketa klien/vendor, putuskan penyelesaian, dan arahkan refund melalui mekanisme escrow.
-            </p>
-          </div>
-          <div className="px-4 py-2 rounded-xl bg-white border border-[#C5A880] text-xs font-semibold shadow-2xs">
-            Sengketa Aktif:{" "}
-            <strong className="text-amber-700">
-              {dbDisputes.filter((d) => ["OPEN", "UNDER_REVIEW"].includes(d.status)).length}
-            </strong>
-          </div>
-        </div>
+          }
+        />
 
         {/* Filter */}
         <div className="flex flex-wrap items-center gap-2 bg-white p-3 rounded-2xl border border-[#C5A880]/30 shadow-sm">

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle2,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { approveVendorAction, rejectVendorAction } from "@/server/actions/admin";
 import { Modal } from "@/components/harikita/ui";
+import { AdminPageHeader } from "@/components/admin";
 import type { VendorVerificationDTO } from "@/server/queries/admin";
 
 /**
@@ -82,27 +82,18 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
   const pendingCount = vendors.filter((v) => v.verificationStatus === "PENDING").length;
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#4A2E35] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="flex flex-col gap-6">
+      <div className="mx-auto w-full max-w-5xl space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="text-xs text-[#6B5E62] flex items-center gap-1 mb-1">
-              <Link href="/admin" className="hover:text-[#4A2E35]">Super Admin</Link>
-              <span>/</span>
-              <span className="text-[#4A2E35] font-medium">Verifikasi Mitra</span>
+        <AdminPageHeader
+          title="Pusat Kurasi &amp; Verifikasi Mitra Vendor"
+          description="Setujui atau minta revisi mitra vendor lokal Kebumen sebelum tampil di katalog."
+          action={
+            <div className="rounded-xl border border-[#C5A880] bg-white px-4 py-2 text-xs font-semibold shadow-2xs">
+              Antrean Menunggu: <strong className="text-amber-700">{pendingCount} Mitra</strong>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A2E35]">
-              Pusat Kurasi &amp; Verifikasi Mitra Vendor
-            </h1>
-            <p className="text-xs text-[#6B5E62] mt-0.5">
-              Setujui atau minta revisi mitra vendor lokal Kebumen sebelum tampil di katalog.
-            </p>
-          </div>
-          <div className="px-4 py-2 rounded-xl bg-white border border-[#C5A880] text-xs font-semibold shadow-2xs">
-            Antrean Menunggu: <strong className="text-amber-700">{pendingCount} Mitra</strong>
-          </div>
-        </div>
+          }
+        />
 
         {/* Filter + search */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-[#C5A880]/30 shadow-sm">
