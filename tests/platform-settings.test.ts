@@ -112,3 +112,13 @@ test("updatePlatformSettings: persists + writes audit row", async () => {
   await ctx.prisma.platformSetting.deleteMany();
   await ctx.prisma.adminAuditLog.deleteMany({ where: { action: "PLATFORM_SETTINGS_UPDATED" } });
 });
+
+import { splitTranches } from "../src/server/services/ledger-service";
+
+test("splitTranches: default 30/70", () => {
+  assert.deepEqual(splitTranches(100000), { dpAmount: 30000, settlementAmount: 70000 });
+});
+
+test("splitTranches: custom dpPct=40 -> 40/60", () => {
+  assert.deepEqual(splitTranches(100000, 40), { dpAmount: 40000, settlementAmount: 60000 });
+});

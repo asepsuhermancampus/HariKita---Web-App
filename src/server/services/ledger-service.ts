@@ -373,7 +373,10 @@ export function ambassadorJournalNumber(orderItemId: string): string {
 }
 
 /** Menghitung split tranche integer dengan Largest Remainder Method. */
-export function splitTranches(totalAmount: number): {
+export function splitTranches(
+  totalAmount: number,
+  dpPct = 30
+): {
   dpAmount: number;
   settlementAmount: number;
 } {
@@ -383,7 +386,7 @@ export function splitTranches(totalAmount: number): {
       `Total amount harus integer >= 0 (diberikan: ${totalAmount}).`
     );
   }
-  const dpAmount = Math.floor((totalAmount * 30) / 100);
+  const dpAmount = Math.floor((totalAmount * dpPct) / 100);
   return { dpAmount, settlementAmount: totalAmount - dpAmount };
 }
 
