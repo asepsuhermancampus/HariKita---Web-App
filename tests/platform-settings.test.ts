@@ -32,6 +32,9 @@ import {
 } from "../src/server/services/platform-settings-service";
 
 test("getPlatformSettings: returns DEFAULT when no row exists", async () => {
+  // dev.db bisa saja sudah ter-seed; pastikan tak ada baris aktif dulu.
+  await ctx.prisma.platformFeeComponent.deleteMany();
+  await ctx.prisma.platformSetting.deleteMany();
   const s = await getPlatformSettings(ctx.prisma);
   assert.equal(s.dpPct, 30);
   assert.equal(s.settlementPct, 70);
@@ -136,7 +139,9 @@ test("createOrder writes snapshot percentages from active settings", async () =>
   const eventDate = "2027-05-01";
   const hold = await claimHoldSlot({ vendorId: v.vendorId, date: eventDate }, ctx.prisma);
 
-  // Seed an active setting with non-default dpPct (before order creation).
+  // Bersihkan setting lama (dev.db mungkin ter-seed), lalu seed satu setting aktif.
+  await ctx.prisma.platformFeeComponent.deleteMany();
+  await ctx.prisma.platformSetting.deleteMany();
   await ctx.prisma.platformSetting.create({
     data: { dpPct: 40, settlementPct: 60, platformFeePct: 10, defaultBaCommissionPct: 5, isActive: true },
   });

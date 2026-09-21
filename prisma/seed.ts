@@ -1,7 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
+/**
+ * Dual-provider aware, mirroring `src/lib/prisma.ts`:
+ *  - `file:`          → SQLite dev client (generated/sqlite-client)
+ *  - `postgresql://`  → PostgreSQL client (@prisma/client)
+ * Ini agar `npm run db:seed` dapat dijalankan ke dev.db SQLite lokal maupun
+ * Neon/Postgres, sesuai DATABASE_URL aktif.
+ */
+function createSeedClient(): PrismaClient {
+  const url = process.env.DATABASE_URL ?? "";
+  if (url.startsWith("file:")) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { PrismaClient: SqlitePrismaClient } = require("../generated/sqlite-client");
+    return new SqlitePrismaClient() as unknown as PrismaClient;
+  }
+  return new PrismaClient();
+}
+
+const prisma = createSeedClient();
 
 async function main() {
   console.log("Seeding HariKita Kebumen database...");
