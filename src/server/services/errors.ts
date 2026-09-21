@@ -12,6 +12,7 @@
  */
 
 import type {
+  AdminErrorCode,
   AmbassadorErrorCode,
   AppDomainErrorCode,
   AvailabilityErrorCode,
@@ -27,7 +28,8 @@ export type AnyDomainErrorCode =
   | PaymentErrorCode
   | LedgerErrorCode
   | AmbassadorErrorCode
-  | OtpErrorCode;
+  | OtpErrorCode
+  | AdminErrorCode;
 
 /**
  * Error domain yang merepresentasikan penolakan business-rule yang bersifat
