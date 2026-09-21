@@ -12,6 +12,7 @@ import {
   requestWithdrawal,
   resolveWithdrawal,
 } from "@/server/services/ambassador-service";
+import { getPlatformSettings } from "@/server/services/platform-settings-service";
 
 /**
  * HariKita - Brand Ambassador Server Actions
@@ -162,6 +163,7 @@ export async function createAmbassadorAction(input: {
     if (existing) throw new DomainError("INVALID_AMBASSADOR_INPUT", "Nomor HP sudah terdaftar.");
 
     const hashedPin = await bcrypt.hash(input.pin, 10);
+    const settings = await getPlatformSettings();
 
     const result = await withTransactionRetry(async (tx) => {
       // Kode unik (retry beberapa kali bila collision).
@@ -181,7 +183,7 @@ export async function createAmbassadorAction(input: {
           referralCode,
           displayName: input.displayName,
           phone: input.phone,
-          commissionPct: input.commissionPct ?? 5.0,
+          commissionPct: input.commissionPct ?? settings.defaultBaCommissionPct,
         },
       });
       await recordAdminAudit(

@@ -22,6 +22,7 @@ import { getStartOfDayWIB, diffCalendarDaysWIB, getEndOfDayWIB } from "@/lib/dat
 import { generateOperationalArtifacts } from "./order-lifecycle";
 import { notifyDpPaid } from "./notification-templates";
 import { creditCommissionForOrder } from "./ambassador-service";
+import { getPlatformSettings } from "./platform-settings-service";
 
 /**
  * HariKita - PaymentService
@@ -323,13 +324,16 @@ export async function activateSettlementInstallment(
   });
   if (existing) return false;
 
-  // Nominal settlement = total - DP yang sudah dibayar (fallback 70% dari total).
+  // Nominal settlement = total - DP yang sudah dibayar
+  // (fallback: pakai snapshot DP% order, atau setting aktif).
   const dpInstallment = await db.paymentInstallment.findFirst({
     where: { orderId, type: "DP_30", status: "PAID" },
   });
+  const setting = await getPlatformSettings(db);
+  const dpPct = order.snapshotDpPct ?? setting.dpPct;
   const settlementAmount = dpInstallment
     ? order.totalAmount - dpInstallment.amount
-    : order.totalAmount - Math.floor((order.totalAmount * 30) / 100);
+    : order.totalAmount - Math.floor((order.totalAmount * dpPct) / 100);
 
   await db.paymentInstallment.create({
     data: {
