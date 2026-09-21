@@ -12,6 +12,7 @@ import {
   TrendingUp,
   AlertCircle,
   LayoutDashboard,
+  Settings,
 } from "lucide-react";
 import { EmptyState } from "@/components/harikita/ui";
 import { AdminTrackingSuite } from "@/components/dashboard";
@@ -93,9 +94,20 @@ export function AdminDashboardClient({
         </div>
 
         {/* Global GMV */}
-        <div className="p-3.5 rounded-2xl bg-white border border-gold/30 shadow-xs text-right">
-          <span className="text-[10px] text-plum-light font-bold uppercase">Total Nilai Transaksi (GMV)</span>
-          <p className="font-mono text-xl font-bold text-plum">{formatRupiah(gmv)}</p>
+        <div className="flex flex-col items-end gap-2">
+          <div className="p-3.5 rounded-2xl bg-white border border-gold/30 shadow-xs text-right">
+            <span className="text-[10px] text-plum-light font-bold uppercase">Total Nilai Transaksi (GMV)</span>
+            <p className="font-mono text-xl font-bold text-plum">{formatRupiah(gmv)}</p>
+          </div>
+          {isAdmin && (
+            <Link
+              href="/admin/pengaturan"
+              className="focus-ring inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-gold/40 px-5 py-2.5 text-xs font-bold text-plum transition-colors hover:bg-gold/10"
+            >
+              <Settings className="w-4 h-4" aria-hidden="true" />
+              Pengaturan Platform
+            </Link>
+          )}
         </div>
       </div>
 
