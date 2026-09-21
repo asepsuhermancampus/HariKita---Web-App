@@ -176,6 +176,9 @@ model Order {
   eventDate           DateTime
   city                String               @default("Kebumen")
   totalAmount         Int                  // Integer Rupiah
+  snapshotDpPct          Int?
+  snapshotSettlementPct  Int?
+  snapshotPlatformFeePct Int?
   status              String               @default("PENDING_CONFIRMATION")
   notes               String?
 
@@ -637,4 +640,34 @@ model AdminAuditLog {
   @@index([actorId, createdAt])
   @@index([targetType, targetId])
   @@index([action, createdAt])
+}
+
+/// Konfigurasi finansial platform (singleton — satu baris aktif).
+model PlatformSetting {
+  id                     String                 @id @default(cuid())
+  dpPct                  Int                    @default(30)
+  settlementPct          Int                    @default(70)
+  platformFeePct         Int                    @default(10)
+  defaultBaCommissionPct Int                    @default(5)
+  isActive               Boolean                @default(true)
+  updatedById            String?
+  updatedByName          String?
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+
+  components             PlatformFeeComponent[]
+}
+
+/// Rincian komponen platform fee (mis. Operasional, Marketing). Total = platformFeePct.
+model PlatformFeeComponent {
+  id        String          @id @default(cuid())
+  settingId String
+  setting   PlatformSetting @relation(fields: [settingId], references: [id], onDelete: Cascade)
+  label     String
+  pct       Int
+  sortOrder Int             @default(0)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([settingId, sortOrder])
 }
