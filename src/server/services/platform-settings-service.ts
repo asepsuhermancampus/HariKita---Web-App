@@ -10,6 +10,8 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { DomainError } from "./errors";
+import type { AdminActor } from "@/server/auth/admin-guard";
+import { recordAdminAudit } from "./admin-audit-service";
 
 export type PlatformSettingsTx = Prisma.TransactionClient;
 
@@ -90,4 +92,62 @@ export async function getPlatformSettings(tx?: PlatformSettingsTx): Promise<Plat
   } catch {
     return { ...DEFAULT_PLATFORM_SETTINGS, components: [] };
   }
+}
+
+/**
+ * Simpan setting + komponen (replace) lalu tulis audit.
+ * Aktor wajib punya MANAGE_PLATFORM_SETTINGS (dicek pemanggil/action).
+ */
+export async function updatePlatformSettings(
+  input: PlatformSettingsView & { actor: AdminActor },
+  tx?: PlatformSettingsTx
+): Promise<PlatformSettingsView> {
+  validatePlatformSettings(input);
+  const db = tx ?? prisma;
+
+  let row = await db.platformSetting.findFirst({ where: { isActive: true } });
+  if (!row) {
+    row = await db.platformSetting.create({ data: { isActive: true } });
+  }
+
+  await db.platformFeeComponent.deleteMany({ where: { settingId: row.id } });
+
+  await db.platformSetting.update({
+    where: { id: row.id },
+    data: {
+      dpPct: input.dpPct,
+      settlementPct: input.settlementPct,
+      platformFeePct: input.platformFeePct,
+      defaultBaCommissionPct: input.defaultBaCommissionPct,
+      updatedById: input.actor.userId,
+      updatedByName: input.actor.name,
+      components: {
+        create: input.components.map((c, i) => ({
+          label: c.label,
+          pct: c.pct,
+          sortOrder: c.sortOrder ?? i,
+        })),
+      },
+    },
+  });
+
+  await recordAdminAudit(
+    {
+      actor: input.actor,
+      capability: "MANAGE_PLATFORM_SETTINGS",
+      action: "PLATFORM_SETTINGS_UPDATED",
+      targetType: "PlatformSetting",
+      targetId: row.id,
+      metadata: {
+        dpPct: input.dpPct,
+        settlementPct: input.settlementPct,
+        platformFeePct: input.platformFeePct,
+        defaultBaCommissionPct: input.defaultBaCommissionPct,
+        componentCount: input.components.length,
+      },
+    },
+    tx
+  );
+
+  return getPlatformSettings(db);
 }

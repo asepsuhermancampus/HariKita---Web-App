@@ -77,3 +77,38 @@ test("validatePlatformSettings: valid input passes", () => {
     })
   );
 });
+
+import { updatePlatformSettings } from "../src/server/services/platform-settings-service";
+
+test("updatePlatformSettings: persists + writes audit row", async () => {
+  const actor = { userId: "u_super", name: "Super", subRole: "SUPER_ADMIN" as const };
+  const saved = await updatePlatformSettings(
+    {
+      dpPct: 30,
+      settlementPct: 70,
+      platformFeePct: 10,
+      defaultBaCommissionPct: 5,
+      components: [
+        { id: "", label: "Operasional", pct: 6, sortOrder: 0 },
+        { id: "", label: "Marketing", pct: 4, sortOrder: 1 },
+      ],
+      actor,
+    },
+    ctx.prisma
+  );
+  assert.equal(saved.platformFeePct, 10);
+  assert.equal(saved.components.length, 2);
+
+  const reread = await getPlatformSettings(ctx.prisma);
+  assert.equal(reread.components.length, 2);
+
+  const audit = await ctx.prisma.adminAuditLog.findFirst({
+    where: { action: "PLATFORM_SETTINGS_UPDATED" },
+  });
+  assert.ok(audit, "audit row written");
+
+  // Bersihkan agar test lain yang mengharapkan DEFAULT tetap valid.
+  await ctx.prisma.platformFeeComponent.deleteMany();
+  await ctx.prisma.platformSetting.deleteMany();
+  await ctx.prisma.adminAuditLog.deleteMany({ where: { action: "PLATFORM_SETTINGS_UPDATED" } });
+});
