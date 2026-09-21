@@ -2,8 +2,11 @@
 
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { withTransactionRetry } from "@/lib/transaction-retry";
 import { runAction, requireSession, revalidate, type ActionResult } from "./_shared";
 import { DomainError } from "@/server/services/errors";
+import { requireAdminCapability } from "@/server/auth/admin-guard";
+import { recordAdminAudit } from "@/server/services/admin-audit-service";
 import {
   generateReferralCode,
   requestWithdrawal,
@@ -14,18 +17,10 @@ import {
  * HariKita - Brand Ambassador Server Actions
  *
  * Aksi self-service BA (pengajuan penarikan saldo) dan aksi admin (pembuatan
- * akun BA, pengaturan komisi/status, resolusi penarikan). Seluruh aksi
- * role-guarded dan memakai kosakata error kanonik dari `src/types/errors.ts`.
+ * akun BA, pengaturan komisi/status, resolusi penarikan). Aksi admin memakai
+ * capability guard (`requireAdminCapability`) + audit atomik; aksi self-service
+ * BA tetap memakai `requireAmbassador`.
  */
-
-/** Auth guard: hanya sesi dengan role ADMIN yang boleh melanjutkan. */
-async function requireAdmin() {
-  const session = await requireSession();
-  if (session.role !== "ADMIN") {
-    throw new DomainError("UNAUTHORIZED_ORDER_ACCESS", "Hanya admin yang boleh melakukan aksi ini.");
-  }
-  return session;
-}
 
 /** Auth guard: hanya BA yang memiliki profil yang boleh melanjutkan. */
 async function requireAmbassador() {
@@ -53,26 +48,39 @@ export async function requestWithdrawalAction(input: {
   });
 }
 
-/** Menyelesaikan penarikan PENDING (PAID / REJECTED). Hanya admin. */
+/** Menyelesaikan penarikan PENDING (PAID / REJECTED). Hanya admin (MANAGE_FINANCE). */
 export async function resolveWithdrawalAction(input: {
   withdrawalId: string;
   decision: "PAID" | "REJECTED";
 }): Promise<ActionResult<{ id: string }>> {
   return runAction(async () => {
-    await requireAdmin();
-    await resolveWithdrawal(input.withdrawalId, input.decision);
+    const actor = await requireAdminCapability("MANAGE_FINANCE");
+    await withTransactionRetry(async (tx) => {
+      await resolveWithdrawal(input.withdrawalId, input.decision, tx);
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_FINANCE",
+          action: "WITHDRAWAL_RESOLVED",
+          targetType: "AmbassadorWithdrawal",
+          targetId: input.withdrawalId,
+          metadata: { decision: input.decision },
+        },
+        tx
+      );
+    });
     revalidate(["/admin/ba"]);
     return { id: input.withdrawalId };
   });
 }
 
-/** Mengatur persentase komisi seorang BA. Hanya admin. */
+/** Mengatur persentase komisi seorang BA. Hanya admin (MANAGE_BA). */
 export async function setAmbassadorCommissionAction(input: {
   ambassadorId: string;
   commissionPct: number;
 }): Promise<ActionResult<{ id: string }>> {
   return runAction(async () => {
-    await requireAdmin();
+    const actor = await requireAdminCapability("MANAGE_BA");
     if (
       !Number.isFinite(input.commissionPct) ||
       input.commissionPct < 0 ||
@@ -80,32 +88,58 @@ export async function setAmbassadorCommissionAction(input: {
     ) {
       throw new DomainError("INVALID_AMBASSADOR_INPUT", "Persen komisi harus antara 0 sampai 100.");
     }
-    await prisma.brandAmbassador.update({
-      where: { id: input.ambassadorId },
-      data: { commissionPct: input.commissionPct },
+    await withTransactionRetry(async (tx) => {
+      await tx.brandAmbassador.update({
+        where: { id: input.ambassadorId },
+        data: { commissionPct: input.commissionPct },
+      });
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_BA",
+          action: "BA_COMMISSION_SET",
+          targetType: "Ambassador",
+          targetId: input.ambassadorId,
+          metadata: { commissionPct: input.commissionPct },
+        },
+        tx
+      );
     });
     revalidate(["/admin/ba"]);
     return { id: input.ambassadorId };
   });
 }
 
-/** Mengaktifkan / menonaktifkan seorang BA. Hanya admin. */
+/** Mengaktifkan / menonaktifkan seorang BA. Hanya admin (MANAGE_BA). */
 export async function setAmbassadorActiveAction(input: {
   ambassadorId: string;
   isActive: boolean;
 }): Promise<ActionResult<{ id: string }>> {
   return runAction(async () => {
-    await requireAdmin();
-    await prisma.brandAmbassador.update({
-      where: { id: input.ambassadorId },
-      data: { isActive: input.isActive },
+    const actor = await requireAdminCapability("MANAGE_BA");
+    await withTransactionRetry(async (tx) => {
+      await tx.brandAmbassador.update({
+        where: { id: input.ambassadorId },
+        data: { isActive: input.isActive },
+      });
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_BA",
+          action: "BA_ACTIVE_CHANGED",
+          targetType: "Ambassador",
+          targetId: input.ambassadorId,
+          metadata: { isActive: input.isActive },
+        },
+        tx
+      );
     });
     revalidate(["/admin/ba"]);
     return { id: input.ambassadorId };
   });
 }
 
-/** Membuat akun BA baru (User role BA + profil BrandAmbassador). Hanya admin. */
+/** Membuat akun BA baru (User role BA + profil BrandAmbassador). Hanya admin (MANAGE_BA). */
 export async function createAmbassadorAction(input: {
   name: string;
   phone: string;
@@ -114,7 +148,7 @@ export async function createAmbassadorAction(input: {
   commissionPct?: number;
 }): Promise<ActionResult<{ ambassadorId: string; referralCode: string }>> {
   return runAction(async () => {
-    await requireAdmin();
+    const actor = await requireAdminCapability("MANAGE_BA");
     if (!/^\d{6}$/.test(input.pin)) {
       throw new DomainError("INVALID_AMBASSADOR_INPUT", "PIN harus 6 digit angka.");
     }
@@ -129,27 +163,41 @@ export async function createAmbassadorAction(input: {
 
     const hashedPin = await bcrypt.hash(input.pin, 10);
 
-    // Kode unik (retry beberapa kali bila collision).
-    let referralCode = generateReferralCode("Kebumen");
-    for (let i = 0; i < 5; i++) {
-      const clash = await prisma.brandAmbassador.findUnique({ where: { referralCode } });
-      if (!clash) break;
-      referralCode = generateReferralCode("Kebumen");
-    }
+    const result = await withTransactionRetry(async (tx) => {
+      // Kode unik (retry beberapa kali bila collision).
+      let referralCode = generateReferralCode("Kebumen");
+      for (let i = 0; i < 5; i++) {
+        const clash = await tx.brandAmbassador.findUnique({ where: { referralCode } });
+        if (!clash) break;
+        referralCode = generateReferralCode("Kebumen");
+      }
 
-    const user = await prisma.user.create({
-      data: { name: input.name, phone: input.phone, pin: hashedPin, role: "BA" },
-    });
-    const ba = await prisma.brandAmbassador.create({
-      data: {
-        userId: user.id,
-        referralCode,
-        displayName: input.displayName,
-        phone: input.phone,
-        commissionPct: input.commissionPct ?? 5.0,
-      },
+      const user = await tx.user.create({
+        data: { name: input.name, phone: input.phone, pin: hashedPin, role: "BA" },
+      });
+      const ba = await tx.brandAmbassador.create({
+        data: {
+          userId: user.id,
+          referralCode,
+          displayName: input.displayName,
+          phone: input.phone,
+          commissionPct: input.commissionPct ?? 5.0,
+        },
+      });
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_BA",
+          action: "BA_CREATED",
+          targetType: "Ambassador",
+          targetId: ba.id,
+          metadata: { referralCode },
+        },
+        tx
+      );
+      return { ambassadorId: ba.id, referralCode };
     });
     revalidate(["/admin/ba"]);
-    return { ambassadorId: ba.id, referralCode };
+    return result;
   });
 }

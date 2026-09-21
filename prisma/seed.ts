@@ -23,6 +23,7 @@ async function main() {
   await prisma.brandAmbassador.deleteMany();
   await prisma.otpCode.deleteMany();
   await prisma.pinChangeLog.deleteMany();
+  await prisma.adminAuditLog.deleteMany();
   await prisma.vendorProfile.deleteMany();
   await prisma.user.deleteMany();
 
@@ -42,6 +43,31 @@ async function main() {
     },
   });
   await logPin(adminUser.id);
+
+  // Admin demo sub-role (OPS & FINANCE). `adminRole` null = SUPER_ADMIN.
+  const opsAdmin = await prisma.user.create({
+    data: {
+      name: "Ops Admin HariKita",
+      phone: "081234567891",
+      email: "ops@harikita.id",
+      pin: DEFAULT_PIN,
+      role: "ADMIN",
+      adminRole: "OPS",
+    },
+  });
+  await logPin(opsAdmin.id);
+
+  const financeAdmin = await prisma.user.create({
+    data: {
+      name: "Finance Admin HariKita",
+      phone: "081234567892",
+      email: "finance@harikita.id",
+      pin: DEFAULT_PIN,
+      role: "ADMIN",
+      adminRole: "FINANCE",
+    },
+  });
+  await logPin(financeAdmin.id);
 
   const clientUser = await prisma.user.create({
     data: {
@@ -634,6 +660,8 @@ async function main() {
   console.log("");
   console.log("=== AKUN DEMO HARI KITA (PIN semua: 123456) ===");
   console.log("Super Admin : 081234567890  -> /auth/login/admin");
+  console.log("Ops Admin   : 081234567891  (sub-role OPS)     -> /auth/login/admin");
+  console.log("Finance Adm : 081234567892  (sub-role FINANCE) -> /auth/login/admin");
   console.log("Pengantin   : 081987654321  -> /auth/login");
   console.log("Vendor      : 081300000001  -> /auth/login");
   console.log("Brand Ambassador:");

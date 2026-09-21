@@ -1,17 +1,13 @@
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/session";
+import { canViewAdmin } from "@/server/auth/admin-guard";
 import { scanForContactLeaks } from "@/server/services/content-audit";
 
 /**
  * HariKita - Admin Query Layer (Phase 9)
  *
- * Query read-only untuk admin (admin-only). Semua fungsi memeriksa role ADMIN.
+ * Query read-only untuk admin (admin-only). Semua fungsi memeriksa capability VIEW_ADMIN
+ * lewat helper bersama `canViewAdmin` (satu sumber otorisasi admin).
  */
-
-async function requireAdmin(): Promise<boolean> {
-  const session = await getSession();
-  return Boolean(session && session.role === "ADMIN");
-}
 
 export interface VendorVerificationDTO {
   id: string;
@@ -34,7 +30,7 @@ export interface VendorVerificationDTO {
 export async function getVendorVerifications(
   status?: "PENDING" | "APPROVED" | "REJECTED"
 ): Promise<VendorVerificationDTO[]> {
-  if (!(await requireAdmin())) return [];
+  if (!(await canViewAdmin())) return [];
 
   const vendors = await prisma.vendorProfile.findMany({
     where: status ? { verificationStatus: status } : undefined,
@@ -70,7 +66,7 @@ export interface ContentAuditFinding {
 
 /** Memindai deskripsi vendor & caption portofolio terhadap kebocoran kontak. */
 export async function getContentAuditFindings(): Promise<ContentAuditFinding[]> {
-  if (!(await requireAdmin())) return [];
+  if (!(await canViewAdmin())) return [];
 
   const findings: ContentAuditFinding[] = [];
 
@@ -132,7 +128,7 @@ export interface DisputeAdminDTO {
 
 /** Daftar sengketa untuk admin. */
 export async function getDisputes(status?: string): Promise<DisputeAdminDTO[]> {
-  if (!(await requireAdmin())) return [];
+  if (!(await canViewAdmin())) return [];
 
   const disputes = await prisma.dispute.findMany({
     where: status ? { status } : undefined,
@@ -158,7 +154,7 @@ export async function getDisputes(status?: string): Promise<DisputeAdminDTO[]> {
 
 /** Ringkasan funnel dari AnalyticsTelemetry (10 tahap → jumlah per eventType). */
 export async function getFunnelTelemetry(): Promise<Array<{ eventType: string; count: number }>> {
-  if (!(await requireAdmin())) return [];
+  if (!(await canViewAdmin())) return [];
 
   const grouped = await prisma.analyticsTelemetry.groupBy({
     by: ["eventType"],

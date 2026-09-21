@@ -10,6 +10,8 @@ import {
   resolveDispute,
   type DisputeReason,
 } from "@/server/services/dispute-service";
+import { requireAdminCapability } from "@/server/auth/admin-guard";
+import { recordAdminAudit } from "@/server/services/admin-audit-service";
 import { runAction, revalidate, type ActionResult } from "./_shared";
 
 /**
@@ -18,14 +20,6 @@ import { runAction, revalidate, type ActionResult } from "./_shared";
  * Verifikasi vendor, dispute/resolution. Aksi dispute dapat dipanggil klien/vendor
  * (open) maupun admin (review/resolve). Semua memakai sesi + pemeriksaan role.
  */
-
-async function requireAdminUserId(): Promise<string> {
-  const session = await getSession();
-  if (!session || session.role !== "ADMIN") {
-    throw new DomainError("UNAUTHORIZED_ORDER_ACCESS", "Hanya Super Admin yang dapat mengakses.");
-  }
-  return session.userId;
-}
 
 async function requireAnyUserId(): Promise<string> {
   const session = await getSession();
@@ -42,13 +36,25 @@ export async function approveVendorAction(input: {
   vendorId: string;
 }): Promise<ActionResult<{ id: string }>> {
   return runAction(async () => {
-    await requireAdminUserId();
+    const actor = await requireAdminCapability("VERIFY_VENDOR");
     const vendor = await prisma.vendorProfile.findUnique({ where: { id: input.vendorId } });
     if (!vendor) throw new DomainError("ORDER_NOT_FOUND", "Vendor tidak ditemukan.");
 
-    await prisma.vendorProfile.update({
-      where: { id: input.vendorId },
-      data: { verificationStatus: "APPROVED", isVerified: true, verificationNote: null },
+    await withTransactionRetry(async (tx) => {
+      await tx.vendorProfile.update({
+        where: { id: input.vendorId },
+        data: { verificationStatus: "APPROVED", isVerified: true, verificationNote: null },
+      });
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "VERIFY_VENDOR",
+          action: "VENDOR_APPROVED",
+          targetType: "VendorProfile",
+          targetId: input.vendorId,
+        },
+        tx
+      );
     });
 
     revalidate(["/admin/verifikasi", "/vendor"]);
@@ -62,17 +68,27 @@ export async function rejectVendorAction(input: {
   note?: string;
 }): Promise<ActionResult<{ id: string }>> {
   return runAction(async () => {
-    await requireAdminUserId();
+    const actor = await requireAdminCapability("VERIFY_VENDOR");
     const vendor = await prisma.vendorProfile.findUnique({ where: { id: input.vendorId } });
     if (!vendor) throw new DomainError("ORDER_NOT_FOUND", "Vendor tidak ditemukan.");
 
-    await prisma.vendorProfile.update({
-      where: { id: input.vendorId },
-      data: {
-        verificationStatus: "REJECTED",
-        isVerified: false,
-        verificationNote: input.note?.trim() || "Berkas belum lengkap.",
-      },
+    const note = input.note?.trim() || "Berkas belum lengkap.";
+    await withTransactionRetry(async (tx) => {
+      await tx.vendorProfile.update({
+        where: { id: input.vendorId },
+        data: { verificationStatus: "REJECTED", isVerified: false, verificationNote: note },
+      });
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "VERIFY_VENDOR",
+          action: "VENDOR_REJECTED",
+          targetType: "VendorProfile",
+          targetId: input.vendorId,
+          metadata: { note },
+        },
+        tx
+      );
     });
 
     revalidate(["/admin/verifikasi", "/vendor"]);
@@ -117,10 +133,21 @@ export async function reviewDisputeAction(input: {
   disputeId: string;
 }): Promise<ActionResult<{ status: string }>> {
   return runAction(async () => {
-    const adminId = await requireAdminUserId();
-    const result = await withTransactionRetry((tx) =>
-      reviewDispute(input.disputeId, adminId, tx)
-    );
+    const actor = await requireAdminCapability("MANAGE_DISPUTE");
+    const result = await withTransactionRetry(async (tx) => {
+      const res = await reviewDispute(input.disputeId, actor.userId, tx);
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_DISPUTE",
+          action: "DISPUTE_REVIEWED",
+          targetType: "Dispute",
+          targetId: input.disputeId,
+        },
+        tx
+      );
+      return res;
+    });
     revalidate(["/admin/dispute"]);
     return result;
   });
@@ -133,21 +160,33 @@ export async function resolveDisputeAction(input: {
   resolution: string;
 }): Promise<ActionResult<{ status: string; orderStatus: string }>> {
   return runAction(async () => {
-    const adminId = await requireAdminUserId();
+    const actor = await requireAdminCapability("MANAGE_DISPUTE");
     if (!input.resolution?.trim()) {
       throw new DomainError("INVALID_ORDER_TRANSITION", "Catatan resolusi wajib diisi.");
     }
-    const result = await withTransactionRetry((tx) =>
-      resolveDispute(
+    const result = await withTransactionRetry(async (tx) => {
+      const res = await resolveDispute(
         {
           disputeId: input.disputeId,
-          adminUserId: adminId,
+          adminUserId: actor.userId,
           approved: input.approved,
           resolution: input.resolution.trim(),
         },
         tx
-      )
-    );
+      );
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_DISPUTE",
+          action: "DISPUTE_RESOLVED",
+          targetType: "Dispute",
+          targetId: input.disputeId,
+          metadata: { approved: input.approved, resolution: input.resolution.trim() },
+        },
+        tx
+      );
+      return res;
+    });
     revalidate(["/admin/dispute", "/admin/escrow", "/client/pesanan"]);
     return result;
   });

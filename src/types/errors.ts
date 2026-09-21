@@ -82,11 +82,19 @@ export const OTP_ERROR_CODES = [
 
 export type OtpErrorCode = (typeof OTP_ERROR_CODES)[number];
 
-// ── 7. CONSOLIDATED APPLICATION ERROR UNION ────────────────────────────────
+// ── 8. ADMIN AUTHORIZATION ERROR CODES ─────────────────────────────────────
+export const ADMIN_ERROR_CODES = [
+  'UNAUTHORIZED_ADMIN_CAPABILITY',
+] as const;
+
+export type AdminErrorCode = (typeof ADMIN_ERROR_CODES)[number];
+
+// ── 9. CONSOLIDATED APPLICATION ERROR UNION ────────────────────────────────
 export type AppDomainErrorCode =
   | AvailabilityErrorCode
   | OrderErrorCode
   | PaymentErrorCode
   | LedgerErrorCode
   | AmbassadorErrorCode
-  | OtpErrorCode;
+  | OtpErrorCode
+  | AdminErrorCode;
