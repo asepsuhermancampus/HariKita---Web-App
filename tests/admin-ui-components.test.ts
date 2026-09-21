@@ -27,3 +27,11 @@ test("AdminCard renders title/description/action slots", () => {
   assert.match(src, /description/);
   assert.match(src, /action/);
 });
+
+test("AdminPageHeader/StatCard/Table exist with expected props", () => {
+  assert.match(read("src/components/admin/AdminPageHeader.tsx"), /title/);
+  assert.match(read("src/components/admin/AdminStatCard.tsx"), /label/);
+  const t = read("src/components/admin/AdminTable.tsx");
+  assert.match(t, /columns/);
+  assert.match(t, /renderRow/);
+});
