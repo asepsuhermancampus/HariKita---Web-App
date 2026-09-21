@@ -1,6 +1,6 @@
 # Platform Settings + Order Snapshot Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Pusatkan seluruh persentase finansial (DP, settlement, platform fee + rinciannya, default komisi BA) ke satu konfigurasi yang dapat diedit Super Admin, dan snapshot nilai yang berlaku ke setiap `Order` saat dibuat.
 
@@ -35,12 +35,12 @@
 **Interfaces:**
 - Produces: model `PlatformSetting` (id, dpPct, settlementPct, platformFeePct, defaultBaCommissionPct, isActive, updatedById, updatedByName, createdAt, updatedAt, components[]), model `PlatformFeeComponent` (id, settingId, label, pct, sortOrder, timestamps), dan `Order.snapshotDpPct/snapshotSettlementPct/snapshotPlatformFeePct` (`Int?`).
 
-- [ ] **Step 1: Backup dev.db**
+- [x] **Step 1: Backup dev.db**
 
 Run: `copy prisma\dev.db prisma\dev.db.bak`
 Expected: `prisma/dev.db.bak` dibuat (jika dev.db ada).
 
-- [ ] **Step 2: Tambah model `PlatformSetting` + `PlatformFeeComponent` di akhir `prisma/schema.prisma`**
+- [x] **Step 2: Tambah model `PlatformSetting` + `PlatformFeeComponent` di akhir `prisma/schema.prisma`**
 
 ```prisma
 /// Konfigurasi finansial platform (singleton — satu baris aktif).
@@ -74,7 +74,7 @@ model PlatformFeeComponent {
 }
 ```
 
-- [ ] **Step 3: Tambah kolom snapshot ke `model Order` di `prisma/schema.prisma`**
+- [x] **Step 3: Tambah kolom snapshot ke `model Order` di `prisma/schema.prisma`**
 
 Sisipkan setelah baris `totalAmount ...` pada `model Order`:
 ```prisma
@@ -83,9 +83,9 @@ Sisipkan setelah baris `totalAmount ...` pada `model Order`:
   snapshotPlatformFeePct Int?
 ```
 
-- [ ] **Step 4: Terapkan Step 2 & 3 identik ke `prisma/schema.sqlite.prisma`**
+- [x] **Step 4: Terapkan Step 2 & 3 identik ke `prisma/schema.sqlite.prisma`**
 
-- [ ] **Step 5: Validasi kedua schema**
+- [x] **Step 5: Validasi kedua schema**
 
 Run:
 ```bash
@@ -94,7 +94,7 @@ npx prisma validate --schema prisma/schema.sqlite.prisma
 ```
 Expected: keduanya `is valid`. (Jika schema sqlite butuh `DATABASE_URL` file:, set env `DATABASE_URL="file:<abs path ke prisma/dev.db>"` untuk perintah ini.)
 
-- [ ] **Step 6: Generate kedua client + push SQLite**
+- [x] **Step 6: Generate kedua client + push SQLite**
 
 Run:
 ```bash
@@ -105,7 +105,7 @@ npx prisma db push --schema prisma/schema.sqlite.prisma --skip-generate
 (Untuk db push, set `$env:DATABASE_URL="file:" + ((Resolve-Path "prisma\dev.db").Path -replace '\\','/')` agar menarget SQLite, bukan Neon.)
 Expected: client ter-generate; db push sukses.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add prisma/schema.prisma prisma/schema.sqlite.prisma prisma/dev.db
@@ -125,7 +125,7 @@ git commit -m "feat(settings): add PlatformSetting, PlatformFeeComponent, Order 
 **Interfaces:**
 - Produces: `SETTINGS_ERROR_CODES`, `type SettingsErrorCode`, masuk ke kedua union; `AdminCapability` bertambah `"MANAGE_PLATFORM_SETTINGS"`; matriks memberi capability ini hanya ke `SUPER_ADMIN`.
 
-- [ ] **Step 1: Tambah grup error**
+- [x] **Step 1: Tambah grup error**
 
 Di `src/types/errors.ts`, setelah grup admin, tambah:
 ```ts
@@ -138,17 +138,17 @@ export type SettingsErrorCode = (typeof SETTINGS_ERROR_CODES)[number];
 ```
 Tambahkan `| SettingsErrorCode` ke union `AppDomainErrorCode`.
 
-- [ ] **Step 2: Tambah ke `AnyDomainErrorCode`**
+- [x] **Step 2: Tambah ke `AnyDomainErrorCode`**
 
 Di `src/server/services/errors.ts`, import `SettingsErrorCode` dan tambahkan `| SettingsErrorCode` ke union `AnyDomainErrorCode`.
 
-- [ ] **Step 3: Tambah capability**
+- [x] **Step 3: Tambah capability**
 
 Di `src/server/auth/admin-guard.ts`:
 - Tambahkan `"MANAGE_PLATFORM_SETTINGS"` ke tipe `AdminCapability`.
 - Tambahkan ke `CAPABILITY_MATRIX.SUPER_ADMIN` (hanya SUPER_ADMIN; OPS/FINANCE tidak).
 
-- [ ] **Step 4: Tulis test capability yang gagal**
+- [x] **Step 4: Tulis test capability yang gagal**
 
 Buat `tests/platform-settings.test.ts`:
 ```ts
@@ -178,12 +178,12 @@ test("capability: OPS and FINANCE do NOT have MANAGE_PLATFORM_SETTINGS", () => {
 });
 ```
 
-- [ ] **Step 5: Jalankan test — pastikan lulus setelah perubahan**
+- [x] **Step 5: Jalankan test — pastikan lulus setelah perubahan**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: PASS (2 tests). Typecheck juga: `npm run typecheck`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/types/errors.ts src/server/services/errors.ts src/server/auth/admin-guard.ts tests/platform-settings.test.ts
@@ -206,7 +206,7 @@ git commit -m "feat(settings): add INVALID_PLATFORM_SETTINGS error + MANAGE_PLAT
   - `async function getPlatformSettings(tx?): Promise<PlatformSettingsView>`
   - `function validatePlatformSettings(input: PlatformSettingsView): void`
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Tambahkan ke `tests/platform-settings.test.ts`:
 ```ts
@@ -263,12 +263,12 @@ test("validatePlatformSettings: valid input passes", () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan test — pastikan gagal**
+- [x] **Step 2: Jalankan test — pastikan gagal**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: FAIL — modul belum ada.
 
-- [ ] **Step 3: Implementasi service (get + validate + default)**
+- [x] **Step 3: Implementasi service (get + validate + default)**
 
 Buat `src/server/services/platform-settings-service.ts`:
 ```ts
@@ -349,12 +349,12 @@ export async function getPlatformSettings(tx?: PlatformSettingsTx): Promise<Plat
 }
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/platform-settings-service.ts tests/platform-settings.test.ts
@@ -373,7 +373,7 @@ git commit -m "feat(settings): add getPlatformSettings + validatePlatformSetting
 - Consumes: `validatePlatformSettings`, `recordAdminAudit`, `AdminActor`.
 - Produces: `async function updatePlatformSettings(input: PlatformSettingsView & { actor: AdminActor }, tx?): Promise<PlatformSettingsView>`.
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Tambahkan ke `tests/platform-settings.test.ts`:
 ```ts
@@ -400,12 +400,12 @@ test("updatePlatformSettings: persists + writes audit row", async () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan test — pastikan gagal**
+- [x] **Step 2: Jalankan test — pastikan gagal**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: FAIL — `updatePlatformSettings` belum ada.
 
-- [ ] **Step 3: Implementasi**
+- [x] **Step 3: Implementasi**
 
 Tambahkan ke `src/server/services/platform-settings-service.ts`:
 ```ts
@@ -468,12 +468,12 @@ export async function updatePlatformSettings(
 }
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/platform-settings-service.ts tests/platform-settings.test.ts
@@ -493,7 +493,7 @@ git commit -m "feat(settings): add updatePlatformSettings with audit"
   - query `getPlatformSettingsForAdmin(): Promise<PlatformSettingsView | null>` (VIEW_ADMIN; null bila tak berhak).
   - action `updatePlatformSettingsAction(input): Promise<ActionResult<PlatformSettingsView>>` (guard `MANAGE_PLATFORM_SETTINGS`).
 
-- [ ] **Step 1: Query**
+- [x] **Step 1: Query**
 
 Buat `src/server/queries/platform-settings.ts`:
 ```ts
@@ -507,7 +507,7 @@ export async function getPlatformSettingsForAdmin(): Promise<PlatformSettingsVie
 }
 ```
 
-- [ ] **Step 2: Action**
+- [x] **Step 2: Action**
 
 Buat `src/server/actions/platform-settings.ts`:
 ```ts
@@ -547,12 +547,12 @@ export async function updatePlatformSettingsAction(
 }
 ```
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 Run: `npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/server/queries/platform-settings.ts src/server/actions/platform-settings.ts
@@ -570,7 +570,7 @@ git commit -m "feat(settings): add settings query + update action (SUPER_ADMIN)"
 **Interfaces:**
 - Produces: `splitTranches(totalAmount: number, dpPct = 30): { dpAmount; settlementAmount }`.
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Tambahkan ke `tests/platform-settings.test.ts`:
 ```ts
@@ -585,12 +585,12 @@ test("splitTranches: custom dpPct=40 -> 40/60", () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan test — pastikan gagal pada kasus custom**
+- [x] **Step 2: Jalankan test — pastikan gagal pada kasus custom**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: FAIL — `splitTranches` belum menerima argumen kedua (TypeScript error / hasil salah).
 
-- [ ] **Step 3: Ubah `splitTranches`**
+- [x] **Step 3: Ubah `splitTranches`**
 
 Ganti isi `splitTranches` di `src/server/services/ledger-service.ts`:
 ```ts
@@ -612,12 +612,12 @@ export function splitTranches(
 }
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/ledger-service.ts tests/platform-settings.test.ts
@@ -636,7 +636,7 @@ git commit -m "feat(settings): make splitTranches accept dpPct (backward-compati
 - Consumes: `getPlatformSettings` (via `db` dalam transaksi).
 - Produces: `createOrder` menulis `snapshotDpPct/snapshotSettlementPct/snapshotPlatformFeePct` dari setting aktif.
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Tambahkan ke `tests/platform-settings.test.ts` (gunakan helper `seedVendorWithPackage` + `claimHoldSlot`; pola dari `tests/services-integration.test.ts`):
 ```ts
@@ -680,12 +680,12 @@ test("createOrder writes snapshot percentages from active settings", async () =>
 > `claimHoldSlot({ vendorId, date }, prisma)` → `createOrder({... items: [{ servicePackageId, holdToken: hold.holdToken }]}, tx)`.
 > Tiru setup ini persis agar order bisa dibuat.
 
-- [ ] **Step 2: Jalankan test — pastikan gagal**
+- [x] **Step 2: Jalankan test — pastikan gagal**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: FAIL — snapshot masih null.
 
-- [ ] **Step 3: Modifikasi `createOrder`**
+- [x] **Step 3: Modifikasi `createOrder`**
 
 Di `src/server/services/order-service.ts`, tambahkan import:
 ```ts
@@ -702,17 +702,17 @@ Lalu pada `data: { ... }` di `db.order.create`, tambahkan:
       snapshotPlatformFeePct: settings.platformFeePct,
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Jalankan suite penuh**
+- [x] **Step 5: Jalankan suite penuh**
 
 Run: `npm test`
 Expected: PASS (baseline + test baru). Verifikasi `order-lifecycle.test.ts` tetap hijau.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/server/services/order-service.ts tests/platform-settings.test.ts
@@ -731,7 +731,7 @@ git commit -m "feat(settings): snapshot platform percentages onto Order at creat
 - Consumes: `getPlatformSettings`.
 - Produces: fallback settlement memakai snapshot order (bila ada) atau setting; default komisi BA dari setting.
 
-- [ ] **Step 1: Ganti fallback di `payment-service.ts`**
+- [x] **Step 1: Ganti fallback di `payment-service.ts`**
 
 Pada fungsi yang mengaktifkan `SETTLEMENT_70` (~line 326-332), ganti fallback:
 ```ts
@@ -743,7 +743,7 @@ Pada fungsi yang mengaktifkan `SETTLEMENT_70` (~line 326-332), ganti fallback:
 ```
 (Hapus `Math.floor((order.totalAmount * 30) / 100)` hardcode; import `getPlatformSettings`.)
 
-- [ ] **Step 2: Ganti default komisi BA di `actions/ambassador.ts`**
+- [x] **Step 2: Ganti default komisi BA di `actions/ambassador.ts`**
 
 Pada `createAmbassadorAction` (~line 149), ganti `commissionPct: input.commissionPct ?? 5.0` menjadi membaca setting:
 ```ts
@@ -753,12 +753,12 @@ Pada `createAmbassadorAction` (~line 149), ganti `commissionPct: input.commissio
 ```
 (Tambahkan import `getPlatformSettings`.)
 
-- [ ] **Step 3: Typecheck + suite**
+- [x] **Step 3: Typecheck + suite**
 
 Run: `npm run typecheck` lalu `npm test`
 Expected: keduanya PASS.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/server/services/payment-service.ts src/server/actions/ambassador.ts
@@ -776,7 +776,7 @@ git commit -m "feat(settings): read dpPct default + BA commission default from p
 **Interfaces:**
 - Consumes: `getPlatformSettingsForAdmin`, `updatePlatformSettingsAction`.
 
-- [ ] **Step 1: Server component**
+- [x] **Step 1: Server component**
 
 Buat `src/app/admin/pengaturan/page.tsx`:
 ```tsx
@@ -796,7 +796,7 @@ export default async function AdminPengaturanPage() {
 }
 ```
 
-- [ ] **Step 2: Client form (ringkas, mobile-first, ≥44px target)**
+- [x] **Step 2: Client form (ringkas, mobile-first, ≥44px target)**
 
 Buat `src/app/admin/pengaturan/AdminPengaturanClient.tsx`:
 ```tsx
@@ -856,16 +856,16 @@ export function AdminPengaturanClient({ initial }: { initial: PlatformSettingsVi
 }
 ```
 
-- [ ] **Step 3: Tambah tautan di dashboard admin (opsional)**
+- [x] **Step 3: Tambah tautan di dashboard admin (opsional)**
 
 Tambahkan kartu/link `Pengaturan Platform` di `src/app/admin/AdminDashboardClient.tsx` menuju `/admin/pengaturan` (hanya tampil bila perlu; server tetap otoritatif).
 
-- [ ] **Step 4: Typecheck + build**
+- [x] **Step 4: Typecheck + build**
 
 Run: `npm run typecheck` lalu `npm run build`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/admin/pengaturan src/app/admin/AdminDashboardClient.tsx
@@ -884,7 +884,7 @@ git commit -m "feat(settings): add Super Admin platform settings panel"
 **Interfaces:**
 - Produces: `useCart(settings?)` menerima `{ dpPct?, platformFeePct? }` (opsional, default 30/10) untuk kalkulasi.
 
-- [ ] **Step 1: `cart-store` terima persen (opsional)**
+- [x] **Step 1: `cart-store` terima persen (opsional)**
 
 Di `src/lib/cart-store.ts`, ubah `useCart()` menjadi:
 ```ts
@@ -901,13 +901,13 @@ export function useCart(opts?: { dpPct?: number; platformFeePct?: number }) {
 }
 ```
 
-- [ ] **Step 2: Checkout meneruskan settings**
+- [x] **Step 2: Checkout meneruskan settings**
 
 Ubah `src/app/checkout/page.tsx`: buat server wrapper yang memuat settings lalu teruskan ke client, ATAU (lebih sederhana, karena halaman ini client) tambahkan prop. Pola minimal: jadikan `checkout/page.tsx` server component yang merender `<CheckoutClient settings={...} />` (pindahkan isi client ke `CheckoutClient.tsx`), lalu `CheckoutClient` memanggil `useCart({ dpPct: settings.dpPct, platformFeePct: settings.platformFeePct })`.
 
 > Rencana menetapkan pola split server/client ini agar settings dibaca server-side (tidak fetch DB dari klien).
 
-- [ ] **Step 3: Seed**
+- [x] **Step 3: Seed**
 
 Di `prisma/seed.ts`:
 - Tambah ke blok `deleteMany` awal: `await prisma.platformFeeComponent.deleteMany(); await prisma.platformSetting.deleteMany();`
@@ -925,7 +925,7 @@ Di `prisma/seed.ts`:
   });
 ```
 
-- [ ] **Step 4: Verifikasi akhir lengkap**
+- [x] **Step 4: Verifikasi akhir lengkap**
 
 Run:
 ```bash
@@ -937,7 +937,7 @@ npm run build
 ```
 Expected: semua PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/cart-store.ts src/app/checkout prisma/seed.ts
