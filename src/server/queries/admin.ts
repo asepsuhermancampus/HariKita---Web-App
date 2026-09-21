@@ -1,22 +1,13 @@
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/session";
-import { loadAdminActor, hasCapability } from "@/server/auth/admin-guard";
+import { canViewAdmin } from "@/server/auth/admin-guard";
 import { scanForContactLeaks } from "@/server/services/content-audit";
 
 /**
  * HariKita - Admin Query Layer (Phase 9)
  *
- * Query read-only untuk admin (admin-only). Semua fungsi memeriksa capability VIEW_ADMIN.
+ * Query read-only untuk admin (admin-only). Semua fungsi memeriksa capability VIEW_ADMIN
+ * lewat helper bersama `canViewAdmin` (satu sumber otorisasi admin).
  */
-
-/** Cek read access admin (VIEW_ADMIN). Mengembalikan boolean, tanpa throw. */
-async function canViewAdmin(): Promise<boolean> {
-  const session = await getSession();
-  if (!session) return false;
-  const actor = await loadAdminActor(session.userId);
-  if (!actor) return false;
-  return hasCapability(actor.subRole, "VIEW_ADMIN");
-}
 
 export interface VendorVerificationDTO {
   id: string;

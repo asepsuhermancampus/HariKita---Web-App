@@ -12,6 +12,8 @@ import { persistWebhookEvent, processWebhookEvent } from "@/server/services/paym
 import { DomainError } from "@/server/services/errors";
 import { getCheckoutAdapter, getDefaultProvider } from "@/server/payments/registry";
 import type { GatewayProvider } from "@/server/payments/types";
+import { requireAdminCapability } from "@/server/auth/admin-guard";
+import { recordAdminAudit } from "@/server/services/admin-audit-service";
 import { runAction, requireSession, revalidate, type ActionResult } from "./_shared";
 
 /**
@@ -127,12 +129,28 @@ export async function runPayoutSweepAction(
   candidates: Array<{ orderId: string; tranche: PayoutTranche }>
 ): Promise<ActionResult<{ eligible: string[]; executed: string[]; skipped: Array<{ orderId: string; tranche: string; reason: string }> }>> {
   return runAction(async () => {
-    const session = await requireSession();
-    if (session.role !== "ADMIN") {
-      throw new DomainError("UNAUTHORIZED_ORDER_ACCESS", "Hanya admin yang dapat menjalankan payout.");
-    }
+    const actor = await requireAdminCapability("MANAGE_FINANCE");
 
-    const result = await withTransactionRetry((tx) => runPayoutSweep(candidates, tx));
+    const result = await withTransactionRetry(async (tx) => {
+      const sweep = await runPayoutSweep(candidates, tx);
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_FINANCE",
+          action: "PAYOUT_SWEEP_RUN",
+          targetType: "PayoutSweep",
+          targetId: `sweep-${Date.now()}`,
+          metadata: {
+            requested: candidates.length,
+            eligible: sweep.eligible.length,
+            executed: sweep.executed.length,
+            skipped: sweep.skipped.length,
+          },
+        },
+        tx
+      );
+      return sweep;
+    });
     revalidate(["/admin/escrow", "/dashboard/vendor/dompet"]);
     return {
       eligible: result.eligible,

@@ -93,3 +93,16 @@ export async function requireAdminCapability(cap: AdminCapability): Promise<Admi
   }
   return actor;
 }
+
+/**
+ * Predikat read-only untuk akses baca admin (VIEW_ADMIN). Tidak pernah throw —
+ * mengembalikan `false` bila tidak login / bukan admin / sub-role tanpa VIEW_ADMIN.
+ * Dipakai oleh query layer (read paths) agar otorisasi admin tetap satu sumber.
+ */
+export async function canViewAdmin(): Promise<boolean> {
+  const session = await getSession();
+  if (!session) return false;
+  const actor = await loadAdminActor(session.userId);
+  if (!actor) return false;
+  return hasCapability(actor.subRole, "VIEW_ADMIN");
+}

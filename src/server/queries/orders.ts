@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
+import { canViewAdmin } from "@/server/auth/admin-guard";
 
 /**
  * HariKita - Server-side Query Layer (Phase 2)
@@ -207,8 +208,7 @@ export async function getClientOrderViewModelByBooking(
 
 /** Semua order sebagai view-model (khusus admin). */
 export async function getAdminOrderViewModels(): Promise<OrderViewModel[]> {
-  const session = await getSession();
-  if (!session || session.role !== "ADMIN") return [];
+  if (!(await canViewAdmin())) return [];
 
   const orders = await prisma.order.findMany({
     include: { items: true },
@@ -307,8 +307,7 @@ export async function getVendorInboxItems() {
 
 /** Ringkasan escrow untuk admin (order dengan pembayaran/ledger). */
 export async function getAdminEscrowOverview() {
-  const session = await getSession();
-  if (!session || session.role !== "ADMIN") return null;
+  if (!(await canViewAdmin())) return null;
 
   const [orders, journals] = await Promise.all([
     prisma.order.findMany({
@@ -339,8 +338,7 @@ export async function getAdminEscrowOverview() {
 
 /** Order multi-vendor untuk master calendar admin (semua order, admin-only). */
 export async function getAdminMasterCalendar() {
-  const session = await getSession();
-  if (!session || session.role !== "ADMIN") return [];
+  if (!(await canViewAdmin())) return [];
 
   const orders = await prisma.order.findMany({
     where: { status: { notIn: ["CANCELLED", "EXPIRED"] } },
@@ -375,8 +373,7 @@ export interface AdminCalendarEventDTO {
 
 /** Mengambil event kalender master dari DB (admin-only) untuk UI master calendar. */
 export async function getAdminCalendarEvents(): Promise<AdminCalendarEventDTO[]> {
-  const session = await getSession();
-  if (!session || session.role !== "ADMIN") return [];
+  if (!(await canViewAdmin())) return [];
 
   const orders = await prisma.order.findMany({
     where: { status: { notIn: ["CANCELLED", "EXPIRED"] } },
