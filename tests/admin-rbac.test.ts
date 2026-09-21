@@ -21,16 +21,22 @@ import { createTestDb, type TestDb } from "./helpers/test-db";
 
 type AdminGuard = typeof import("../src/server/auth/admin-guard");
 type AdminAuditService = typeof import("../src/server/services/admin-audit-service");
+type TransactionRetry = typeof import("../src/lib/transaction-retry");
+type AmbassadorService = typeof import("../src/server/services/ambassador-service");
 
 let ctx: TestDb;
 let guard: AdminGuard;
 let audit: AdminAuditService;
+let txRetry: TransactionRetry;
+let ambassador: AmbassadorService;
 
 before(async () => {
   ctx = await createTestDb();
   (globalThis as unknown as { prisma?: unknown }).prisma = ctx.prisma;
   guard = await import("../src/server/auth/admin-guard");
   audit = await import("../src/server/services/admin-audit-service");
+  txRetry = await import("../src/lib/transaction-retry");
+  ambassador = await import("../src/server/services/ambassador-service");
 });
 
 after(async () => {
@@ -163,4 +169,232 @@ test("recordAdminAudit: no metadata -> null", async () => {
   const row = await ctx.prisma.adminAuditLog.findFirst({ where: { actorId: "u_test2" } });
   assert.equal(row?.metadata, null);
   await ctx.prisma.adminAuditLog.deleteMany({ where: { actorId: "u_test2" } });
+});
+
+/* ------------- Admin BA actions: atomic mutation + audit (DB-backed) -------------
+ *
+ * Server Action `src/server/actions/ambassador.ts` tidak dapat dipanggil langsung
+ * dari test (import `next/headers` → butuh request context). Yang diuji di sini
+ * adalah BODY transaksi persis yang dipakai aksi tersebut:
+ *   withTransactionRetry(async (tx) => {
+ *     <mutasi>(..., tx);  recordAdminAudit({...}, tx);
+ *   });
+ * sehingga kontrak atomicity (mutasi + audit commit/rollback bersama) tervalidasi.
+ */
+
+const financeActor: import("../src/server/auth/admin-guard").AdminActor = {
+  userId: "u_finance_1",
+  name: "Finance Uji",
+  subRole: "FINANCE",
+};
+const baActor: import("../src/server/auth/admin-guard").AdminActor = {
+  userId: "u_ba_1",
+  name: "BA Admin Uji",
+  subRole: "SUPER_ADMIN",
+};
+
+/** BA + withdrawal PENDING untuk diuji resolusi admin. */
+async function seedPendingWithdrawal(amount: number) {
+  const user = await ctx.prisma.user.create({
+    data: {
+      name: "BA Withdraw Uji",
+      phone: `0857${Math.floor(Math.random() * 1e8).toString().padStart(8, "0")}`,
+      role: "BA",
+    },
+  });
+  const ambassadorRow = await ctx.prisma.brandAmbassador.create({
+    data: {
+      userId: user.id,
+      referralCode: `BA-TW-${Math.floor(Math.random() * 1e6).toString(36).toUpperCase()}`,
+      displayName: "BA Withdraw Uji",
+      // Nominal penarikan sudah ditahan saat PENDING → saldo wallet 0.
+      walletBalance: 0,
+    },
+  });
+  const withdrawal = await ctx.prisma.ambassadorWithdrawal.create({
+    data: { ambassadorId: ambassadorRow.id, amount, status: "PENDING" },
+  });
+  return { user, ambassadorRow, withdrawal };
+}
+
+test("ambassador admin: resolveWithdrawal(REJECTED) + audit commit atomically", async () => {
+  const { user, ambassadorRow, withdrawal } = await seedPendingWithdrawal(50_000);
+  try {
+    await txRetry.withTransactionRetry(async (tx) => {
+      await ambassador.resolveWithdrawal(withdrawal.id, "REJECTED", tx);
+      await audit.recordAdminAudit(
+        {
+          actor: financeActor,
+          capability: "MANAGE_FINANCE",
+          action: "WITHDRAWAL_RESOLVED",
+          targetType: "AmbassadorWithdrawal",
+          targetId: withdrawal.id,
+          metadata: { decision: "REJECTED" },
+        },
+        tx
+      );
+    });
+
+    const w = await ctx.prisma.ambassadorWithdrawal.findUniqueOrThrow({ where: { id: withdrawal.id } });
+    assert.equal(w.status, "REJECTED");
+    const baAfter = await ctx.prisma.brandAmbassador.findUniqueOrThrow({ where: { id: ambassadorRow.id } });
+    assert.equal(baAfter.walletBalance, 50_000); // refund saldo saat REJECTED (dari 0)
+    const log = await ctx.prisma.adminAuditLog.findFirst({
+      where: { targetId: withdrawal.id, action: "WITHDRAWAL_RESOLVED" },
+    });
+    assert.ok(log, "audit row harus tertulis");
+    assert.equal(log?.capability, "MANAGE_FINANCE");
+    assert.equal(log?.actorRole, "FINANCE");
+    assert.equal(log?.metadata, JSON.stringify({ decision: "REJECTED" }));
+  } finally {
+    await ctx.prisma.adminAuditLog.deleteMany({ where: { targetId: withdrawal.id } });
+    await ctx.prisma.brandAmbassador.deleteMany({ where: { id: ambassadorRow.id } });
+    await ctx.prisma.user.deleteMany({ where: { id: user.id } });
+  }
+});
+
+test("ambassador admin: resolveWithdrawal + audit roll back together bila audit gagal", async () => {
+  const { user, ambassadorRow, withdrawal } = await seedPendingWithdrawal(50_000);
+  try {
+    await assert.rejects(
+      txRetry.withTransactionRetry(async (tx) => {
+        await ambassador.resolveWithdrawal(withdrawal.id, "REJECTED", tx);
+        // targetId TIDAK NULL → foreign-key/unique violation memaksa rollback.
+        await audit.recordAdminAudit(
+          {
+            actor: financeActor,
+            capability: "MANAGE_FINANCE",
+            action: "WITHDRAWAL_RESOLVED",
+            targetType: "AmbassadorWithdrawal",
+            targetId: withdrawal.id,
+            // metadata memaksa error lewat payload non-serializable
+            metadata: { bad: BigInt(1) as unknown as number },
+          },
+          tx
+        );
+      })
+    );
+
+    // Mutasi withdrawal harus ikut ter-rollback (masih PENDING).
+    const w = await ctx.prisma.ambassadorWithdrawal.findUniqueOrThrow({ where: { id: withdrawal.id } });
+    assert.equal(w.status, "PENDING");
+    const baAfter = await ctx.prisma.brandAmbassador.findUniqueOrThrow({ where: { id: ambassadorRow.id } });
+    assert.equal(baAfter.walletBalance, 0); // refund ikut ter-rollback
+    assert.equal(await ctx.prisma.adminAuditLog.count({ where: { targetId: withdrawal.id } }), 0);
+  } finally {
+    await ctx.prisma.adminAuditLog.deleteMany({ where: { targetId: withdrawal.id } });
+    await ctx.prisma.brandAmbassador.deleteMany({ where: { id: ambassadorRow.id } });
+    await ctx.prisma.user.deleteMany({ where: { id: user.id } });
+  }
+});
+
+test("ambassador admin: setCommission + audit commit atomically", async () => {
+  const { user, ambassadorRow } = await seedPendingWithdrawal(0);
+  try {
+    await txRetry.withTransactionRetry(async (tx) => {
+      await tx.brandAmbassador.update({
+        where: { id: ambassadorRow.id },
+        data: { commissionPct: 12.5 },
+      });
+      await audit.recordAdminAudit(
+        {
+          actor: baActor,
+          capability: "MANAGE_BA",
+          action: "BA_COMMISSION_SET",
+          targetType: "Ambassador",
+          targetId: ambassadorRow.id,
+          metadata: { commissionPct: 12.5 },
+        },
+        tx
+      );
+    });
+
+    const baAfter = await ctx.prisma.brandAmbassador.findUniqueOrThrow({ where: { id: ambassadorRow.id } });
+    assert.equal(baAfter.commissionPct, 12.5);
+    const log = await ctx.prisma.adminAuditLog.findFirst({
+      where: { targetId: ambassadorRow.id, action: "BA_COMMISSION_SET" },
+    });
+    assert.equal(log?.metadata, JSON.stringify({ commissionPct: 12.5 }));
+    assert.equal(log?.capability, "MANAGE_BA");
+  } finally {
+    await ctx.prisma.adminAuditLog.deleteMany({ where: { targetId: ambassadorRow.id } });
+    await ctx.prisma.brandAmbassador.deleteMany({ where: { id: ambassadorRow.id } });
+    await ctx.prisma.user.deleteMany({ where: { id: user.id } });
+  }
+});
+
+test("ambassador admin: setActive + audit commit atomically", async () => {
+  const { user, ambassadorRow } = await seedPendingWithdrawal(0);
+  try {
+    await txRetry.withTransactionRetry(async (tx) => {
+      await tx.brandAmbassador.update({
+        where: { id: ambassadorRow.id },
+        data: { isActive: false },
+      });
+      await audit.recordAdminAudit(
+        {
+          actor: baActor,
+          capability: "MANAGE_BA",
+          action: "BA_ACTIVE_CHANGED",
+          targetType: "Ambassador",
+          targetId: ambassadorRow.id,
+          metadata: { isActive: false },
+        },
+        tx
+      );
+    });
+
+    const baAfter = await ctx.prisma.brandAmbassador.findUniqueOrThrow({ where: { id: ambassadorRow.id } });
+    assert.equal(baAfter.isActive, false);
+    const log = await ctx.prisma.adminAuditLog.findFirst({
+      where: { targetId: ambassadorRow.id, action: "BA_ACTIVE_CHANGED" },
+    });
+    assert.equal(log?.metadata, JSON.stringify({ isActive: false }));
+  } finally {
+    await ctx.prisma.adminAuditLog.deleteMany({ where: { targetId: ambassadorRow.id } });
+    await ctx.prisma.brandAmbassador.deleteMany({ where: { id: ambassadorRow.id } });
+    await ctx.prisma.user.deleteMany({ where: { id: user.id } });
+  }
+});
+
+test("ambassador admin: create (User + BrandAmbassador + audit) commit atomically", async () => {
+  const phone = `0866${Math.floor(Math.random() * 1e8).toString().padStart(8, "0")}`;
+  const result = await txRetry.withTransactionRetry(async (tx) => {
+    const createdUser = await tx.user.create({
+      data: { name: "BA Baru", phone, pin: "hash", role: "BA" },
+    });
+    const createdBa = await tx.brandAmbassador.create({
+      data: {
+        userId: createdUser.id,
+        referralCode: `BA-NEW-${Math.floor(Math.random() * 1e6).toString(36).toUpperCase()}`,
+        displayName: "BA Baru",
+        commissionPct: 5.0,
+      },
+    });
+    await audit.recordAdminAudit(
+      {
+        actor: baActor,
+        capability: "MANAGE_BA",
+        action: "BA_CREATED",
+        targetType: "Ambassador",
+        targetId: createdBa.id,
+        metadata: { referralCode: createdBa.referralCode },
+      },
+      tx
+    );
+    return createdBa;
+  });
+
+  try {
+    const persisted = await ctx.prisma.brandAmbassador.findUniqueOrThrow({ where: { id: result.id } });
+    assert.equal(persisted.referralCode, result.referralCode);
+    const log = await ctx.prisma.adminAuditLog.findFirst({
+      where: { targetId: result.id, action: "BA_CREATED" },
+    });
+    assert.equal(log?.metadata, JSON.stringify({ referralCode: result.referralCode }));
+  } finally {
+    await ctx.prisma.adminAuditLog.deleteMany({ where: { targetId: result.id } });
+    await ctx.prisma.brandAmbassador.deleteMany({ where: { id: result.id } });
+    await ctx.prisma.user.deleteMany({ where: { phone } });
+  }
 });
