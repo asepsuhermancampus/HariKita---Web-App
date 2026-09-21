@@ -89,7 +89,14 @@ export const ADMIN_ERROR_CODES = [
 
 export type AdminErrorCode = (typeof ADMIN_ERROR_CODES)[number];
 
-// ── 9. CONSOLIDATED APPLICATION ERROR UNION ────────────────────────────────
+// ── 9. PLATFORM SETTINGS ERROR CODES ───────────────────────────────────────
+export const SETTINGS_ERROR_CODES = [
+  'INVALID_PLATFORM_SETTINGS',
+] as const;
+
+export type SettingsErrorCode = (typeof SETTINGS_ERROR_CODES)[number];
+
+// ── 10. CONSOLIDATED APPLICATION ERROR UNION ───────────────────────────────
 export type AppDomainErrorCode =
   | AvailabilityErrorCode
   | OrderErrorCode
@@ -97,4 +104,5 @@ export type AppDomainErrorCode =
   | LedgerErrorCode
   | AmbassadorErrorCode
   | OtpErrorCode
-  | AdminErrorCode;
+  | AdminErrorCode
+  | SettingsErrorCode;

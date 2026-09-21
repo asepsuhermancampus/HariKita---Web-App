@@ -17,7 +17,8 @@ export type AdminCapability =
   | "MANAGE_DISPUTE"
   | "MANAGE_FINANCE"
   | "MANAGE_BA"
-  | "MANAGE_ADMIN";
+  | "MANAGE_ADMIN"
+  | "MANAGE_PLATFORM_SETTINGS";
 
 export const CAPABILITY_MATRIX: Record<AdminSubRole, readonly AdminCapability[]> = {
   SUPER_ADMIN: [
@@ -27,6 +28,7 @@ export const CAPABILITY_MATRIX: Record<AdminSubRole, readonly AdminCapability[]>
     "MANAGE_FINANCE",
     "MANAGE_BA",
     "MANAGE_ADMIN",
+    "MANAGE_PLATFORM_SETTINGS",
   ],
   OPS: ["VIEW_ADMIN", "VERIFY_VENDOR", "MANAGE_DISPUTE"],
   FINANCE: ["VIEW_ADMIN", "MANAGE_FINANCE"],
