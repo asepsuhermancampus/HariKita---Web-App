@@ -40,17 +40,21 @@ export async function approveVendorAction(input: {
     const vendor = await prisma.vendorProfile.findUnique({ where: { id: input.vendorId } });
     if (!vendor) throw new DomainError("ORDER_NOT_FOUND", "Vendor tidak ditemukan.");
 
-    await prisma.vendorProfile.update({
-      where: { id: input.vendorId },
-      data: { verificationStatus: "APPROVED", isVerified: true, verificationNote: null },
-    });
-
-    await recordAdminAudit({
-      actor,
-      capability: "VERIFY_VENDOR",
-      action: "VENDOR_APPROVED",
-      targetType: "VendorProfile",
-      targetId: input.vendorId,
+    await withTransactionRetry(async (tx) => {
+      await tx.vendorProfile.update({
+        where: { id: input.vendorId },
+        data: { verificationStatus: "APPROVED", isVerified: true, verificationNote: null },
+      });
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "VERIFY_VENDOR",
+          action: "VENDOR_APPROVED",
+          targetType: "VendorProfile",
+          targetId: input.vendorId,
+        },
+        tx
+      );
     });
 
     revalidate(["/admin/verifikasi", "/vendor"]);
@@ -69,18 +73,22 @@ export async function rejectVendorAction(input: {
     if (!vendor) throw new DomainError("ORDER_NOT_FOUND", "Vendor tidak ditemukan.");
 
     const note = input.note?.trim() || "Berkas belum lengkap.";
-    await prisma.vendorProfile.update({
-      where: { id: input.vendorId },
-      data: { verificationStatus: "REJECTED", isVerified: false, verificationNote: note },
-    });
-
-    await recordAdminAudit({
-      actor,
-      capability: "VERIFY_VENDOR",
-      action: "VENDOR_REJECTED",
-      targetType: "VendorProfile",
-      targetId: input.vendorId,
-      metadata: { note },
+    await withTransactionRetry(async (tx) => {
+      await tx.vendorProfile.update({
+        where: { id: input.vendorId },
+        data: { verificationStatus: "REJECTED", isVerified: false, verificationNote: note },
+      });
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "VERIFY_VENDOR",
+          action: "VENDOR_REJECTED",
+          targetType: "VendorProfile",
+          targetId: input.vendorId,
+          metadata: { note },
+        },
+        tx
+      );
     });
 
     revalidate(["/admin/verifikasi", "/vendor"]);
@@ -126,15 +134,19 @@ export async function reviewDisputeAction(input: {
 }): Promise<ActionResult<{ status: string }>> {
   return runAction(async () => {
     const actor = await requireAdminCapability("MANAGE_DISPUTE");
-    const result = await withTransactionRetry((tx) =>
-      reviewDispute(input.disputeId, actor.userId, tx)
-    );
-    await recordAdminAudit({
-      actor,
-      capability: "MANAGE_DISPUTE",
-      action: "DISPUTE_REVIEWED",
-      targetType: "Dispute",
-      targetId: input.disputeId,
+    const result = await withTransactionRetry(async (tx) => {
+      const res = await reviewDispute(input.disputeId, actor.userId, tx);
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_DISPUTE",
+          action: "DISPUTE_REVIEWED",
+          targetType: "Dispute",
+          targetId: input.disputeId,
+        },
+        tx
+      );
+      return res;
     });
     revalidate(["/admin/dispute"]);
     return result;
@@ -152,8 +164,8 @@ export async function resolveDisputeAction(input: {
     if (!input.resolution?.trim()) {
       throw new DomainError("INVALID_ORDER_TRANSITION", "Catatan resolusi wajib diisi.");
     }
-    const result = await withTransactionRetry((tx) =>
-      resolveDispute(
+    const result = await withTransactionRetry(async (tx) => {
+      const res = await resolveDispute(
         {
           disputeId: input.disputeId,
           adminUserId: actor.userId,
@@ -161,15 +173,19 @@ export async function resolveDisputeAction(input: {
           resolution: input.resolution.trim(),
         },
         tx
-      )
-    );
-    await recordAdminAudit({
-      actor,
-      capability: "MANAGE_DISPUTE",
-      action: "DISPUTE_RESOLVED",
-      targetType: "Dispute",
-      targetId: input.disputeId,
-      metadata: { approved: input.approved, resolution: input.resolution.trim() },
+      );
+      await recordAdminAudit(
+        {
+          actor,
+          capability: "MANAGE_DISPUTE",
+          action: "DISPUTE_RESOLVED",
+          targetType: "Dispute",
+          targetId: input.disputeId,
+          metadata: { approved: input.approved, resolution: input.resolution.trim() },
+        },
+        tx
+      );
+      return res;
     });
     revalidate(["/admin/dispute", "/admin/escrow", "/client/pesanan"]);
     return result;
