@@ -24,6 +24,8 @@ async function main() {
   await prisma.otpCode.deleteMany();
   await prisma.pinChangeLog.deleteMany();
   await prisma.adminAuditLog.deleteMany();
+  await prisma.platformFeeComponent.deleteMany();
+  await prisma.platformSetting.deleteMany();
   await prisma.vendorProfile.deleteMany();
   await prisma.user.deleteMany();
 
@@ -68,6 +70,25 @@ async function main() {
     },
   });
   await logPin(financeAdmin.id);
+
+  // Platform settings (singleton) — persentase finansial + rincian platform fee.
+  const platformSetting = await prisma.platformSetting.create({
+    data: {
+      dpPct: 30,
+      settlementPct: 70,
+      platformFeePct: 10,
+      defaultBaCommissionPct: 5,
+      isActive: true,
+      updatedByName: adminUser.name,
+    },
+  });
+  await prisma.platformFeeComponent.createMany({
+    data: [
+      { settingId: platformSetting.id, label: "Operasional", pct: 6, sortOrder: 0 },
+      { settingId: platformSetting.id, label: "Marketing", pct: 2, sortOrder: 1 },
+      { settingId: platformSetting.id, label: "Cadangan", pct: 2, sortOrder: 2 },
+    ],
+  });
 
   const clientUser = await prisma.user.create({
     data: {

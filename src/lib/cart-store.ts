@@ -205,9 +205,12 @@ export const cartStore = {
 };
 
 /**
- * Custom React Hook untuk mengonsumsi cart store secara reaktif
+ * Custom React Hook untuk mengonsumsi cart store secara reaktif.
+ *
+ * Persentase finansial (DP & platform fee) dibaca dari config aktif bila
+ * disuplai; default 30/10 agar pemanggil lama tetap benar (kompatibel-mundur).
  */
-export function useCart() {
+export function useCart(opts?: { dpPct?: number; platformFeePct?: number }) {
   const state = useSyncExternalStore(
     cartStore.subscribe,
     cartStore.getSnapshot,
@@ -219,14 +222,18 @@ export function useCart() {
     0
   );
 
-  const dpAmount = Math.round(subtotal * 0.3);
-  const finalAmount = subtotal - dpAmount; // Strictly 70% without float drift
-  const platformFee = Math.round(subtotal * 0.1); // 10% platform commission
+  const dpPct = opts?.dpPct ?? 30;
+  const platformFeePct = opts?.platformFeePct ?? 10;
+  const dpAmount = Math.round((subtotal * dpPct) / 100);
+  const finalAmount = subtotal - dpAmount;
+  const platformFee = Math.round((subtotal * platformFeePct) / 100);
   const vendorNetAmount = subtotal - platformFee;
 
   return {
     ...state,
     subtotal,
+    dpPct,
+    platformFeePct,
     dpAmount,
     finalAmount,
     platformFee,
