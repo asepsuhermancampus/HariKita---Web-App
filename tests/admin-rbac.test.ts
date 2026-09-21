@@ -20,14 +20,17 @@ import { createTestDb, type TestDb } from "./helpers/test-db";
  */
 
 type AdminGuard = typeof import("../src/server/auth/admin-guard");
+type AdminAuditService = typeof import("../src/server/services/admin-audit-service");
 
 let ctx: TestDb;
 let guard: AdminGuard;
+let audit: AdminAuditService;
 
 before(async () => {
   ctx = await createTestDb();
   (globalThis as unknown as { prisma?: unknown }).prisma = ctx.prisma;
   guard = await import("../src/server/auth/admin-guard");
+  audit = await import("../src/server/services/admin-audit-service");
 });
 
 after(async () => {
@@ -122,4 +125,42 @@ test("loadAdminActor: resolves OPS sub-role", async () => {
   } finally {
     await ctx.prisma.user.delete({ where: { id: u.id } });
   }
+});
+
+/* -------------------- Audit service (DB-backed) -------------------- */
+
+test("recordAdminAudit writes a row with correct fields + JSON metadata", async () => {
+  const before = await ctx.prisma.adminAuditLog.count();
+  await audit.recordAdminAudit({
+    actor: { userId: "u_test", name: "Test Admin", subRole: "OPS" },
+    capability: "VERIFY_VENDOR",
+    action: "VENDOR_APPROVED",
+    targetType: "VendorProfile",
+    targetId: "vp_1",
+    metadata: { note: "ok" },
+  });
+  const rows = await ctx.prisma.adminAuditLog.findMany({ orderBy: { createdAt: "desc" }, take: 1 });
+  assert.equal(await ctx.prisma.adminAuditLog.count(), before + 1);
+  assert.equal(rows[0].actorId, "u_test");
+  assert.equal(rows[0].actorName, "Test Admin");
+  assert.equal(rows[0].actorRole, "OPS");
+  assert.equal(rows[0].capability, "VERIFY_VENDOR");
+  assert.equal(rows[0].action, "VENDOR_APPROVED");
+  assert.equal(rows[0].targetType, "VendorProfile");
+  assert.equal(rows[0].targetId, "vp_1");
+  assert.equal(rows[0].metadata, JSON.stringify({ note: "ok" }));
+  await ctx.prisma.adminAuditLog.deleteMany({ where: { actorId: "u_test" } });
+});
+
+test("recordAdminAudit: no metadata -> null", async () => {
+  await audit.recordAdminAudit({
+    actor: { userId: "u_test2", name: "A", subRole: "SUPER_ADMIN" },
+    capability: "MANAGE_BA",
+    action: "BA_CREATED",
+    targetType: "Ambassador",
+    targetId: "ba_1",
+  });
+  const row = await ctx.prisma.adminAuditLog.findFirst({ where: { actorId: "u_test2" } });
+  assert.equal(row?.metadata, null);
+  await ctx.prisma.adminAuditLog.deleteMany({ where: { actorId: "u_test2" } });
 });
