@@ -10,6 +10,7 @@ import {
   notifyOrderCreatedToVendor,
   notifyVendorDecisionToClient,
 } from "./notification-templates";
+import { getPlatformSettings } from "./platform-settings-service";
 
 /**
  * HariKita - OrderService
@@ -136,6 +137,7 @@ export async function createOrder(
   );
 
   // 2. Buat Order terlebih dahulu.
+  const settings = await getPlatformSettings(db);
   const order = await db.order.create({
     data: {
       orderNumber: generateOrderNumber(),
@@ -148,6 +150,9 @@ export async function createOrder(
       status: "PENDING_CONFIRMATION",
       notes: request.notes ?? null,
       vendorResponseDueAt,
+      snapshotDpPct: settings.dpPct,
+      snapshotSettlementPct: settings.settlementPct,
+      snapshotPlatformFeePct: settings.platformFeePct,
     },
   });
 

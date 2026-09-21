@@ -122,3 +122,42 @@ test("splitTranches: default 30/70", () => {
 test("splitTranches: custom dpPct=40 -> 40/60", () => {
   assert.deepEqual(splitTranches(100000, 40), { dpAmount: 40000, settlementAmount: 60000 });
 });
+
+import { createOrder } from "../src/server/services/order-service";
+import { claimHoldSlot } from "../src/server/services/availability-service";
+import { seedVendorWithPackage } from "./helpers/test-db";
+
+test("createOrder writes snapshot percentages from active settings", async () => {
+  const v = await seedVendorWithPackage(ctx.prisma, {
+    category: "katering",
+    businessName: "Snapshot Vendor",
+    price: 100000,
+  });
+  const eventDate = "2027-05-01";
+  const hold = await claimHoldSlot({ vendorId: v.vendorId, date: eventDate }, ctx.prisma);
+
+  // Seed an active setting with non-default dpPct (before order creation).
+  await ctx.prisma.platformSetting.create({
+    data: { dpPct: 40, settlementPct: 60, platformFeePct: 10, defaultBaCommissionPct: 5, isActive: true },
+  });
+
+  const result = await createOrder(
+    {
+      eventDate,
+      clientName: "Test Client",
+      clientPhone: "081200000000",
+      city: "Kebumen",
+      userId: null,
+      items: [{ servicePackageId: v.packageId, quantity: 1, holdToken: hold.holdToken }],
+    },
+    ctx.prisma
+  );
+
+  const order = await ctx.prisma.order.findUnique({ where: { id: result.orderId } });
+  assert.equal(order?.snapshotDpPct, 40);
+  assert.equal(order?.snapshotSettlementPct, 60);
+  assert.equal(order?.snapshotPlatformFeePct, 10);
+
+  // Bersihkan setting agar test lain yang mengharapkan DEFAULT tetap valid.
+  await ctx.prisma.platformSetting.deleteMany();
+});
