@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HariKita — Admin Panel Mockup (SaaS + Sidebar)</title>
+<!-- Import font dari design-system -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ──────────────────────────────────────────────────────────────────────────
+     MOCKUP ADMIN PANEL — SUMBER FONT & WARNA SEMUA DARI DESIGN-SYSTEM:
+     • Font  : 'Manrope' (body), 'Playfair Display' (display/serif),
+               'Cormorant Garamond' (editorial) — dari globals.css & tailwind.
+     • Warna : hk-canvas, hk-ivory, hk-soft-beige, hk-charcoal, hk-taupe,
+               hk-champagne, gold{light/DEFAULT/dark}, plum{light/DEFAULT/dark},
+               success/warning/error/info — dari tailwind.config.ts.
+     ────────────────────────────────────────────────────────────────────────── */
+  /* ── Design System tokens (dari tailwind.config + globals.css) ── */
+  :root {
+    --hk-canvas: #FAF8F5;
+    --hk-ivory: #F8F6F1;
+    --hk-soft-beige: #E8DED1;
+    --hk-charcoal: #2B2B2B;
+    --hk-taupe: #88735B;
+    --hk-champagne: #C9A88A;
+    --gold: #C5A880;
+    --gold-light: #E3CAA5;
+    --gold-dark: #A3865E;
+    --plum: #4A2E35;
+    --plum-dark: #2A181D;
+    --plum-light: #6B5E62;
+    --radius: 16px;
+
+    /* Status tokens (dari design-system tailwind.config) */
+    --success: #36D399;
+    --warning: #FBBD23;
+    --error: #F87272;
+    --info: #3ABFF8;
+    /* Teks status (turunan gelap agar kontras di latar terang) */
+    --success-text: #157a4d;
+    --warning-text: #8a6410;
+    --error-text: #a2352f;
+    
+    /* Font families (sesuai globals.css + tailwind) */
+    --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-editorial: 'Cormorant Garamond', Georgia, serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    background: var(--hk-canvas);
+    color: var(--hk-charcoal);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .serif { font-family: var(--font-display); }
+  .editorial { font-family: var(--font-editorial); }
+
+  /* ── Layout ── */
+  .shell { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 264px; flex-shrink: 0;
+    background: var(--plum-dark);
+    color: #fff;
+    display: flex; flex-direction: column;
+    padding: 20px 14px;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 6px 10px 20px; }
+  .brand-mark {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+    display: grid; place-items: center; font-weight: 800; color: var(--plum-dark); font-size: 17px;
+  }
+  .brand-name { font-weight: 700; font-size: 15px; }
+  .brand-sub { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--gold-light); }
+  .nav { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; flex: 1; }
+  .nav-item {
+    display: flex; align-items: center; gap: 11px;
+    padding: 10px 12px; border-radius: 11px;
+    color: rgba(255,255,255,.72); font-size: 13px; font-weight: 500;
+    cursor: pointer; text-decoration: none; transition: .15s;
+  }
+  .nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
+  .nav-item.active { background: rgba(197,168,128,.22); color: var(--gold-light); font-weight: 700; }
+  .nav-item .ico { width: 18px; text-align: center; }
+  .nav-section { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.4); padding: 16px 12px 6px; }
+  .sidebar-foot { border-top: 1px solid rgba(255,255,255,.1); padding-top: 14px; margin-top: 10px; }
+  .gmv-label { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.5); }
+  .gmv-value { font-family: monospace; font-size: 19px; font-weight: 700; color: var(--gold-light); }
+
+  /* Main */
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    padding: 16px 28px; border-bottom: 1px solid var(--hk-soft-beige); background: rgba(255,255,255,.7);
+    position: sticky; top: 0; z-index: 5; backdrop-filter: blur(8px);
+  }
+  .page-title { font-size: 20px; font-weight: 700; }
+  .page-sub { font-size: 12px; color: var(--plum-light); }
+  .admin-chip { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--hk-soft-beige); border-radius: 999px; padding: 6px 14px 6px 6px; }
+  .avatar { width: 30px; height: 30px; border-radius: 999px; background: var(--gold); display: grid; place-items: center; color: var(--plum-dark); font-weight: 700; font-size: 12px; }
+  .content { padding: 26px 28px; display: flex; flex-direction: column; gap: 22px; }
+
+  /* Cards */
+  .card { background: #fff; border: 1px solid var(--hk-soft-beige); border-radius: var(--radius); box-shadow: 0 1px 2px rgba(42,24,29,.04); }
+  .card-h { padding: 16px 20px; border-bottom: 1px solid var(--hk-soft-beige); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .card-title { font-weight: 700; font-size: 15px; }
+  .card-desc { font-size: 12px; color: var(--plum-light); margin-top: 2px; }
+  .card-b { padding: 20px; }
+
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .stat { padding: 18px; }
+  .stat .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--plum-light); font-weight: 700; }
+  .stat .val { font-size: 26px; font-weight: 800; margin-top: 6px; }
+  .stat .delta { font-size: 11px; font-weight: 700; margin-top: 4px; }
+  .up { color: var(--success-text); } .warn { color: var(--warning-text); } .down { color: var(--error-text); }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 999px; font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: .15s; }
+  .btn-primary { background: var(--gold); color: var(--plum-dark); }
+  .btn-primary:hover { background: var(--gold-dark); }
+  .btn-ghost { background: #fff; border-color: var(--hk-soft-beige); color: var(--hk-charcoal); }
+  .btn-ghost:hover { background: var(--hk-ivory); }
+  .btn-danger { background: #fff; border-color: #f3c9c6; color: var(--error-text); }
+  .btn-sm { min-height: 36px; padding: 0 14px; font-size: 12px; }
+  .btn:disabled, .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+
+  /* Inputs */
+  .field label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .input {
+    width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid var(--hk-soft-beige);
+    border-radius: 12px; font-size: 14px; background: #fff; color: var(--hk-charcoal); outline: none;
+  }
+  .input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197,168,128,.2); }
+  .input[readonly], .input:disabled { background: var(--hk-ivory); color: var(--plum-light); cursor: not-allowed; }
+  .input-prefix { position: relative; }
+  .input-prefix .input { padding-right: 42px; }
+  .input-prefix .suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--plum-light); font-weight: 700; }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .badge-ok { background: #e5f4ec; color: var(--success-text); }
+  .badge-warn { background: #fbf0d8; color: var(--warning-text); }
+  .badge-lock { background: var(--hk-ivory); color: var(--plum-light); border: 1px solid var(--hk-soft-beige); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--plum-light); padding: 12px 16px; border-bottom: 1px solid var(--hk-soft-beige); }
+  td { padding: 14px 16px; border-bottom: 1px solid #f2ede6; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--hk-ivory); }
+
+  /* Dua kolom sejajar: Persentase | Rincian Fee */
+  .settings-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 28px; align-items: start; }
+  .settings-col { min-width: 0; }
+  .settings-col .subhead { min-height: 24px; }
+  .settings-stack { display: flex; flex-direction: column; gap: 12px; max-width: 340px; }
+  .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .setting-row > label { font-size: 13px; font-weight: 600; color: var(--hk-charcoal); }
+  .input-prefix.compact { width: 104px; flex-shrink: 0; }
+  .input-prefix.compact .input { text-align: right; padding-left: 14px; }
+
+  .subhead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; font-weight: 700; font-size: 13px; }
+
+  /* Rincian fee — tabel mini proporsional */
+  .fee-table { width: 100%; }
+  .fee-table-head { display: grid; grid-template-columns: 1fr 104px 72px; gap: 10px; padding: 0 2px 8px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--plum-light); font-weight: 700; }
+  .fee-table-head span:nth-child(2) { text-align: right; }
+  .fee-table-row { display: grid; grid-template-columns: 1fr 104px 72px; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .fee-table-row .input-prefix.compact { width: auto; }
+
+  /* Locked overlay note */
+  .note { display: flex; gap: 10px; align-items: center; background: #fbf0d8; border: 1px solid #f0dcae; border-radius: 12px; padding: 12px 16px; font-size: 12px; color: #7a5608; }
+
+  /* Modal */
+  .modal-back { position: fixed; inset: 0; background: rgba(42,24,29,.55); display: none; place-items: center; z-index: 50; padding: 20px; }
+  .modal-back.show { display: grid; }
+  .modal { background: #fff; border-radius: 20px; width: 100%; max-width: 420px; padding: 24px; box-shadow: 0 24px 60px rgba(0,0,0,.3); }
+  .otp-inputs { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+  .otp-inputs input { width: 46px; height: 56px; text-align: center; font-size: 22px; font-weight: 800; border: 1.5px solid var(--hk-soft-beige); border-radius: 12px; }
+  .otp-inputs input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197,168,128,.2); outline: none; }
+
+  .mob-toggle { display: none; }
+
+  /* Mobile */
+  @media (max-width: 860px) {
+    .sidebar { position: fixed; left: 0; top: 0; z-index: 40; transform: translateX(-100%); transition: .25s; }
+    .sidebar.open { transform: translateX(0); }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .mob-toggle { display: inline-flex; }
+    .content { padding: 18px; }
+    .topbar { padding: 12px 16px; }
+    .settings-cols { grid-template-columns: 1fr; gap: 24px; }
+    .fee-table-head, .fee-table-row { grid-template-columns: 1fr 96px 68px; }
+  }
+  @media (max-width: 520px) {
+    .grid-4 { grid-template-columns: 1fr; }
+    .fee-table-head, .fee-table-row { grid-template-columns: 1fr 84px 64px; gap: 8px; }
+    .settings-stack { max-width: none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">H</div>
+      <div>
+        <div class="brand-name">HariKita</div>
+        <div class="brand-sub">Super Admin</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Operasional</div>
+      <a class="nav-item active"><span class="ico">▦</span> Dashboard</a>
+      <a class="nav-item"><span class="ico">✓</span> Verifikasi Vendor</a>
+      <a class="nav-item"><span class="ico">◈</span> Kliring &amp; Settlement</a>
+      <a class="nav-item"><span class="ico">⚖</span> Dispute</a>
+      <div class="nav-section">Pertumbuhan</div>
+      <a class="nav-item"><span class="ico">◆</span> Brand Ambassador</a>
+      <a class="nav-item"><span class="ico">▤</span> Kalender</a>
+      <a class="nav-item"><span class="ico">◉</span> Audit Konten</a>
+      <div class="nav-section">Konfigurasi</div>
+      <a class="nav-item"><span class="ico">⚙</span> Pengaturan Platform</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="gmv-label">Total GMV</div>
+      <div class="gmv-value">Rp 128.450.000</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="btn btn-ghost btn-sm mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div>
+          <div class="page-title serif">Master Kontrol HariKita</div>
+          <div class="page-sub">Monitoring funnel, jadwal multi-vendor, dan kliring escrow Kebumen</div>
+        </div>
+      </div>
+      <div class="admin-chip"><div class="avatar">SA</div><div style="font-size:12px"><b>Super Admin</b><br><span style="color:var(--plum-light)">0812…7890</span></div></div>
+    </div>
+
+    <div class="content">
+      <!-- STAT ROW -->
+      <div class="grid-4">
+        <div class="card stat"><div class="lbl">GMV</div><div class="val">Rp128,4jt</div><div class="delta up">▲ 12% bulan ini</div></div>
+        <div class="card stat"><div class="lbl">Order Aktif</div><div class="val">42</div><div class="delta up">▲ 5 minggu ini</div></div>
+        <div class="card stat"><div class="lbl">Vendor Pending</div><div class="val">7</div><div class="delta warn">◆ perlu review</div></div>
+        <div class="card stat"><div class="lbl">Dispute Aktif</div><div class="val">2</div><div class="delta down">▼ 1 sejak kemarin</div></div>
+      </div>
+
+      <!-- PENGATURAN PLATFORM (mockup utama) -->
+      <div class="card">
+        <div class="card-h">
+          <div>
+            <div class="card-title">Pengaturan Platform</div>
+            <div class="card-desc">Persentase finansial &amp; rincian fee. Perubahan butuh verifikasi OTP ke email Super Admin.</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span class="badge badge-lock" id="lockBadge">🔒 Terkunci</span>
+            <button class="btn btn-ghost btn-sm" onclick="openOtp()">Kirim Kode OTP</button>
+          </div>
+        </div>
+        <div class="card-b">
+          <div class="note" style="margin-bottom:22px">
+            <span>ℹ️</span>
+            <span>Form ini <b>read-only</b> secara default. Klik <b>Kirim Kode OTP</b>, masukkan kode dari email Super Admin, lalu tombol <b>Edit</b> terbuka.</span>
+          </div>
+
+          <!-- DUA KOLOM SEJAJAR: Persentase (kiri) | Rincian Fee (kanan) -->
+          <div class="settings-cols">
+            <!-- KIRI: Persentase Finansial -->
+            <div class="settings-col">
+              <div class="subhead"><span>Persentase Finansial</span></div>
+              <div class="settings-stack">
+                <div class="setting-row">
+                  <label>DP</label>
+                  <div class="input-prefix compact"><input class="input" value="30" readonly><span class="suffix">%</span></div>
+                </div>
+                <div class="setting-row">
+                  <label>Pelunasan</label>
+                  <div class="input-prefix compact"><input class="input" value="70" readonly><span class="suffix">%</span></div>
+                </div>
+                <div class="setting-row">
+                  <label>Platform Fee</label>
+                  <div class="input-prefix compact"><input class="input" value="10" readonly><span class="suffix">%</span></div>
+                </div>
+                <div class="setting-row">
+                  <label>Default Komisi BA</label>
+                  <div class="input-prefix compact"><input class="input" value="5" readonly><span class="suffix">%</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- KANAN: Rincian Platform Fee -->
+            <div class="settings-col">
+              <div class="subhead">
+                <span>Rincian Platform Fee</span>
+                <span class="badge badge-ok">total 10% = platformFee ✓</span>
+              </div>
+              <div class="fee-table">
+                <div class="fee-table-head"><span>Komponen</span><span>Persentase</span><span></span></div>
+                <div class="fee-table-row"><input class="input" value="Operasional" readonly><div class="input-prefix compact"><input class="input" value="6" readonly><span class="suffix">%</span></div><button class="btn btn-danger btn-sm" aria-disabled="true">Hapus</button></div>
+                <div class="fee-table-row"><input class="input" value="Marketing" readonly><div class="input-prefix compact"><input class="input" value="2" readonly><span class="suffix">%</span></div><button class="btn btn-danger btn-sm" aria-disabled="true">Hapus</button></div>
+                <div class="fee-table-row"><input class="input" value="Cadangan" readonly><div class="input-prefix compact"><input class="input" value="2" readonly><span class="suffix">%</span></div><button class="btn btn-danger btn-sm" aria-disabled="true">Hapus</button></div>
+              </div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:12px" aria-disabled="true">+ Tambah Komponen</button>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:24px;border-top:1px solid var(--hk-soft-beige);padding-top:18px">
+            <button class="btn btn-ghost" id="editBtn" aria-disabled="true" onclick="alert('Mode edit hanya aktif setelah OTP terverifikasi. (Fitur OTP belum diaktifkan.)')">✎ Edit</button>
+            <button class="btn btn-primary" aria-disabled="true" title="Aktif setelah mode Edit">Simpan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTOH TABEL (untuk saya tunjukkan gaya tabel) -->
+      <div class="card">
+        <div class="card-h">
+          <div><div class="card-title">Contoh Gaya Tabel — Verifikasi Vendor</div><div class="card-desc">Tabel SaaS: header rapi, hover, badge status</div></div>
+          <button class="btn btn-ghost btn-sm">Filter</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Vendor</th><th>Kategori</th><th>Kecamatan</th><th>Status</th><th>Aksi</th></tr></thead>
+            <tbody>
+              <tr><td><b>Alula MUA</b></td><td>MUA &amp; Hair</td><td>Kebumen Kota</td><td><span class="badge badge-warn">Pending</span></td><td><button class="btn btn-ghost btn-sm">Tinjau</button></td></tr>
+              <tr><td><b>Sanggar Dekor</b></td><td>Dekorasi</td><td>Gombong</td><td><span class="badge badge-ok">Approved</span></td><td><button class="btn btn-ghost btn-sm">Detail</button></td></tr>
+              <tr><td><b>Bunga Segar</b></td><td>Florist</td><td>Karanganyar</td><td><span class="badge badge-ok">Approved</span></td><td><button class="btn btn-ghost btn-sm">Detail</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="font-size:12px;color:var(--plum-light);text-align:center;padding:8px">
+        Mockup statis — font (Manrope · Playfair Display · Cormorant Garamond) &amp; warna (hk-canvas · gold · plum · status tokens) seluruhnya dari design-system HariKita. Bukan aplikasi berjalan.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OTP MODAL -->
+<div class="modal-back" id="otpModal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div class="card-title" style="font-size:17px">Verifikasi OTP</div>
+        <div class="card-desc">Kode 6 digit dikirim ke email Super Admin.</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeOtp()">✕</button>
+    </div>
+    <div class="otp-inputs">
+      <input maxlength="1"><input maxlength="1"><input maxlength="1"><input maxlength="1"><input maxlength="1"><input maxlength="1">
+    </div>
+    <div class="note" style="background:#fdeceb;border-color:#f3c9c6;color:#8f2b25;">
+      <span>⚠️</span><span>Fitur OTP belum diaktifkan (menunggu akun email Resend). Ini contoh tampilan.</span>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeOtp()">Batal</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="alert('Fitur OTP belum diaktifkan.');closeOtp()">Verifikasi</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openOtp(){ document.getElementById('otpModal').classList.add('show'); }
+  function closeOtp(){ document.getElementById('otpModal').classList.remove('show'); }
+</script>
+</body>
+</html>
