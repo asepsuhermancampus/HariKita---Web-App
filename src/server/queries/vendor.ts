@@ -216,3 +216,12 @@ export async function getVendorInbox(): Promise<VendorInboxItemDTO[]> {
     vendorResponseDueAt: i.vendorResponseDueAt ? i.vendorResponseDueAt.toISOString() : null,
   }));
 }
+
+/** Rincian komponen platform fee (dari config admin). Read-only untuk vendor. */
+export async function getPlatformFeeBreakdown(): Promise<
+  Array<{ label: string; pct: number }>
+> {
+  const { getPlatformSettings } = await import("@/server/services/platform-settings-service");
+  const s = await getPlatformSettings();
+  return s.components.map((c) => ({ label: c.label, pct: c.pct }));
+}

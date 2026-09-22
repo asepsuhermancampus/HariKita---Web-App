@@ -1,5 +1,5 @@
 import React from "react";
-import { getVendorPackages, getCurrentVendor } from "@/server/queries/vendor";
+import { getVendorPackages, getCurrentVendor, getPlatformFeeBreakdown } from "@/server/queries/vendor";
 import { VendorPaketClient } from "./VendorPaketClient";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +11,13 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   const vendor = await getCurrentVendor();
   const dbPackages = vendor ? await getVendorPackages() : [];
+  const feeBreakdown = await getPlatformFeeBreakdown();
 
-  return <VendorPaketClient dbPackages={dbPackages} vendorResolved={Boolean(vendor)} />;
+  return (
+    <VendorPaketClient
+      dbPackages={dbPackages}
+      vendorResolved={Boolean(vendor)}
+      feeBreakdown={feeBreakdown}
+    />
+  );
 }

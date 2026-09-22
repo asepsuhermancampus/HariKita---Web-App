@@ -206,3 +206,13 @@ test("isAdminEditUnlocked contract: returns false for mismatched admin", async (
   const res = await verifyUnlockToken(t);
   assert.notEqual(res?.adminId, "admin-b");
 });
+
+test("getPlatformSettings exposes components as array for vendor breakdown", async () => {
+  const { getPlatformSettings } = await import("../src/server/services/platform-settings-service");
+  const s = await getPlatformSettings(ctx.prisma);
+  assert.ok(Array.isArray(s.components));
+  for (const c of s.components) {
+    assert.equal(typeof c.label, "string");
+    assert.equal(typeof c.pct, "number");
+  }
+});

@@ -4,19 +4,14 @@ import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Package,
   Plus,
   Edit2,
   Trash2,
   Calculator,
-  Percent,
   Clock,
-  Sparkles,
   AlertCircle,
   ChevronDown,
   ShieldCheck,
-  Server,
-  Headphones,
 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { Modal } from "@/components/harikita/ui";
@@ -44,9 +39,11 @@ const EMPTY_FORM: PackageInput = {
 export function VendorPaketClient({
   dbPackages,
   vendorResolved,
+  feeBreakdown,
 }: {
   dbPackages: VendorPackageDTO[];
   vendorResolved: boolean;
+  feeBreakdown: Array<{ label: string; pct: number }>;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -286,59 +283,29 @@ export function VendorPaketClient({
                             </div>
 
                             <div className="space-y-1.5 text-[11px]">
-                              <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
-                                <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
-                                  <Server className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
-                                  <span className="whitespace-nowrap">Server Cloud &amp; Portofolio HD</span>
-                                </span>
-                                <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
-                                  3.5%
-                                </span>
-                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
-                                  {formatRupiah(Math.round(pkg.basePrice * 0.035))}
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
-                                <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
-                                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                  <span className="whitespace-nowrap">
-                                    Semua Admin Ditanggung
-                                  </span>
-                                </span>
-                                <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
-                                  3.0%
-                                </span>
-                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
-                                  {formatRupiah(Math.round(pkg.basePrice * 0.030))}
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
-                                <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
-                                  <Sparkles className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
-                                  <span className="whitespace-nowrap">Pemasaran &amp; SEO Kebumen</span>
-                                </span>
-                                <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
-                                  2.0%
-                                </span>
-                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
-                                  {formatRupiah(Math.round(pkg.basePrice * 0.020))}
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors">
-                                <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
-                                  <Headphones className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                                  <span className="whitespace-nowrap">Bantuan CS &amp; Mediasi Jadwal</span>
-                                </span>
-                                <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
-                                  1.5%
-                                </span>
-                                <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
-                                  {formatRupiah(Math.round(pkg.basePrice * 0.015))}
-                                </span>
-                              </div>
+                              {feeBreakdown.length === 0 ? (
+                                <p className="px-1.5 py-1 text-[11px] italic text-[#6B5E62]">
+                                  Rincian komponen belum diatur admin.
+                                </p>
+                              ) : (
+                                feeBreakdown.map((c) => (
+                                  <div
+                                    key={c.label}
+                                    className="grid grid-cols-[1fr_auto_auto] items-center gap-2 p-1.5 rounded-lg hover:bg-[#FAF8F5] transition-colors"
+                                  >
+                                    <span className="flex items-center gap-2 text-[#4A2E35] min-w-0">
+                                      <ShieldCheck className="w-3.5 h-3.5 text-[#C5A880] shrink-0" />
+                                      <span className="whitespace-nowrap">{c.label}</span>
+                                    </span>
+                                    <span className="w-10 text-center font-mono text-[10.5px] text-[#6B5E62] shrink-0">
+                                      {c.pct}%
+                                    </span>
+                                    <span className="font-mono text-[11px] font-semibold text-[#4A2E35] text-right shrink-0">
+                                      {formatRupiah(Math.round((pkg.basePrice * c.pct) / 100))}
+                                    </span>
+                                  </div>
+                                ))
+                              )}
                             </div>
                           </div>
                         </>
