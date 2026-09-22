@@ -14,3 +14,6 @@ export * from "./DashCard";
 export * from "./DashPageHeader";
 export * from "./DashStatCard";
 export * from "./DashTable";
+export * from "./DashboardShell";
+export * from "./DashboardSidebarNav";
+export * from "./nav-config";
