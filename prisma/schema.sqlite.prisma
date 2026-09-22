@@ -652,6 +652,7 @@ model PlatformSetting {
   settlementPct          Int                    @default(70)
   platformFeePct         Int                    @default(10)
   defaultBaCommissionPct Int                    @default(5)
+  superAdminEmail        String?
   isActive               Boolean                @default(true)
   updatedById            String?
   updatedByName          String?
