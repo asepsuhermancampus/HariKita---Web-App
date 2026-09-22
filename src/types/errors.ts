@@ -92,6 +92,7 @@ export type AdminErrorCode = (typeof ADMIN_ERROR_CODES)[number];
 // ── 9. PLATFORM SETTINGS ERROR CODES ───────────────────────────────────────
 export const SETTINGS_ERROR_CODES = [
   'INVALID_PLATFORM_SETTINGS',
+  'ADMIN_EDIT_NOT_UNLOCKED',
 ] as const;
 
 export type SettingsErrorCode = (typeof SETTINGS_ERROR_CODES)[number];

@@ -188,3 +188,8 @@ test("updatePlatformSettings persists superAdminEmail", async () => {
   await ctx.prisma.platformSetting.deleteMany();
   await ctx.prisma.adminAuditLog.deleteMany({ where: { action: "PLATFORM_SETTINGS_UPDATED" } });
 });
+
+test("SETTINGS_ERROR_CODES includes ADMIN_EDIT_NOT_UNLOCKED", async () => {
+  const { SETTINGS_ERROR_CODES } = await import("../src/types/errors");
+  assert.ok(SETTINGS_ERROR_CODES.includes("ADMIN_EDIT_NOT_UNLOCKED"));
+});
