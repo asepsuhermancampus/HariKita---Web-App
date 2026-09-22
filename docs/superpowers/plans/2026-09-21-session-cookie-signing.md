@@ -1,6 +1,6 @@
 # Session Cookie Signing (HMAC) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Menandatangani cookie sesi `hk_session` dengan HMAC-SHA256 sehingga tidak dapat dipalsukan menjadi role apa pun.
 
@@ -41,7 +41,7 @@
 
 > **Catatan urutan:** Plan ini menguji `signSession` (Task 1) dan `verifySession` (Task 2) secara terpisah. Task 1 TIDAK mendefinisikan `verifySession` sama sekali; Task 2 menambahkannya ke file yang sama. Ekspor akhir file baru lengkap setelah Task 2.
 
-- [ ] **Step 1: Tulis test yang gagal (secret + sign format)**
+- [x] **Step 1: Tulis test yang gagal (secret + sign format)**
 
 Buat `tests/session-token.test.ts`:
 
@@ -103,12 +103,12 @@ test("signSession is deterministic for the same data + secret", async () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan test — pastikan gagal**
+- [x] **Step 2: Jalankan test — pastikan gagal**
 
 Run: `npx tsx --test tests/session-token.test.ts`
 Expected: FAIL — modul `../src/lib/session-token` belum ada (`Cannot find module`).
 
-- [ ] **Step 3: Implementasi minimal `src/lib/session-token.ts`**
+- [x] **Step 3: Implementasi minimal `src/lib/session-token.ts`**
 
 ```ts
 /**
@@ -179,12 +179,12 @@ export async function signSession(data: SessionData): Promise<string> {
 }
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/session-token.test.ts`
 Expected: PASS (5 tests).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/session-token.ts tests/session-token.test.ts
@@ -203,7 +203,7 @@ git commit -m "feat(auth): add session token signing foundation (base64url + HMA
 - Consumes: `signSession`, `getSessionSecret`, `base64urlDecode`, `hmacBase64url` dari Task 1.
 - Produces: `export async function verifySession(token: string): Promise<SessionData | null>`.
 
-- [ ] **Step 1: Tambah test yang gagal untuk `verifySession`**
+- [x] **Step 1: Tambah test yang gagal untuk `verifySession`**
 
 Tambahkan ke `tests/session-token.test.ts` (di akhir file):
 
@@ -270,12 +270,12 @@ test("verifySession rejects payload missing required fields", async () => {
 
 > Catatan: `verifySession` memanggil `getSessionSecret()` di dalam `try/catch`, jadi token yang diverifikasi setelah secret diganti (atau hilang) → `null`, bukan throw. Test "different secret" bergantung pada ini.
 
-- [ ] **Step 2: Jalankan test — pastikan gagal**
+- [x] **Step 2: Jalankan test — pastikan gagal**
 
 Run: `npx tsx --test tests/session-token.test.ts`
 Expected: FAIL — `verifySession` bukan bagian ekspor modul.
 
-- [ ] **Step 3: Implementasi `safeEqual` + `verifySession`**
+- [x] **Step 3: Implementasi `safeEqual` + `verifySession`**
 
 Tambahkan ke `src/lib/session-token.ts` (setelah `signSession`):
 
@@ -327,12 +327,12 @@ export async function verifySession(token: string): Promise<SessionData | null> 
 }
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/session-token.test.ts`
 Expected: PASS (semua test, termasuk malformed & escalation).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/session-token.ts tests/session-token.test.ts
@@ -355,7 +355,7 @@ git commit -m "feat(auth): add verifySession with constant-time signature check"
   - `export async function setSessionCookie(data: SessionData): Promise<void>`
   - `clearSessionCookie`, `getDashboardPath`, `getLoginPath`, `setOtpCookie`, `readOtpCookie`, `clearOtpCookie` tetap.
 
-- [ ] **Step 1: Ubah impor & hapus definisi lokal `SessionData`**
+- [x] **Step 1: Ubah impor & hapus definisi lokal `SessionData`**
 
 Di `src/lib/session.ts`, ganti blok:
 
@@ -377,7 +377,7 @@ export type { SessionData };
 
 > **Kenapa `export type { SessionData }` (tanpa `from`):** kita sudah meng-`import` tipe `SessionData` di baris sebelumnya, jadi cukup re-export nama yang sudah ada. Menulis `export type { SessionData } from "./session-token"` bersamaan dengan impor bernama yang sama akan memicu konflik deklarasi. Bentuk di atas tetap membuat `import { SessionData } from "@/lib/session"` berfungsi untuk pemanggil lama.
 
-- [ ] **Step 2: Ganti body `getSession`**
+- [x] **Step 2: Ganti body `getSession`**
 
 Ganti seluruh fungsi `getSession` menjadi:
 
@@ -390,7 +390,7 @@ export async function getSession(): Promise<SessionData | null> {
 }
 ```
 
-- [ ] **Step 3: Ganti body `setSessionCookie`**
+- [x] **Step 3: Ganti body `setSessionCookie`**
 
 Ganti seluruh fungsi `setSessionCookie` menjadi:
 
@@ -407,17 +407,17 @@ export async function setSessionCookie(data: SessionData): Promise<void> {
 }
 ```
 
-- [ ] **Step 4: Typecheck**
+- [x] **Step 4: Typecheck**
 
 Run: `npm run typecheck`
 Expected: PASS — tidak ada error tipe (pastikan tidak ada referensi `Buffer` yang tertinggal di file ini; hapus impor tak terpakai bila ada).
 
-- [ ] **Step 5: Jalankan suite penuh**
+- [x] **Step 5: Jalankan suite penuh**
 
 Run: `npm test`
 Expected: PASS — jumlah test = baseline 231 + test baru session-token (≥ 13). 0 fail.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/lib/session.ts
@@ -435,7 +435,7 @@ git commit -m "feat(auth): sign and verify hk_session cookie via session-token"
 - Consumes: `verifySession`, `type SessionData` dari `@/lib/session-token`.
 - Produces: `export async function middleware(request: NextRequest)` (handler menjadi async).
 
-- [ ] **Step 1: Ganti helper `parseSession` dengan impor verifier**
+- [x] **Step 1: Ganti helper `parseSession` dengan impor verifier**
 
 Di `src/middleware.ts`, hapus blok:
 
@@ -472,7 +472,7 @@ const COOKIE_NAME = "hk_session";
 
 > Catatan: `import` sebaiknya diletakkan di bagian atas file bersama impor lain. Susun ulang agar `import { verifySession, type SessionData } from "@/lib/session-token";` berada tepat setelah `import type { NextRequest } from "next/server";`. Konstanta `COOKIE_NAME` tetap di tempatnya semula.
 
-- [ ] **Step 2: Jadikan handler async & baca sesi lewat verifier**
+- [x] **Step 2: Jadikan handler async & baca sesi lewat verifier**
 
 Ganti tanda tangan & baris pembacaan sesi:
 
@@ -496,17 +496,17 @@ export async function middleware(request: NextRequest) {
 
 Sisa logika (redirect `/auth/*`, `/admin`, `/dashboard/vendor`, `/dashboard/ba`, `/client`, dan alias `profile`→`profil`) **tidak berubah**.
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 Run: `npm run typecheck`
 Expected: PASS. Pastikan tidak ada sisa referensi `parseSession`.
 
-- [ ] **Step 4: Build (validasi Edge runtime menerima crypto.subtle)**
+- [x] **Step 4: Build (validasi Edge runtime menerima crypto.subtle)**
 
 Run: `npm run build`
 Expected: PASS — build sukses, middleware terkompilasi tanpa error Edge (mis. tidak ada `Buffer`/`node:crypto` di jalur middleware).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/middleware.ts
@@ -524,7 +524,7 @@ git commit -m "feat(auth): verify signed session cookie in middleware (Edge)"
 
 **Interfaces:** tidak ada ekspor baru.
 
-- [ ] **Step 1: Tambah `HARIKITA_SESSION_SECRET` di `.env.example`**
+- [x] **Step 1: Tambah `HARIKITA_SESSION_SECRET` di `.env.example`**
 
 Tambahkan setelah blok `# ── Cron ──` (atau sebelum blok `# ── App ──`):
 
@@ -535,7 +535,7 @@ Tambahkan setelah blok `# ── Cron ──` (atau sebelum blok `# ── App �
 HARIKITA_SESSION_SECRET="change-me-to-a-long-random-string"
 ```
 
-- [ ] **Step 2: Set secret lokal agar dev/test berjalan**
+- [x] **Step 2: Set secret lokal agar dev/test berjalan**
 
 Tambahkan ke `.env.local` (dan `.env` bila dipakai dev):
 
@@ -548,7 +548,7 @@ Verifikasi `.env.local`/`.env` ter-gitignore:
 Run: `git check-ignore -v .env.local .env`
 Expected: kedua path tercetak sebagai ignored. Bila TIDAK, tambahkan ke `.gitignore` sebelum melanjutkan.
 
-- [ ] **Step 3: Catat di `PROJECT_STATUS.md`**
+- [x] **Step 3: Catat di `PROJECT_STATUS.md`**
 
 Tambahkan satu baris di bagian auth/keamanan (sesuaikan heading yang ada):
 
@@ -556,7 +556,7 @@ Tambahkan satu baris di bagian auth/keamanan (sesuaikan heading yang ada):
 - [x] Cookie sesi `hk_session` ditandatangani HMAC-SHA256 (env `HARIKITA_SESSION_SECRET`); cookie lama tanpa tanda tangan ditolak → login ulang.
 ```
 
-- [ ] **Step 4: Verifikasi akhir lengkap**
+- [x] **Step 4: Verifikasi akhir lengkap**
 
 Run: `npm run typecheck`
 Expected: PASS.
@@ -567,7 +567,7 @@ Expected: PASS — semua suite hijau.
 Run: `npm run build`
 Expected: PASS.
 
-- [ ] **Step 5: Uji manual (smoke)**
+- [x] **Step 5: Uji manual (smoke)**
 
 1. Start dev: `npm run dev`.
 2. Login sebagai demo user (mis. client `081987654321` / PIN `123456`).
@@ -575,7 +575,7 @@ Expected: PASS.
 4. Ubah cookie di DevTools menjadi base64 JSON `{"userId":"x","role":"ADMIN",...}` (tanpa tanda tangan) → reload `/admin` → harus ter-redirect ke login.
 5. Logout, lalu login lagi → dashboard sesuai role.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add .env.example PROJECT_STATUS.md

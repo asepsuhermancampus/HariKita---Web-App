@@ -1,6 +1,6 @@
 # Admin RBAC + Audit Log Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Pisahkan wewenang admin ke sub-role (SUPER_ADMIN/OPS/FINANCE) lewat satu modul guard capability, dan catat setiap aksi admin ke audit log append-only — tanpa menyentuh cookie/middleware.
 
@@ -34,7 +34,7 @@
 **Interfaces:**
 - Produces: model `AdminAuditLog` dengan field `id, actorId, actorName, actorRole, capability, action, targetType, targetId, metadata, createdAt`; field `User.adminRole String?`.
 
-- [ ] **Step 1: Backup dev.db**
+- [x] **Step 1: Backup dev.db**
 
 Run:
 ```bash
@@ -42,7 +42,7 @@ copy prisma\dev.db prisma\dev.db.bak
 ```
 Expected: file `prisma/dev.db.bak` dibuat (jika `dev.db` ada). Jika tidak ada, lanjut (fresh).
 
-- [ ] **Step 2: Ubah `prisma/schema.prisma` — tambah `adminRole` ke User**
+- [x] **Step 2: Ubah `prisma/schema.prisma` — tambah `adminRole` ke User**
 
 Di `model User`, setelah baris `role String @default("CLIENT") // "CLIENT", "VENDOR", "ADMIN"`, tambahkan:
 
@@ -50,7 +50,7 @@ Di `model User`, setelah baris `role String @default("CLIENT") // "CLIENT", "VEN
   adminRole         String?              // null | "SUPER_ADMIN" | "OPS" | "FINANCE" (relevan bila role = "ADMIN")
 ```
 
-- [ ] **Step 3: Tambah model `AdminAuditLog` di akhir `prisma/schema.prisma`**
+- [x] **Step 3: Tambah model `AdminAuditLog` di akhir `prisma/schema.prisma`**
 
 ```prisma
 /// Log audit aksi admin (append-only). actorId sengaja TANPA FK cascade agar jejak awet.
@@ -72,11 +72,11 @@ model AdminAuditLog {
 }
 ```
 
-- [ ] **Step 4: Terapkan hal yang sama ke `prisma/schema.sqlite.prisma`**
+- [x] **Step 4: Terapkan hal yang sama ke `prisma/schema.sqlite.prisma`**
 
 Ulangi Step 2 & 3 persis pada file SQLite (tambah `adminRole` ke `User`, tambah model `AdminAuditLog` di akhir).
 
-- [ ] **Step 5: Validasi kedua schema**
+- [x] **Step 5: Validasi kedua schema**
 
 Run:
 ```bash
@@ -85,7 +85,7 @@ npx prisma validate --schema prisma/schema.sqlite.prisma
 ```
 Expected: kedua perintah mencetak `The schema ... is valid`.
 
-- [ ] **Step 6: Generate kedua client + push ke SQLite**
+- [x] **Step 6: Generate kedua client + push ke SQLite**
 
 Run:
 ```bash
@@ -95,7 +95,7 @@ npx prisma db push --schema prisma/schema.sqlite.prisma
 ```
 Expected: client ter-generate; db push sukses (menambah kolom/tabel tanpa data loss).
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add prisma/schema.prisma prisma/schema.sqlite.prisma
@@ -113,7 +113,7 @@ git commit -m "feat(admin): add User.adminRole and AdminAuditLog model"
 **Interfaces:**
 - Produces: `ADMIN_ERROR_CODES`, `type AdminErrorCode`, dan `AdminErrorCode` masuk ke union `AppDomainErrorCode` + `AnyDomainErrorCode`.
 
-- [ ] **Step 1: Tambah grup error di `src/types/errors.ts`**
+- [x] **Step 1: Tambah grup error di `src/types/errors.ts`**
 
 Setelah grup 7 (OTP) dan sebelum `AppDomainErrorCode`, tambah:
 
@@ -126,7 +126,7 @@ export const ADMIN_ERROR_CODES = [
 export type AdminErrorCode = (typeof ADMIN_ERROR_CODES)[number];
 ```
 
-- [ ] **Step 2: Tambah ke union `AppDomainErrorCode`**
+- [x] **Step 2: Tambah ke union `AppDomainErrorCode`**
 
 Ubah definisi union agar menyertakan `| AdminErrorCode`:
 
@@ -141,7 +141,7 @@ export type AppDomainErrorCode =
   | AdminErrorCode;
 ```
 
-- [ ] **Step 3: Tambah ke `AnyDomainErrorCode` di `src/server/services/errors.ts`**
+- [x] **Step 3: Tambah ke `AnyDomainErrorCode` di `src/server/services/errors.ts`**
 
 Import `AdminErrorCode` dari `@/types/errors` (tambah ke daftar import yang ada) dan tambahkan ke union:
 
@@ -156,12 +156,12 @@ export type AnyDomainErrorCode =
   | AdminErrorCode;
 ```
 
-- [ ] **Step 4: Typecheck**
+- [x] **Step 4: Typecheck**
 
 Run: `npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/types/errors.ts src/server/services/errors.ts
@@ -184,7 +184,7 @@ git commit -m "feat(admin): add UNAUTHORIZED_ADMIN_CAPABILITY error code"
   - `function resolveAdminRole(role: string, adminRole: string | null): AdminSubRole | null`
   - `function hasCapability(subRole: AdminSubRole, cap: AdminCapability): boolean`
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Buat `tests/admin-rbac.test.ts`:
 
@@ -251,12 +251,12 @@ test("CAPABILITY_MATRIX: SUPER_ADMIN has all capabilities", () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan test — pastikan gagal**
+- [x] **Step 2: Jalankan test — pastikan gagal**
 
 Run: `npx tsx --test tests/admin-rbac.test.ts`
 Expected: FAIL — `Cannot find module '../src/server/auth/admin-guard'`.
 
-- [ ] **Step 3: Implementasi pure module**
+- [x] **Step 3: Implementasi pure module**
 
 Buat `src/server/auth/admin-guard.ts`:
 
@@ -314,12 +314,12 @@ export function hasCapability(subRole: AdminSubRole, cap: AdminCapability): bool
 }
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/admin-rbac.test.ts`
 Expected: PASS (semua test pure).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/auth/admin-guard.ts tests/admin-rbac.test.ts
@@ -340,7 +340,7 @@ git commit -m "feat(admin): add pure RBAC guard (resolveAdminRole + hasCapabilit
   - `interface AdminActor { userId: string; name: string; subRole: AdminSubRole }`
   - `async function requireAdminCapability(cap: AdminCapability): Promise<AdminActor>`
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Tambahkan ke `tests/admin-rbac.test.ts`:
 
@@ -385,12 +385,12 @@ test("loadAdminActor: resolves OPS sub-role", async () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan test — pastikan gagal**
+- [x] **Step 2: Jalankan test — pastikan gagal**
 
 Run: `npx tsx --test tests/admin-rbac.test.ts`
 Expected: FAIL — `loadAdminActor` belum diekspor.
 
-- [ ] **Step 3: Implementasi guard async**
+- [x] **Step 3: Implementasi guard async**
 
 Tambahkan ke `src/server/auth/admin-guard.ts`:
 
@@ -440,12 +440,12 @@ export async function requireAdminCapability(cap: AdminCapability): Promise<Admi
 }
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/admin-rbac.test.ts`
 Expected: PASS. (Pastikan DB test tersedia — suite lain sudah memakai `prisma` seperti di `vendor-portfolio.test.ts`.)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/auth/admin-guard.ts tests/admin-rbac.test.ts
@@ -466,7 +466,7 @@ git commit -m "feat(admin): add async requireAdminCapability guard"
   - `interface AdminAuditInput { actor: AdminActor; capability: AdminCapability; action: string; targetType: string; targetId: string; metadata?: Record<string, unknown> }`
   - `async function recordAdminAudit(input: AdminAuditInput, tx?: Prisma.TransactionClient): Promise<void>`
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Tambahkan ke `tests/admin-rbac.test.ts`:
 
@@ -509,12 +509,12 @@ test("recordAdminAudit: no metadata -> null", async () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan test — pastikan gagal**
+- [x] **Step 2: Jalankan test — pastikan gagal**
 
 Run: `npx tsx --test tests/admin-rbac.test.ts`
 Expected: FAIL — modul `admin-audit-service` belum ada.
 
-- [ ] **Step 3: Implementasi service**
+- [x] **Step 3: Implementasi service**
 
 Buat `src/server/services/admin-audit-service.ts`:
 
@@ -559,12 +559,12 @@ export async function recordAdminAudit(
 }
 ```
 
-- [ ] **Step 4: Jalankan test — pastikan lulus**
+- [x] **Step 4: Jalankan test — pastikan lulus**
 
 Run: `npx tsx --test tests/admin-rbac.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/admin-audit-service.ts tests/admin-rbac.test.ts
@@ -582,7 +582,7 @@ git commit -m "feat(admin): add recordAdminAudit service"
 - Consumes: `requireAdminCapability`, `loadAdminActor` tidak dipakai di sini; `recordAdminAudit`.
 - Produces: aksi vendor/dispute kini memakai capability + menulis audit. Bentuk return `ActionResult` tidak berubah.
 
-- [ ] **Step 1: Ganti import + hapus guard lokal**
+- [x] **Step 1: Ganti import + hapus guard lokal**
 
 Di `src/server/actions/admin.ts`, ganti import `getSession`/`DomainError` bila tidak lagi dipakai, dan tambah:
 
@@ -593,7 +593,7 @@ import { recordAdminAudit } from "@/server/services/admin-audit-service";
 
 Hapus fungsi `requireAdminUserId` (diganti). **Pertahankan** `requireAnyUserId` (dipakai `openDisputeAction`).
 
-- [ ] **Step 2: Update `approveVendorAction`**
+- [x] **Step 2: Update `approveVendorAction`**
 
 ```ts
 export async function approveVendorAction(input: {
@@ -623,7 +623,7 @@ export async function approveVendorAction(input: {
 }
 ```
 
-- [ ] **Step 3: Update `rejectVendorAction`**
+- [x] **Step 3: Update `rejectVendorAction`**
 
 ```ts
 export async function rejectVendorAction(input: {
@@ -656,7 +656,7 @@ export async function rejectVendorAction(input: {
 }
 ```
 
-- [ ] **Step 4: Update `reviewDisputeAction` + `resolveDisputeAction`**
+- [x] **Step 4: Update `reviewDisputeAction` + `resolveDisputeAction`**
 
 ```ts
 export async function reviewDisputeAction(input: {
@@ -714,12 +714,12 @@ export async function resolveDisputeAction(input: {
 }
 ```
 
-- [ ] **Step 5: Typecheck**
+- [x] **Step 5: Typecheck**
 
 Run: `npm run typecheck`
 Expected: PASS. Pastikan tidak ada referensi `requireAdminUserId`/`getSession` yang tersisa bila tak dipakai.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/server/actions/admin.ts
@@ -737,7 +737,7 @@ git commit -m "feat(admin): enforce capability + audit in vendor/dispute actions
 - Consumes: `requireAdminCapability`, `recordAdminAudit`.
 - Produces: aksi admin BA (withdraw, set commission, set active, create) memakai capability + audit. `requireAmbassador` (self-service BA) tetap.
 
-- [ ] **Step 1: Ganti import + hapus `requireAdmin` lokal**
+- [x] **Step 1: Ganti import + hapus `requireAdmin` lokal**
 
 Di `src/server/actions/ambassador.ts`, hapus fungsi `requireAdmin` lokal. Tambah:
 
@@ -748,7 +748,7 @@ import { recordAdminAudit } from "@/server/services/admin-audit-service";
 
 **Pertahankan** `requireAmbassador` untuk `requestWithdrawalAction`.
 
-- [ ] **Step 2: Update `resolveWithdrawalAction`**
+- [x] **Step 2: Update `resolveWithdrawalAction`**
 
 ```ts
 export async function resolveWithdrawalAction(input: {
@@ -772,7 +772,7 @@ export async function resolveWithdrawalAction(input: {
 }
 ```
 
-- [ ] **Step 3: Update `setAmbassadorCommissionAction`**
+- [x] **Step 3: Update `setAmbassadorCommissionAction`**
 
 ```ts
 export async function setAmbassadorCommissionAction(input: {
@@ -806,7 +806,7 @@ export async function setAmbassadorCommissionAction(input: {
 }
 ```
 
-- [ ] **Step 4: Update `setAmbassadorActiveAction`**
+- [x] **Step 4: Update `setAmbassadorActiveAction`**
 
 ```ts
 export async function setAmbassadorActiveAction(input: {
@@ -833,7 +833,7 @@ export async function setAmbassadorActiveAction(input: {
 }
 ```
 
-- [ ] **Step 5: Update `createAmbassadorAction`**
+- [x] **Step 5: Update `createAmbassadorAction`**
 
 Ganti baris `await requireAdmin();` menjadi `const actor = await requireAdminCapability("MANAGE_BA");`, dan tepat sebelum `return`, tambah:
 
@@ -850,12 +850,12 @@ Ganti baris `await requireAdmin();` menjadi `const actor = await requireAdminCap
 
 (Sisanya tidak berubah.)
 
-- [ ] **Step 6: Typecheck**
+- [x] **Step 6: Typecheck**
 
 Run: `npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/server/actions/ambassador.ts
@@ -872,7 +872,7 @@ git commit -m "feat(admin): enforce capability + audit in ambassador admin actio
 **Interfaces:**
 - Consumes: `loadAdminActor` (untuk cek VIEW_ADMIN tanpa throw) atau `resolveAdminRole`.
 
-- [ ] **Step 1: Ganti `requireAdmin` lokal dengan capability check**
+- [x] **Step 1: Ganti `requireAdmin` lokal dengan capability check**
 
 Di `src/server/queries/admin.ts`, ganti fungsi `requireAdmin` menjadi berbasis capability (read-only, return boolean, tanpa throw):
 
@@ -892,17 +892,17 @@ async function canViewAdmin(): Promise<boolean> {
 
 Lalu ganti setiap `if (!(await requireAdmin())) return [];` menjadi `if (!(await canViewAdmin())) return [];` (ada 4 pemakaian: `getVendorVerifications`, `getContentAuditFindings`, `getDisputes`, `getFunnelTelemetry`).
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 3: Jalankan suite penuh**
+- [x] **Step 3: Jalankan suite penuh**
 
 Run: `npm test`
 Expected: PASS — baseline 244 + test baru admin-rbac.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/server/queries/admin.ts
@@ -918,7 +918,7 @@ git commit -m "feat(admin): guard admin queries with VIEW_ADMIN capability"
 
 **Interfaces:** tidak ada ekspor baru.
 
-- [ ] **Step 1: Tambah 2 admin demo setelah `adminUser`**
+- [x] **Step 1: Tambah 2 admin demo setelah `adminUser`**
 
 Di `prisma/seed.ts`, setelah blok pembuatan `adminUser` + `logPin(adminUser.id)`, tambah:
 
@@ -948,7 +948,7 @@ Di `prisma/seed.ts`, setelah blok pembuatan `adminUser` + `logPin(adminUser.id)`
   await logPin(financeAdmin.id);
 ```
 
-- [ ] **Step 2: Update blok cetak akun demo**
+- [x] **Step 2: Update blok cetak akun demo**
 
 Setelah baris `console.log("Super Admin : 081234567890  -> /auth/login/admin");`, tambah:
 
@@ -957,7 +957,7 @@ Setelah baris `console.log("Super Admin : 081234567890  -> /auth/login/admin");`
   console.log("Finance Adm : 081234567892  (sub-role FINANCE) -> /auth/login/admin");
 ```
 
-- [ ] **Step 3: Tambah `adminAuditLog` ke pembersihan seed (opsional, konsisten)**
+- [x] **Step 3: Tambah `adminAuditLog` ke pembersihan seed (opsional, konsisten)**
 
 Di blok `deleteMany` awal seed, tambahkan:
 
@@ -965,12 +965,12 @@ Di blok `deleteMany` awal seed, tambahkan:
   await prisma.adminAuditLog.deleteMany();
 ```
 
-- [ ] **Step 4: Jalankan seed**
+- [x] **Step 4: Jalankan seed**
 
 Run: `npm run db:seed`
 Expected: seed sukses; blok akun demo mencetak 3 admin (Super/Ops/Finance).
 
-- [ ] **Step 5: Verifikasi akhir lengkap**
+- [x] **Step 5: Verifikasi akhir lengkap**
 
 Run:
 ```bash
@@ -982,7 +982,7 @@ npm run build
 ```
 Expected: semua PASS. Build sukses (tidak ada perubahan cookie/middleware).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add prisma/seed.ts

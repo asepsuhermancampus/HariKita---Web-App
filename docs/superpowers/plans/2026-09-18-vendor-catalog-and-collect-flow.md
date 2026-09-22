@@ -1,6 +1,6 @@
 # Vendor Catalog Pages, Collect-Vendor Flow & Vendor Dashboard Relocation — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Add public `/vendor` (11-category catalog) and `/vendor/kategori/[kategori]` (per-vendor marketplace) pages, with a persistent "+ Rencana" collect flow that feeds the builder; relocate the vendor dashboard to `/dashboard/vendor/*`; and fix the builder's state/ID bugs.
 
@@ -69,7 +69,7 @@ Menghilangkan duplikasi 11 kategori dengan satu modul yang bisa diuji. Foundatio
   - `export function getVendorCategory(id: string): VendorCategory | undefined`
   - `export function getVendorsByCategory(id: string): VendorProfile[]` — filter `MULTI_VENDOR_CATALOG`.
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Create `tests/vendor-categories.test.ts`:
 
@@ -114,12 +114,12 @@ test("getVendorCategory returns entry for known id and undefined otherwise", () 
 });
 ```
 
-- [ ] **Step 2: Jalankan test, pastikan gagal**
+- [x] **Step 2: Jalankan test, pastikan gagal**
 
 Run: `npx tsx --test tests/vendor-categories.test.ts`
 Expected: FAIL — `Cannot find module '../src/lib/vendor-categories'`.
 
-- [ ] **Step 3: Implementasi modul**
+- [x] **Step 3: Implementasi modul**
 
 Create `src/lib/vendor-categories.ts`:
 
@@ -174,12 +174,12 @@ export function getVendorsByCategory(id: string): VendorProfile[] {
 }
 ```
 
-- [ ] **Step 4: Jalankan test, pastikan lulus**
+- [x] **Step 4: Jalankan test, pastikan lulus**
 
 Run: `npx tsx --test tests/vendor-categories.test.ts`
 Expected: PASS (4 tests).
 
-- [ ] **Step 5: Typecheck & commit**
+- [x] **Step 5: Typecheck & commit**
 
 Run: `npm run typecheck`
 Expected: no errors.
@@ -203,7 +203,7 @@ Halaman katalog/direktori 11 kategori, dibedakan dari halaman kategori (Task 3).
 - Consumes: `VENDOR_CATEGORIES: VendorCategory[]`, `getVendorsByCategory(id): VendorProfile[]`
 - Produces: route `GET /vendor` (komponen default `VendorCatalogIndexPage`).
 
-- [ ] **Step 1: Buat halaman index**
+- [x] **Step 1: Buat halaman index**
 
 Create `src/app/vendor/page.tsx`:
 
@@ -289,17 +289,17 @@ export default function VendorCatalogIndexPage() {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors.
 
-- [ ] **Step 3: Verifikasi manual**
+- [x] **Step 3: Verifikasi manual**
 
 Jalankan `npm run dev:next`, buka `http://localhost:3000/vendor`.
 Expected: 11 card kategori tampil, tiap card menampilkan "X vendor tersedia" (prewed = 2, lainnya 1), tombol "Racik Paket Hari H" ada. Klik card → navigasi ke `/vendor/kategori/<id>` (halaman ini dibuat di Task 3 — untuk sekarang boleh 404, lanjut Task 3).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/vendor/page.tsx
@@ -324,7 +324,7 @@ Marketplace vendor perorangan per kategori, tombol "+ Rencana" persisten via `ca
   - `CartVendorItem` fields: `categoryId, categoryTitle, vendorId, vendorName, district, packageId, packageName, unitPrice, quantity, callTime, notes`.
 - Produces: route `GET /vendor/kategori/[kategori]` (default export `VendorCategoryDetailPage`).
 
-- [ ] **Step 1: Buat halaman kategori**
+- [x] **Step 1: Buat halaman kategori**
 
 Create `src/app/vendor/kategori/[kategori]/page.tsx`:
 
@@ -624,12 +624,12 @@ export default function VendorCategoryDetailPage({ params }: PageProps) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors.
 
-- [ ] **Step 3: Verifikasi manual**
+- [x] **Step 3: Verifikasi manual**
 
 `npm run dev:next`, buka:
 1. `/vendor` → klik card "Pre-wedding Alam & Studio" → `/vendor/kategori/prewed` menampilkan 2 vendor (Menganti Cinematic, Lensa Walet).
@@ -639,7 +639,7 @@ Expected: no errors.
 5. Refresh halaman (F5) → badge & bar tetap (localStorage `hk_cart_v1`).
 6. "Racik sekarang" → menuju `/builder`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "src/app/vendor/kategori/[kategori]/page.tsx"
@@ -658,7 +658,7 @@ Memisahkan profil publik dari header nav dashboard.
 **Interfaces:**
 - Produces: layout passthrough (tanpa header dashboard) untuk segmen `/vendor/[slug]`.
 
-- [ ] **Step 1: Buat layout**
+- [x] **Step 1: Buat layout**
 
 Create `src/app/vendor/[slug]/layout.tsx`:
 
@@ -678,16 +678,16 @@ export default function PublicVendorProfileLayout({
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors.
 
-- [ ] **Step 3: Verifikasi manual**
+- [x] **Step 3: Verifikasi manual**
 
 Buka `/vendor/menganti-cinematic` → halaman profil publik tampil **tanpa** bar nav dashboard (Data Diri, Kalender Blackout, dst). Tombol back mengarah ke `/kategori/prewed`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "src/app/vendor/[slug]/layout.tsx"
@@ -711,7 +711,7 @@ Pindahkan seluruh folder dashboard dan update semua link/breadcrumb.
 
 **PENTING:** Jangan pindahkan `src/app/vendor/[slug]/page.tsx` (profil publik) dan `src/app/vendor/kategori/` (Task 3). Hanya folder dashboard.
 
-- [ ] **Step 1: Buat folder tujuan & pindahkan file dashboard**
+- [x] **Step 1: Buat folder tujuan & pindahkan file dashboard**
 
 ```bash
 New-Item -ItemType Directory -Force -Path "src/app/dashboard/vendor" | Out-Null
@@ -727,12 +727,12 @@ Move-Item -LiteralPath "src/app/vendor/profil" "src/app/dashboard/vendor/profil"
 Move-Item -LiteralPath "src/app/vendor/profile" "src/app/dashboard/vendor/profile"
 ```
 
-- [ ] **Step 2: Verifikasi struktur folder**
+- [x] **Step 2: Verifikasi struktur folder**
 
 Run: `Get-ChildItem -Recurse -Directory src/app/vendor, src/app/dashboard/vendor | Select-Object FullName`
 Expected: `src/app/vendor/` hanya berisi `[slug]` dan `kategori`. `src/app/dashboard/vendor/` berisi page/layout/error + dompet, inbox, kalender, paket, portofolio, profil, profile.
 
-- [ ] **Step 3: Update VendorHeaderNav**
+- [x] **Step 3: Update VendorHeaderNav**
 
 Di `src/components/vendor/VendorHeaderNav.tsx`, ganti semua href:
 - `/vendor/profil` → `/dashboard/vendor/profil`
@@ -745,7 +745,7 @@ Di `src/components/vendor/VendorHeaderNav.tsx`, ganti semua href:
 
 (Tepat 7 penggantian di array `navItems`.)
 
-- [ ] **Step 4: Update breadcrumb & cross-nav dashboard**
+- [x] **Step 4: Update breadcrumb & cross-nav dashboard**
 
 Ganti `/vendor` → `/dashboard/vendor` pada file-file ini:
 - `src/app/dashboard/vendor/dompet/page.tsx` (breadcrumb)
@@ -757,16 +757,16 @@ Ganti `/vendor` → `/dashboard/vendor` pada file-file ini:
 
 **JANGAN ubah** link `href={\`/vendor/${...}\`}` (profil publik) di `VendorPortofolioClient.tsx`.
 
-- [ ] **Step 5: Update redirect register vendor**
+- [x] **Step 5: Update redirect register vendor**
 
 `src/app/auth/register-vendor/page.tsx:44`: `router.push("/vendor")` → `router.push("/dashboard/vendor")`.
 
-- [ ] **Step 6: Typecheck**
+- [x] **Step 6: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors (pastikan tidak ada import rusak akibat pemindahan).
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add -A
@@ -788,7 +788,7 @@ git commit -m "refactor(vendor): relocate vendor dashboard to /dashboard/vendor/
   - `ROUTES.VENDOR_CATALOG = '/vendor'`, `ROUTES.VENDOR_CATEGORY: (id: string) => '/vendor/kategori/' + id`
   - `getDashboardPath("VENDOR")` → `/dashboard/vendor/profil` (di `middleware.ts` & `lib/session.ts`).
 
-- [ ] **Step 1: Update `src/lib/routes.ts`**
+- [x] **Step 1: Update `src/lib/routes.ts`**
 
 Ganti blok `VENDOR: { ... }` (baris 31-38) menjadi:
 
@@ -823,7 +823,7 @@ Update entri `ROUTE_REGISTRY` untuk kategori `vendor` (baris 115-120):
   { path: '/dashboard/vendor/dompet', label: 'Dompet Saldo Escrow', category: 'vendor' },
 ```
 
-- [ ] **Step 2: Update `src/middleware.ts`**
+- [x] **Step 2: Update `src/middleware.ts`**
 
 Ganti `getDashboardPath` (baris 33-37):
 
@@ -868,23 +868,23 @@ Ganti alias redirect (baris 44-50):
 
 **Catatan:** `/vendor/*` (index, kategori, [slug]) **tidak lagi dilindungi** — tidak perlu blok guard untuk `/vendor`. Hapus seluruh blok §3 lama (`pathname.startsWith("/vendor/")`) dan §4 lama (`pathname === "/vendor"`).
 
-- [ ] **Step 3: Update `src/lib/session.ts`**
+- [x] **Step 3: Update `src/lib/session.ts`**
 
 Baris 63: `return "/vendor/profil";` → `return "/dashboard/vendor/profil";`
 
-- [ ] **Step 4: Typecheck**
+- [x] **Step 4: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors.
 
-- [ ] **Step 5: Verifikasi manual**
+- [x] **Step 5: Verifikasi manual**
 
 1. Buka `/dashboard/vendor` tanpa login → redirect `/auth/login?callbackUrl=/dashboard/vendor`.
 2. Buka `/vendor` tanpa login → halaman katalog tampil (publik).
 3. Buka `/vendor/kategori/prewed` tanpa login → tampil (publik).
 4. Buka `/vendor/menganti-cinematic` tanpa login → tampil (publik).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/lib/routes.ts src/middleware.ts src/lib/session.ts
@@ -898,16 +898,16 @@ git commit -m "refactor(routes): guard /dashboard/vendor, make /vendor catalog p
 **Files:**
 - Modify: `src/components/layout/Navbar.tsx:105`, `:203`
 
-- [ ] **Step 1: Update link desktop & mobile**
+- [x] **Step 1: Update link desktop & mobile**
 
 Di `Navbar.tsx`, ganti **dua** kemunculan `href="/vendor"` (baris 105 dropdown desktop, baris 203 grid mobile) menjadi `href="/dashboard/vendor"`.
 
-- [ ] **Step 2: Verifikasi tidak ada sisa link dashboard**
+- [x] **Step 2: Verifikasi tidak ada sisa link dashboard**
 
 Run: `Select-String -Path "src/components/layout/Navbar.tsx" -Pattern 'href="/vendor"'`
 Expected: tidak ada hasil. Label "Portal Mitra Vendor Kebumen" & "Vendor" tetap.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/components/layout/Navbar.tsx
@@ -926,7 +926,7 @@ git commit -m "refactor(navbar): point vendor portal link to /dashboard/vendor"
 - Modify: `src/server/actions/order.ts`
 - Modify: `src/server/actions/payment.ts`
 
-- [ ] **Step 1: Update robots disallow list**
+- [x] **Step 1: Update robots disallow list**
 
 Ganti entri `/vendor/*` (baris 19-24) menjadi `/dashboard/vendor/*`:
 
@@ -939,11 +939,11 @@ Ganti entri `/vendor/*` (baris 19-24) menjadi `/dashboard/vendor/*`:
     "/dashboard/vendor/profile",
 ```
 
-- [ ] **Step 2: Update notification URL template**
+- [x] **Step 2: Update notification URL template**
 
 `src/lib/notification-store.ts:210`: `https://harikita.id/vendor/inbox` → `https://harikita.id/dashboard/vendor/inbox`.
 
-- [ ] **Step 3: Update semua revalidate/revalidatePath**
+- [x] **Step 3: Update semua revalidate/revalidatePath**
 
 Ganti setiap path `/vendor/...` atau `/vendor` pada `revalidate([...])` / `revalidatePath(...)`:
 - `src/server/actions/vendor.ts`: `/vendor/kalender` → `/dashboard/vendor/kalender`; `/vendor/paket` → `/dashboard/vendor/paket`; `/vendor/portofolio` → `/dashboard/vendor/portofolio`; `/vendor` → `/dashboard/vendor`. **Biarkan `/kategori` apa adanya.**
@@ -951,17 +951,17 @@ Ganti setiap path `/vendor/...` atau `/vendor` pada `revalidate([...])` / `reval
 - `src/server/actions/order.ts`: `... + "/vendor/inbox"` → `... + "/dashboard/vendor/inbox"` (semua 4 kemunculan).
 - `src/server/actions/payment.ts`: `"${...}/vendor/dompet"` → `... /dashboard/vendor/dompet` (2 kemunculan).
 
-- [ ] **Step 4: Verify tidak ada sisa**
+- [x] **Step 4: Verify tidak ada sisa**
 
 Run: `Select-String -Path "src/server/actions/*.ts" -Pattern '/vendor/'`
 Expected: tidak ada hasil (kecuali komentar bila ada — pastikan bukan path revalidate).
 
-- [ ] **Step 5: Typecheck**
+- [x] **Step 5: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/app/robots.ts src/lib/notification-store.ts src/server/actions/
@@ -983,7 +983,7 @@ Builder harus memuat vendor yang sudah dikumpulkan (dari cartStore) saat mount d
   - Fungsi murni `mergeSelections(base, extra)` diekspor dari `src/lib/builder-selection.ts` untuk diuji.
   - Efek mount builder memuat `cartStore.getSnapshot().items` → ubah ke `selectedItems` via peta kategori/vendor → merge.
 
-- [ ] **Step 1: Buat helper murni + test yang gagal**
+- [x] **Step 1: Buat helper murni + test yang gagal**
 
 Create `src/lib/builder-selection.ts`:
 
@@ -1104,17 +1104,17 @@ test("selectionsFromCartItems ignores unmapped items", () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan test, pastikan gagal**
+- [x] **Step 2: Jalankan test, pastikan gagal**
 
 Run: `npx tsx --test tests/builder-hydration.test.ts`
 Expected: FAIL — module not found.
 
-- [ ] **Step 3: Jalankan test setelah helper ada**
+- [x] **Step 3: Jalankan test setelah helper ada**
 
 Run: `npx tsx --test tests/builder-hydration.test.ts`
 Expected: PASS (6 tests).
 
-- [ ] **Step 4: Refactor builder — hapus peta lokal, pakai helper, hydrate + merge**
+- [x] **Step 4: Refactor builder — hapus peta lokal, pakai helper, hydrate + merge**
 
 Di `src/app/builder/page.tsx`:
 
@@ -1168,18 +1168,18 @@ import {
   }, []);
 ```
 
-- [ ] **Step 5: Typecheck**
+- [x] **Step 5: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors.
 
-- [ ] **Step 6: Verifikasi manual**
+- [x] **Step 6: Verifikasi manual**
 
 1. `/vendor/kategori/prewed` → "+ Rencana" vendor → `/vendor/kategori/katering` → "+ Rencana" vendor.
 2. Buka `/builder` → **dua** layanan (Pre-wedding + Katering) tampil terpilih.
 3. `/builder?cat=dekor` → dekor ditambahkan, prewed & katering **tetap** terpilih (tidak tertimpa).
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/lib/builder-selection.ts tests/builder-hydration.test.ts src/app/builder/page.tsx
@@ -1197,7 +1197,7 @@ git commit -m "fix(builder): hydrate selections from cartStore and merge (not ov
 - Consumes: `catalogIdByVendorName` (memo builder, baris 271-277), `cartStore.removeItem`, `cartStore.addItem`.
 - Produces: perilaku upsert cart — item builder menggantikan item kategori yang sama tanpa menghapus kategori lain.
 
-- [ ] **Step 1: Ganti `syncToCart`**
+- [x] **Step 1: Ganti `syncToCart`**
 
 Ganti seluruh fungsi `syncToCart` (baris 351-384) dengan:
 
@@ -1261,19 +1261,19 @@ Ganti seluruh fungsi `syncToCart` (baris 351-384) dengan:
 
 **Catatan:** `item.categoryId` tidak ada pada `ServiceItem`; ekspresi di atas memakai peta kategori dari serviceId agar `categoryId` konsisten dengan `CATEGORY_TO_SERVICE`. Bila hasilnya tetap tidak pas, gunakan `Object.entries(categoryToServiceMap).find(([, sid]) => sid === item.id)?.[0]`. Pilih satu bentuk dan pastikan `categoryId` bertipe string.
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors. (Jika `item.categoryId` memicu error, ganti dengan lookup `Object.entries(categoryToServiceMap).find(...)`.)
 
-- [ ] **Step 3: Verifikasi manual — ID katalog asli**
+- [x] **Step 3: Verifikasi manual — ID katalog asli**
 
 1. Di `/builder`, pilih Katering + submit checkout.
 2. Sebelum pindah, buka DevTools → Application → localStorage → `hk_cart_v1`.
 3. Expected: item katering punya `"vendorId": "v_katering_01"` (BUKAN `"vendor_katering-1"`) dan `"packageId"` = ID paket katalog.
 4. Submit → `/checkout` menampilkan item tanpa error.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/builder/page.tsx
@@ -1287,7 +1287,7 @@ git commit -m "fix(builder): upsert cart without clearing and write real catalog
 **Files:**
 - Modify: `src/app/page.tsx` (section layanan baris ~642-711; pemakaian modal baris ~1044)
 
-- [ ] **Step 1: Ganti aksi card jadi "Lihat Layanan"**
+- [x] **Step 1: Ganti aksi card jadi "Lihat Layanan"**
 
 Di dalam `filteredCategories.map(...)` (baris ~686-705), **hapus** tombol Portofolio (`<button onClick={() => handleOpenModal(item)}>`) dan ganti blok aksi menjadi:
 
@@ -1303,22 +1303,22 @@ Di dalam `filteredCategories.map(...)` (baris ~686-705), **hapus** tombol Portof
                   </div>
 ```
 
-- [ ] **Step 2: Bersihkan state & modal yang tak terpakai**
+- [x] **Step 2: Bersihkan state & modal yang tak terpakai**
 
 - Hapus pemakaian `<VendorPortfolioModal ... />` pada baris ~1044 **beserta** state `selectedVendor` / `isModalOpen` / `handleOpenModal` yang kini tidak dipakai di section layanan — **kecuali** masih dipakai di section lain. Cek dengan:
   Run: `Select-String -Path "src/app/page.tsx" -Pattern 'handleOpenModal|isModalOpen|selectedVendor|VendorPortfolioModal'`
   Jika hanya tersisa deklarasi (tak ada pemakaian JSX lain), hapus import `VendorPortfolioModal`, `dynamic`, `Eye`, dan `type VendorPortfolioData` bila tidak dipakai lagi. Jalankan `npm run typecheck` untuk memastikan tidak ada yang menggantung.
 
-- [ ] **Step 3: Typecheck**
+- [x] **Step 3: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors (tidak ada import/state menggantung).
 
-- [ ] **Step 4: Verifikasi manual**
+- [x] **Step 4: Verifikasi manual**
 
 Beranda → section "11 Kategori Layanan Terpadu": tiap card hanya punya tombol **"Lihat Layanan"** → klik → `/vendor/kategori/<id>`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/page.tsx
@@ -1331,22 +1331,22 @@ git commit -m "feat(home): replace category card action with 'Lihat Layanan' -> 
 
 **Files:** (tidak ada file baru — hanya verifikasi)
 
-- [ ] **Step 1: Jalankan seluruh test**
+- [x] **Step 1: Jalankan seluruh test**
 
 Run: `npm test`
 Expected: semua test lulus, termasuk `vendor-categories.test.ts` & `builder-hydration.test.ts`.
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: no errors.
 
-- [ ] **Step 3: Build produksi**
+- [x] **Step 3: Build produksi**
 
 Run: `npm run build`
 Expected: build sukses tanpa error. Perhatikan output route: `/vendor`, `/vendor/kategori/[kategori]`, `/vendor/[slug]`, `/dashboard/vendor`, `/dashboard/vendor/*`.
 
-- [ ] **Step 4: Sapu sisa link dashboard lama**
+- [x] **Step 4: Sapu sisa link dashboard lama**
 
 Run:
 ```powershell
@@ -1354,11 +1354,11 @@ Select-String -Path "src/**/*.ts","src/**/*.tsx" -Pattern 'href="/vendor"|"/vend
 ```
 Expected: tidak ada hasil (semua sudah `/dashboard/vendor`). Kemunculan `/vendor/<slug>` (profil publik) & `/vendor/kategori/` diperbolehkan.
 
-- [ ] **Step 5: Checklist E2E manual (dari spec §7)**
+- [x] **Step 5: Checklist E2E manual (dari spec §7)**
 
 Jalankan `npm run dev:next` dan verifikasi seluruh checklist di spec bagian Testing & Definition of Done (katalog, collect flow, persist, swap, builder hydrate+merge, ID katalog, guard dashboard, publik, robots, homepage).
 
-- [ ] **Step 6: Commit final (bila ada perbaikan dari checklist)**
+- [x] **Step 6: Commit final (bila ada perbaikan dari checklist)**
 
 ```bash
 git add -A

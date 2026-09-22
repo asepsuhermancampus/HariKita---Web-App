@@ -1,6 +1,6 @@
 # Modular Tracking Dashboard Components Suite Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Membangun set komponen modular tracking dashboard (Spline Line Area Chart, 180° Semi-Donut Gauge, Sparkline Micro Bar Card, Schedule Timeline, dan Tracking Data Table) berbasis pure SVG & Tailwind CSS, lalu mengintegrasikannya ke Dashboard Profil Vendor (`/vendor/profil`) dan Dashboard Superadmin (`/admin`).
 
@@ -61,7 +61,7 @@ tests/
   export function formatCompactNumber(num: number): string;
   ```
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```typescript
 // tests/dashboard-tracking.test.ts
@@ -96,12 +96,12 @@ test("formatCompactNumber formats values compactly", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/dashboard-tracking.test.ts`  
 Expected: FAIL with module not found `dashboard-utils`.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 ```typescript
 // src/components/dashboard/dashboard-utils.ts
@@ -151,12 +151,12 @@ export function formatCompactNumber(num: number): string {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx --test tests/dashboard-tracking.test.ts`  
 Expected: PASS (3 tests passing).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/dashboard/dashboard-utils.ts tests/dashboard-tracking.test.ts
@@ -193,7 +193,7 @@ git commit -m "feat(dashboard): add pure SVG math and formatting utilities"
   }
   ```
 
-- [ ] **Step 1: Write test for Spline data normalization**
+- [x] **Step 1: Write test for Spline data normalization**
 
 ```typescript
 // in tests/dashboard-tracking.test.ts
@@ -208,16 +208,16 @@ test("DashboardSplineChart data coordinates scale within viewBox limits", () => 
 });
 ```
 
-- [ ] **Step 2: Implement `DashboardSplineChart.tsx`**
+- [x] **Step 2: Implement `DashboardSplineChart.tsx`**
 
 Implement smooth curve area chart with `<defs><linearGradient>`, interactive vertical dashed guideline on mouse move/hover, floating badge with delta (+15%), timeframe dropdown selector, and clean date labels.
 
-- [ ] **Step 3: Run test and typecheck**
+- [x] **Step 3: Run test and typecheck**
 
 Run: `npm run typecheck && npx tsx --test tests/dashboard-tracking.test.ts`  
 Expected: PASS with 0 errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/dashboard/DashboardSplineChart.tsx tests/dashboard-tracking.test.ts
@@ -251,7 +251,7 @@ git commit -m "feat(dashboard): implement pure SVG DashboardSplineChart componen
   }
   ```
 
-- [ ] **Step 1: Write test for semi-donut angle calculation**
+- [x] **Step 1: Write test for semi-donut angle calculation**
 
 ```typescript
 // in tests/dashboard-tracking.test.ts
@@ -265,16 +265,16 @@ test("DashboardSemiDonutGauge computes ratio angles summing to 180 degrees", () 
 });
 ```
 
-- [ ] **Step 2: Implement `DashboardSemiDonutGauge.tsx`**
+- [x] **Step 2: Implement `DashboardSemiDonutGauge.tsx`**
 
 Implement 180° semi-donut dial with large bold center counter, amber and emerald arcs with `strokeLinecap="round"`, and bottom legend with color dots and sublabels.
 
-- [ ] **Step 3: Run test and typecheck**
+- [x] **Step 3: Run test and typecheck**
 
 Run: `npm run typecheck && npx tsx --test tests/dashboard-tracking.test.ts`  
 Expected: PASS.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/dashboard/DashboardSemiDonutGauge.tsx tests/dashboard-tracking.test.ts
@@ -312,16 +312,16 @@ git commit -m "feat(dashboard): implement DashboardSemiDonutGauge component"
   }
   ```
 
-- [ ] **Step 1: Implement `DashboardSparkBarCard.tsx`**
+- [x] **Step 1: Implement `DashboardSparkBarCard.tsx`**
 
 Build clean card with title, action link, big bold typography, delta badge (`+24% VS Last Week`), and 7-bar micro column chart with `rounded-full` pill bars and dynamic percentage heights.
 
-- [ ] **Step 2: Run test and typecheck**
+- [x] **Step 2: Run test and typecheck**
 
 Run: `npm run typecheck && npx tsx --test tests/dashboard-tracking.test.ts`  
 Expected: PASS.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/components/dashboard/DashboardSparkBarCard.tsx tests/dashboard-tracking.test.ts
@@ -340,24 +340,24 @@ git commit -m "feat(dashboard): implement DashboardSparkBarCard component"
 **Interfaces:**
 - Produces: `DashboardScheduleTimeline`, `DashboardTrackingTable`, and unified exports via `index.ts`.
 
-- [ ] **Step 1: Implement `DashboardScheduleTimeline.tsx`**
+- [x] **Step 1: Implement `DashboardScheduleTimeline.tsx`**
 
 Daily schedule card with header, date stepper buttons (`< 10 Nov 2025 >`), segmented category tabs (`Events | Celebrations | Holiday` or `Semua | Fitting | Test Food | Hari H`), and vertical list items with colored indicator bars.
 
-- [ ] **Step 2: Implement `DashboardTrackingTable.tsx`**
+- [x] **Step 2: Implement `DashboardTrackingTable.tsx`**
 
 Full-width data table with action buttons (`⇅ Sort`, `⎚ Filter`, `See All`), avatar + 2-line name/contact, category metadata, pastel rounded pill badges, and status dates.
 
-- [ ] **Step 3: Create barrel export `src/components/dashboard/index.ts`**
+- [x] **Step 3: Create barrel export `src/components/dashboard/index.ts`**
 
 Export all 5 atomic components and their interfaces.
 
-- [ ] **Step 4: Run typecheck**
+- [x] **Step 4: Run typecheck**
 
 Run: `npm run typecheck`  
 Expected: PASS with 0 errors.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/dashboard/DashboardScheduleTimeline.tsx src/components/dashboard/DashboardTrackingTable.tsx src/components/dashboard/index.ts
@@ -372,7 +372,7 @@ git commit -m "feat(dashboard): implement DashboardScheduleTimeline and Dashboar
 - Create: `src/components/dashboard/VendorTrackingSuite.tsx`
 - Modify: `src/app/vendor/profil/VendorProfilWorkspace.tsx`
 
-- [ ] **Step 1: Implement `VendorTrackingSuite.tsx`**
+- [x] **Step 1: Implement `VendorTrackingSuite.tsx`**
 
 Compose the 5 components in the exact responsive 3-row layout from the reference image, mapping realistic telemetry data for the vendor:
 - Spline: Kunjungan Tamu vs Pengantin Berakun vs Racik Builder.
@@ -382,16 +382,16 @@ Compose the 5 components in the exact responsive 3-row layout from the reference
 - Schedule: Agenda Sesi Fisik Terdekat (Fitting Gaun Pengantin & Test Food Katering).
 - Table: Daftar Pesanan & Pelacakan Klien Masuk di Kebumen.
 
-- [ ] **Step 2: Integrate into `VendorProfilWorkspace.tsx`**
+- [x] **Step 2: Integrate into `VendorProfilWorkspace.tsx`**
 
 Embed `VendorTrackingSuite` inside the `activeTab === "analytics"` tab, seamlessly replacing the old partial cards while keeping logistics, escrow, and profile settings tabs intact.
 
-- [ ] **Step 3: Run verify and automated tests**
+- [x] **Step 3: Run verify and automated tests**
 
 Run: `npm run typecheck && npm test`  
 Expected: All tests pass.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/dashboard/VendorTrackingSuite.tsx src/app/vendor/profil/VendorProfilWorkspace.tsx
@@ -406,7 +406,7 @@ git commit -m "feat(vendor): integrate modular tracking dashboard suite into ven
 - Create: `src/components/dashboard/AdminTrackingSuite.tsx`
 - Modify: `src/app/admin/AdminDashboardClient.tsx`
 
-- [ ] **Step 1: Implement `AdminTrackingSuite.tsx`**
+- [x] **Step 1: Implement `AdminTrackingSuite.tsx`**
 
 Compose the 5 components for Superadmin:
 - Spline: Tren GMV Transaksi Kebumen & Telemetri Funnel Konversi.
@@ -416,16 +416,16 @@ Compose the 5 components for Superadmin:
 - Schedule: Master Multi-Vendor Calendar Hari H.
 - Table: Master Kliring Escrow & Transaksi Pengantin Kebumen.
 
-- [ ] **Step 2: Integrate into `AdminDashboardClient.tsx`**
+- [x] **Step 2: Integrate into `AdminDashboardClient.tsx`**
 
 Integrate as the primary overview or prominent master tracking tab in the Superadmin workspace.
 
-- [ ] **Step 3: Run verification & visual check**
+- [x] **Step 3: Run verification & visual check**
 
 Run: `npm run verify`  
 Check dev server `http://localhost:3000/vendor/profil` and `http://localhost:3000/admin`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/dashboard/AdminTrackingSuite.tsx src/app/admin/AdminDashboardClient.tsx

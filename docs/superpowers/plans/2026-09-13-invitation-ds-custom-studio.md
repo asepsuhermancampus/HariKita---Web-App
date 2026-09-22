@@ -1,6 +1,6 @@
 # HariKita Custom Invitation Studio Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Membangun Studio Racik Undangan Kustom (Split-Screen Studio 65:35) di Undangan Digital DS dengan master 11-section flow, 8 arketipe kartu mempelai eksklusif, smart location card & QR navigasi (pemisahan dari rekening bank), mesin normalisasi warna SVG dinamis untuk 254 aset, 10 gaya penataan posisi aset dengan visual guardrails, 15 efek optik & 15 animasi mikro 60 FPS, serta simulator smartphone sticky multi-device.
 
@@ -28,7 +28,7 @@
 **Interfaces:**
 - Produces: `InvitationStudioConfig`, `CoupleCardVariantId` (1 to 8), `PlacementStyleId` (1 to 10), `VisualEffectId` (1 to 15), `MicroAnimationId` (1 to 15), `DeviceFrameId` (`iphone-15-pro` | `iphone-se` | `galaxy-s24` | `pixel-8` | `iphone-max`), `SANDBOX_STUDIO_DEFAULTS`, `SANDBOX_VENUE_LOCATION_DATA`.
 
-- [ ] **Step 1: Write test script for data contracts and defaults**
+- [x] **Step 1: Write test script for data contracts and defaults**
 
 ```typescript
 // scripts/test_studio_types.ts
@@ -50,22 +50,22 @@ function validateTypes(): boolean {
 validateTypes();
 ```
 
-- [ ] **Step 2: Run test to verify failure before creation**
+- [x] **Step 2: Run test to verify failure before creation**
 
 Run: `node --loader ts-node/esm scripts/test_studio_types.ts` or `npx tsx scripts/test_studio_types.ts`
 Expected: FAIL (modules not yet defined)
 
-- [ ] **Step 3: Define TypeScript interfaces and extended mock data**
+- [x] **Step 3: Define TypeScript interfaces and extended mock data**
 
 Create `src/types/invitation-studio.ts` with complete types for all 10 placement styles, 8 couple card variants, 15 visual effects, 15 micro animations, 5 device frames, and 12 theme colors.
 Extend `src/app/design-system-showcase/data/mock-invitation-sandbox.ts` with `SANDBOX_VENUE_LOCATION_DATA`, `SANDBOX_STUDIO_DEFAULTS`, and comprehensive Kebumen event details.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/test_studio_types.ts`
 Expected: PASS ("✓ Task 1 validation passed: Studio types and defaults valid")
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/types/invitation-studio.ts src/app/design-system-showcase/data/mock-invitation-sandbox.ts scripts/test_studio_types.ts
@@ -85,7 +85,7 @@ git commit -m "feat(studio): add TypeScript contracts and mock data for invitati
 - Consumes: `HariKitaAsset` from `@/types/harikita-asset`
 - Produces: `<DynamicSvgRenderer asset={asset} color={hexColor} className={...} />`, `CURATED_THEME_PALETTES` (12 colors array with metadata)
 
-- [ ] **Step 1: Write test for SVG color normalizer**
+- [x] **Step 1: Write test for SVG color normalizer**
 
 ```typescript
 // scripts/test_svg_normalizer.ts
@@ -110,22 +110,22 @@ function testNormalize(): boolean {
 testNormalize();
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run: `npx tsx scripts/test_svg_normalizer.ts`
 Expected: FAIL
 
-- [ ] **Step 3: Implement DynamicSvgRenderer and Palette Picker**
+- [x] **Step 3: Implement DynamicSvgRenderer and Palette Picker**
 
 Implement regex sanitizer inside `DynamicSvgRenderer.tsx` to safely replace non-none strokes and fills with `currentColor`, plus apply fallback CSS classes `[&_path]:stroke-current [&_circle]:stroke-current [&_rect]:stroke-current`.
 Implement `StudioColorPalettePicker.tsx` with all 12 curated HariKita colors (Taupe, Gilded Gold, Deep Plum Charcoal, Champagne, Sage, Sogan, Emerald, Rose Gold, Terracotta, Midnight, Coral, Olive) with active indicator and contrast validation.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/test_svg_normalizer.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/design-system-showcase/components/invitation-hub/studio/DynamicSvgRenderer.tsx src/app/design-system-showcase/components/invitation-hub/studio/StudioColorPalettePicker.tsx scripts/test_svg_normalizer.ts
@@ -152,7 +152,7 @@ git commit -m "feat(studio): implement dynamic SVG normalizer engine and 12-pale
 - Consumes: `CoupleCardVariantId` from `@/types/invitation-studio`, `SANDBOX_COUPLE_DATA`
 - Produces: `<StudioCoupleSection variant={variantId} themeColor={hex} ornamentAsset={...} />`
 
-- [ ] **Step 1: Write verification script for 8 variants**
+- [x] **Step 1: Write verification script for 8 variants**
 
 ```typescript
 // scripts/test_couple_variants.ts
@@ -180,22 +180,22 @@ function testVariantsList(): boolean {
 testVariantsList();
 ```
 
-- [ ] **Step 2: Run test to verify variant count**
+- [x] **Step 2: Run test to verify variant count**
 
 Run: `npx tsx scripts/test_couple_variants.ts`
 Expected: PASS
 
-- [ ] **Step 3: Implement the 8 distinct couple card variant components**
+- [x] **Step 3: Implement the 8 distinct couple card variant components**
 
 Build all 8 variant components with unique layouts, typography, border styling, and integrated SVG ornament surrounds.
 Wire into `StudioCoupleSection.tsx` with smooth switching and mobile-first 375px responsive containers.
 
-- [ ] **Step 4: Verify build with test script**
+- [x] **Step 4: Verify build with test script**
 
 Run: `npx tsx scripts/test_couple_variants.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/design-system-showcase/components/invitation-hub/studio/sections/couple-variants/ src/app/design-system-showcase/components/invitation-hub/studio/sections/StudioCoupleSection.tsx scripts/test_couple_variants.ts
@@ -215,7 +215,7 @@ git commit -m "feat(studio): add 8 distinct luxury bride and groom card archetyp
 - Consumes: `SANDBOX_VENUE_LOCATION_DATA`, `SANDBOX_GIFT_DATA`
 - Produces: `<StudioLocationCard venue={...} themeColor={...} />`, `<StudioBankGiftSection bankAccounts={...} physicalGift={...} themeColor={...} />`
 
-- [ ] **Step 1: Write test to verify clean separation between Location and Bank**
+- [x] **Step 1: Write test to verify clean separation between Location and Bank**
 
 ```typescript
 // scripts/test_location_bank_separation.ts
@@ -237,22 +237,22 @@ function testSeparation(): boolean {
 testSeparation();
 ```
 
-- [ ] **Step 2: Run test to verify data contracts**
+- [x] **Step 2: Run test to verify data contracts**
 
 Run: `npx tsx scripts/test_location_bank_separation.ts`
 Expected: PASS
 
-- [ ] **Step 3: Implement StudioLocationCard and StudioBankGiftSection**
+- [x] **Step 3: Implement StudioLocationCard and StudioBankGiftSection**
 
 - `StudioLocationCard.tsx`: Venue address, interactive Google Maps / Waze buttons, and dynamic QR Code for instant phone GPS navigation.
 - `StudioBankGiftSection.tsx`: Clean bank transfer cards (BCA, Mandiri, BRI, BSI), 1-click clipboard copy with green emerald checkmark, and Kebumen physical gift parcel destination card.
 
-- [ ] **Step 4: Verify rendering and component exports**
+- [x] **Step 4: Verify rendering and component exports**
 
 Run: `npx tsx scripts/test_location_bank_separation.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/design-system-showcase/components/invitation-hub/studio/sections/StudioLocationCard.tsx src/app/design-system-showcase/components/invitation-hub/studio/sections/StudioBankGiftSection.tsx scripts/test_location_bank_separation.ts
@@ -273,7 +273,7 @@ git commit -m "feat(studio): separate pure bank accounts and transform QRIS to s
 - Consumes: `HariKitaAsset` from `@/lib/harikita-assets`, `PlacementStyleId`
 - Produces: `getSlotAllowedCategories(slotName: SlotZoneId): string[]`, `isAssetCompatibleWithSlot(asset, slotName): boolean`, `PLACEMENT_STYLES_CATALOG` (10 styles), `<StudioPlacementPicker ... />`
 
-- [ ] **Step 1: Write test for Visual Guardrails slot filtering**
+- [x] **Step 1: Write test for Visual Guardrails slot filtering**
 
 ```typescript
 // scripts/test_placement_guardrails.ts
@@ -298,23 +298,23 @@ function testGuardrails(): boolean {
 testGuardrails();
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run: `npx tsx scripts/test_placement_guardrails.ts`
 Expected: FAIL
 
-- [ ] **Step 3: Implement AssetPlacementEngine, 10 Styles Catalog, and Guardrail Checkers**
+- [x] **Step 3: Implement AssetPlacementEngine, 10 Styles Catalog, and Guardrail Checkers**
 
 Define all 10 placement styles with coordinate anchor matrices.
 Implement slot guardrail rules, golden ratio scale clamps, and compatibility badge generators.
 Implement `StudioPlacementPicker.tsx` and `StudioSlotAssetModal.tsx` for easy slot swapping with visual harmony indicators.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/test_placement_guardrails.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/design-system-showcase/components/invitation-hub/studio/AssetPlacementEngine.ts src/app/design-system-showcase/components/invitation-hub/studio/StudioPlacementPicker.tsx src/app/design-system-showcase/components/invitation-hub/studio/StudioSlotAssetModal.tsx scripts/test_placement_guardrails.ts
@@ -334,7 +334,7 @@ git commit -m "feat(studio): add 10 asset placement styles and visual guardrails
 **Interfaces:**
 - Produces: `OPTICAL_EFFECTS_LIST` (15 effects), `MICRO_ANIMATIONS_LIST` (15 animations), `<VisualEffectsLayer activeEffects={...} activeAnimations={...} themeColor={...}>`, `<StudioEffectsController ... />`
 
-- [ ] **Step 1: Write test verifying all 15 effects and 15 animations exist in manifest**
+- [x] **Step 1: Write test verifying all 15 effects and 15 animations exist in manifest**
 
 ```typescript
 // scripts/test_effects_manifest.ts
@@ -354,23 +354,23 @@ function testManifest(): boolean {
 testManifest();
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run: `npx tsx scripts/test_effects_manifest.ts`
 Expected: FAIL
 
-- [ ] **Step 3: Implement VisualEffectsLayer, CSS keyframes, and StudioEffectsController**
+- [x] **Step 3: Implement VisualEffectsLayer, CSS keyframes, and StudioEffectsController**
 
 - `invitation-motion.css`: GPU-accelerated keyframes for SVG stroke drawing (`stroke-dashoffset`), gentle botanical sway, gold shimmer sheen, floating petals, pulse, and smooth unfolds.
 - `VisualEffectsLayer.tsx`: Ambient canvas overlays, floating petal emitters, letterpress filters, and gold rim lights.
 - `StudioEffectsController.tsx`: Preset mood buttons (Serene, Graceful Motion, Cinematic Wonder) and individual toggles.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/test_effects_manifest.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/design-system-showcase/components/invitation-hub/studio/VisualEffectsLayer.tsx src/app/design-system-showcase/components/invitation-hub/studio/invitation-motion.css src/app/design-system-showcase/components/invitation-hub/studio/StudioEffectsController.tsx scripts/test_effects_manifest.ts
@@ -397,7 +397,7 @@ git commit -m "feat(studio): implement 15 optical effects and 15 micro-animation
 **Interfaces:**
 - Produces: `<DeviceFrameContainer activeFrame={frameId}><InvitationDevicePreview ... /></DeviceFrameContainer>`, renders complete 11 sections stream inside phone viewport.
 
-- [ ] **Step 1: Write test checking device frame dimensions and aspect ratios**
+- [x] **Step 1: Write test checking device frame dimensions and aspect ratios**
 
 ```typescript
 // scripts/test_device_frames.ts
@@ -418,22 +418,22 @@ function testFrames(): boolean {
 testFrames();
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run: `npx tsx scripts/test_device_frames.ts`
 Expected: FAIL
 
-- [ ] **Step 3: Implement DeviceFrameContainer, InvitationDevicePreview, and all 11 studio sections**
+- [x] **Step 3: Implement DeviceFrameContainer, InvitationDevicePreview, and all 11 studio sections**
 
 Construct exact bezels, notch / Dynamic Island, status bar, and scrollable container.
 Assemble the full 11-section stream (Cover with 3D Wax Seal -> Muqaddimah -> Couple Section [active variant] -> Love Story -> Event Schedule -> Location Card & QR -> Gallery [8 styles] -> Bank Gift Clean -> RSVP Guestbook -> Dresscode -> Closing Takzim).
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/test_device_frames.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/design-system-showcase/components/invitation-hub/studio/DeviceFrameContainer.tsx src/app/design-system-showcase/components/invitation-hub/studio/InvitationDevicePreview.tsx src/app/design-system-showcase/components/invitation-hub/studio/sections/ scripts/test_device_frames.ts
@@ -453,7 +453,7 @@ git commit -m "feat(studio): create multi-device bezel simulator and full 11-sec
 - Consumes: All studio components from Tasks 1-7
 - Produces: Complete interactive Split Studio (65% Builder Controls Left : 35% Sticky Smartphone Preview Right) mounted inside `InvitationHubView.tsx`.
 
-- [ ] **Step 1: Write integration verification script**
+- [x] **Step 1: Write integration verification script**
 
 ```typescript
 // scripts/test_studio_builder_integration.ts
@@ -471,12 +471,12 @@ function testIntegration(): boolean {
 testIntegration();
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run: `npx tsx scripts/test_studio_builder_integration.ts`
 Expected: FAIL
 
-- [ ] **Step 3: Implement InvitationStudioBuilder and integrate in InvitationHubView**
+- [x] **Step 3: Implement InvitationStudioBuilder and integrate in InvitationHubView**
 
 - `InvitationStudioBuilder.tsx`: Left 65% column with organized accordion sections:
   1. Arketipe Bawaan & Palet 12 Warna HariKita
@@ -487,12 +487,12 @@ Expected: FAIL
 - Right 35% column: `sticky top-24` holding `DeviceFrameContainer` with instant interactive preview.
 - Update `InvitationHubView.tsx` to showcase the Split Studio prominently as the primary visual laboratory.
 
-- [ ] **Step 4: Run test to verify integration passes**
+- [x] **Step 4: Run test to verify integration passes**
 
 Run: `npx tsx scripts/test_studio_builder_integration.ts`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/design-system-showcase/components/invitation-hub/studio/InvitationStudioBuilder.tsx src/app/design-system-showcase/components/invitation-hub/InvitationHubView.tsx scripts/test_studio_builder_integration.ts
@@ -507,7 +507,7 @@ git commit -m "feat(studio): integrate unified 65:35 split-screen studio into In
 - Modify: Any files needing CSS adjustments or TypeScript typing fixes
 - Test: Full Next.js production build (`npm run build`) and lint checks
 
-- [ ] **Step 1: Run all unit verification scripts**
+- [x] **Step 1: Run all unit verification scripts**
 
 Run:
 ```bash
@@ -522,16 +522,16 @@ npx tsx scripts/test_studio_builder_integration.ts
 ```
 Expected: All 8 test suites pass cleanly with green checkmarks.
 
-- [ ] **Step 2: Run Next.js Typecheck & Build**
+- [x] **Step 2: Run Next.js Typecheck & Build**
 
 Run: `npm run build`
 Expected: Build successfully finishes with 0 errors and valid static/dynamic routes.
 
-- [ ] **Step 3: Perform visual verification of the studio**
+- [x] **Step 3: Perform visual verification of the studio**
 
 Verify split layout at >= 1024px, responsive vertical stack on small screens, smooth color changes across all SVG assets, flawless couple card variant switching, location QR display, and hardware-accelerated animations.
 
-- [ ] **Step 4: Commit and finalize**
+- [x] **Step 4: Commit and finalize**
 
 ```bash
 git add .

@@ -1,6 +1,6 @@
 # Admin Panel Redesign + Platform Settings OTP Guard — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Redesain seluruh panel Super Admin dengan layout SaaS + sidebar (font & warna dari design-system, ikon Lucide), pindahkan Pengaturan Platform menjadi item sidebar sederajat, tambahkan gembok edit berbasis OTP email (validasi di server), dan buat vendor membaca rincian komisi 10% dari `PlatformFeeComponent`.
 
@@ -47,7 +47,7 @@
   - `AdminBadge({ tone: "ok"|"warn"|"error"|"info"|"neutral"; children })`
   - `AdminCard({ title?: string; description?: string; action?: React.ReactNode; children })`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tests/admin-ui-components.test.ts
@@ -84,12 +84,12 @@ test("AdminCard renders title/description/action slots", () => {
 
 > Catatan: test ini memakai pola "source assertion" (memeriksa sumber) karena proyek belum punya React Testing Library. Bila test render React sudah tersedia, ganti dengan render test.
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/admin-ui-components.test.ts`
 Expected: FAIL — file belum ada (`ENOENT`).
 
-- [ ] **Step 3: Create `AdminButton`**
+- [x] **Step 3: Create `AdminButton`**
 
 ```tsx
 // src/components/admin/AdminButton.tsx
@@ -126,7 +126,7 @@ export function AdminButton({
 }
 ```
 
-- [ ] **Step 4: Create `AdminBadge`**
+- [x] **Step 4: Create `AdminBadge`**
 
 ```tsx
 // src/components/admin/AdminBadge.tsx
@@ -161,7 +161,7 @@ export function AdminBadge({
 }
 ```
 
-- [ ] **Step 5: Create `AdminCard`**
+- [x] **Step 5: Create `AdminCard`**
 
 ```tsx
 // src/components/admin/AdminCard.tsx
@@ -197,7 +197,7 @@ export function AdminCard({
 }
 ```
 
-- [ ] **Step 6: Create barrel `index.ts`**
+- [x] **Step 6: Create barrel `index.ts`**
 
 ```ts
 // src/components/admin/index.ts
@@ -206,17 +206,17 @@ export * from "./AdminBadge";
 export * from "./AdminCard";
 ```
 
-- [ ] **Step 7: Run test to verify it passes**
+- [x] **Step 7: Run test to verify it passes**
 
 Run: `npx tsx --test tests/admin-ui-components.test.ts`
 Expected: PASS (3 tests).
 
-- [ ] **Step 8: Typecheck**
+- [x] **Step 8: Typecheck**
 
 Run: `npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add src/components/admin tests/admin-ui-components.test.ts
@@ -240,7 +240,7 @@ git commit -m "feat(admin-ui): add shared AdminButton, AdminBadge, AdminCard com
   - `AdminStatCard({ label: string; value: string; delta?: string; deltaTone?: "ok"|"warn"|"error" })`
   - `AdminTable<T>({ columns: { key: string; header: string; className?: string }[]; rows: T[]; renderRow: (row: T) => React.ReactNode[]; empty?: React.ReactNode })`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tambahkan ke tests/admin-ui-components.test.ts
@@ -253,12 +253,12 @@ test("AdminPageHeader/StatCard/Table exist with expected props", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/admin-ui-components.test.ts`
 Expected: FAIL — `AdminPageHeader.tsx` belum ada.
 
-- [ ] **Step 3: Create `AdminPageHeader`**
+- [x] **Step 3: Create `AdminPageHeader`**
 
 ```tsx
 // src/components/admin/AdminPageHeader.tsx
@@ -285,7 +285,7 @@ export function AdminPageHeader({
 }
 ```
 
-- [ ] **Step 4: Create `AdminStatCard`**
+- [x] **Step 4: Create `AdminStatCard`**
 
 ```tsx
 // src/components/admin/AdminStatCard.tsx
@@ -318,7 +318,7 @@ export function AdminStatCard({
 }
 ```
 
-- [ ] **Step 5: Create `AdminTable`**
+- [x] **Step 5: Create `AdminTable`**
 
 ```tsx
 // src/components/admin/AdminTable.tsx
@@ -374,7 +374,7 @@ export function AdminTable<T>({
 }
 ```
 
-- [ ] **Step 6: Update barrel**
+- [x] **Step 6: Update barrel**
 
 ```ts
 // src/components/admin/index.ts
@@ -386,12 +386,12 @@ export * from "./AdminStatCard";
 export * from "./AdminTable";
 ```
 
-- [ ] **Step 7: Run test + typecheck**
+- [x] **Step 7: Run test + typecheck**
 
 Run: `npx tsx --test tests/admin-ui-components.test.ts && npm run typecheck`
 Expected: PASS keduanya.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add src/components/admin tests/admin-ui-components.test.ts
@@ -412,7 +412,7 @@ git commit -m "feat(admin-ui): add AdminPageHeader, AdminStatCard, AdminTable"
   - `ADMIN_NAV: Array<{ group: string; items: Array<{ label: string; href: string; icon: LucideIcon }> }>`
   - `AdminSidebarNav()` (client component) — nav aktif berdasar `usePathname()`, drawer mobile.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tests/admin-sidebar.test.ts
@@ -445,12 +445,12 @@ test("sidebar uses lucide icons, no emoji", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/admin-sidebar.test.ts`
 Expected: FAIL — file belum ada.
 
-- [ ] **Step 3: Create `AdminSidebarNav`**
+- [x] **Step 3: Create `AdminSidebarNav`**
 
 ```tsx
 // src/app/admin/AdminSidebarNav.tsx
@@ -599,7 +599,7 @@ function SidebarBrand() {
 }
 ```
 
-- [ ] **Step 4: Create `layout.tsx`**
+- [x] **Step 4: Create `layout.tsx`**
 
 ```tsx
 // src/app/admin/layout.tsx
@@ -624,12 +624,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 }
 ```
 
-- [ ] **Step 5: Run test + typecheck + build**
+- [x] **Step 5: Run test + typecheck + build**
 
 Run: `npx tsx --test tests/admin-sidebar.test.ts && npm run typecheck && npm run build`
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/app/admin/layout.tsx src/app/admin/AdminSidebarNav.tsx tests/admin-sidebar.test.ts
@@ -650,7 +650,7 @@ git commit -m "feat(admin-ui): add admin sidebar nav + layout shell"
 - Consumes: `AdminPageHeader`, `AdminStatCard`, `AdminCard` (Task 1–2); `AdminTrackingSuite`.
 - Produces: dashboard memakai shell; tab lama → section dalam satu halaman.
 
-- [ ] **Step 1: Refactor header & hilangkan link pengaturan lama**
+- [x] **Step 1: Refactor header & hilangkan link pengaturan lama**
 
 Di `src/app/admin/AdminDashboardClient.tsx`: hapus blok header lama (baris `min-h-screen py-12 ...` pembuka + header + tombol "Pengaturan Platform" + notice) karena header kini dari shell. Struktur baru:
 
@@ -755,16 +755,16 @@ export function AdminDashboardClient({
 
 > Pertahankan seluruh logika data yang ada; hanya struktur visual yang berubah. Jika `AdminTrackingSuite` sudah menyajikan funnel/kalender/escrow, tidak perlu tab manual.
 
-- [ ] **Step 2: Typecheck + build**
+- [x] **Step 2: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 Expected: PASS.
 
-- [ ] **Step 3: Verifikasi visual**
+- [x] **Step 3: Verifikasi visual**
 
 Buka `http://localhost:3000/admin` (setelah login admin). Cek: sidebar tampil; tidak ada duplikasi header; tidak ada horizontal overflow di 375px.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/admin/AdminDashboardClient.tsx
@@ -788,7 +788,7 @@ git commit -m "feat(admin-ui): redesign admin dashboard inside shell"
 
 > Tugas ini **tidak mengubah logika data/aksi**. Hanya: bungkus konten dengan `AdminPageHeader` + `AdminCard`, ganti tabel manual → `AdminTable` bila strukturnya cocok, ganti badge status → `AdminBadge`. Jika struktur tabel sangat spesifik, boleh tetap `<table>` tapi styling diseragamkan dengan token design-system.
 
-- [ ] **Step 1: Ganti header tiap halaman**
+- [x] **Step 1: Ganti header tiap halaman**
 
 Untuk tiap file di atas, tambahkan import & bungkus:
 
@@ -811,7 +811,7 @@ Judul per halaman:
 - kalender → "Kalender Multi-Vendor Se-Kebumen"
 - audit-konten → "Audit Konten"
 
-- [ ] **Step 2: Ganti badge status → `AdminBadge`**
+- [x] **Step 2: Ganti badge status → `AdminBadge`**
 
 Contoh pemetaan:
 ```tsx
@@ -821,16 +821,16 @@ import { AdminBadge } from "@/components/admin";
 // REJECTED -> <AdminBadge tone="error">Rejected</AdminBadge>
 ```
 
-- [ ] **Step 3: Typecheck + build**
+- [x] **Step 3: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 Expected: PASS.
 
-- [ ] **Step 4: Verifikasi visual**
+- [x] **Step 4: Verifikasi visual**
 
 Cek tiap halaman (desktop + 375px). Tidak ada horizontal overflow; header & kartu konsisten; ikon Lucide (bukan emoji).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/admin/verifikasi src/app/admin/escrow src/app/admin/dispute src/app/admin/ba src/app/admin/kalender src/app/admin/audit-konten
@@ -846,12 +846,12 @@ git commit -m "feat(admin-ui): redesign remaining admin pages with shared compon
 - Modify: `prisma/schema.sqlite.prisma`
 - Test: verifikasi via prisma validate/push
 
-- [ ] **Step 1: Backup dev.db**
+- [x] **Step 1: Backup dev.db**
 
 Run: `copy prisma\dev.db prisma\dev.db.bak`
 Expected: file backup dibuat (lewati bila tidak ada dev.db).
 
-- [ ] **Step 2: Tambah kolom di kedua schema**
+- [x] **Step 2: Tambah kolom di kedua schema**
 
 Pada `model PlatformSetting`, setelah `defaultBaCommissionPct`, tambah:
 ```prisma
@@ -859,7 +859,7 @@ Pada `model PlatformSetting`, setelah `defaultBaCommissionPct`, tambah:
 ```
 Terapkan identik di `prisma/schema.prisma` dan `prisma/schema.sqlite.prisma`.
 
-- [ ] **Step 3: Validasi kedua schema**
+- [x] **Step 3: Validasi kedua schema**
 
 Run:
 ```bash
@@ -868,7 +868,7 @@ npx prisma validate --schema prisma/schema.sqlite.prisma
 ```
 Expected: keduanya `is valid`.
 
-- [ ] **Step 4: Generate + push ke SQLite**
+- [x] **Step 4: Generate + push ke SQLite**
 
 Run:
 ```bash
@@ -878,7 +878,7 @@ $env:DATABASE_URL="file:" + ((Resolve-Path "prisma\dev.db").Path -replace '\\','
 ```
 Expected: client ter-generate; db push sukses.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add prisma/schema.prisma prisma/schema.sqlite.prisma prisma/dev.db
@@ -896,7 +896,7 @@ git commit -m "feat(settings): add PlatformSetting.superAdminEmail column"
 **Interfaces:**
 - Produces: `PlatformSettingsView` bertambah `superAdminEmail: string | null`; `updatePlatformSettings` menulis kolom tsb.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tambahkan ke tests/platform-settings.test.ts
@@ -919,12 +919,12 @@ test("updatePlatformSettings persists superAdminEmail", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: FAIL — `superAdminEmail` tak ada di tipe.
 
-- [ ] **Step 3: Update service**
+- [x] **Step 3: Update service**
 
 Di `PlatformSettingsView` tambah `superAdminEmail: string | null;`.
 
@@ -934,12 +934,12 @@ Di `getPlatformSettings` return tambah `superAdminEmail: row.superAdminEmail,` (
 
 Di `updatePlatformSettings` `db.platformSetting.update({ data })` tambah `superAdminEmail: input.superAdminEmail ?? null,`.
 
-- [ ] **Step 4: Run test + typecheck**
+- [x] **Step 4: Run test + typecheck**
 
 Run: `npx tsx --test tests/platform-settings.test.ts && npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/services/platform-settings-service.ts tests/platform-settings.test.ts
@@ -958,7 +958,7 @@ git commit -m "feat(settings): support superAdminEmail in platform settings serv
 **Interfaces:**
 - Produces: `ADMIN_EDIT_NOT_UNLOCKED` di grup `SETTINGS_ERROR_CODES`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tambahkan ke tests/platform-settings.test.ts
@@ -968,12 +968,12 @@ test("SETTINGS_ERROR_CODES includes ADMIN_EDIT_NOT_UNLOCKED", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/platform-settings.test.ts`
 Expected: FAIL.
 
-- [ ] **Step 3: Tambah error code**
+- [x] **Step 3: Tambah error code**
 
 Di `src/types/errors.ts`:
 ```ts
@@ -985,12 +985,12 @@ export const SETTINGS_ERROR_CODES = [
 (`SettingsErrorCode` & union otomatis ikut karena sudah derived.)
 Pastikan `SettingsErrorCode` tetap masuk `AppDomainErrorCode` (sudah dari pekerjaan sebelumnya) dan `AnyDomainErrorCode` (`src/server/services/errors.ts`).
 
-- [ ] **Step 4: Run test + typecheck**
+- [x] **Step 4: Run test + typecheck**
 
 Run: `npx tsx --test tests/platform-settings.test.ts && npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/types/errors.ts src/server/services/errors.ts tests/platform-settings.test.ts
@@ -1013,7 +1013,7 @@ git commit -m "feat(settings): add ADMIN_EDIT_NOT_UNLOCKED error code"
   - cookie name: `hk_admin_unlock`
   - `setAdminUnlockCookie(adminId)`, `clearAdminUnlockCookie()`, `isAdminEditUnlocked(adminId)` (async; baca cookie)
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tests/admin-edit-unlock.test.ts
@@ -1045,12 +1045,12 @@ test("garbage token returns null (never throws)", async () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx --test tests/admin-edit-unlock.test.ts`
 Expected: FAIL — modul belum ada.
 
-- [ ] **Step 3: Implementasi `admin-edit-unlock.ts`**
+- [x] **Step 3: Implementasi `admin-edit-unlock.ts`**
 
 ```ts
 // src/server/auth/admin-edit-unlock.ts
@@ -1137,17 +1137,17 @@ export async function isAdminEditUnlocked(adminId: string): Promise<boolean> {
 
 > Pastikan `hmacBase64url` diekspor dari `src/lib/session-token.ts`. Bila belum, tambahkan `export` pada fungsi itu (perubahan kecil, ikut commit ini).
 
-- [ ] **Step 4: Verify `hmacBase64url` exported**
+- [x] **Step 4: Verify `hmacBase64url` exported**
 
 Run: `Select-String -Path src/lib/session-token.ts -Pattern "export.*hmacBase64url"`
 Jika tidak ada `export`, ubah deklarasinya menjadi `export async function hmacBase64url(...)`.
 
-- [ ] **Step 5: Run test + typecheck**
+- [x] **Step 5: Run test + typecheck**
 
 Run: `npx tsx --test tests/admin-edit-unlock.test.ts && npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/server/auth/admin-edit-unlock.ts src/lib/session-token.ts tests/admin-edit-unlock.test.ts
@@ -1171,12 +1171,12 @@ git commit -m "feat(settings): signed admin-edit unlock token (hmac cookie)"
 
 > **Fase 2 aktif.** Bila `RESEND_API_KEY` belum ada, `sendOtpEmail` mengembalikan `{ sent: false }`; action mengembalikan pesan yang jelas. UI tetap menampilkan error yang ramah.
 
-- [ ] **Step 1: Cek tipe purpose OTP**
+- [x] **Step 1: Cek tipe purpose OTP**
 
 Run: `Select-String -Path src/server/services/otp-service.ts -Pattern "OtpPurpose|purpose"`
 Tentukan apakah `purpose` bertipe union tertutup. Jika ya, tambah `"ADMIN_EDIT_UNLOCK"` ke tipe union tersebut dan ke tipe `OtpCode.purpose` bila divalidasi.
 
-- [ ] **Step 2: Write the failing test**
+- [x] **Step 2: Write the failing test**
 
 ```ts
 // tambahkan ke tests/platform-settings.test.ts
@@ -1187,7 +1187,7 @@ test("unlock token issued for admin id can be verified", async () => {
 });
 ```
 
-- [ ] **Step 3: Create action file**
+- [x] **Step 3: Create action file**
 
 ```ts
 // src/server/actions/platform-settings-unlock.ts
@@ -1258,12 +1258,12 @@ export async function lockPlatformEditAction(): Promise<ActionResult<{ locked: b
 
 > Verifikasi signature `issueOtp`/`verifyOtp`/`sendOtpEmail` di codebase; sesuaikan argumen bila berbeda (mis. `sendOtpEmail(to, code, purpose)` vs `(to, code)`). Jangan mengarang — sesuaikan dengan definisi aktual.
 
-- [ ] **Step 4: Run test + typecheck**
+- [x] **Step 4: Run test + typecheck**
 
 Run: `npx tsx --test tests/platform-settings.test.ts && npm run typecheck`
 Expected: PASS (typecheck memastikan signature benar).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/actions/platform-settings-unlock.ts src/server/services/otp-service.ts tests/platform-settings.test.ts
@@ -1282,7 +1282,7 @@ git commit -m "feat(settings): OTP request/verify actions to unlock platform edi
 - Consumes: `isAdminEditUnlocked` (Task 9), `clearAdminUnlockCookie` (Task 9).
 - Produces: action menolak save bila tidak unlocked; setelah sukses, cookie unlock dihapus (kembali terkunci).
 
-- [ ] **Step 1: Write the failing test (guard helper)**
+- [x] **Step 1: Write the failing test (guard helper)**
 
 ```ts
 // tambahkan ke tests/platform-settings.test.ts
@@ -1294,7 +1294,7 @@ test("isAdminEditUnlocked contract: returns false for mismatched admin", async (
 });
 ```
 
-- [ ] **Step 2: Update action**
+- [x] **Step 2: Update action**
 
 Di `src/server/actions/platform-settings.ts`, di dalam `runAction` setelah `requireAdminCapability`:
 
@@ -1315,12 +1315,12 @@ return saved;
 
 Tambah `import { DomainError } from "@/server/services/errors";` bila belum ada.
 
-- [ ] **Step 3: Run test + typecheck + full test**
+- [x] **Step 3: Run test + typecheck + full test**
 
 Run: `npx tsx --test tests/platform-settings.test.ts && npm run typecheck && npm test`
 Expected: PASS.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/server/actions/platform-settings.ts tests/platform-settings.test.ts
@@ -1339,7 +1339,7 @@ git commit -m "feat(settings): enforce admin-edit unlock guard on save"
 - Consumes: `updatePlatformSettingsAction`, `requestPlatformEditOtpAction`, `verifyPlatformEditOtpAction`, `lockPlatformEditAction`, `getPlatformSettingsForAdmin`; `AdminPageHeader`, `AdminCard`, `AdminButton`, `AdminBadge`.
 - Produces: UI sesuai mockup `docs/mockups/admin/admin-panel-mockup.html`.
 
-- [ ] **Step 1: Server page — sediakan status unlocked**
+- [x] **Step 1: Server page — sediakan status unlocked**
 
 Di `src/app/admin/pengaturan/page.tsx`, setelah ambil `settings`, tentukan unlocked (butuh actor id). Gunakan `getSession()` + `isAdminEditUnlocked(session.userId)`:
 
@@ -1352,7 +1352,7 @@ const unlocked = session ? await isAdminEditUnlocked(session.userId) : false;
 return <AdminPengaturanClient initial={settings} unlocked={unlocked} />;
 ```
 
-- [ ] **Step 2: Client — layout 2 kolom + state mode**
+- [x] **Step 2: Client — layout 2 kolom + state mode**
 
 Terapkan struktur mockup: header `AdminPageHeader` dengan aksi `Kirim Kode OTP` + badge `🔒 Terkunci`/`Terbuka` (pakai Lucide `Lock`/`Unlock`, bukan emoji); dua kolom (`grid lg:grid-cols-[1fr_1.15fr]`) — kiri Persentase Finansial (label↔input pendek), kanan Rincian Fee (`AdminTable`); footer `Edit` (ghost) + `Simpan` (primary) sejajar.
 
@@ -1435,16 +1435,16 @@ export function AdminPengaturanClient({
 
 > Catatan: `updatePlatformSettingsAction` perlu memperluas `input` agar menerima `superAdminEmail` (Task 7 sudah menambah tipe service; tambahkan ke signature action `Omit<PlatformSettingsView,"components"> & {...}`).
 
-- [ ] **Step 3: Typecheck + build**
+- [x] **Step 3: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 Expected: PASS.
 
-- [ ] **Step 4: Verifikasi visual manual**
+- [x] **Step 4: Verifikasi visual manual**
 
 Login admin → `/admin/pengaturan`. Cek: read-only default; klik Kirim OTP → modal; (bila email terkonfigurasi) alur verifikasi; layout 2 kolom rapi; mobile tanpa overflow.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/admin/pengaturan
@@ -1458,11 +1458,11 @@ git commit -m "feat(settings): redesign platform settings UI with OTP-gated edit
 **Files:**
 - Modify: `prisma/seed.ts`
 
-- [ ] **Step 1: Set `superAdminEmail` + komponen saat seed**
+- [x] **Step 1: Set `superAdminEmail` + komponen saat seed**
 
 Di blok pembuatan `platformSetting`, tambahkan `superAdminEmail: adminUser.email` (mis. `admin@harikita.id`). Pastikan komponen seed mencerminkan struktur yang diharapkan (mis. Operasional/Marketing/Cadangan).
 
-- [ ] **Step 2: Jalankan seed ke SQLite**
+- [x] **Step 2: Jalankan seed ke SQLite**
 
 Run:
 ```bash
@@ -1470,7 +1470,7 @@ $env:DATABASE_URL="file:" + ((Resolve-Path "prisma\dev.db").Path -replace '\\','
 ```
 Expected: sukses.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add prisma/seed.ts prisma/dev.db
@@ -1490,7 +1490,7 @@ git commit -m "feat(settings): seed super admin email for OTP edit lock"
 **Interfaces:**
 - Produces: `getPlatformFeeBreakdown(): Promise<Array<{ label: string; pct: number }>>` (read-only; fallback default).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tambahkan ke tests/platform-settings.test.ts
@@ -1503,7 +1503,7 @@ test("getPlatformFeeComponents falls back to default when empty", async () => {
 
 > Test di atas menjaga kontrak dasar; perilaku query diuji lewat typecheck + verifikasi visual (karena query butuh sesi vendor).
 
-- [ ] **Step 2: Tambah query komponen fee**
+- [x] **Step 2: Tambah query komponen fee**
 
 Di `src/server/queries/vendor.ts`:
 
@@ -1518,7 +1518,7 @@ export async function getPlatformFeeBreakdown(): Promise<
 }
 ```
 
-- [ ] **Step 3: Teruskan ke client**
+- [x] **Step 3: Teruskan ke client**
 
 Di `paket/page.tsx`:
 ```tsx
@@ -1528,7 +1528,7 @@ const feeBreakdown = await getPlatformFeeBreakdown();
 return <VendorPaketClient dbPackages={dbPackages} vendorResolved={Boolean(vendor)} feeBreakdown={feeBreakdown} />;
 ```
 
-- [ ] **Step 4: Pakai di `VendorPaketClient`**
+- [x] **Step 4: Pakai di `VendorPaketClient`**
 
 Tambah prop `feeBreakdown: Array<{ label: string; pct: number }>`. Pada dropdown "Alokasi Komisi 10%", **ganti** baris hardcode (Server Cloud, dll) dengan map `feeBreakdown`:
 
@@ -1549,12 +1549,12 @@ Tambah prop `feeBreakdown: Array<{ label: string; pct: number }>`. Pada dropdown
 
 Hapus import ikon & baris hardcode yang tak dipakai lagi (`Server`, `Headphones`, dsb) bila sudah tidak terpakai.
 
-- [ ] **Step 5: Typecheck + test + build**
+- [x] **Step 5: Typecheck + test + build**
 
 Run: `npm run typecheck && npm test && npm run build`
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/server/queries/vendor.ts src/app/dashboard/vendor/paket
@@ -1565,13 +1565,13 @@ git commit -m "feat(vendor): read platform fee breakdown from admin config"
 
 ## Verifikasi Akhir (setelah semua task)
 
-- [ ] `npx prisma validate --schema prisma/schema.prisma` → valid
-- [ ] `npx prisma validate --schema prisma/schema.sqlite.prisma` → valid
-- [ ] `npm run typecheck` → PASS
-- [ ] `npm test` → PASS
-- [ ] `npm run build` → PASS
-- [ ] Visual: tiap halaman admin (desktop + 375px) tanpa horizontal overflow, ikon Lucide, warna/font design-system
-- [ ] Migrasi: buat migrasi baru (migrate) untuk `superAdminEmail` lalu `migrate deploy` ke Neon sebelum deploy produksi
+- [x] `npx prisma validate --schema prisma/schema.prisma` → valid
+- [x] `npx prisma validate --schema prisma/schema.sqlite.prisma` → valid
+- [x] `npm run typecheck` → PASS
+- [x] `npm test` → PASS
+- [x] `npm run build` → PASS
+- [x] Visual: tiap halaman admin (desktop + 375px) tanpa horizontal overflow, ikon Lucide, warna/font design-system
+- [x] Migrasi: buat migrasi baru (migrate) untuk `superAdminEmail` lalu `migrate deploy` ke Neon sebelum deploy produksi
 
 ## Self-Review
 

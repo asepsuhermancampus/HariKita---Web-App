@@ -1,6 +1,6 @@
 # HariKita Brand Identity & Design System Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Implement the complete vector-based HariKita brand identity system (monogram H+K symbol, editorial typography, 6 calibrated core color tokens, reusable React logo components, and PWA icons) across the HariKita web application based on `HariKita-Design.png`.
 
@@ -39,7 +39,7 @@
 - Consumes: Normalized SVG paths from `scripts/build_perfect_board.js`
 - Produces: Static SVG files in `public/brand/` and `public/favicon.svg`
 
-- [ ] **Step 1: Write test to verify master SVG files exist and are valid pure vectors**
+- [x] **Step 1: Write test to verify master SVG files exist and are valid pure vectors**
 
 Create `scripts/test_brand_assets.js`:
 ```javascript
@@ -64,12 +64,12 @@ for (const file of files) {
 console.log('✅ Task 1 SVG Asset Test Passed!');
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `node scripts/test_brand_assets.js`
 Expected: FAIL with "File public/brand/harikita-symbol.svg must exist"
 
-- [ ] **Step 3: Generate the static SVG master files into public/brand/ and public/favicon.svg**
+- [x] **Step 3: Generate the static SVG master files into public/brand/ and public/favicon.svg**
 
 Create `scripts/generate_public_brand_assets.js`:
 ```javascript
@@ -143,12 +143,12 @@ console.log('Successfully generated public SVG brand assets!');
 
 Run: `node scripts/generate_public_brand_assets.js`
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `node scripts/test_brand_assets.js`
 Expected: PASS with "✅ Task 1 SVG Asset Test Passed!"
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add public/brand public/favicon.svg scripts/generate_public_brand_assets.js scripts/test_brand_assets.js
@@ -170,7 +170,7 @@ git commit -m "feat(brand): add master vector SVG logo assets and favicon.svg"
 - Consumes: `public/favicon.svg`
 - Produces: Crisp PWA launcher PNG icons rendered at exact dimensions
 
-- [ ] **Step 1: Write test for PWA icon dimensions and manifest validity**
+- [x] **Step 1: Write test for PWA icon dimensions and manifest validity**
 
 Create `scripts/test_pwa_icons.js`:
 ```javascript
@@ -195,12 +195,12 @@ async function test() {
 test().catch(err => { console.error(err); process.exit(1); });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `node scripts/test_pwa_icons.js`
 Expected: FAIL (theme_color mismatch or old icons)
 
-- [ ] **Step 3: Generate crisp PNG icons with Sharp and update manifest**
+- [x] **Step 3: Generate crisp PNG icons with Sharp and update manifest**
 
 Create `scripts/generate_pwa_icons.js`:
 ```javascript
@@ -233,12 +233,12 @@ generate().catch(console.error);
 
 Run: `node scripts/generate_pwa_icons.js`
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `node scripts/test_pwa_icons.js`
 Expected: PASS with "✅ Task 2 PWA Icon Test Passed!"
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add public/icons public/manifest.webmanifest scripts/generate_pwa_icons.js scripts/test_pwa_icons.js
@@ -258,7 +258,7 @@ git commit -m "feat(pwa): regenerate PWA app launcher icons with taupe squircle 
 **Interfaces:**
 - Produces: CSS variables `--hk-*`, Tailwind color classes `hk-*`, and Google Fonts Cormorant Garamond + Manrope
 
-- [ ] **Step 1: Write test to verify design tokens and typography are defined**
+- [x] **Step 1: Write test to verify design tokens and typography are defined**
 
 Create `scripts/test_design_tokens.js`:
 ```javascript
@@ -283,12 +283,12 @@ assert(layout.includes('family=Cormorant+Garamond'), 'layout.tsx must load Cormo
 console.log('✅ Task 3 Design Tokens Test Passed!');
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `node scripts/test_design_tokens.js`
 Expected: FAIL (missing `--hk-canvas` in globals.css)
 
-- [ ] **Step 3: Update globals.css, tailwind.config.ts, and layout.tsx**
+- [x] **Step 3: Update globals.css, tailwind.config.ts, and layout.tsx**
 
 In `src/app/globals.css`, add:
 ```css
@@ -331,12 +331,12 @@ In `src/app/layout.tsx`, update the Google Fonts URL:
 href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&family=Cinzel:wght@400;600;700;900&family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap"
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `node scripts/test_design_tokens.js`
 Expected: PASS with "✅ Task 3 Design Tokens Test Passed!"
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/globals.css tailwind.config.ts src/app/layout.tsx scripts/test_design_tokens.js
@@ -354,7 +354,7 @@ git commit -m "feat(design-system): register --hk core color tokens and Manrope 
 **Interfaces:**
 - Produces: `<HariKitaLogo />` component supporting `variant` (`horizontal` | `stacked` | `symbol`), `tone` (`dark` | `light` | `currentColor`), `size`, and `asLink`.
 
-- [ ] **Step 1: Write test for `<HariKitaLogo />` component export and props**
+- [x] **Step 1: Write test for `<HariKitaLogo />` component export and props**
 
 Create `scripts/test_logo_component.js`:
 ```javascript
@@ -373,12 +373,12 @@ assert(content.includes('fill="currentColor"'), 'Must support currentColor');
 console.log('✅ Task 4 Logo Component Test Passed!');
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `node scripts/test_logo_component.js`
 Expected: FAIL (file does not exist)
 
-- [ ] **Step 3: Implement `src/components/brand/HariKitaLogo.tsx`**
+- [x] **Step 3: Implement `src/components/brand/HariKitaLogo.tsx`**
 
 Create `src/components/brand/HariKitaLogo.tsx`:
 ```tsx
@@ -418,17 +418,17 @@ export const HariKitaLogo: React.FC<HariKitaLogoProps> = ({
 };
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `node scripts/test_logo_component.js`
 Expected: PASS with "✅ Task 4 Logo Component Test Passed!"
 
-- [ ] **Step 5: Run TypeScript compilation check**
+- [x] **Step 5: Run TypeScript compilation check**
 
 Run: `npx tsc --noEmit`
 Expected: PASS with 0 errors
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/components/brand/HariKitaLogo.tsx scripts/test_logo_component.js
@@ -449,7 +449,7 @@ git commit -m "feat(brand): implement reusable HariKitaLogo SVG component"
 - Consumes: `<HariKitaLogo />` from `src/components/brand/HariKitaLogo.tsx`
 - Produces: Refactored `LogoBadge.tsx` rendering pure vector logo without `/logo_badge.png` raster image.
 
-- [ ] **Step 1: Write integration test for LogoBadge, Navbar, and Footer**
+- [x] **Step 1: Write integration test for LogoBadge, Navbar, and Footer**
 
 Create `scripts/test_layout_integration.js`:
 ```javascript
@@ -469,12 +469,12 @@ assert(footer.includes('LogoBadge') || footer.includes('HariKitaLogo'), 'Footer 
 console.log('✅ Task 5 Layout Integration Test Passed!');
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `node scripts/test_layout_integration.js`
 Expected: FAIL (LogoBadge still uses `/logo_badge.png`)
 
-- [ ] **Step 3: Refactor `LogoBadge.tsx`**
+- [x] **Step 3: Refactor `LogoBadge.tsx`**
 
 Update `src/components/layout/LogoBadge.tsx`:
 ```tsx
@@ -509,21 +509,21 @@ export const LogoBadge: React.FC<LogoBadgeProps> = ({
 };
 ```
 
-- [ ] **Step 4: Update `Footer.tsx` and `Navbar.tsx` styling for new brand aesthetic**
+- [x] **Step 4: Update `Footer.tsx` and `Navbar.tsx` styling for new brand aesthetic**
 
 In `Footer.tsx`, remove the old cameo circle container and allow the light-toned logo to render cleanly against the dark background.
 
-- [ ] **Step 5: Run test to verify it passes**
+- [x] **Step 5: Run test to verify it passes**
 
 Run: `node scripts/test_layout_integration.js`
 Expected: PASS with "✅ Task 5 Layout Integration Test Passed!"
 
-- [ ] **Step 6: Run TypeScript check**
+- [x] **Step 6: Run TypeScript check**
 
 Run: `npx tsc --noEmit`
 Expected: PASS with 0 errors
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/components/layout/LogoBadge.tsx src/components/layout/Navbar.tsx src/components/layout/Footer.tsx scripts/test_layout_integration.js
@@ -538,7 +538,7 @@ git commit -m "feat(layout): refactor LogoBadge adapter to use vector HariKitaLo
 - Create: `scripts/verify_brand_system.js`
 - Test: Next.js Production Build (`npm run build`)
 
-- [ ] **Step 1: Write master health check script**
+- [x] **Step 1: Write master health check script**
 
 Create `scripts/verify_brand_system.js`:
 ```javascript
@@ -568,22 +568,22 @@ assert(css.includes('--hk-champagne: #C5B39F;'), 'Missing calibrated champagne')
 console.log('🎉 All Master Brand Checks Passed!');
 ```
 
-- [ ] **Step 2: Run health check script**
+- [x] **Step 2: Run health check script**
 
 Run: `node scripts/verify_brand_system.js`
 Expected: PASS
 
-- [ ] **Step 3: Run TypeScript compiler**
+- [x] **Step 3: Run TypeScript compiler**
 
 Run: `npx tsc --noEmit`
 Expected: 0 errors
 
-- [ ] **Step 4: Run Next.js production build**
+- [x] **Step 4: Run Next.js production build**
 
 Run: `npm run build`
 Expected: Build successfully completes with 0 errors
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add scripts/verify_brand_system.js

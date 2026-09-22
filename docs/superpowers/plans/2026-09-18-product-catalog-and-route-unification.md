@@ -1,6 +1,6 @@
 # Katalog Produk Multi-Vendor & Penyeragaman Route Kategori — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Menyeragamkan routing kategori ke `/vendor/*`, mengubah beranda agar menampilkan card kategori murni, menambah jenjang produk (`/vendor/[slug]/produk/[slug]`) dengan stepper jumlah & satuan, dan menyediakan generator katalog statis 220 vendor × 15 produk.
 
@@ -57,7 +57,7 @@
 - Consumes: tidak ada.
 - Produces: `export type UnitType = "package" | "pax" | "piece" | "portion"`; `export interface VendorProduct { id: string; slug: string; name: string; price: number; unitType: UnitType; unitLabel: string; minQuantity?: number; maxQuantity?: number; image: string; desc: string; callTime: string; features: string[]; productTags: string[]; }`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Buat `tests/product-catalog.test.ts`:
 
@@ -86,12 +86,12 @@ test("VendorProduct type accepts a valid pax product", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npm test`
 Expected: FAIL — tidak bisa resolve `../src/data/product-types` (module belum ada).
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Buat `src/data/product-types.ts`:
 
@@ -115,12 +115,12 @@ export interface VendorProduct {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npm test`
 Expected: PASS (test baru hijau, test lama tetap hijau).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/data/product-types.ts tests/product-catalog.test.ts
@@ -141,7 +141,7 @@ git commit -m "feat(catalog): add VendorProduct & UnitType types"
 
 > **Catatan dependensi melingkar:** `multi-vendor-catalog.ts` akan mengimpor generator, dan generator butuh `KEBUMEN_DISTRICTS`. Hindari impor melingkar dengan **mendefinisikan `GENERATOR_DISTRICTS` sebagai array lokal di generator**, bukan mengimpor dari katalog. Nilai sama dengan `KEBUMEN_DISTRICTS`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Tambah ke `tests/product-catalog.test.ts`:
 
@@ -171,12 +171,12 @@ test("generateCatalog covers all 11 categories, 20 vendors each", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npm test`
 Expected: FAIL — `../src/data/catalog-generator` belum ada.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Buat `src/data/catalog-generator.ts`:
 
@@ -338,12 +338,12 @@ function slugify(s: string): string {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npm test`
 Expected: PASS — 220 vendor, 15 produk, deterministik, 11 kategori × 20.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/data/catalog-generator.ts tests/product-catalog.test.ts
@@ -362,7 +362,7 @@ git commit -m "feat(catalog): deterministic catalog generator (220 vendors x 15 
 - Consumes: `generateCatalog` dari `src/data/catalog-generator.ts`; `VendorProduct` dari `src/data/product-types.ts`.
 - Produces: `MULTI_VENDOR_CATALOG: VendorProfile[]` dengan `products: VendorProduct[]` (menggantikan `packages`); `VendorProfile` interface diupdate; `KEBUMEN_DISTRICTS` tetap.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Tambah ke `tests/product-catalog.test.ts`:
 
@@ -376,12 +376,12 @@ test("catalog vendors expose products (not packages)", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npm test`
 Expected: FAIL — `MULTI_VENDOR_CATALOG.length` masih 12 / `products` tidak ada.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Ubah `src/data/multi-vendor-catalog.ts`:
 1. Ganti interface `VendorPackage` → impor `VendorProduct` dari `./product-types`, hapus definisi lama.
@@ -397,12 +397,12 @@ export const MULTI_VENDOR_CATALOG: VendorProfile[] = generateCatalog() as unknow
 
 4. Pertahankan `KEBUMEN_DISTRICTS`, `VendorProfile`, `VendorPortfolioItem`, dan ekspor tipe lainnya.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npm test`
 Expected: PASS. (Catatan: `tests/vendor-categories.test.ts` lama memakai `>= 1` sehingga tetap hijau.)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/data/multi-vendor-catalog.ts tests/product-catalog.test.ts
@@ -421,7 +421,7 @@ git commit -m "refactor(catalog): source MULTI_VENDOR_CATALOG from generator, pa
 - Consumes: `MULTI_VENDOR_CATALOG`, `VendorProfile` dari `src/data/multi-vendor-catalog.ts`; `VendorProduct` dari `src/data/product-types.ts`.
 - Produces: `getVendorBySlug(slug: string): VendorProfile | undefined`; `getProduct(vendorSlug: string, productSlug: string): VendorProduct | undefined`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Tambah ke `tests/product-catalog.test.ts`:
 
@@ -448,12 +448,12 @@ test("getProduct returns undefined for unknown product", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npm test`
 Expected: FAIL — `getVendorBySlug`/`getProduct` belum diekspor.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Tambah ke `src/lib/vendor-categories.ts`:
 
@@ -470,12 +470,12 @@ export function getProduct(vendorSlug: string, productSlug: string): VendorProdu
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npm test`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/vendor-categories.ts tests/product-catalog.test.ts
@@ -494,7 +494,7 @@ git commit -m "feat(catalog): add getVendorBySlug and getProduct helpers"
 - Consumes: tidak ada.
 - Produces: `CartVendorItem` tambah `unitLabel?: string`, `productSlug?: string`; `cartStore.addItem` ber-key `vendorId + packageId` (upsert quantity bila sama, baris baru bila beda vendor/produk).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Buat `tests/cart-multi-product.test.ts`:
 
@@ -532,12 +532,12 @@ test("adding the same product twice upserts quantity", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npm test`
 Expected: FAIL — logika lama dedupe by `categoryId` → test pertama menghasilkan 1 baris (bukan 2).
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Ubah `src/lib/cart-store.ts`:
 1. Tambah ke `CartVendorItem`:
@@ -580,12 +580,12 @@ Ubah `src/lib/cart-store.ts`:
 
 > **Catatan:** `vitest`/`node:test` tanpa `window` → `localStorage` tidak ada. `saveToLocalStorage` sudah mem-`return` saat `typeof window === "undefined"`, jadi aman. `loadFromLocalStorage` juga. Pastikan blok inisialisasi `if (typeof window !== "undefined")` tetap menjaga `memoryState` default saat test.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npm test`
 Expected: PASS — 2 baris untuk produk berbeda, 1 baris dengan qty 300 untuk produk sama.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/cart-store.ts tests/cart-multi-product.test.ts
@@ -604,7 +604,7 @@ git commit -m "feat(cart): multi-product per vendor (key vendorId+packageId)"
 - Consumes: tidak ada.
 - Produces: `ROUTES.KATEGORI = '/vendor'`; `ROUTES.KATEGORI_DETAIL = (slug) => '/vendor/kategori/${slug}'`; `ROUTES.PRODUCT = (vendorSlug, productSlug) => '/vendor/${vendorSlug}/produk/${productSlug}'`; `RESERVED_VENDOR_SLUGS` memuat `kategori`, `produk`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Tambah ke `tests/product-catalog.test.ts`:
 
@@ -624,12 +624,12 @@ test("ROUTES exposes vendor category and product paths", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npm test`
 Expected: FAIL — `/kategori` masih nilai lama, `produk` belum reserved, `ROUTES.PRODUCT` tidak ada.
 
-- [ ] **Step 3: Write minimal implementation**
+- [x] **Step 3: Write minimal implementation**
 
 Ubah `src/lib/routes.ts`:
 1. Baris 9-10:
@@ -644,12 +644,12 @@ Ubah `src/lib/routes.ts`:
 3. Tambah `'kategori'`, `'produk'` ke `RESERVED_VENDOR_SLUGS`.
 4. Baris 101 `ROUTE_REGISTRY` entri `{ path: '/kategori', ... }` → `{ path: '/vendor', label: '11 Kategori Layanan', category: 'public' }`.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npm test`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/routes.ts tests/product-catalog.test.ts
@@ -668,7 +668,7 @@ git commit -m "feat(routes): canonical /vendor routes + reserve kategori/produk 
 - Consumes: `getVendorBySlug`, `getProduct` dari `src/lib/vendor-categories.ts`; `useCart` dari `src/lib/cart-store.ts`.
 - Produces: halaman client yang merender produk + stepper quantity.
 
-- [ ] **Step 1: Tulis halaman (implementasi langsung — komponen UI)**
+- [x] **Step 1: Tulis halaman (implementasi langsung — komponen UI)**
 
 Buat `src/app/vendor/[slug]/produk/[productSlug]/page.tsx`:
 
@@ -816,12 +816,12 @@ export default function ProductDetailPage({ params }: PageProps) {
 }
 ```
 
-- [ ] **Step 2: Verifikasi type-check**
+- [x] **Step 2: Verifikasi type-check**
 
 Run: `npm run typecheck`
 Expected: bersih (tidak ada error tipe baru dari file ini).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add "src/app/vendor/[slug]/produk/[productSlug]/page.tsx"
@@ -840,23 +840,23 @@ git commit -m "feat(vendor): product detail page with quantity stepper"
 - Consumes: `vendor.products` (bukan `vendor.packages`); `ROUTES`.
 - Produces: tab produk menampilkan 15 produk dari `products[]`, link ke halaman produk, back-link ke `/vendor/kategori/[categoryId]`.
 
-- [ ] **Step 1: Ubah referensi `packages` → `products`**
+- [x] **Step 1: Ubah referensi `packages` → `products`**
 
 Di `src/app/vendor/[slug]/page.tsx`:
 - Ganti semua `vendor.packages` → `vendor.products`.
 - Tab label "Pilihan Paket Layanan (N)" → "Produk (N)".
 - `handleAddPackage` → ganti menjadi navigasi ke halaman produk, atau tetap tombol tambah cepat. Minimal: card produk di tab menampilkan gambar, nama, harga, `unitLabel`, dan Link ke `/vendor/${vendor.slug}/produk/${p.slug}`.
 
-- [ ] **Step 2: Perbaiki back-link**
+- [x] **Step 2: Perbaiki back-link**
 
 Baris ~96: `href={`/kategori/${vendor.categoryId}`}` → `href={`/vendor/kategori/${vendor.categoryId}`}` dan teks tetap "Kembali ke Daftar {vendor.categoryTitle}".
 
-- [ ] **Step 3: Verifikasi type-check**
+- [x] **Step 3: Verifikasi type-check**
 
 Run: `npm run typecheck`
 Expected: bersih (tidak ada sisa referensi `packages`).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "src/app/vendor/[slug]/page.tsx"
@@ -875,7 +875,7 @@ git commit -m "refactor(vendor): profile uses products[], fix back-link to /vend
 - Consumes: `getVendorsByCategory`; `productTags` dari vendor products.
 - Produces: dropdown filter jenis (gabungan `productTags` unik) yang menyaring vendor.
 
-- [ ] **Step 1: Hitung daftar jenis**
+- [x] **Step 1: Hitung daftar jenis**
 
 Di komponen, setelah `vendors`:
 
@@ -891,20 +891,20 @@ const filteredVendors = vendors.filter((v) => {
 });
 ```
 
-- [ ] **Step 2: Tambah dropdown di header**
+- [x] **Step 2: Tambah dropdown di header**
 
 Tambah `<select>` kedua di samping filter kecamatan, memetakan `allTags` sebagai opsi. Sertakan opsi "Semua Jenis".
 
-- [ ] **Step 3: Ganti referensi `packages` yang tersisa**
+- [x] **Step 3: Ganti referensi `packages` yang tersisa**
 
 Cari `vendor.packages` di file ini; pada card vendor ganti `.packages[0].price` → `.products[0].price`, dan hitung "N produk".
 
-- [ ] **Step 4: Verifikasi type-check**
+- [x] **Step 4: Verifikasi type-check**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add "src/app/vendor/kategori/[kategori]/page.tsx"
@@ -923,7 +923,7 @@ git commit -m "feat(catalog): filter vendors by product type tags"
 - Consumes: `VENDOR_CATEGORIES`, `getVendorsByCategory` dari `src/lib/vendor-categories.ts`.
 - Produces: section layanan beranda menampilkan 11 card kategori (ikon, judul, deskripsi, "N vendor tersedia", tombol "Lihat Layanan").
 
-- [ ] **Step 1: Ganti sumber data card**
+- [x] **Step 1: Ganti sumber data card**
 
 Hapus array hardcoded `CATEGORIES` di `src/app/page.tsx` dan ganti pemakaian `filteredCategories` dengan:
 
@@ -933,20 +933,20 @@ import { VENDOR_CATEGORIES, getVendorsByCategory } from "@/lib/vendor-categories
 
 Filter tab fase tetap; map berdasarkan `VENDOR_CATEGORIES` (field `phase`, `title`, `shortDesc`, `iconName`).
 
-- [ ] **Step 2: Ganti kartu**
+- [x] **Step 2: Ganti kartu**
 
 Card hanya: ikon (map `iconName` → lucide component seperti di `src/app/vendor/page.tsx`), `title`, `shortDesc`, badge `{getVendorsByCategory(id).length} vendor tersedia`, dan tombol `Lihat Layanan` → `/vendor/kategori/${id}`.
 
-- [ ] **Step 3: Hapus sisa data vendor di card**
+- [x] **Step 3: Hapus sisa data vendor di card**
 
 Pastikan tidak ada lagi referensi ke `item.vendor`, `item.price`, `item.district`, `item.badge` di section layanan beranda. Jika ada tipe `VendorPortfolioData` yang tidak lagi dipakai, hapus impornya.
 
-- [ ] **Step 4: Verifikasi type-check + build**
+- [x] **Step 4: Verifikasi type-check + build**
 
 Run: `npm run typecheck`
 Expected: bersih. (Build penuh di Task 12.)
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/page.tsx
@@ -966,7 +966,7 @@ git commit -m "feat(home): category-only cards sourced from VENDOR_CATEGORIES"
 - Consumes: tidak ada.
 - Produces: redirect 308 `/kategori` → `/vendor`, `/kategori/:slug` → `/vendor/kategori/:slug`.
 
-- [ ] **Step 1: Hapus folder `/kategori`**
+- [x] **Step 1: Hapus folder `/kategori`**
 
 Hapus file:
 - `src/app/kategori/page.tsx`
@@ -975,7 +975,7 @@ Hapus file:
 - `src/app/kategori/loading.tsx`
 (Hapus folder `src/app/kategori` bila kosong.)
 
-- [ ] **Step 2: Tambah redirect di `next.config.ts`**
+- [x] **Step 2: Tambah redirect di `next.config.ts`**
 
 Tambah ke objek `nextConfig`:
 
@@ -988,17 +988,17 @@ Tambah ke objek `nextConfig`:
   },
 ```
 
-- [ ] **Step 3: Perbaiki link tersisa**
+- [x] **Step 3: Perbaiki link tersisa**
 
 - `src/app/not-found.tsx` baris ~35: `href="/kategori"` → `href="/vendor"`.
 - `src/components/vendor/VendorHeaderNav.tsx` baris ~113: `href="/kategori"` → `href="/vendor"`.
 
-- [ ] **Step 4: Cari sisa referensi**
+- [x] **Step 4: Cari sisa referensi**
 
 Run: `git grep -n "/kategori" -- src`
 Expected: hanya kemunculan di dalam `next.config.ts` (redirect) dan komentar; tidak ada `<Link href="/kategori">` aktif.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A
@@ -1012,22 +1012,22 @@ git commit -m "refactor(routes): remove legacy /kategori, add redirects to /vend
 **Files:**
 - Tidak ada file baru.
 
-- [ ] **Step 1: Jalankan seluruh test**
+- [x] **Step 1: Jalankan seluruh test**
 
 Run: `npm test`
 Expected: semua test hijau (product-catalog, cart-multi-product, vendor-categories, dan 27 test lain).
 
-- [ ] **Step 2: Type-check**
+- [x] **Step 2: Type-check**
 
 Run: `npm run typecheck`
 Expected: bersih.
 
-- [ ] **Step 3: Build produksi**
+- [x] **Step 3: Build produksi**
 
 Run: `npm run build`
 Expected: sukses tanpa error import/link patah.
 
-- [ ] **Step 4: Checklist manual (dev server)**
+- [x] **Step 4: Checklist manual (dev server)**
 
 Run: `npm run dev`, lalu verifikasi:
 - `/` menampilkan 11 card kategori tanpa vendor/harga; tombol "Lihat Layanan" → `/vendor/kategori/<id>`.
@@ -1037,7 +1037,7 @@ Run: `npm run dev`, lalu verifikasi:
 - Tambah 300 pax bakso + 300 pax sate → 2 baris dengan label "per pax".
 - `/kategori` → redirect ke `/vendor`; `/kategori/katering` → redirect ke `/vendor/kategori/katering`.
 
-- [ ] **Step 5: Commit (bila ada perbaikan sisa)**
+- [x] **Step 5: Commit (bila ada perbaikan sisa)**
 
 ```bash
 git add -A

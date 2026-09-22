@@ -1,6 +1,6 @@
 # Dedicated Digital Invitation Architecture & 8 Archetype Engines Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build and integrate the Universal Luxury Shell (Dual-pane desktop showcase, envelope cover gate, rotating vinyl audio player, floating scroll-spy dock, auto-scroll button, e-ticket boarding pass download) and 8 bespoke archetype layout engines with 64 template presets for HariKita's Kebumen hyperlocal wedding platform.
 
@@ -42,7 +42,7 @@
 - Produces: `AutoScrollButton` accepting `{ isAutoScrolling: boolean; onToggleAutoScroll: () => void; isVisible: boolean }`
 - Produces: `ETicketBoardingPass` accepting `{ guestName: string; sessionTitle: string; timeSlot: string; venueName: string; venueAddress: string; qrValue: string; brideGroomInitials: string; isOpen: boolean; onClose: () => void }`
 
-- [ ] **Step 1: Write the failing verification test**
+- [x] **Step 1: Write the failing verification test**
 
 Create `scripts/verify-task1-shell.ts`:
 ```typescript
@@ -68,12 +68,12 @@ verifyShellComponents().catch((err) => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx scripts/verify-task1-shell.ts`
 Expected: FAIL with "Cannot find module '../src/components/invitation/shell/index'"
 
-- [ ] **Step 3: Implement Universal Luxury Shell components**
+- [x] **Step 3: Implement Universal Luxury Shell components**
 
 1. Create `src/components/invitation/shell/InvitationDesktopLayout.tsx`:
    - Dual-pane layout on desktop: Left panel (50% w, sticky 100vh) with prewed photo slideshow, Ken Burns subtle motion, live countdown timer to wedding date, and Kebumen hyperlocal stamp. Right panel (50% w) centered `max-w-[480px]` container.
@@ -108,12 +108,12 @@ Expected: FAIL with "Cannot find module '../src/components/invitation/shell/inde
 7. Create `src/components/invitation/shell/index.ts`:
    - Re-export all 6 shell components.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/verify-task1-shell.ts`
 Expected: PASS: All 6 Universal Luxury Shell components are properly exported.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/invitation/shell scripts/verify-task1-shell.ts
@@ -138,7 +138,7 @@ git commit -m "feat(invitation): implement universal luxury shell components"
 - Produces: `BotanicalEngine: React.FC<DedicatedTemplateProps>`
 - Produces: `JavaneseEngine: React.FC<DedicatedTemplateProps>`
 
-- [ ] **Step 1: Write the failing verification test**
+- [x] **Step 1: Write the failing verification test**
 
 Create `scripts/verify-task2-botanical-javanese.ts`:
 ```typescript
@@ -161,12 +161,12 @@ verifyBotanicalAndJavanese().catch((err) => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx scripts/verify-task2-botanical-javanese.ts`
 Expected: FAIL with "Cannot find module '../src/components/templates/engines/BotanicalEngine'"
 
-- [ ] **Step 3: Implement Botanical and Javanese Archetype Engines**
+- [x] **Step 3: Implement Botanical and Javanese Archetype Engines**
 
 1. Create `src/components/templates/engines/BotanicalEngine.tsx`:
    - Organic curved cards (`rounded-2xl` / `rounded-3xl`).
@@ -183,12 +183,12 @@ Expected: FAIL with "Cannot find module '../src/components/templates/engines/Bot
    - Cinzel Decorative typography, deep velvet black / royal brown teakwood cards.
    - Cultural copy: *"Serat Ulem / Nuwun Sewu"*, Bismillah, doa pengantin adat Jawa, detailed rundown for Sesi 1 & Sesi 2 with Kebumen venues (Pendopo Kabumian / Mexolie).
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/verify-task2-botanical-javanese.ts`
 Expected: PASS: Botanical and Javanese layout engines are properly exported.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/templates/engines/BotanicalEngine.tsx src/components/templates/engines/JavaneseEngine.tsx scripts/verify-task2-botanical-javanese.ts
@@ -212,7 +212,7 @@ git commit -m "feat(invitation): implement botanical and javanese archetype engi
 - Produces: `IslamicEngine: React.FC<DedicatedTemplateProps>`
 - Produces: `MinimalistEngine: React.FC<DedicatedTemplateProps>`
 
-- [ ] **Step 1: Write the failing verification test**
+- [x] **Step 1: Write the failing verification test**
 
 Create `scripts/verify-task3-islamic-minimalist.ts`:
 ```typescript
@@ -235,12 +235,12 @@ verifyIslamicAndMinimalist().catch((err) => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx scripts/verify-task3-islamic-minimalist.ts`
 Expected: FAIL with "Cannot find module '../src/components/templates/engines/IslamicEngine'"
 
-- [ ] **Step 3: Implement Islamic and Minimalist Archetype Engines**
+- [x] **Step 3: Implement Islamic and Minimalist Archetype Engines**
 
 1. Create `src/components/templates/engines/IslamicEngine.tsx`:
    - Moorish architectural arches (*Moroccan Archway* geometry) framing photos and event cards.
@@ -255,12 +255,12 @@ Expected: FAIL with "Cannot find module '../src/components/templates/engines/Isl
    - Zero particle canvas for crisp, clean, distraction-free high fashion aesthetic.
    - Large architectural typography monograms, numbered editorial sections (01 / COUPLE, 02 / CEREMONY, 03 / STORY).
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/verify-task3-islamic-minimalist.ts`
 Expected: PASS: Islamic and Minimalist layout engines are properly exported.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/templates/engines/IslamicEngine.tsx src/components/templates/engines/MinimalistEngine.tsx scripts/verify-task3-islamic-minimalist.ts
@@ -284,7 +284,7 @@ git commit -m "feat(invitation): implement islamic and minimalist archetype engi
 - Produces: `RoseGoldEngine: React.FC<DedicatedTemplateProps>`
 - Produces: `RusticEngine: React.FC<DedicatedTemplateProps>`
 
-- [ ] **Step 1: Write the failing verification test**
+- [x] **Step 1: Write the failing verification test**
 
 Create `scripts/verify-task4-rosegold-rustic.ts`:
 ```typescript
@@ -307,12 +307,12 @@ verifyRoseGoldAndRustic().catch((err) => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx scripts/verify-task4-rosegold-rustic.ts`
 Expected: FAIL with "Cannot find module '../src/components/templates/engines/RoseGoldEngine'"
 
-- [ ] **Step 3: Implement Rose Gold and Rustic Archetype Engines**
+- [x] **Step 3: Implement Rose Gold and Rustic Archetype Engines**
 
 1. Create `src/components/templates/engines/RoseGoldEngine.tsx`:
    - Gilded luxury with beveled cut corners and diamond geometry.
@@ -328,12 +328,12 @@ Expected: FAIL with "Cannot find module '../src/components/templates/engines/Ros
    - `AutumnLeavesCanvas` with falling rustic leaves.
    - Story timeline styled as vintage travel postcards with destination milestones.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/verify-task4-rosegold-rustic.ts`
 Expected: PASS: Rose Gold and Rustic layout engines are properly exported.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/templates/engines/RoseGoldEngine.tsx src/components/templates/engines/RusticEngine.tsx scripts/verify-task4-rosegold-rustic.ts
@@ -358,7 +358,7 @@ git commit -m "feat(invitation): implement rose gold and rustic archetype engine
 - Produces: `CuteIllustratedEngine: React.FC<DedicatedTemplateProps>`
 - Produces: Re-export of all 8 archetype engines in `src/components/templates/engines/index.ts`
 
-- [ ] **Step 1: Write the failing verification test**
+- [x] **Step 1: Write the failing verification test**
 
 Create `scripts/verify-task5-celestial-cute.ts`:
 ```typescript
@@ -386,12 +386,12 @@ verifyCelestialAndCute().catch((err) => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx scripts/verify-task5-celestial-cute.ts`
 Expected: FAIL with "Cannot find module '../src/components/templates/engines/index'"
 
-- [ ] **Step 3: Implement Celestial and Cute Illustrated Archetype Engines**
+- [x] **Step 3: Implement Celestial and Cute Illustrated Archetype Engines**
 
 1. Create `src/components/templates/engines/CelestialEngine.tsx`:
    - True dark mode luxury: deep midnight navy / velvet charcoal canvas (`bg-slate-950`).
@@ -410,12 +410,12 @@ Expected: FAIL with "Cannot find module '../src/components/templates/engines/ind
 3. Create `src/components/templates/engines/index.ts`:
    - Export `BotanicalEngine`, `JavaneseEngine`, `IslamicEngine`, `MinimalistEngine`, `RoseGoldEngine`, `RusticEngine`, `CelestialEngine`, `CuteIllustratedEngine`.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `npx tsx scripts/verify-task5-celestial-cute.ts`
 Expected: PASS: All 8 archetype layout engines are exported in index.ts.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/templates/engines/CelestialEngine.tsx src/components/templates/engines/CuteIllustratedEngine.tsx src/components/templates/engines/index.ts scripts/verify-task5-celestial-cute.ts
@@ -442,7 +442,7 @@ git commit -m "feat(invitation): implement celestial and cute illustrated archet
 - Produces: `TemplateEngineResolver` rendering the active engine wrapped inside the Universal Luxury Shell.
 - Produces: `LiveThemeSwitcherToolbar` with search, category tabs, and instant live URL switching.
 
-- [ ] **Step 1: Write the failing verification test**
+- [x] **Step 1: Write the failing verification test**
 
 Create `scripts/verify-task6-registry-build.ts`:
 ```typescript
@@ -497,12 +497,12 @@ verifyRegistryAndCatalog().catch((err) => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `npx tsx scripts/verify-task6-registry-build.ts`
 Expected: FAIL with "Cannot find module '../src/lib/templates/templatesCatalog'"
 
-- [ ] **Step 3: Implement 64 Templates Registry and Resolver Integration**
+- [x] **Step 3: Implement 64 Templates Registry and Resolver Integration**
 
 1. Update `src/lib/templates/types.ts`:
    - Expand `ArchetypeId` to:
@@ -549,7 +549,7 @@ Expected: FAIL with "Cannot find module '../src/lib/templates/templatesCatalog'"
 6. Update `src/app/globals.css`:
    - Add custom `@keyframes` for `@keyframes botanicalSway`, `@keyframes gununganKiri`, `@keyframes gununganKanan`, `@keyframes shimmerFoil`.
 
-- [ ] **Step 4: Run verification tests and build**
+- [x] **Step 4: Run verification tests and build**
 
 Run: `npx tsx scripts/verify-task6-registry-build.ts`
 Expected: PASS: 64 Templates catalog matrix verified with 8 presets per archetype engine.
@@ -557,7 +557,7 @@ Expected: PASS: 64 Templates catalog matrix verified with 8 presets per archetyp
 Run: `npm run build`
 Expected: `✓ Generating static pages` with 0 errors.
 
-- [ ] **Step 5: Commit and push**
+- [x] **Step 5: Commit and push**
 
 ```bash
 git add src/lib/templates src/components/templates src/components/invitation src/app/globals.css scripts/verify-task6-registry-build.ts docs/superpowers/plans/2026-09-09-dedicated-invitation-templates-plan.md

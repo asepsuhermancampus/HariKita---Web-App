@@ -1,6 +1,6 @@
 # Dashboard SaaS untuk Semua Role — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Semua dashboard role (Vendor, BA, Klien) memakai shell SaaS yang sama seperti admin — sidebar Charcoal + komponen bersama dari brand hub (Charcoal/Taupe/Champagne/Soft Beige/Ivory, Cormorant + Manrope) — dan semua halaman tiap role dirapikan; Navbar/Footer publik disembunyikan di area dashboard.
 
@@ -40,7 +40,7 @@
 **Interfaces:**
 - Produces: `DashButton`, `DashBadge`, `DashCard`, `DashPageHeader`, `DashStatCard`, `DashTable` (API sama seperti `Admin*` lama, hanya nama berubah).
 
-- [ ] **Step 1: Rename test & sesuaikan path**
+- [x] **Step 1: Rename test & sesuaikan path**
 
 Buat `tests/dashboard-ui-components.test.ts` (hasil rename dari `admin-ui-components`), baca `src/components/dashboard/*`. Hapus file test lama.
 
@@ -85,12 +85,12 @@ test("DashPageHeader/StatCard/Table exist with expected props", () => {
 });
 ```
 
-- [ ] **Step 2: Run test — verify it fails**
+- [x] **Step 2: Run test — verify it fails**
 
 Run: `npx tsx --test tests/dashboard-ui-components.test.ts`
 Expected: FAIL — `DashButton.tsx` belum ada.
 
-- [ ] **Step 3: Salin & rename komponen**
+- [x] **Step 3: Salin & rename komponen**
 
 Untuk tiap file `src/components/admin/{AdminButton,AdminBadge,AdminCard,AdminPageHeader,AdminStatCard,AdminTable}.tsx`, buat versi `src/components/dashboard/Dash*.tsx` dengan:
 - Nama export diganti: `AdminButton`→`DashButton`, dst.
@@ -129,7 +129,7 @@ export function DashButton({ variant = "primary", size = "md", className = "", .
 
 `DashBadge.tsx`, `DashCard.tsx`, `DashPageHeader.tsx`, `DashStatCard.tsx`, `DashTable.tsx`: salin identik, hanya rename `Admin`→`Dash`. (`DashPageHeader` tetap `font-editorial`.)
 
-- [ ] **Step 4: Barrel `index.ts`**
+- [x] **Step 4: Barrel `index.ts`**
 
 ```ts
 // src/components/dashboard/index.ts
@@ -141,7 +141,7 @@ export * from "./DashStatCard";
 export * from "./DashTable";
 ```
 
-- [ ] **Step 5: Update semua konsumen admin**
+- [x] **Step 5: Update semua konsumen admin**
 
 Di seluruh `src/app/admin/**`:
 - Ganti `import { ... } from "@/components/admin"` → `"@/components/dashboard"`.
@@ -152,18 +152,18 @@ Cari semua pemakaian:
 grep -rn "components/admin\|AdminButton\|AdminBadge\|AdminCard\|AdminPageHeader\|AdminStatCard\|AdminTable" src/app/admin
 ```
 
-- [ ] **Step 6: Hapus komponen admin lama**
+- [x] **Step 6: Hapus komponen admin lama**
 
 ```bash
 rm -rf src/components/admin
 ```
 
-- [ ] **Step 7: Run test + typecheck**
+- [x] **Step 7: Run test + typecheck**
 
 Run: `npx tsx --test tests/dashboard-ui-components.test.ts && npm run typecheck`
 Expected: PASS keduanya.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add src/components/dashboard src/app/admin tests/dashboard-ui-components.test.ts
@@ -189,7 +189,7 @@ git commit -m "refactor(dashboard): move shared components to components/dashboa
   - `DashboardSidebarNav({ nav, roleLabel, homeHref })` (client)
   - `DashboardShell({ nav, roleLabel, homeHref, children })` (server)
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tests/dashboard-nav.test.ts
@@ -224,12 +224,12 @@ test("nav config uses lucide icons, no emoji", () => {
 });
 ```
 
-- [ ] **Step 2: Run test — verify it fails**
+- [x] **Step 2: Run test — verify it fails**
 
 Run: `npx tsx --test tests/dashboard-nav.test.ts`
 Expected: FAIL — file belum ada.
 
-- [ ] **Step 3: Create `nav-config.ts`**
+- [x] **Step 3: Create `nav-config.ts`**
 
 Pindahkan `ADMIN_NAV` (dari `AdminSidebarNav.tsx`) ke sini, tambah 3 nav baru:
 
@@ -299,7 +299,7 @@ export const CLIENT_NAV: NavGroup[] = [
 ];
 ```
 
-- [ ] **Step 4: Create `DashboardSidebarNav.tsx`** (generalisasi dari `AdminSidebarNav`)
+- [x] **Step 4: Create `DashboardSidebarNav.tsx`** (generalisasi dari `AdminSidebarNav`)
 
 ```tsx
 "use client";
@@ -405,7 +405,7 @@ export function DashboardSidebarNav({
 }
 ```
 
-- [ ] **Step 5: Create `DashboardShell.tsx`**
+- [x] **Step 5: Create `DashboardShell.tsx`**
 
 ```tsx
 import type { ReactNode } from "react";
@@ -434,7 +434,7 @@ export function DashboardShell({
 }
 ```
 
-- [ ] **Step 6: Update barrel**
+- [x] **Step 6: Update barrel**
 
 ```ts
 // src/components/dashboard/index.ts
@@ -449,12 +449,12 @@ export * from "./DashboardSidebarNav";
 export * from "./nav-config";
 ```
 
-- [ ] **Step 7: Run test + typecheck**
+- [x] **Step 7: Run test + typecheck**
 
 Run: `npx tsx --test tests/dashboard-nav.test.ts && npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add src/components/dashboard tests/dashboard-nav.test.ts
@@ -470,7 +470,7 @@ git commit -m "feat(dashboard): add generic DashboardShell + nav config for all 
 - Delete: `src/app/admin/AdminSidebarNav.tsx`
 - Modify: `tests/admin-sidebar.test.ts` → hapus (digantikan `dashboard-nav.test.ts`)
 
-- [ ] **Step 1: Rewrite `admin/layout.tsx`**
+- [x] **Step 1: Rewrite `admin/layout.tsx`**
 
 ```tsx
 import type { Metadata } from "next";
@@ -491,18 +491,18 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 }
 ```
 
-- [ ] **Step 2: Hapus `AdminSidebarNav.tsx` & test lama**
+- [x] **Step 2: Hapus `AdminSidebarNav.tsx` & test lama**
 
 ```bash
 rm src/app/admin/AdminSidebarNav.tsx tests/admin-sidebar.test.ts
 ```
 
-- [ ] **Step 3: Typecheck + test + build**
+- [x] **Step 3: Typecheck + test + build**
 
 Run: `npm run typecheck && npm test && npm run build`
 Expected: PASS.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/admin/layout.tsx
@@ -520,7 +520,7 @@ git commit -m "refactor(admin): use generic DashboardShell for admin layout"
 - Modify: `src/app/dashboard/vendor/{paket,portofolio,kalender,inbox,dompet,profil}/*`
 - Delete: `src/components/vendor/VendorHeaderNav.tsx` (bila tak dipakai lagi)
 
-- [ ] **Step 1: Rewrite `vendor/layout.tsx`**
+- [x] **Step 1: Rewrite `vendor/layout.tsx`**
 
 ```tsx
 import React from "react";
@@ -543,7 +543,7 @@ export default async function VendorLayout({ children }: { children: React.React
 }
 ```
 
-- [ ] **Step 2: Rapikan `vendor/page.tsx`**
+- [x] **Step 2: Rapikan `vendor/page.tsx`**
 
 Bungkus konten dengan `DashPageHeader` + `DashCard`; stat cards → `DashStatCard`. **Pertahankan** `VendorTrackingSuite` & seluruh query/props existing. Contoh kerangka:
 
@@ -561,24 +561,24 @@ return (
 );
 ```
 
-- [ ] **Step 3: Rapikan halaman vendor lain**
+- [x] **Step 3: Rapikan halaman vendor lain**
 
 Untuk `paket`, `portofolio`, `kalender`, `inbox`, `dompet`, `profil`: tambah `DashPageHeader` di atas konten; ganti pembungkus luar `min-h-screen ... py-8 px-4` → `flex flex-col gap-6`. **Jangan ubah logika data/aksi.** (Halaman-halaman ini punya client component masing-masing; hanya lapisan visual.)
 
-- [ ] **Step 4: Hapus `VendorHeaderNav` bila tak dipakai**
+- [x] **Step 4: Hapus `VendorHeaderNav` bila tak dipakai**
 
 Cari pemakaian: `grep -rn "VendorHeaderNav" src`. Bila hanya di layout lama (sudah diganti), hapus file.
 
-- [ ] **Step 5: Typecheck + build**
+- [x] **Step 5: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 Expected: PASS.
 
-- [ ] **Step 6: Verifikasi visual**
+- [x] **Step 6: Verifikasi visual**
 
 `/dashboard/vendor` → sidebar Charcoal muncul; tiap halaman konsisten; 375px tanpa overflow.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/app/dashboard/vendor
@@ -595,7 +595,7 @@ git commit -m "feat(vendor): SaaS shell + tidy vendor dashboard pages"
 - Modify: `src/app/dashboard/ba/page.tsx` + `{vendor,komisi,dompet}/*`
 - Delete: `src/components/ba/BaHeaderNav.tsx` (bila tak dipakai)
 
-- [ ] **Step 1: Rewrite `ba/layout.tsx`**
+- [x] **Step 1: Rewrite `ba/layout.tsx`**
 
 ```tsx
 import React from "react";
@@ -618,24 +618,24 @@ export default async function BaLayout({ children }: { children: React.ReactNode
 }
 ```
 
-- [ ] **Step 2: Rapikan `ba/page.tsx`**
+- [x] **Step 2: Rapikan `ba/page.tsx`**
 
 Ganti `max-w-3xl mx-auto px-4 py-12` → `flex flex-col gap-6`; header & stat cards → `DashPageHeader` + `DashStatCard`. Pertahankan `getAmbassadorSummary()` & logika existing.
 
-- [ ] **Step 3: Rapikan `{vendor,komisi,dompet}`**
+- [x] **Step 3: Rapikan `{vendor,komisi,dompet}`**
 
 Tambah `DashPageHeader`; pembungkus luar → `flex flex-col gap-6`. Logika tidak diubah.
 
-- [ ] **Step 4: Hapus `BaHeaderNav` bila tak dipakai**
+- [x] **Step 4: Hapus `BaHeaderNav` bila tak dipakai**
 
 `grep -rn "BaHeaderNav" src` → hapus bila hanya di layout lama.
 
-- [ ] **Step 5: Typecheck + build + verifikasi visual**
+- [x] **Step 5: Typecheck + build + verifikasi visual**
 
 Run: `npm run typecheck && npm run build`.
 Cek `/dashboard/ba` + sub-halaman.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/app/dashboard/ba
@@ -652,7 +652,7 @@ git commit -m "feat(ba): SaaS shell + tidy BA dashboard pages"
 - Modify: `src/app/client/page.tsx` + `{pesanan,jadwal,undangan,profil}/*`
 - Delete: `src/components/client/ClientHeaderNav.tsx` (bila tak dipakai)
 
-- [ ] **Step 1: Rewrite `client/layout.tsx`**
+- [x] **Step 1: Rewrite `client/layout.tsx`**
 
 ```tsx
 import React from "react";
@@ -675,20 +675,20 @@ export default async function ClientLayout({ children }: { children: React.React
 }
 ```
 
-- [ ] **Step 2: Rapikan `client/page.tsx` + sub-halaman**
+- [x] **Step 2: Rapikan `client/page.tsx` + sub-halaman**
 
 `DashPageHeader` + `DashCard`/`DashStatCard`; pembungkus `flex flex-col gap-6`. Logika tidak diubah.
 
-- [ ] **Step 3: Hapus `ClientHeaderNav` bila tak dipakai**
+- [x] **Step 3: Hapus `ClientHeaderNav` bila tak dipakai**
 
 `grep -rn "ClientHeaderNav" src` → hapus bila hanya di layout lama.
 
-- [ ] **Step 4: Typecheck + build + verifikasi visual**
+- [x] **Step 4: Typecheck + build + verifikasi visual**
 
 Run: `npm run typecheck && npm run build`.
 Cek `/client` + sub-halaman.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/client
@@ -704,7 +704,7 @@ git commit -m "feat(client): SaaS shell + tidy client dashboard pages"
 - Modify: `src/components/layout/Navbar.tsx`
 - Modify: `src/components/layout/Footer.tsx`
 
-- [ ] **Step 1: Update `Navbar.tsx`**
+- [x] **Step 1: Update `Navbar.tsx`**
 
 Setelah blok `isInvitationDetailPage`/`isDesignSystemShowcase`, tambah:
 
@@ -720,16 +720,16 @@ if (isInvitationDetailPage || isDesignSystemShowcase || isDashboardArea) {
 }
 ```
 
-- [ ] **Step 2: Update `Footer.tsx`**
+- [x] **Step 2: Update `Footer.tsx`**
 
 Cari kondisi `return null` yang sudah ada; tambah `isDashboardArea` dengan logika sama.
 
-- [ ] **Step 3: Typecheck + build + verifikasi**
+- [x] **Step 3: Typecheck + build + verifikasi**
 
 Run: `npm run typecheck && npm run build`.
 Cek `/admin`, `/dashboard/vendor`, `/client` → tanpa navbar/footer publik.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/layout/Navbar.tsx src/components/layout/Footer.tsx
@@ -740,12 +740,12 @@ git commit -m "feat(layout): hide public navbar/footer in dashboard areas"
 
 ## Verifikasi Akhir
 
-- [ ] `npm run typecheck` → PASS
-- [ ] `npm test` → PASS
-- [ ] `npm run build` → PASS
-- [ ] Visual tiap role (admin/vendor/BA/client) desktop + 375px: sidebar Charcoal, komponen konsisten, tanpa overflow, ikon Lucide, tanpa emoji
-- [ ] Navbar/Footer publik tidak tampil di `/admin`, `/dashboard/*`, `/client/*`
-- [ ] Tidak ada regresi logika data/aksi (test hijau)
+- [x] `npm run typecheck` → PASS
+- [x] `npm test` → PASS
+- [x] `npm run build` → PASS
+- [x] Visual tiap role (admin/vendor/BA/client) desktop + 375px: sidebar Charcoal, komponen konsisten, tanpa overflow, ikon Lucide, tanpa emoji
+- [x] Navbar/Footer publik tidak tampil di `/admin`, `/dashboard/*`, `/client/*`
+- [x] Tidak ada regresi logika data/aksi (test hijau)
 
 ## Self-Review
 
