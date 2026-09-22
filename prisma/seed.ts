@@ -95,6 +95,7 @@ async function main() {
       settlementPct: 70,
       platformFeePct: 10,
       defaultBaCommissionPct: 5,
+      superAdminEmail: adminUser.email,
       isActive: true,
       updatedByName: adminUser.name,
     },
