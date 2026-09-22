@@ -13,7 +13,7 @@ import {
   Filter,
 } from "lucide-react";
 import { resolveDisputeAction, reviewDisputeAction } from "@/server/actions/admin";
-import { AdminPageHeader } from "@/components/admin";
+import { DashPageHeader } from "@/components/dashboard";
 import type { DisputeAdminDTO } from "@/server/queries/admin";
 
 /**
@@ -55,7 +55,7 @@ export function AdminDisputeClient({ dbDisputes }: { dbDisputes: DisputeAdminDTO
     <div className="flex flex-col gap-6">
       <div className="mx-auto w-full max-w-5xl space-y-6">
         {/* Header */}
-        <AdminPageHeader
+        <DashPageHeader
           title="Pusat Penyelesaian Sengketa"
           description="Tinjau sengketa klien/vendor, putuskan penyelesaian, dan arahkan refund melalui mekanisme escrow."
           action={

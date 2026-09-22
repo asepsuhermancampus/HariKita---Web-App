@@ -1,6 +1,6 @@
 import React from "react";
 
-export function AdminPageHeader({
+export function DashPageHeader({
   title,
   description,
   action,
@@ -12,8 +12,8 @@ export function AdminPageHeader({
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div>
-        <h1 className="font-serif text-2xl font-bold text-hk-charcoal sm:text-3xl">{title}</h1>
-        {description && <p className="mt-1 text-xs text-plum-light sm:text-sm">{description}</p>}
+        <h1 className="font-editorial text-3xl font-normal text-hk-charcoal sm:text-4xl">{title}</h1>
+        {description && <p className="mt-1 text-xs text-hk-taupe sm:text-sm">{description}</p>}
       </div>
       {action && <div className="flex items-center gap-2">{action}</div>}
     </div>

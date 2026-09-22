@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { EmptyState } from "@/components/harikita/ui";
-import { AdminPageHeader } from "@/components/admin";
+import { DashPageHeader } from "@/components/dashboard";
 import type { OrderViewModel } from "@/server/queries/orders";
 
 export function AdminEscrowClient({
@@ -31,7 +31,7 @@ export function AdminEscrowClient({
     <div className="flex flex-col gap-6">
       <div className="mx-auto w-full max-w-5xl space-y-8">
         {/* Header */}
-        <AdminPageHeader
+        <DashPageHeader
           title="Otorisasi Rekening Bersama &amp; Outbox Notifikasi"
           description="Persetujuan transfer dana rekber resmi HariKita ke mitra vendor Kebumen serta pemantauan pengiriman notifikasi ganda."
           action={

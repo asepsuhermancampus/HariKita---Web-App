@@ -1,21 +1,21 @@
 import React from "react";
 
-export type AdminBadgeTone = "ok" | "warn" | "error" | "info" | "neutral";
+export type DashBadgeTone = "ok" | "warn" | "error" | "info" | "neutral";
 
-const TONE: Record<AdminBadgeTone, string> = {
+const TONE: Record<DashBadgeTone, string> = {
   ok: "bg-[#e5f4ec] text-[#157a4d]",
   warn: "bg-[#fbf0d8] text-[#8a6410]",
   error: "bg-[#fdeceb] text-[#a2352f]",
   info: "bg-[#e6f4fd] text-[#0b6a95]",
-  neutral: "bg-hk-ivory text-plum-light border border-hk-soft-beige",
+  neutral: "bg-hk-ivory text-hk-taupe border border-hk-soft-beige",
 };
 
-export function AdminBadge({
+export function DashBadge({
   tone = "neutral",
   children,
   className = "",
 }: {
-  tone?: AdminBadgeTone;
+  tone?: DashBadgeTone;
   children: React.ReactNode;
   className?: string;
 }) {

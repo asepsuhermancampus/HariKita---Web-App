@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { formatRupiah } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
-import { AdminPageHeader, AdminStatCard, AdminCard } from "@/components/admin";
+import { DashPageHeader, DashStatCard, DashCard } from "@/components/dashboard";
 import { AdminTrackingSuite } from "@/components/dashboard";
 
 import type { AdminCalendarEventDTO } from "@/server/queries/orders";
@@ -54,7 +54,7 @@ export function AdminDashboardClient({
 
   return (
     <div className="flex flex-col gap-6">
-      <AdminPageHeader
+      <DashPageHeader
         title="Master Kontrol HariKita"
         description="Funnel konversi, jadwal multi-vendor, dan kliring escrow Kebumen."
       />
@@ -75,18 +75,18 @@ export function AdminDashboardClient({
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <AdminStatCard label="Total GMV" value={formatRupiah(gmv)} />
-        <AdminStatCard label="Order dalam Escrow" value={String(totalOrders)} />
-        <AdminStatCard
+        <DashStatCard label="Total GMV" value={formatRupiah(gmv)} />
+        <DashStatCard label="Order dalam Escrow" value={String(totalOrders)} />
+        <DashStatCard
           label="Vendor Terlibat"
           value={String(calendarEvents.reduce((a, e) => a + e.vendorsCount, 0))}
           delta="perlu dipantau"
           deltaTone="warn"
         />
-        <AdminStatCard label="Jurnal Ledger" value={String(escrow?.journalCount ?? 0)} />
+        <DashStatCard label="Jurnal Ledger" value={String(escrow?.journalCount ?? 0)} />
       </div>
 
-      <AdminCard
+      <DashCard
         title="Master Tracking &amp; Eksekutif"
         description="Ringkasan operasional, funnel konversi, kalender, dan escrow."
       >
@@ -96,7 +96,7 @@ export function AdminDashboardClient({
           escrow={escrow}
           gmv={gmv}
         />
-      </AdminCard>
+      </DashCard>
     </div>
   );
 }

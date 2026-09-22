@@ -21,7 +21,7 @@ import {
   resolveWithdrawalAction,
 } from "@/server/actions/ambassador";
 import { Modal, ToggleSwitch, EmptyState } from "@/components/harikita/ui";
-import { AdminPageHeader } from "@/components/admin";
+import { DashPageHeader } from "@/components/dashboard";
 import type { listAmbassadors, listAmbassadorWithdrawals } from "@/server/queries/ambassador";
 
 type Ambassador = Awaited<ReturnType<typeof listAmbassadors>>[number];
@@ -127,7 +127,7 @@ export function AdminBaClient({
     <div className="flex flex-col gap-6">
       <div className="mx-auto w-full max-w-6xl space-y-6">
         {/* Header */}
-        <AdminPageHeader
+        <DashPageHeader
           title="Panel Brand Ambassador"
           description="Kelola akun BA, atur persen komisi, dan proses penarikan dompet komisi."
           action={

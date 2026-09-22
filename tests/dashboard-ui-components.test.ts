@@ -6,32 +6,32 @@ import path from "node:path";
 const root = path.resolve(__dirname, "..");
 const read = (p: string) => readFileSync(path.join(root, p), "utf-8");
 
-test("AdminButton exposes variants and min-h-11", () => {
-  const src = read("src/components/admin/AdminButton.tsx");
+test("DashButton exposes variants and min-h-11", () => {
+  const src = read("src/components/dashboard/DashButton.tsx");
   assert.match(src, /variant/);
   assert.match(src, /min-h-11/);
   assert.match(src, /primary/);
   assert.match(src, /danger/);
 });
 
-test("AdminBadge maps tone to design-system tokens", () => {
-  const src = read("src/components/admin/AdminBadge.tsx");
+test("DashBadge maps tone to design-system tokens", () => {
+  const src = read("src/components/dashboard/DashBadge.tsx");
   assert.match(src, /success|ok/);
   assert.match(src, /warning|warn/);
   assert.match(src, /error/);
 });
 
-test("AdminCard renders title/description/action slots", () => {
-  const src = read("src/components/admin/AdminCard.tsx");
+test("DashCard renders title/description/action slots", () => {
+  const src = read("src/components/dashboard/DashCard.tsx");
   assert.match(src, /title/);
   assert.match(src, /description/);
   assert.match(src, /action/);
 });
 
-test("AdminPageHeader/StatCard/Table exist with expected props", () => {
-  assert.match(read("src/components/admin/AdminPageHeader.tsx"), /title/);
-  assert.match(read("src/components/admin/AdminStatCard.tsx"), /label/);
-  const t = read("src/components/admin/AdminTable.tsx");
+test("DashPageHeader/StatCard/Table exist with expected props", () => {
+  assert.match(read("src/components/dashboard/DashPageHeader.tsx"), /title/);
+  assert.match(read("src/components/dashboard/DashStatCard.tsx"), /label/);
+  const t = read("src/components/dashboard/DashTable.tsx");
   assert.match(t, /columns/);
   assert.match(t, /renderRow/);
 });

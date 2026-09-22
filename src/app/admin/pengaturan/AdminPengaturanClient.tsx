@@ -4,11 +4,11 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { Lock, Unlock, Pencil, Plus, Trash2, ShieldCheck } from "lucide-react";
 import {
-  AdminPageHeader,
-  AdminCard,
-  AdminButton,
-  AdminBadge,
-} from "@/components/admin";
+  DashPageHeader,
+  DashCard,
+  DashButton,
+  DashBadge,
+} from "@/components/dashboard";
 import { updatePlatformSettingsAction } from "@/server/actions/platform-settings";
 import {
   requestPlatformEditOtpAction,
@@ -115,29 +115,29 @@ export function AdminPengaturanClient({
 
   return (
     <div className="flex flex-col gap-6">
-      <AdminPageHeader
+      <DashPageHeader
         title="Pengaturan Platform"
         description="Persentase finansial & rincian fee. Perubahan butuh verifikasi OTP ke email Super Admin."
         action={
           <div className="flex items-center gap-2">
             {unlocked ? (
-              <AdminBadge tone="ok">
+              <DashBadge tone="ok">
                 <Unlock className="h-3.5 w-3.5" aria-hidden="true" /> Terbuka
-              </AdminBadge>
+              </DashBadge>
             ) : (
-              <AdminBadge tone="neutral">
+              <DashBadge tone="neutral">
                 <Lock className="h-3.5 w-3.5" aria-hidden="true" /> Terkunci
-              </AdminBadge>
+              </DashBadge>
             )}
-            <AdminButton variant="ghost" size="sm" onClick={requestOtp} disabled={busy}>
+            <DashButton variant="ghost" size="sm" onClick={requestOtp} disabled={busy}>
               <ShieldCheck className="h-4 w-4" aria-hidden="true" />
               Kirim Kode OTP
-            </AdminButton>
+            </DashButton>
           </div>
         }
       />
 
-      <AdminCard>
+      <DashCard>
         <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-[#f0dcae] bg-[#fbf0d8] px-4 py-3 text-xs text-[#7a5608]">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>
@@ -184,9 +184,9 @@ export function AdminPengaturanClient({
           <div className="min-w-0">
             <div className="mb-3 flex flex-wrap items-center gap-2.5">
               <span className="text-[13px] font-bold text-hk-charcoal">Rincian Platform Fee</span>
-              <AdminBadge tone={feeValid ? "ok" : "error"}>
+              <DashBadge tone={feeValid ? "ok" : "error"}>
                 total {feeTotal}% {feeValid ? "= platformFee" : "≠ platformFee"}
-              </AdminBadge>
+              </DashBadge>
             </div>
             <div className="mb-2 grid grid-cols-[1fr_104px_72px] gap-2.5 text-[11px] font-bold uppercase tracking-wide text-plum-light">
               <span>Komponen</span>
@@ -214,7 +214,7 @@ export function AdminPengaturanClient({
                     }
                     readOnly={ro}
                   />
-                  <AdminButton
+                  <DashButton
                     variant="danger"
                     size="sm"
                     disabled={ro}
@@ -222,11 +222,11 @@ export function AdminPengaturanClient({
                     aria-label={`Hapus komponen ${c.label || i + 1}`}
                   >
                     <Trash2 className="h-4 w-4" aria-hidden="true" />
-                  </AdminButton>
+                  </DashButton>
                 </div>
               ))}
             </div>
-            <AdminButton
+            <DashButton
               variant="ghost"
               size="sm"
               className="mt-3"
@@ -240,7 +240,7 @@ export function AdminPengaturanClient({
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
               Tambah Komponen
-            </AdminButton>
+            </DashButton>
           </div>
         </div>
 
@@ -251,15 +251,15 @@ export function AdminPengaturanClient({
         )}
 
         <div className="mt-6 flex justify-end gap-3 border-t border-hk-soft-beige pt-4">
-          <AdminButton variant="secondary" disabled={!unlocked || busy} onClick={() => setUnlocked(true)}>
+          <DashButton variant="secondary" disabled={!unlocked || busy} onClick={() => setUnlocked(true)}>
             <Pencil className="h-4 w-4" aria-hidden="true" />
             Edit
-          </AdminButton>
-          <AdminButton variant="primary" disabled={!unlocked || busy} onClick={save}>
+          </DashButton>
+          <DashButton variant="primary" disabled={!unlocked || busy} onClick={save}>
             Simpan
-          </AdminButton>
+          </DashButton>
         </div>
-      </AdminCard>
+      </DashCard>
 
       {/* Modal OTP */}
       {otpModal && (
@@ -294,7 +294,7 @@ export function AdminPengaturanClient({
             {msg && <div className="mt-3 text-xs font-semibold text-[#a2352f]">{msg}</div>}
 
             <div className="mt-5 flex gap-3">
-              <AdminButton
+              <DashButton
                 variant="secondary"
                 className="flex-1"
                 onClick={() => {
@@ -305,15 +305,15 @@ export function AdminPengaturanClient({
                 }}
               >
                 Batal
-              </AdminButton>
-              <AdminButton
+              </DashButton>
+              <DashButton
                 variant="primary"
                 className="flex-1"
                 disabled={busy || otp.length !== 6}
                 onClick={submitOtp}
               >
                 Verifikasi
-              </AdminButton>
+              </DashButton>
             </div>
           </div>
         </div>

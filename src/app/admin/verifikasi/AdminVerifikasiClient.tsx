@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { approveVendorAction, rejectVendorAction } from "@/server/actions/admin";
 import { Modal } from "@/components/harikita/ui";
-import { AdminPageHeader } from "@/components/admin";
+import { DashPageHeader } from "@/components/dashboard";
 import type { VendorVerificationDTO } from "@/server/queries/admin";
 
 /**
@@ -85,7 +85,7 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
     <div className="flex flex-col gap-6">
       <div className="mx-auto w-full max-w-5xl space-y-6">
         {/* Header */}
-        <AdminPageHeader
+        <DashPageHeader
           title="Pusat Kurasi &amp; Verifikasi Mitra Vendor"
           description="Setujui atau minta revisi mitra vendor lokal Kebumen sebelum tampil di katalog."
           action={

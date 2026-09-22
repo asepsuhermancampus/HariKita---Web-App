@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { ShieldAlert, AlertTriangle, CheckCircle2, Search, Lock } from "lucide-react";
-import { AdminPageHeader } from "@/components/admin";
+import { DashPageHeader } from "@/components/dashboard";
 import type { ContentAuditFinding } from "@/server/queries/admin";
 
 /**
@@ -23,7 +23,7 @@ export function AdminAuditKontenClient({ dbFindings }: { dbFindings: ContentAudi
     <div className="flex flex-col gap-6">
       <div className="mx-auto w-full max-w-4xl space-y-6">
         {/* Header */}
-        <AdminPageHeader
+        <DashPageHeader
           title="Log Sensor Anti-Disintermediasi"
           description="Pemindaian otomatis teks tersimpan (deskripsi vendor &amp; caption portofolio) terhadap upaya penyelundupan kontak pribadi."
           action={

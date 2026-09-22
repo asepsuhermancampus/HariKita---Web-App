@@ -10,7 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { EmptyState, DatePicker } from "@/components/harikita/ui";
-import { AdminPageHeader } from "@/components/admin";
+import { DashPageHeader } from "@/components/dashboard";
 import { formatRupiah } from "@/lib/utils";
 import type { AdminCalendarEventDTO } from "@/server/queries/orders";
 
@@ -97,7 +97,7 @@ export function AdminMasterKalenderPage({
     <div className="flex flex-col gap-6">
       <div className="mx-auto w-full max-w-5xl space-y-6">
         {/* Header */}
-        <AdminPageHeader
+        <DashPageHeader
           title="Master Multi-Vendor Calendar"
           description="Peta jadwal seluruh pernikahan di 26 kecamatan Kabupaten Kebumen untuk sinkronisasi operasional multi-vendor."
           action={

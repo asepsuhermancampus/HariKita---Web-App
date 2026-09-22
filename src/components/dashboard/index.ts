@@ -7,4 +7,10 @@ export * from "./DashboardTrackingTable";
 export * from "./VendorTrackingSuite";
 export * from "./AdminTrackingSuite";
 
-
+// Komponen bersama shell SaaS (semua role)
+export * from "./DashButton";
+export * from "./DashBadge";
+export * from "./DashCard";
+export * from "./DashPageHeader";
+export * from "./DashStatCard";
+export * from "./DashTable";

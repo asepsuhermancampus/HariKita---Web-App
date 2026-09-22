@@ -6,7 +6,7 @@ const DELTA: Record<string, string> = {
   error: "text-[#a2352f]",
 };
 
-export function AdminStatCard({
+export function DashStatCard({
   label,
   value,
   delta,
@@ -18,9 +18,11 @@ export function AdminStatCard({
   deltaTone?: "ok" | "warn" | "error";
 }) {
   return (
-    <div className="rounded-2xl border border-hk-soft-beige bg-white p-5 shadow-xs">
-      <div className="text-[11px] font-bold uppercase tracking-wide text-plum-light">{label}</div>
-      <div className="mt-1.5 text-2xl font-extrabold text-hk-charcoal">{value}</div>
+    <div className="rounded-2xl border border-hk-champagne/30 bg-white p-5 shadow-sm">
+      <div className="font-manrope text-[11px] font-bold uppercase tracking-wide text-hk-taupe">
+        {label}
+      </div>
+      <div className="mt-1.5 font-editorial text-3xl font-medium text-hk-charcoal">{value}</div>
       {delta && <div className={`mt-1 text-[11px] font-bold ${DELTA[deltaTone]}`}>{delta}</div>}
     </div>
   );
