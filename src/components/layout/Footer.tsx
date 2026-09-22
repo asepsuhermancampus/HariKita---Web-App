@@ -11,6 +11,11 @@ export const Footer = () => {
   const isInvitationDetailPage =
     pathname && pathname.startsWith("/undangan/") && pathname !== "/undangan";
   const isDesignSystemShowcase = pathname === "/design-system-showcase";
+  const isDashboardArea =
+    pathname &&
+    (pathname.startsWith("/admin") ||
+      pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/client"));
 
   const handleDownloadApps = () => {
     if (typeof window !== "undefined") {
@@ -18,7 +23,7 @@ export const Footer = () => {
     }
   };
 
-  if (isInvitationDetailPage || isDesignSystemShowcase) {
+  if (isInvitationDetailPage || isDesignSystemShowcase || isDashboardArea) {
     return null;
   }
 

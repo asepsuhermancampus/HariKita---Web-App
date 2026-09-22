@@ -28,8 +28,13 @@ export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
   const isInvitationDetailPage =
     pathname && pathname.startsWith("/undangan/") && pathname !== "/undangan";
   const isDesignSystemShowcase = pathname === "/design-system-showcase";
+  const isDashboardArea =
+    pathname &&
+    (pathname.startsWith("/admin") ||
+      pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/client"));
 
-  if (isInvitationDetailPage || isDesignSystemShowcase) {
+  if (isInvitationDetailPage || isDesignSystemShowcase || isDashboardArea) {
     return null;
   }
 
