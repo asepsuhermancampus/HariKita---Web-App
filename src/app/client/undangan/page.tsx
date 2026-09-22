@@ -13,6 +13,7 @@ import {
   Filter,
 } from "lucide-react";
 import { Modal } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 
 interface Guest {
   id: string;
@@ -145,43 +146,30 @@ export default function ClientUndanganPage() {
   });
 
   return (
-    <div className="py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-6">
-      {/* Header Breadcrumb */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-hk-champagne/40 pb-6">
-        <div>
-          <div className="text-xs font-manrope text-hk-charcoal/70 flex items-center gap-1 mb-1.5">
-            <Link href="/client" className="hover:text-hk-charcoal font-medium">
-              Portal Klien
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title="Pengelola Undangan Digital & RSVP"
+        description="Kelola daftar tamu, buat tautan personalisasi WhatsApp otomatis, dan pantau amplop digital QRIS."
+        action={
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Link
+              href={`/undangan/${slug}`}
+              target="_blank"
+              className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-semibold text-hk-charcoal hover:bg-hk-soft-beige/40"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-hk-taupe" />
+              <span>Buka Web Undangan</span>
             </Link>
-            <span>/</span>
-            <span className="text-hk-charcoal font-semibold">Buku Tamu &amp; RSVP</span>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="focus-ring inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-hk-taupe px-4 text-xs font-semibold text-white hover:bg-hk-charcoal"
+            >
+              <Plus className="w-3.5 h-3.5 text-hk-champagne" />
+              <span>Tambah Tamu Baru</span>
+            </button>
           </div>
-          <h1 className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal leading-tight">
-            Pengelola Undangan Digital &amp; RSVP
-          </h1>
-          <p className="text-xs sm:text-sm font-manrope text-hk-charcoal/80 mt-1 leading-relaxed">
-            Kelola daftar tamu, buat tautan personalisasi WhatsApp otomatis, dan pantau amplop digital QRIS.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Link
-            href={`/undangan/${slug}`}
-            target="_blank"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-hk-champagne/60 text-hk-charcoal text-xs font-manrope font-semibold hover:bg-hk-soft-beige/40 transition-colors shadow-2xs"
-          >
-            <ExternalLink className="w-3.5 h-3.5 text-hk-taupe" />
-            <span>Buka Web Undangan</span>
-          </Link>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-hk-taupe text-white text-xs font-manrope font-semibold hover:bg-[#78644e] transition-colors shadow-xs cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5 text-hk-champagne" />
-            <span>Tambah Tamu Baru</span>
-          </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

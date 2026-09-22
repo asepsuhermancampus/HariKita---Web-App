@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { getClientProfile } from "@/server/actions/client-profile";
 import { ClientProfileForm } from "./ClientProfileForm";
-import { BadgePremium } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 
 export const metadata = {
   title: "Profil & Data Diri Pengantin • HariKita Kebumen",
@@ -38,35 +38,20 @@ export default async function ClientProfilePage() {
   }
 
   return (
-    <div className="py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-8">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-hk-champagne/40 pb-6">
-        <div>
-          <BadgePremium
-            label="PROFIL PENGANTIN & DATA ACARA"
-            variant="pill"
-            className="mb-2"
-          />
-          <h1 className="font-editorial text-3xl sm:text-4xl text-hk-charcoal font-normal mt-1 leading-tight">
-            Data Diri: {profile.name}
-            {profile.partnerName ? ` & ${profile.partnerName}` : ""}
-          </h1>
-          <p className="font-manrope text-xs sm:text-sm text-hk-charcoal/80 mt-1 leading-relaxed">
-            Data ini digunakan untuk kontrak digital SLA, sinkronisasi jadwal
-            fitting, dan penentuan logistik vendor se-Kebumen.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
+    <div className="flex flex-col gap-8">
+      <DashPageHeader
+        title={`Data Diri: ${profile.name}${profile.partnerName ? ` & ${profile.partnerName}` : ""}`}
+        description="Data ini digunakan untuk kontrak digital SLA, sinkronisasi jadwal fitting, dan penentuan logistik vendor se-Kebumen."
+        action={
           <Link
             href="/client/undangan"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-hk-champagne/60 bg-white text-hk-charcoal text-xs font-manrope font-semibold hover:bg-hk-soft-beige/40 transition-all shadow-xs"
+            className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-semibold text-hk-charcoal hover:bg-hk-soft-beige/40"
           >
             <ExternalLink className="w-3.5 h-3.5 text-hk-taupe" />
             <span>Kelola Undangan &amp; Tamu</span>
           </Link>
-        </div>
-      </div>
+        }
+      />
 
       {/* Couple Summary Card Banner */}
       <div className="rounded-3xl bg-white border border-hk-champagne/40 p-6 sm:p-8 shadow-xs relative overflow-hidden">

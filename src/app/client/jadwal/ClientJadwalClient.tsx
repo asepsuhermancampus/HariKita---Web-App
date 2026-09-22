@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useOrders } from "@/lib/order-store";
 import { Modal, DatePicker } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 import type { PhysicalSessionDTO, RundownRowDTO } from "@/server/queries/orders";
 
 interface PhysicalSession {
@@ -240,35 +241,20 @@ export function ClientJadwalClient({
   ];
 
   return (
-    <div className="py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-6">
-      {/* Header Breadcrumb */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-hk-champagne/40 pb-6">
-        <div>
-          <div className="text-xs font-manrope text-hk-charcoal/70 flex items-center gap-1 mb-1.5">
-            <Link href="/client" className="hover:text-hk-charcoal font-medium">
-              Portal Klien
-            </Link>
-            <span>/</span>
-            <span className="text-hk-charcoal font-semibold">Jadwal Sesi &amp; Hari H</span>
-          </div>
-          <h1 className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal leading-tight">
-            Pelacak Sesi Fisik &amp; Rundown Hari H
-          </h1>
-          <p className="text-xs sm:text-sm font-manrope text-hk-charcoal/80 mt-1 leading-relaxed">
-            Kelola sesi fitting di Kebumen, pengantaran sample box test food, dan susunan rundown hari H terkoordinasi.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title="Pelacak Sesi Fisik & Rundown Hari H"
+        description="Kelola sesi fitting di Kebumen, pengantaran sample box test food, dan susunan rundown hari H terkoordinasi."
+        action={
           <Link
             href={`/hub-koordinasi?orderId=${activeOrder.id}`}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-hk-taupe text-white text-xs font-manrope font-semibold hover:bg-[#78644e] transition-colors shadow-xs"
+            className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-hk-taupe px-4 text-xs font-semibold text-white hover:bg-hk-charcoal"
           >
             <Sparkles className="w-3.5 h-3.5 text-hk-champagne" />
             <span>Radar Hub Koordinasi</span>
           </Link>
-        </div>
-      </div>
+        }
+      />
 
       {/* Info Card Active Order */}
       <div className="bg-white rounded-3xl border border-hk-champagne/40 shadow-xs p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">

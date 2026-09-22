@@ -8,6 +8,7 @@ import {
   Calendar,
   CreditCard,
   CheckCircle2,
+  Check,
   Clock,
   ExternalLink,
   Phone,
@@ -17,7 +18,7 @@ import {
   ShieldCheck,
   User,
 } from "lucide-react";
-import { BadgePremium, DecorativeDivider } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 
 export default function ClientPortalPage() {
   const [activeTab, setActiveTab] = useState<"invoices" | "sessions" | "contract">("invoices");
@@ -69,41 +70,30 @@ export default function ClientPortalPage() {
   ];
 
   return (
-    <div className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-hk-champagne/40 pb-6">
-        <div>
-          <BadgePremium
-            label="PORTAL KLIEN TERINTEGRASI"
-            variant="pill"
-            className="mb-2"
-          />
-          <h1 className="font-editorial text-3xl sm:text-4xl text-hk-charcoal font-normal mt-1 leading-tight">
-            Pusat Pesanan: {mockOrder.clientName}
-          </h1>
-          <p className="font-manrope text-xs sm:text-sm text-hk-charcoal/80 mt-1">
-            Kode Booking: <span className="font-mono font-bold text-hk-charcoal">{mockOrder.orderNumber}</span> • Acara: {mockOrder.eventDate} di {mockOrder.venue}
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Link
-            href="/client/profil"
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-hk-champagne/60 bg-white text-hk-charcoal text-xs font-manrope font-semibold hover:bg-hk-soft-beige/40 transition-all shadow-xs"
-          >
-            <User className="w-3.5 h-3.5 text-hk-taupe" />
-            <span>Kelola Profil Data Diri</span>
-          </Link>
-          <Link
-            href="/undangan/bima-citra"
-            target="_blank"
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-hk-champagne/60 bg-white text-hk-charcoal text-xs font-manrope font-semibold hover:bg-hk-soft-beige/40 transition-all shadow-xs"
-          >
-            <ExternalLink className="w-3.5 h-3.5 text-hk-taupe" />
-            <span>Buka Undangan Web Anda</span>
-          </Link>
-        </div>
-      </div>
+    <div className="flex flex-col gap-8">
+      <DashPageHeader
+        title={`Pusat Pesanan: ${mockOrder.clientName}`}
+        description={`Kode Booking ${mockOrder.orderNumber} • Acara ${mockOrder.eventDate} di ${mockOrder.venue}`}
+        action={
+          <div className="flex flex-wrap items-center gap-2.5">
+            <Link
+              href="/client/profil"
+              className="flex min-h-11 items-center gap-2 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-semibold text-hk-charcoal hover:bg-hk-soft-beige/40"
+            >
+              <User className="w-3.5 h-3.5 text-hk-taupe" />
+              <span>Kelola Profil Data Diri</span>
+            </Link>
+            <Link
+              href="/undangan/bima-citra"
+              target="_blank"
+              className="flex min-h-11 items-center gap-2 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-semibold text-hk-charcoal hover:bg-hk-soft-beige/40"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-hk-taupe" />
+              <span>Buka Undangan Web Anda</span>
+            </Link>
+          </div>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex flex-wrap items-center gap-2.5 border-b border-hk-champagne/30 pb-3">
@@ -317,7 +307,9 @@ export default function ClientPortalPage() {
               <div className="h-16 flex items-center justify-center font-editorial text-2xl italic text-hk-charcoal">
                 Bima &amp; Citra
               </div>
-              <span className="text-[11px] text-emerald-700 font-bold block font-manrope">✓ Ditandatangani Digital</span>
+              <span className="text-[11px] text-emerald-700 font-bold flex items-center justify-center gap-1 font-manrope">
+                <Check className="h-3.5 w-3.5" /> Ditandatangani Digital
+              </span>
             </div>
 
             <div className="p-5 rounded-2xl bg-white border border-hk-champagne/40 space-y-2">
@@ -325,7 +317,9 @@ export default function ClientPortalPage() {
               <div className="h-16 flex items-center justify-center font-editorial text-2xl italic text-hk-charcoal">
                 HariKita Kebumen
               </div>
-              <span className="text-[11px] text-emerald-700 font-bold block font-manrope">✓ Terverifikasi Legal</span>
+              <span className="text-[11px] text-emerald-700 font-bold flex items-center justify-center gap-1 font-manrope">
+                <Check className="h-3.5 w-3.5" /> Terverifikasi Legal
+              </span>
             </div>
           </div>
         </div>
