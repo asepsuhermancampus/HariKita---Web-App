@@ -33,7 +33,7 @@ export function getSessionSecret(): string {
 }
 
 /** Encode string → base64url (UTF-8 aman, tanpa padding). */
-function base64urlEncode(input: string): string {
+export function base64urlEncode(input: string): string {
   const bytes = new TextEncoder().encode(input);
   let binary = "";
   for (const b of bytes) binary += String.fromCharCode(b);
@@ -41,7 +41,7 @@ function base64urlEncode(input: string): string {
 }
 
 /** Decode base64url → string (UTF-8). Throw bila format tidak valid. */
-function base64urlDecode(input: string): string {
+export function base64urlDecode(input: string): string {
   const padded = input.replace(/-/g, "+").replace(/_/g, "/");
   const binary = atob(padded);
   const bytes = new Uint8Array(binary.length);
@@ -50,7 +50,7 @@ function base64urlDecode(input: string): string {
 }
 
 /** Hitung HMAC-SHA256(payload, secret) → base64url. */
-async function hmacBase64url(payload: string, secret: string): Promise<string> {
+export async function hmacBase64url(payload: string, secret: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(secret),
