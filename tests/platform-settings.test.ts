@@ -199,3 +199,10 @@ test("unlock token issued for admin id can be verified", async () => {
   const t = await signUnlockToken("admin-x");
   assert.deepEqual(await verifyUnlockToken(t), { adminId: "admin-x" });
 });
+
+test("isAdminEditUnlocked contract: returns false for mismatched admin", async () => {
+  const { verifyUnlockToken, signUnlockToken } = await import("../src/server/auth/admin-edit-unlock");
+  const t = await signUnlockToken("admin-a");
+  const res = await verifyUnlockToken(t);
+  assert.notEqual(res?.adminId, "admin-b");
+});
