@@ -20,6 +20,7 @@ import {
 import { detectOffPlatformContact } from "@/lib/content-guard";
 import { usePortfolio, portfolioStore, PortfolioPost } from "@/lib/portfolio-store";
 import { Modal } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 import {
   createPortfolioAction,
   deletePortfolioAction,
@@ -144,45 +145,31 @@ export function VendorPortofolioClient({
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#4A2E35] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-6">
-        {/* Header Breadcrumb */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="text-xs text-[#6B5E62] flex items-center gap-1 mb-1">
-              <Link href="/dashboard/vendor" className="hover:text-[#4A2E35]">
-                Portal Mitra Vendor
-              </Link>
-              <span>/</span>
-              <span className="text-[#4A2E35] font-medium">Portofolio Feed</span>
-            </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A2E35]">
-              Pengelola Portofolio Feed
-            </h1>
-            <p className="text-xs text-[#6B5E62] mt-0.5">
-              Unggah karya foto/video pernikahan Anda. Ditampilkan langsung di profil publik dan direktori calon pengantin.
-            </p>
-          </div>
-
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title="Pengelola Portofolio Feed"
+        description="Unggah karya foto/video pernikahan Anda. Ditampilkan langsung di profil publik dan direktori calon pengantin."
+        action={
           <div className="flex items-center gap-2">
             <Link
               href={`/vendor/${currentVendorSlug}`}
               target="_blank"
-              className="px-3.5 py-2 rounded-xl bg-white border border-[#C5A880] text-[#4A2E35] text-xs font-semibold hover:bg-[#FAF8F5] transition-colors flex items-center gap-1.5 shadow-2xs"
+              className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-hk-champagne bg-white px-3.5 text-xs font-semibold text-hk-charcoal hover:bg-hk-ivory"
             >
-              <ExternalLink className="w-3.5 h-3.5 text-[#C5A880]" />
+              <ExternalLink className="w-3.5 h-3.5 text-hk-champagne" />
               Lihat Profil Publik
             </Link>
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-3.5 py-2 rounded-xl bg-[#4A2E35] text-white text-xs font-semibold hover:bg-[#6B5E62] transition-colors flex items-center gap-1.5 shadow-sm"
+              className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-hk-taupe px-3.5 text-xs font-semibold text-white hover:bg-hk-charcoal"
             >
-              <Plus className="w-3.5 h-3.5 text-[#C5A880]" />
+              <Plus className="w-3.5 h-3.5" />
               Unggah Karya Baru
             </button>
           </div>
-        </div>
-
+        }
+      />
+      <div className="space-y-6">
         {/* Anti-Disintermediation Policy Banner */}
         <div className="p-4 rounded-2xl bg-white border border-[#C5A880]/30 shadow-sm flex items-start gap-3">
           <ShieldCheck className="w-5 h-5 text-[#C5A880] shrink-0 mt-0.5" />

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useNotifications } from "@/lib/notification-store";
 import { vendorDecisionAction } from "@/server/actions/order";
+import { DashPageHeader } from "@/components/dashboard";
 import type { VendorInboxItemDTO } from "@/server/queries/vendor";
 
 interface InboxVM {
@@ -104,34 +105,20 @@ export function VendorInboxClient({ dbItems }: { dbItems: VendorInboxItemDTO[] }
   };
 
   return (
-    <div className="min-h-screen bg-hk-ivory text-hk-charcoal py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="text-xs font-manrope text-hk-charcoal/70 flex items-center gap-1 mb-1">
-              <Link href="/dashboard/vendor" className="hover:text-hk-charcoal">
-                Portal Mitra Vendor
-              </Link>
-              <span>/</span>
-              <span className="text-hk-charcoal font-semibold">Kotak Masuk Pesanan</span>
-            </div>
-            <h1 className="font-editorial text-2xl sm:text-4xl font-bold text-hk-charcoal">
-              Kotak Masuk Order &amp; Notifikasi
-            </h1>
-            <p className="text-xs font-manrope text-hk-charcoal/70 mt-0.5">
-              Pesanan nyata yang masuk setelah calon pengantin mengajukan booking. Setujui atau tolak sesuai ketersediaan jadwal Anda.
-            </p>
-          </div>
-
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title="Kotak Masuk Order & Notifikasi"
+        description="Pesanan nyata yang masuk setelah calon pengantin mengajukan booking. Setujui atau tolak sesuai ketersediaan jadwal Anda."
+        action={
           <Link
             href="/dashboard/vendor/kalender"
-            className="px-4 py-2 rounded-full bg-white border border-hk-champagne/60 text-hk-charcoal text-xs font-manrope font-bold hover:bg-hk-ivory transition-colors shadow-2xs"
+            className="focus-ring inline-flex min-h-11 items-center rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-bold text-hk-charcoal hover:bg-hk-ivory"
           >
             Cek Kalender Sibuk
           </Link>
-        </div>
-
+        }
+      />
+      <div className="space-y-6">
         {/* Filter */}
         <div className="flex gap-2 border-b border-hk-champagne/40 pb-2">
           <button

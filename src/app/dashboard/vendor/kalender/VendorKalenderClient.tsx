@@ -16,6 +16,7 @@ import { useAvailability, availabilityStore } from "@/lib/availability-store";
 import { addBlackoutAction, removeBlackoutAction } from "@/server/actions/vendor";
 import type { VendorBlackoutDTO } from "@/server/queries/vendor";
 import { Calendar as DayPickerCalendar, Modal } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 
 /** Tanggal hari ini dalam format kanonikal "YYYY-MM-DD" (waktu lokal). */
 function todayYmd(): string {
@@ -127,35 +128,21 @@ export function VendorKalenderClient({
   };
 
   return (
-    <div className="min-h-screen bg-hk-canvas text-hk-charcoal py-8 font-manrope">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        {/* Header Breadcrumb */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="text-xs text-hk-charcoal/70 flex items-center gap-1 mb-1">
-              <Link href="/dashboard/vendor" className="hover:text-hk-charcoal">
-                Portal Mitra Vendor
-              </Link>
-              <span>/</span>
-              <span className="text-hk-charcoal font-medium">Kalender Blackout</span>
-            </div>
-            <h1 className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal">
-              Kalender Blackout Dates
-            </h1>
-            <p className="text-xs text-hk-charcoal/70 mt-0.5">
-              Kunci tanggal di mana jadwal Anda sudah terisi di luar platform HariKita atau saat libur operasional.
-            </p>
-          </div>
-
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title="Kalender Blackout Dates"
+        description="Kunci tanggal di mana jadwal Anda sudah terisi di luar platform HariKita atau saat libur operasional."
+        action={
           <Link
             href="/hub-koordinasi"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-hk-taupe text-white text-xs font-semibold hover:bg-hk-charcoal transition-colors shadow-sm self-start"
+            className="focus-ring inline-flex min-h-11 items-center gap-2 self-start rounded-xl bg-hk-taupe px-4 text-xs font-semibold text-white hover:bg-hk-charcoal"
           >
             <Sparkles className="w-3.5 h-3.5 text-hk-champagne" />
             Cek Matriks Ketersediaan
           </Link>
-        </div>
-
+        }
+      />
+      <div className="space-y-6">
         {/* Lock Date Form Card */}
         <div className="bg-white rounded-2xl border border-hk-champagne/40 shadow-sm p-5 sm:p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-hk-soft-beige pb-3">

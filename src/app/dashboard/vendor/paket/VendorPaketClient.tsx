@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { formatRupiah } from "@/lib/utils";
 import { Modal } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 import {
   createPackageAction,
   updatePackageAction,
@@ -141,35 +142,21 @@ export function VendorPaketClient({
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#4A2E35] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header Breadcrumb */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="text-xs text-[#6B5E62] flex items-center gap-1 mb-1">
-              <Link href="/dashboard/vendor" className="hover:text-[#4A2E35]">
-                Portal Mitra Vendor
-              </Link>
-              <span>/</span>
-              <span className="text-[#4A2E35] font-medium">Daftar Paket Layanan</span>
-            </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#4A2E35]">
-              Manajemen Paket &amp; Harga
-            </h1>
-            <p className="text-xs text-[#6B5E62] mt-0.5">
-              Atur daftar paket yang dapat dipilih langsung oleh calon pengantin di katalog dan mix-and-match builder.
-            </p>
-          </div>
-
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title="Manajemen Paket & Harga"
+        description="Atur daftar paket yang dapat dipilih langsung oleh calon pengantin di katalog dan mix-and-match builder."
+        action={
           <button
             onClick={openCreate}
-            className="px-3.5 py-2 rounded-xl bg-[#4A2E35] text-white text-xs font-semibold hover:bg-[#6B5E62] transition-colors flex items-center gap-1.5 shadow-sm self-start"
+            className="focus-ring inline-flex min-h-11 items-center gap-1.5 self-start rounded-xl bg-hk-taupe px-3.5 text-xs font-semibold text-white hover:bg-hk-charcoal"
           >
-            <Plus className="w-3.5 h-3.5 text-[#C5A880]" />
+            <Plus className="w-3.5 h-3.5" />
             Tambah Paket Baru
           </button>
-        </div>
-
+        }
+      />
+      <div className="space-y-6">
         {message && (
           <div className="flex items-center gap-2 text-xs text-red-700 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
             <AlertCircle className="w-4 h-4" />

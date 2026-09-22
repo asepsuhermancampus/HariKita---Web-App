@@ -3,18 +3,12 @@
 import React, { useState } from "react";
 import { formatRupiah } from "@/lib/utils";
 import {
-  Store,
   Calendar,
   Wallet,
-  Clock,
-  CheckCircle2,
   Lock,
-  Unlock,
-  AlertCircle,
-  Sparkles,
-  TrendingUp,
 } from "lucide-react";
 import { DatePicker } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 
 export default function VendorPortalPage() {
   const [activeTab, setActiveTab] = useState<"calendar" | "package" | "wallet">("calendar");
@@ -54,58 +48,47 @@ export default function VendorPortalPage() {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gold/25 pb-6">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/15 text-gold-dark text-xs font-bold uppercase tracking-wider">
-            <Store className="w-3.5 h-3.5" />
-            <span>Portal Mitra Vendor Terverifikasi Kebumen</span>
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title={vendorInfo.name}
+        description={`Kategori ${vendorInfo.category} • ${vendorInfo.city} • ${vendorInfo.ordersCompleted} acara sukses`}
+        action={
+          <div className="flex items-center gap-4 rounded-2xl border border-hk-champagne/30 bg-white p-4 shadow-sm">
+            <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-hk-champagne to-hk-taupe text-white">
+              <Wallet className="h-5 w-5" />
+            </div>
+            <div>
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-hk-taupe">
+                Saldo Dompet Payout
+              </span>
+              <p className="font-mono text-xl font-bold text-hk-charcoal">
+                {formatRupiah(vendorInfo.walletBalance)}
+              </p>
+            </div>
           </div>
-          <h1 className="font-serif-luxury text-3xl sm:text-4xl text-plum font-bold mt-2">
-            {vendorInfo.name}
-          </h1>
-          <p className="text-xs text-plum-light mt-1">
-            Kategori: <strong className="text-plum">{vendorInfo.category}</strong> • Lokasi: {vendorInfo.city} • Rating: ⭐ {vendorInfo.rating} ({vendorInfo.ordersCompleted} Acara Sukses)
-          </p>
-        </div>
-
-        {/* Quick Wallet Balance */}
-        <div className="p-4 rounded-2xl bg-white border border-gold/30 shadow-xs flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl gold-gradient-bg text-plum-dark flex items-center justify-center">
-            <Wallet className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-[10px] text-plum-light uppercase tracking-wider font-bold">
-              Saldo Dompet Payout
-            </span>
-            <p className="font-mono text-xl font-bold text-plum">
-              {formatRupiah(vendorInfo.walletBalance)}
-            </p>
-          </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-gold/20 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-hk-soft-beige pb-2">
         <button
           onClick={() => setActiveTab("calendar")}
-          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${
+          className={`flex min-h-11 items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition-all ${
             activeTab === "calendar"
-              ? "gold-gradient-bg text-plum-dark shadow-sm"
-              : "text-plum-light hover:bg-gold/10"
+              ? "bg-hk-taupe text-white shadow-sm"
+              : "text-hk-taupe hover:bg-hk-ivory"
           }`}
         >
           <Calendar className="w-4 h-4" />
-          <span>Kalender Blackout Dates (Kunci Tanggal Offline)</span>
+          <span>Kalender Blackout Dates</span>
         </button>
 
         <button
           onClick={() => setActiveTab("wallet")}
-          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${
+          className={`flex min-h-11 items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold transition-all ${
             activeTab === "wallet"
-              ? "gold-gradient-bg text-plum-dark shadow-sm"
-              : "text-plum-light hover:bg-gold/10"
+              ? "bg-hk-taupe text-white shadow-sm"
+              : "text-hk-taupe hover:bg-hk-ivory"
           }`}
         >
           <Wallet className="w-4 h-4" />
@@ -116,12 +99,12 @@ export default function VendorPortalPage() {
       {/* TAB 1: BLACKOUT DATES CALENDAR */}
       {activeTab === "calendar" && (
         <div className="space-y-6 animate-fadeIn">
-          <div className="p-6 rounded-3xl bg-white border border-gold/30 shadow-sm space-y-4">
+          <div className="p-6 rounded-3xl bg-white border border-hk-champagne/30 shadow-sm space-y-4">
             <div className="space-y-1">
-              <h3 className="font-serif-luxury text-xl font-bold text-plum">
+              <h3 className="font-editorial text-xl font-medium text-hk-charcoal">
                 Kunci Tanggal Sibuk / Booking Offline
               </h3>
-              <p className="text-xs text-plum-light leading-relaxed">
+              <p className="text-xs text-hk-taupe leading-relaxed">
                 Tanggal yang Anda kunci di sini otomatis <strong>TIDAK BISA DIBOOKING</strong> oleh calon pengantin di platform HariKita Kebumen. Ini mencegah terjadinya double-booking jadwal pemotretan atau acara.
               </p>
             </div>
@@ -140,9 +123,9 @@ export default function VendorPortalPage() {
               </div>
               <button
                 type="submit"
-                className="btn btn-sm gold-gradient-bg text-plum-dark font-bold rounded-xl border-none min-h-[40px] shrink-0"
+                className="focus-ring inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-hk-taupe px-4 text-sm font-bold text-white hover:bg-hk-charcoal"
               >
-                <Lock className="w-3.5 h-3.5 mr-1" />
+                <Lock className="w-3.5 h-3.5" />
                 Kunci Tanggal Ini
               </button>
             </form>
@@ -153,23 +136,23 @@ export default function VendorPortalPage() {
             {blackoutDates.map((dateStr) => (
               <div
                 key={dateStr}
-                className="p-4 rounded-2xl bg-rose-50/80 border border-rose-200 flex items-center justify-between shadow-xs"
+                className="p-4 rounded-2xl bg-[#fdeceb] border border-[#f3c9c6] flex items-center justify-between shadow-sm"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-rose-100 text-rose-700">
+                  <div className="p-2 rounded-lg bg-[#fadad7] text-[#a2352f]">
                     <Lock className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="font-mono text-xs font-bold text-rose-900 block">
+                    <span className="font-mono text-xs font-bold text-[#7a2620] block">
                       {dateStr}
                     </span>
-                    <span className="text-[10px] text-rose-600 font-semibold">Terkunci (Offline Booking)</span>
+                    <span className="text-[10px] text-[#a2352f] font-semibold">Terkunci (Offline)</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => toggleBlackoutDate(dateStr)}
-                  className="btn btn-xs btn-ghost text-rose-700 hover:bg-rose-200/60 rounded-lg text-[10px]"
+                  className="focus-ring min-h-9 rounded-lg px-3 text-[10px] font-bold text-[#a2352f] hover:bg-[#f3c9c6]/60"
                 >
                   Buka Kunci
                 </button>
@@ -183,52 +166,52 @@ export default function VendorPortalPage() {
       {activeTab === "wallet" && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fadeIn">
           {/* Main Balance Card */}
-          <div className="p-6 rounded-3xl bg-white border border-gold/30 shadow-md space-y-4">
-            <span className="text-xs uppercase font-bold text-gold-dark">Saldo Siap Tarik</span>
-            <p className="font-mono text-3xl font-bold text-plum">
+          <div className="p-6 rounded-3xl bg-white border border-hk-champagne/30 shadow-sm space-y-4">
+            <span className="text-xs uppercase font-bold text-hk-taupe">Saldo Siap Tarik</span>
+            <p className="font-mono text-3xl font-bold text-hk-charcoal">
               {formatRupiah(vendorInfo.walletBalance)}
             </p>
-            <p className="text-[11px] text-plum-light leading-relaxed">
+            <p className="text-[11px] text-hk-taupe leading-relaxed">
               Hak dana 30% dari pesanan yang telah memasuki H-3 acara, dan 70% pelunasan dari acara yang telah sukses diselesaikan di Kebumen.
             </p>
-            <button className="btn btn-sm w-full gold-gradient-bg text-plum-dark font-bold rounded-full border-none shadow-sm">
+            <button className="focus-ring inline-flex min-h-11 w-full items-center justify-center rounded-full bg-hk-taupe px-4 text-sm font-bold text-white hover:bg-hk-charcoal">
               Tarik Saldo ke Rekening BCA
             </button>
           </div>
 
           {/* Escrow On-Hold Card */}
-          <div className="p-6 rounded-3xl bg-white border border-gold/30 shadow-md space-y-4">
-            <span className="text-xs uppercase font-bold text-amber-700">Dana On-Hold di Escrow</span>
-            <p className="font-mono text-3xl font-bold text-plum">
+          <div className="p-6 rounded-3xl bg-white border border-hk-champagne/30 shadow-sm space-y-4">
+            <span className="text-xs uppercase font-bold text-[#8a6410]">Dana On-Hold di Escrow</span>
+            <p className="font-mono text-3xl font-bold text-hk-charcoal">
               {formatRupiah(2450000)}
             </p>
-            <p className="text-[11px] text-plum-light leading-relaxed">
-              Pelunasan 70% dari 1 acara aktif yang sedang berlangsung (Bima & Citra). Akan otomatis cair pada H+2 pasca-acara setelah konfirmasi sukses klien.
+            <p className="text-[11px] text-hk-taupe leading-relaxed">
+              Pelunasan 70% dari 1 acara aktif yang sedang berlangsung (Bima &amp; Citra). Akan otomatis cair pada H+2 pasca-acara setelah konfirmasi sukses klien.
             </p>
-            <div className="p-2.5 rounded-xl bg-amber-50 text-amber-900 text-[11px] border border-amber-200">
+            <div className="p-2.5 rounded-xl bg-[#fbf0d8] text-[#7a5608] text-[11px] border border-[#f0dcae]">
               Acara tanggal: 20 Nov 2026 (Setda Kebumen)
             </div>
           </div>
 
           {/* Performance Metrik */}
-          <div className="p-6 rounded-3xl bg-white border border-gold/30 shadow-md space-y-4">
-            <span className="text-xs uppercase font-bold text-emerald-800">Metrik Trafik Profil</span>
+          <div className="p-6 rounded-3xl bg-white border border-hk-champagne/30 shadow-sm space-y-4">
+            <span className="text-xs uppercase font-bold text-[#157a4d]">Metrik Trafik Profil</span>
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between text-plum">
+              <div className="flex justify-between text-hk-charcoal">
                 <span>Views Portofolio:</span>
                 <span className="font-bold">428 kali</span>
               </div>
-              <div className="flex justify-between text-plum">
+              <div className="flex justify-between text-hk-charcoal">
                 <span>Klik Pricelist:</span>
                 <span className="font-bold">112 kali</span>
               </div>
-              <div className="flex justify-between text-plum">
+              <div className="flex justify-between text-hk-charcoal">
                 <span>Masuk Keranjang Builder:</span>
                 <span className="font-bold">39 kali</span>
               </div>
             </div>
-            <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-900 text-[11px] font-semibold border border-emerald-200">
-              🔥 Kategori Terpopuler di Kebumen bulan ini!
+            <div className="p-2.5 rounded-xl bg-[#e5f4ec] text-[#157a4d] text-[11px] font-semibold border border-[#bfe6d1]">
+              Kategori terpopuler di Kebumen bulan ini
             </div>
           </div>
         </div>

@@ -57,7 +57,7 @@ export function VendorProfilWorkspace({ data }: VendorProfilWorkspaceProps) {
   const orderRate = data.builderTrials > 0 ? ((totalOrders / data.builderTrials) * 100).toFixed(1) : "0";
 
   return (
-    <div className="py-6 sm:py-8 px-3.5 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8 sm:space-y-10">
+    <div className="space-y-8 sm:space-y-10">
       {/* =================================================================
           1. HERO ATELIER: Luxury Organic Studio Header (Brand Hub Living)
          ================================================================= */}
