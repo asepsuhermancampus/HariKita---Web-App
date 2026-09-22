@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { DomainError } from "./errors";
 
 export type OtpTx = Prisma.TransactionClient;
-export type OtpPurpose = "REGISTER" | "RESET_PIN";
+export type OtpPurpose = "REGISTER" | "RESET_PIN" | "ADMIN_EDIT_UNLOCK";
 
 const OTP_TTL_MS = 5 * 60 * 1000; // 5 menit
 const MAX_ATTEMPTS = 3; // salah maksimal 3x

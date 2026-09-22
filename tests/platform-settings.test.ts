@@ -193,3 +193,9 @@ test("SETTINGS_ERROR_CODES includes ADMIN_EDIT_NOT_UNLOCKED", async () => {
   const { SETTINGS_ERROR_CODES } = await import("../src/types/errors");
   assert.ok(SETTINGS_ERROR_CODES.includes("ADMIN_EDIT_NOT_UNLOCKED"));
 });
+
+test("unlock token issued for admin id can be verified", async () => {
+  const { signUnlockToken, verifyUnlockToken } = await import("../src/server/auth/admin-edit-unlock");
+  const t = await signUnlockToken("admin-x");
+  assert.deepEqual(await verifyUnlockToken(t), { adminId: "admin-x" });
+});

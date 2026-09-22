@@ -43,14 +43,19 @@ function wrapEmail(title: string, bodyHtml: string): string {
 export async function sendOtpEmail(
   to: string,
   code: string,
-  purpose: "REGISTER" | "RESET_PIN"
+  purpose: "REGISTER" | "RESET_PIN" | "ADMIN_EDIT_UNLOCK"
 ): Promise<SendResult> {
   if (isDevMode()) {
     console.log(`[OTP][DEV] ${purpose} → ${to} | kode: ${code}`);
     return { sent: false, devMode: true, devCode: code };
   }
 
-  const title = purpose === "REGISTER" ? "Verifikasi Pendaftaran" : "Reset PIN";
+  const title =
+    purpose === "REGISTER"
+      ? "Verifikasi Pendaftaran"
+      : purpose === "ADMIN_EDIT_UNLOCK"
+        ? "Kode Edit Pengaturan Platform"
+        : "Reset PIN";
   const html = wrapEmail(
     title,
     `<p style="font-size:13px;line-height:1.6;">Gunakan kode berikut untuk melanjutkan. Kode berlaku <strong>5 menit</strong>:</p>
