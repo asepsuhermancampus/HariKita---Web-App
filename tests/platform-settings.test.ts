@@ -2,6 +2,10 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createTestDb, type TestDb } from "./helpers/test-db";
 
+// Tes token unlock butuh secret sesi; set agar tidak bergantung .env lokal.
+process.env.HARIKITA_SESSION_SECRET =
+  process.env.HARIKITA_SESSION_SECRET || "test-secret-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+
 type AdminGuard = typeof import("../src/server/auth/admin-guard");
 let ctx: TestDb;
 let guard: AdminGuard;
