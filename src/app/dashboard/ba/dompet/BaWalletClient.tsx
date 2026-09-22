@@ -15,6 +15,7 @@ import { formatRupiah } from "@/lib/utils";
 import { requestWithdrawalAction } from "@/server/actions/ambassador";
 import { PAYOUT_GROUPS, isEwallet, payoutLabel } from "@/lib/indonesian-banks";
 import { Dropdown } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 import type { getAmbassadorSummary, getAmbassadorWithdrawals } from "@/server/queries/ambassador";
 
 type Summary = NonNullable<Awaited<ReturnType<typeof getAmbassadorSummary>>>;
@@ -89,16 +90,11 @@ export function BaWalletClient({
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="font-editorial text-2xl sm:text-3xl font-bold text-hk-charcoal">
-          Dompet & Penarikan Komisi
-        </h1>
-        <p className="text-xs text-hk-charcoal/70 mt-0.5 font-manrope">
-          Pantau saldo komisi Anda dan ajukan pencairan ke rekening bank.
-        </p>
-      </div>
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title="Dompet & Penarikan Komisi"
+        description="Pantau saldo komisi Anda dan ajukan pencairan ke rekening bank."
+      />
 
       {/* Balance Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

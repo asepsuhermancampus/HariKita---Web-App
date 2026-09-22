@@ -12,6 +12,7 @@ import {
 import { formatRupiah } from "@/lib/utils";
 import { getAmbassadorSummary } from "@/server/queries/ambassador";
 import { EmptyState } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 import { ROUTES } from "@/lib/routes";
 
 export const dynamic = "force-dynamic";
@@ -63,22 +64,17 @@ export default async function BaSummaryPage() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="font-editorial text-2xl sm:text-3xl font-bold text-hk-charcoal">
-            Selamat datang, {summary.displayName}
-          </h1>
-          <p className="text-xs text-hk-charcoal/70 mt-0.5 font-manrope">
-            Pantau performa rekrutmen vendor dan komisi Anda di satu tempat.
-          </p>
-        </div>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-hk-soft-beige/60 text-hk-charcoal text-xs font-semibold border border-hk-champagne/50">
-          <Percent className="w-3.5 h-3.5 text-hk-taupe" />
-          Komisi Anda: {summary.commissionPct}%
-        </span>
-      </div>
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title={`Selamat datang, ${summary.displayName}`}
+        description="Pantau performa rekrutmen vendor dan komisi Anda di satu tempat."
+        action={
+          <span className="inline-flex items-center gap-1.5 rounded-xl border border-hk-champagne/50 bg-hk-soft-beige/60 px-3 py-1.5 text-xs font-semibold text-hk-charcoal">
+            <Percent className="w-3.5 h-3.5 text-hk-taupe" />
+            Komisi Anda: {summary.commissionPct}%
+          </span>
+        }
+      />
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

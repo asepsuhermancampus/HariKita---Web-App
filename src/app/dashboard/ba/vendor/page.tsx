@@ -2,6 +2,7 @@ import React from "react";
 import { Store, CalendarDays } from "lucide-react";
 import { getAmbassadorRecruitedVendors } from "@/server/queries/ambassador";
 import { EmptyState } from "@/components/harikita/ui";
+import { DashPageHeader } from "@/components/dashboard";
 
 export const dynamic = "force-dynamic";
 
@@ -12,15 +13,11 @@ export default async function BaVendorsPage() {
   const vendors = await getAmbassadorRecruitedVendors();
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      <div>
-        <h1 className="font-editorial text-2xl sm:text-3xl font-bold text-hk-charcoal">
-          Vendor Rekrutan
-        </h1>
-        <p className="text-xs text-hk-charcoal/70 mt-0.5 font-manrope">
-          Mitra vendor yang mendaftar menggunakan kode referral Anda.
-        </p>
-      </div>
+    <div className="flex flex-col gap-6">
+      <DashPageHeader
+        title="Vendor Rekrutan"
+        description="Mitra vendor yang mendaftar menggunakan kode referral Anda."
+      />
 
       {vendors.length === 0 ? (
         <EmptyState
