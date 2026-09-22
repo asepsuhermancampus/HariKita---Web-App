@@ -14,7 +14,8 @@ import { runAction, revalidate, type ActionResult } from "./_shared";
  * (capability MANAGE_PLATFORM_SETTINGS) — dimulai dari admin RBAC.
  */
 export async function updatePlatformSettingsAction(
-  input: Omit<PlatformSettingsView, "components"> & {
+  input: Omit<PlatformSettingsView, "components" | "superAdminEmail"> & {
+    superAdminEmail?: string | null;
     components: Array<{ id?: string; label: string; pct: number; sortOrder?: number }>;
   }
 ): Promise<ActionResult<PlatformSettingsView>> {
@@ -25,6 +26,7 @@ export async function updatePlatformSettingsAction(
       settlementPct: input.settlementPct,
       platformFeePct: input.platformFeePct,
       defaultBaCommissionPct: input.defaultBaCommissionPct,
+      superAdminEmail: input.superAdminEmail ?? null,
       components: input.components.map((c, i) => ({
         id: c.id ?? "",
         label: c.label,

@@ -27,6 +27,7 @@ export interface PlatformSettingsView {
   settlementPct: number;
   platformFeePct: number;
   defaultBaCommissionPct: number;
+  superAdminEmail: string | null;
   components: PlatformFeeComponentView[];
 }
 
@@ -36,6 +37,7 @@ export const DEFAULT_PLATFORM_SETTINGS: PlatformSettingsView = {
   settlementPct: 70,
   platformFeePct: 10,
   defaultBaCommissionPct: 5,
+  superAdminEmail: null,
   components: [],
 };
 
@@ -82,6 +84,7 @@ export async function getPlatformSettings(tx?: PlatformSettingsTx): Promise<Plat
       settlementPct: row.settlementPct,
       platformFeePct: row.platformFeePct,
       defaultBaCommissionPct: row.defaultBaCommissionPct,
+      superAdminEmail: row.superAdminEmail,
       components: row.components.map((c) => ({
         id: c.id,
         label: c.label,
@@ -119,6 +122,7 @@ export async function updatePlatformSettings(
       settlementPct: input.settlementPct,
       platformFeePct: input.platformFeePct,
       defaultBaCommissionPct: input.defaultBaCommissionPct,
+      superAdminEmail: input.superAdminEmail ?? null,
       updatedById: input.actor.userId,
       updatedByName: input.actor.name,
       components: {

@@ -91,6 +91,7 @@ test("updatePlatformSettings: persists + writes audit row", async () => {
       settlementPct: 70,
       platformFeePct: 10,
       defaultBaCommissionPct: 5,
+      superAdminEmail: null,
       components: [
         { id: "", label: "Operasional", pct: 6, sortOrder: 0 },
         { id: "", label: "Marketing", pct: 4, sortOrder: 1 },
@@ -165,4 +166,25 @@ test("createOrder writes snapshot percentages from active settings", async () =>
 
   // Bersihkan setting agar test lain yang mengharapkan DEFAULT tetap valid.
   await ctx.prisma.platformSetting.deleteMany();
+});
+
+test("updatePlatformSettings persists superAdminEmail", async () => {
+  const actor = { userId: "u_super", name: "Super", subRole: "SUPER_ADMIN" as const };
+  const saved = await updatePlatformSettings(
+    {
+      dpPct: 30,
+      settlementPct: 70,
+      platformFeePct: 10,
+      defaultBaCommissionPct: 5,
+      superAdminEmail: "owner@harikita.id",
+      components: [{ id: "", label: "Operasional", pct: 10, sortOrder: 0 }],
+      actor,
+    },
+    ctx.prisma
+  );
+  assert.equal(saved.superAdminEmail, "owner@harikita.id");
+
+  await ctx.prisma.platformFeeComponent.deleteMany();
+  await ctx.prisma.platformSetting.deleteMany();
+  await ctx.prisma.adminAuditLog.deleteMany({ where: { action: "PLATFORM_SETTINGS_UPDATED" } });
 });
