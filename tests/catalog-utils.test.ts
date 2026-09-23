@@ -19,3 +19,17 @@ test("buildVendorSlug is url-safe and stable", () => {
   assert.match(s, /^[a-z0-9-]+$/);
   assert.ok(s.includes("menganti"));
 });
+
+import { unitTypeDbToUi, buildProductSlug } from "../src/lib/catalog-utils";
+
+test("unitTypeDbToUi maps DB unit types to UI", () => {
+  assert.equal(unitTypeDbToUi("pax"), "pax");
+  assert.equal(unitTypeDbToUi("pcs"), "piece");
+  assert.equal(unitTypeDbToUi("baki"), "piece");
+  assert.equal(unitTypeDbToUi("all_in"), "package");
+  assert.equal(unitTypeDbToUi(undefined), "package");
+});
+
+test("buildProductSlug is url-safe", () => {
+  assert.match(buildProductSlug("Paket Sewa Kebaya Beaded", "abc12345"), /^[a-z0-9-]+$/);
+});

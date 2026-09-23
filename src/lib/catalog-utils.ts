@@ -35,3 +35,27 @@ export function slugify(input: string): string {
 export function buildVendorSlug(businessName: string, id: string): string {
   return `${slugify(businessName)}-${id.slice(-8)}`;
 }
+
+/** Tipe unit UI (dipakai komponen katalog). */
+export type UiUnitType = "package" | "pax" | "piece" | "portion";
+
+/** Peta unit type DB (ServicePackage.unitType) → UI. */
+export function unitTypeDbToUi(db?: string | null): UiUnitType {
+  switch (db) {
+    case "pax":
+      return "pax";
+    case "pcs":
+    case "baki":
+    case "set":
+      return "piece";
+    case "jam":
+      return "portion";
+    default:
+      return "package";
+  }
+}
+
+/** Slug produk stabil: nama-slug + 8 karakter terakhir id. */
+export function buildProductSlug(name: string, id: string): string {
+  return `${slugify(name)}-${id.slice(-8)}`;
+}
