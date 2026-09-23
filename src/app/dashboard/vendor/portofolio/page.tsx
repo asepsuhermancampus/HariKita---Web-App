@@ -17,7 +17,8 @@ export default async function Page() {
     <VendorPortofolioClient
       dbPosts={dbPosts}
       vendorResolved={Boolean(vendor)}
-      vendorSlug=""
+      vendorSlug={vendor?.slug ?? ""}
+      vendorName={vendor?.businessName ?? ""}
     />
   );
 }

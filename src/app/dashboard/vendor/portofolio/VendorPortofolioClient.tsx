@@ -31,14 +31,16 @@ export function VendorPortofolioClient({
   dbPosts,
   vendorResolved,
   vendorSlug,
+  vendorName,
 }: {
   dbPosts: VendorPortfolioDTO[];
   vendorResolved: boolean;
   vendorSlug: string;
+  vendorName: string;
 }) {
   const router = useRouter();
-  const currentVendorSlug = vendorSlug || "griya-busana-rarasati";
-  const currentVendorName = "Griya Busana Rarasati";
+  const currentVendorSlug = vendorSlug;
+  const currentVendorName = vendorName || "Mitra Vendor";
 
   // Reactive posts from mock store (fallback)
   const mockPosts = usePortfolio();
@@ -151,14 +153,16 @@ export function VendorPortofolioClient({
         description="Unggah karya foto/video pernikahan Anda. Ditampilkan langsung di profil publik dan direktori calon pengantin."
         action={
           <div className="flex items-center gap-2">
-            <Link
-              href={`/vendor/${currentVendorSlug}`}
-              target="_blank"
-              className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-hk-champagne bg-white px-3.5 text-xs font-semibold text-hk-charcoal hover:bg-hk-ivory"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-hk-champagne" />
-              Lihat Profil Publik
-            </Link>
+            {currentVendorSlug && (
+              <Link
+                href={`/vendor/${currentVendorSlug}`}
+                target="_blank"
+                className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-hk-champagne bg-white px-3.5 text-xs font-semibold text-hk-charcoal hover:bg-hk-ivory"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-hk-champagne" />
+                Lihat Profil Publik
+              </Link>
+            )}
             <button
               onClick={() => setShowAddModal(true)}
               className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-hk-taupe px-3.5 text-xs font-semibold text-white hover:bg-hk-charcoal"
