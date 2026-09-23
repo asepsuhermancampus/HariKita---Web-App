@@ -1,6 +1,6 @@
 # Vendor Verification + Peta & Estimasi Jarak — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Vendor wajib lengkapi data usaha + unggah dokumen (KTP/foto usaha) & mengajukan verifikasi (PENDING→APPROVED oleh admin; hanya APPROVED tampil), plus alamat terstruktur + koordinat peta (vendor & client) dan estimasi jarak berkendara (OSRM) di order client.
 
@@ -38,7 +38,7 @@
   - `lookupPostalCode(desa: string, kecamatan: string): string | null`
   - `KEBUMEN_POSTAL: Record<string, { kecamatan: string; postalCode: string }>`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tests/geo.test.ts
@@ -66,12 +66,12 @@ test("lookupPostalCode: mengembalikan kode pos utk desa+Kecamatan dikenal", () =
 });
 ```
 
-- [ ] **Step 2: Run test — verify it fails**
+- [x] **Step 2: Run test — verify it fails**
 
 Run: `npx tsx --test tests/geo.test.ts`
 Expected: FAIL — modul belum ada.
 
-- [ ] **Step 3: Create `haversine.ts`**
+- [x] **Step 3: Create `haversine.ts`**
 
 ```ts
 // src/lib/geo/haversine.ts
@@ -95,7 +95,7 @@ export function haversineKm(a: LatLng, b: LatLng): number {
 }
 ```
 
-- [ ] **Step 4: Create `postal-codes.ts`**
+- [x] **Step 4: Create `postal-codes.ts`**
 
 ```ts
 // src/lib/geo/postal-codes.ts
@@ -128,12 +128,12 @@ export function lookupPostalCode(desa: string, kecamatan: string): string | null
 }
 ```
 
-- [ ] **Step 5: Run test — verify it passes**
+- [x] **Step 5: Run test — verify it passes**
 
 Run: `npx tsx --test tests/geo.test.ts`
 Expected: PASS (3 tests).
 
-- [ ] **Step 6: Typecheck + commit**
+- [x] **Step 6: Typecheck + commit**
 
 Run: `npm run typecheck`
 
@@ -156,7 +156,7 @@ git commit -m "feat(geo): add haversine + Kebumen postal code lookup"
   - `interface DistanceResult { km: number; minutes: number | null; source: "osrm" | "haversine" }`
   - `estimateDrivingDistance(from: LatLng, to: LatLng, fetchImpl?: typeof fetch): Promise<DistanceResult>`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tambah ke tests/geo.test.ts
@@ -185,12 +185,12 @@ test("estimateDrivingDistance: fallback haversine bila OSRM gagal", async () => 
 });
 ```
 
-- [ ] **Step 2: Run test — verify it fails**
+- [x] **Step 2: Run test — verify it fails**
 
 Run: `npx tsx --test tests/geo.test.ts`
 Expected: FAIL — `osrm` modul belum ada.
 
-- [ ] **Step 3: Create `osrm.ts`**
+- [x] **Step 3: Create `osrm.ts`**
 
 ```ts
 // src/lib/geo/osrm.ts
@@ -236,12 +236,12 @@ export async function estimateDrivingDistance(
 }
 ```
 
-- [ ] **Step 4: Run test — verify it passes**
+- [x] **Step 4: Run test — verify it passes**
 
 Run: `npx tsx --test tests/geo.test.ts`
 Expected: PASS.
 
-- [ ] **Step 5: Typecheck + commit**
+- [x] **Step 5: Typecheck + commit**
 
 ```bash
 git add src/lib/geo/osrm.ts tests/geo.test.ts
@@ -260,11 +260,11 @@ git commit -m "feat(geo): add OSRM driving distance with haversine fallback"
 **Interfaces:**
 - Produces: kolom baru `VendorProfile.{ktpNumber,ktpPhotoUrl,businessPhotoUrl,revenueMethod,ewalletProvider,rt,rw,dusun,desa,kecamatan,kabupaten,postalCode,latitude,longitude,profileCompleted,submittedAt}`; `ClientProfile.{rt,rw,dusun,desa,kecamatan,kabupaten,postalCode,latitude,longitude}`; default `verificationStatus="PENDING"`, `isVerified=false`.
 
-- [ ] **Step 1: Backup dev.db**
+- [x] **Step 1: Backup dev.db**
 
 Run: `copy prisma\dev.db prisma\dev.db.bak`
 
-- [ ] **Step 2: Edit `VendorProfile` (kedua schema)**
+- [x] **Step 2: Edit `VendorProfile` (kedua schema)**
 
 Tambah kolom (letakkan dekat field terkait) & ubah default:
 ```prisma
@@ -287,7 +287,7 @@ Tambah kolom (letakkan dekat field terkait) & ubah default:
 ```
 Ubah: `isVerified Boolean @default(false)` dan `verificationStatus String @default("PENDING")`.
 
-- [ ] **Step 3: Edit `ClientProfile` (kedua schema)**
+- [x] **Step 3: Edit `ClientProfile` (kedua schema)**
 
 ```prisma
   rt         String?
@@ -301,7 +301,7 @@ Ubah: `isVerified Boolean @default(false)` dan `verificationStatus String @defau
   longitude  Float?
 ```
 
-- [ ] **Step 4: Validate + generate + push**
+- [x] **Step 4: Validate + generate + push**
 
 ```bash
 npx prisma validate --schema prisma/schema.prisma
@@ -312,7 +312,7 @@ $env:DATABASE_URL="file:" + ((Resolve-Path "prisma\dev.db").Path -replace '\\','
 ```
 Expected: valid; db push sukses.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add prisma/schema.prisma prisma/schema.sqlite.prisma prisma/dev.db
@@ -333,7 +333,7 @@ git commit -m "feat(vendor): add verification, address, and geo columns"
   - `submitVendorVerificationAction()` — validasi kelengkapan server → set `profileCompleted=true`, `submittedAt=now`, `verificationStatus="PENDING"`
   - `validateVendorCompleteness(v: {...}): string[]` (pure, daftar field yang kurang)
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tests/vendor-verification.test.ts
@@ -368,12 +368,12 @@ test("validateVendorCompleteness: lengkap -> kosong", () => {
 });
 ```
 
-- [ ] **Step 2: Run test — verify it fails**
+- [x] **Step 2: Run test — verify it fails**
 
 Run: `npx tsx --test tests/vendor-verification.test.ts`
 Expected: FAIL — `validateVendorCompleteness` belum ada.
 
-- [ ] **Step 3: Tambah `validateVendorCompleteness` + actions**
+- [x] **Step 3: Tambah `validateVendorCompleteness` + actions**
 
 Di `src/server/actions/vendor-profile.ts`, tambah fungsi murni + action. (Sesuaikan dengan pola `runAction`/session yang sudah ada di file.)
 
@@ -442,12 +442,12 @@ export async function submitVendorVerificationAction(): Promise<ActionResult<{ o
 ```
 > Sesuaikan query vendor & helper `requireSession`/`runAction`/`revalidate` dengan yang sudah ada di file. Jangan mengarang nama yang tidak ada.
 
-- [ ] **Step 4: Run test + typecheck**
+- [x] **Step 4: Run test + typecheck**
 
 Run: `npx tsx --test tests/vendor-verification.test.ts && npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/server/actions/vendor-profile.ts tests/vendor-verification.test.ts
@@ -468,12 +468,12 @@ git commit -m "feat(vendor): completeness validation + submit verification actio
   - `LocationPickerMap({ value: LatLng|null, onChange: (v: LatLng) => void })`
   - `LocationPreviewMap({ lat: number; lng: number; label?: string })`
 
-- [ ] **Step 1: Install deps**
+- [x] **Step 1: Install deps**
 
 Run: `npm install leaflet react-leaflet && npm install -D @types/leaflet`
 Expected: terpasang.
 
-- [ ] **Step 2: Create `LocationPickerMap.tsx`**
+- [x] **Step 2: Create `LocationPickerMap.tsx`**
 
 ```tsx
 // src/components/maps/LocationPickerMap.tsx
@@ -519,7 +519,7 @@ export function LocationPickerMap({
 }
 ```
 
-- [ ] **Step 3: Create `LocationPreviewMap.tsx`**
+- [x] **Step 3: Create `LocationPreviewMap.tsx`**
 
 ```tsx
 // src/components/maps/LocationPreviewMap.tsx
@@ -549,12 +549,12 @@ export function LocationPreviewMap({ lat, lng }: { lat: number; lng: number }) {
 
 > Peta di-load via `dynamic(() => import(...), { ssr: false })` di halaman yang memakainya (Task 6/8/9) — Leaflet butuh `window`.
 
-- [ ] **Step 4: Typecheck + build**
+- [x] **Step 4: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/maps package.json package-lock.json
@@ -571,7 +571,7 @@ git commit -m "feat(maps): add Leaflet location picker + preview components"
 **Interfaces:**
 - Produces: `POST /api/upload/vendor-doc` (FormData: `file`, `kind: "ktp"|"business"`) → `{ url: string }`.
 
-- [ ] **Step 1: Create route**
+- [x] **Step 1: Create route**
 
 ```ts
 // src/app/api/upload/vendor-doc/route.ts
@@ -611,12 +611,12 @@ export async function POST(req: Request) {
 }
 ```
 
-- [ ] **Step 2: Typecheck + build**
+- [x] **Step 2: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 Expected: PASS.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/api/upload/vendor-doc/route.ts
@@ -634,7 +634,7 @@ git commit -m "feat(vendor): add vendor document upload route"
 **Interfaces:**
 - Consumes: `LocationPickerMap` (dynamic), upload route, `saveVendorProfileAction`, `submitVendorVerificationAction`, `lookupPostalCode`.
 
-- [ ] **Step 1: Create `VendorVerificationForm`**
+- [x] **Step 1: Create `VendorVerificationForm`**
 
 Bikin client component dengan section: Info Usaha, Data Pemilik (KTP), Alamat Terstruktur (+auto kode pos), Titik Lokasi (dynamic `LocationPickerMap`), Rekening (BANK/E-WALLET), Dokumen (upload KTP & foto usaha via `/api/upload/vendor-doc`), tombol **Ajukan Verifikasi**. Gunakan `DashCard`, `DashButton`, token brand, ikon Lucide. `LocationPickerMap` diimport:
 ```tsx
@@ -652,16 +652,16 @@ if (pc) setPostalCode(pc);
 ```
 Badge status: PENDING(warn)/APPROVED(ok)/REJECTED(error)+catatan.
 
-- [ ] **Step 2: Render di halaman profil vendor**
+- [x] **Step 2: Render di halaman profil vendor**
 
 Di `src/app/dashboard/vendor/profil/page.tsx` (atau workspace), tampilkan `VendorVerificationForm` dengan data vendor existing. Pertahankan konten lama; tambah section verifikasi.
 
-- [ ] **Step 3: Typecheck + build + verifikasi manual**
+- [x] **Step 3: Typecheck + build + verifikasi manual**
 
 Run: `npm run typecheck && npm run build`
 Manual: `/dashboard/vendor/profil` → isi form, upload 2 foto, pilih titik peta, klik Ajukan → status PENDING.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/components/vendor/VendorVerificationForm.tsx src/app/dashboard/vendor/profil
@@ -680,20 +680,20 @@ git commit -m "feat(vendor): verification form with map, upload, and submit"
 - Consumes: `LocationPreviewMap` (dynamic), data vendor lengkap dari `getVendorVerifications`.
 - Produces: kartu vendor menampilkan data legal, foto (zoom modal), mini-map, tombol Setujui/Tolak (aksi existing).
 
-- [ ] **Step 1: Perluas DTO query**
+- [x] **Step 1: Perluas DTO query**
 
 Tambah field ke `VendorVerificationDTO`: `ktpNumber, ktpPhotoUrl, businessPhotoUrl, revenueMethod, ewalletProvider, rt, rw, dusun, desa, kecamatan, kabupaten, postalCode, latitude, longitude, profileCompleted, submittedAt`.
 
-- [ ] **Step 2: Tampilkan di admin**
+- [x] **Step 2: Tampilkan di admin**
 
 Perluas kartu: section "Data Usaha & Dokumen" + preview `ktpPhotoUrl`/`businessPhotoUrl` (klik → modal) + `LocationPreviewMap` (dynamic ssr:false, hanya bila lat/lng ada). Pertahankan tombol Setujui/Tolak existing.
 
-- [ ] **Step 3: Typecheck + build + manual**
+- [x] **Step 3: Typecheck + build + manual**
 
 Run: `npm run typecheck && npm run build`
 Manual: `/admin/verifikasi` → lihat vendor PENDING + dokumen + peta → Setujui → muncul di katalog.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/admin/verifikasi src/server/queries/admin.ts
@@ -712,19 +712,19 @@ git commit -m "feat(admin): vendor verification card with docs preview + map"
 **Interfaces:**
 - Produces: client bisa simpan `partnerName` + alamat terstruktur + `latitude/longitude`.
 
-- [ ] **Step 1: Tambah action simpan client profile**
+- [x] **Step 1: Tambah action simpan client profile**
 
 Action yang menyimpan field baru `ClientProfile` (rt/rw/dusun/desa/kecamatan/kabupaten/postalCode/latitude/longitude). Sesuaikan dengan pola existing (session + runAction).
 
-- [ ] **Step 2: Form client**
+- [x] **Step 2: Form client**
 
 Di `src/app/client/profil/*`: tambah Nama Pasangan + alamat terstruktur (auto kode pos) + `LocationPickerMap` (dynamic ssr:false). Gunakan `DashCard`/`DashButton`.
 
-- [ ] **Step 3: Typecheck + build + manual**
+- [x] **Step 3: Typecheck + build + manual**
 
 Run: `npm run typecheck && npm run build`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/client/profil src/server/actions
@@ -742,20 +742,20 @@ git commit -m "feat(client): structured address + map coordinates"
 **Interfaces:**
 - Consumes: `estimateDrivingDistance` (Task 2).
 
-- [ ] **Step 1: Sediakan koordinat**
+- [x] **Step 1: Sediakan koordinat**
 
 Query vendor/order agar menyertakan `latitude/longitude` vendor + koordinat client (dari ClientProfile).
 
-- [ ] **Step 2: Tampilkan estimasi**
+- [x] **Step 2: Tampilkan estimasi**
 
 Di checkout/pesanan: panggil `estimateDrivingDistance(clientLatLng, vendorLatLng)` (server-side, sekali per order) → tampil "± X km · ± Y menit berkendara" (atau "(perkiraan)" bila `source==="haversine"`). Bila koordinat tidak lengkap → sembunyikan.
 
-- [ ] **Step 3: Typecheck + test + build + manual**
+- [x] **Step 3: Typecheck + test + build + manual**
 
 Run: `npm run typecheck && npm test && npm run build`
 Manual: buat/lihat order → jarak tampil.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src/app/checkout src/server
@@ -770,15 +770,15 @@ git commit -m "feat(order): show driving distance estimate to client"
 - Modify: `prisma/seed.ts`
 - Verify: query katalog vendor filter `verificationStatus="APPROVED"`.
 
-- [ ] **Step 1: Seed vendor demo APPROVED + data lengkap**
+- [x] **Step 1: Seed vendor demo APPROVED + data lengkap**
 
 Set vendor demo di seed → `verificationStatus:"APPROVED"`, `isVerified:true`, `profileCompleted:true`, isi alamat + koordinat contoh (agar katalog & jarak demo jalan).
 
-- [ ] **Step 2: Pastikan filter katalog**
+- [x] **Step 2: Pastikan filter katalog**
 
 Grep query vendor publik → pastikan hanya `verificationStatus:"APPROVED"` yang ditampilkan. Perbaiki bila ada yang belum filter.
 
-- [ ] **Step 3: Seed ke SQLite + typecheck/test/build**
+- [x] **Step 3: Seed ke SQLite + typecheck/test/build**
 
 Run:
 ```bash
@@ -786,7 +786,7 @@ $env:DATABASE_URL="file:" + ((Resolve-Path "prisma\dev.db").Path -replace '\\','
 npm run typecheck && npm test && npm run build
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add prisma/seed.ts prisma/dev.db src/lib src/server
@@ -797,12 +797,12 @@ git commit -m "feat(vendor): seed approved demo vendor + enforce catalog filter"
 
 ## Verifikasi Akhir
 
-- [ ] `npx prisma validate` (kedua schema) → valid
-- [ ] `npm run typecheck` → PASS
-- [ ] `npm test` → PASS
-- [ ] `npm run build` → PASS
-- [ ] Manual: alur vendor isi→ajukan→admin verifikasi→tampil; peta & jarak tampil; mobile 375px OK
-- [ ] Migrasi baru untuk produksi (Neon) via `migrate deploy` sebelum deploy
+- [x] `npx prisma validate` (kedua schema) → valid
+- [x] `npm run typecheck` → PASS
+- [x] `npm test` → PASS
+- [x] `npm run build` → PASS
+- [x] Manual: alur vendor isi→ajukan→admin verifikasi→tampil; peta & jarak tampil; mobile 375px OK
+- [x] Migrasi baru untuk produksi (Neon) via `migrate deploy` sebelum deploy
 
 ## Self-Review
 

@@ -1,6 +1,6 @@
 # Katalog Vendor Masif + Beranda dari DB + Filter Kategori — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Seeder 275 vendor (25/kategori, satu kategori masing-masing, 25 jasa + 10 portofolio + gambar relevan), beranda baca dari DB (6 vendor/kategori + tombol "Lihat Selengkapnya" + blur CTA), navbar Login→Dashboard→ per role, logout di sidebar, skrip reset-session.
 
@@ -32,18 +32,18 @@
 **Interfaces:**
 - Produces: `VendorProfile.slug String? @unique`.
 
-- [ ] **Step 1: Backup dev.db**
+- [x] **Step 1: Backup dev.db**
 
 Run: `copy prisma\dev.db prisma\dev.db.bak`
 
-- [ ] **Step 2: Tambah kolom di kedua schema**
+- [x] **Step 2: Tambah kolom di kedua schema**
 
 Pada `model VendorProfile`, setelah `businessName`:
 ```prisma
   slug           String?              @unique // URL slug stabil (mis. "menganti-cinematic-<id8>")
 ```
 
-- [ ] **Step 3: Validate + generate + push**
+- [x] **Step 3: Validate + generate + push**
 
 ```bash
 npx prisma validate --schema prisma/schema.prisma
@@ -54,7 +54,7 @@ $env:DATABASE_URL="file:" + ((Resolve-Path "prisma\dev.db").Path -replace '\\','
 ```
 Expected: valid; db push sukses.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add prisma/schema.prisma prisma/schema.sqlite.prisma prisma/dev.db
@@ -75,7 +75,7 @@ git commit -m "feat(catalog): add VendorProfile.slug column"
   - `buildVendorSlug(businessName: string, id: string): string`
   - `slugify(input: string): string`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // tests/catalog-utils.test.ts
@@ -101,12 +101,12 @@ test("buildVendorSlug is url-safe and stable", () => {
 });
 ```
 
-- [ ] **Step 2: Run test — verify it fails**
+- [x] **Step 2: Run test — verify it fails**
 
 Run: `npx tsx --test tests/catalog-utils.test.ts`
 Expected: FAIL — modul belum ada.
 
-- [ ] **Step 3: Implementasi**
+- [x] **Step 3: Implementasi**
 
 ```ts
 // src/lib/catalog-utils.ts
@@ -142,12 +142,12 @@ export function buildVendorSlug(businessName: string, id: string): string {
 }
 ```
 
-- [ ] **Step 4: Run test + typecheck**
+- [x] **Step 4: Run test + typecheck**
 
 Run: `npx tsx --test tests/catalog-utils.test.ts && npm run typecheck`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/catalog-utils.ts tests/catalog-utils.test.ts
@@ -166,7 +166,7 @@ git commit -m "feat(catalog): add category name->id + slug utils"
   - `interface VendorSeed { businessName: string; category: string; district: string; address: string; rating: number; reviewCount: number; igHandle: string; bankName: string; bankAccount: string; bankHolder: string; }`
   - `generateVendors(): VendorSeed[]` — 275 vendor (25 × 11 kategori), nama & atribut bervariasi per kategori.
 
-- [ ] **Step 1: Implementasi generator**
+- [x] **Step 1: Implementasi generator**
 
 ```ts
 // prisma/seed-data/vendors.ts
@@ -240,7 +240,7 @@ export function generateVendors(): VendorSeed[] {
 }
 ```
 
-- [ ] **Step 2: Sanity check via tsx**
+- [x] **Step 2: Sanity check via tsx**
 
 Run:
 ```bash
@@ -248,7 +248,7 @@ npx tsx -e "import('./prisma/seed-data/vendors.ts').then(m=>{const v=m.generateV
 ```
 Expected: `275 ...` dan contoh nama valid.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add prisma/seed-data/vendors.ts
@@ -265,7 +265,7 @@ git commit -m "feat(seed): vendor generator (25 per category)"
 **Interfaces:**
 - Produces: `IMG` dengan ≥8 URL per kategori yang **relevan** (food untuk katering, makeup untuk MUA, dst).
 
-- [ ] **Step 1: Perluas `IMG`**
+- [x] **Step 1: Perluas `IMG`**
 
 Tambah gambar per kategori agar tiap pool ≥8 (menggantikan/menambah yang ada). Contoh tambahan (Unsplash, tematik):
 ```ts
@@ -285,11 +285,11 @@ export const IMG = {
 ```
 > Pilih foto Unsplash yang **jelas tematik** agar tidak "title tidak relevan dengan gambar".
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add prisma/seed-data/vendor-services.ts
@@ -307,7 +307,7 @@ git commit -m "feat(seed): expand category image pools (relevant imagery)"
 - Consumes: `generateVendors`, `getServiceTemplates`, `getPortfolioTemplates`, `IMG`, `categoryImgKey`, `buildVendorSlug`.
 - Produces: 275 vendor APPROVED, @25 jasa + @10 portofolio, akun `081300000001..275`.
 
-- [ ] **Step 1: Ganti sumber vendor**
+- [x] **Step 1: Ganti sumber vendor**
 
 Ganti `vendorsData` (11 vendor lama) → hasil `generateVendors()` (275). Loop:
 ```ts
@@ -360,25 +360,25 @@ for (let i = 0; i < vendors.length; i++) {
 ```
 > **Performa:** pertimbangkan `createMany` untuk jasa/portofolio (batch) agar seed tidak terlalu lama. Bila OrderItem butuh `packageId`, simpan id paket pertama per vendor.
 
-- [ ] **Step 2: Sesuaikan data turunan (komisi BA, order demo)**
+- [x] **Step 2: Sesuaikan data turunan (komisi BA, order demo)**
 
 `createdVendors` sekarang 275; referensi `vendorIndex` pada komisi BA & order demo tetap valid (index 0..10 dipakai) — pastikan `createdVendors.length >= 7`. Order demo tetap pakai `createdVendors[0]`.
 
-- [ ] **Step 3: Jalankan seed ke SQLite dulu**
+- [x] **Step 3: Jalankan seed ke SQLite dulu**
 
 ```bash
 $env:DATABASE_URL="file:" + ((Resolve-Path "prisma\dev.db").Path -replace '\\','/'); npm run db:seed
 ```
 Expected: sukses; cetak ringkasan 275 vendor.
 
-- [ ] **Step 4: Verifikasi jumlah**
+- [x] **Step 4: Verifikasi jumlah**
 
 ```bash
 npx tsx -e "import('@prisma/client').then(async({PrismaClient})=>{const db=new PrismaClient();console.log('vendor',await db.vendorProfile.count(),'pkg',await db.servicePackage.count(),'pf',await db.vendorPortfolio.count());await db.\$disconnect()})"
 ```
 Expected: vendor 275+, pkg ±6875, pf ±2750.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add prisma/seed.ts prisma/dev.db
@@ -399,7 +399,7 @@ git commit -m "feat(seed): 275 vendors with rich catalog (25 services + 10 portf
   - `getHomeVendorsByCategory(limitPerCategory?: number): Promise<Record<string, HomeVendorCard[]>>`
   - `getVendorsByCategoryFromDb(categoryId: string): Promise<HomeVendorCard[]>`
 
-- [ ] **Step 1: Implementasi query**
+- [x] **Step 1: Implementasi query**
 
 ```ts
 // src/server/queries/catalog.ts
@@ -461,11 +461,11 @@ export async function getVendorsByCategoryFromDb(categoryId: string) {
 ```
 > `toCard` memetakan `priceFrom` = paket termurah `basePrice`, `imageUrl` = gambar portofolio/paket pertama.
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/server/queries/catalog.ts
@@ -482,11 +482,11 @@ git commit -m "feat(catalog): DB queries for home & category vendor listings"
 **Interfaces:**
 - Consumes: `getHomeVendorsByCategory`, `VENDOR_CATEGORIES`.
 
-- [ ] **Step 1: Ganti sumber data layanan dari DB**
+- [x] **Step 1: Ganti sumber data layanan dari DB**
 
 Di `src/app/page.tsx`: hapus ketergantungan `getVendorsByCategory` (statis) untuk section layanan; panggil `getHomeVendorsByCategory(6)` (server). Tabs = `[{id:"all",label:"Semua Layanan"}] + VENDOR_CATEGORIES`.
 
-- [ ] **Step 2: Grid 6 vendor + blur + tombol**
+- [x] **Step 2: Grid 6 vendor + blur + tombol**
 
 Untuk tiap kategori (tab aktif), render:
 ```tsx
@@ -512,16 +512,16 @@ Untuk tiap kategori (tab aktif), render:
 
 > Bila ada komponen kartu vendor existing, pakai ulang; bila tidak, buat inline atau komponen kecil `VendorCard`.
 
-- [ ] **Step 3: Typecheck + build**
+- [x] **Step 3: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 Expected: PASS.
 
-- [ ] **Step 4: Verifikasi manual**
+- [x] **Step 4: Verifikasi manual**
 
 `npm run dev` → beranda menampilkan 6 vendor/kategori, blur di bawah grid, tombol "Lihat Selengkapnya".
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app/page.tsx src/components
@@ -538,15 +538,15 @@ git commit -m "feat(home): DB-driven vendor sections (6/category) with blur CTA"
 **Interfaces:**
 - Consumes: `getVendorsByCategoryFromDb`.
 
-- [ ] **Step 1: Ganti sumber ke DB**
+- [x] **Step 1: Ganti sumber ke DB**
 
 Baca `getVendorsByCategoryFromDb(params.kategori)` → tampilkan **semua** vendor kategori. Label kategori dari `VENDOR_CATEGORIES`.
 
-- [ ] **Step 2: Typecheck + build**
+- [x] **Step 2: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/app/vendor/kategori
@@ -560,17 +560,17 @@ git commit -m "feat(catalog): category page reads all vendors from DB"
 **Files:**
 - Verify: `src/components/layout/Navbar.tsx`, `src/components/dashboard/DashboardSidebarNav.tsx`, `src/app/layout.tsx`, `scripts/reset-session.mjs`, `package.json`
 
-- [ ] **Step 1: Konfirmasi implementasi ada**
+- [x] **Step 1: Konfirmasi implementasi ada**
 
 Cek: Navbar render "Dashboard →" bila `isLoggedIn`; sidebar tampilkan `userName` + tombol Keluar (`logoutAction`); `npm run reset-session` ada di package.json; tiap layout pass `userName`.
 
 Run: `grep -rn "reset-session\|Dashboard\|logoutAction\|userName" src/components/dashboard src/components/layout package.json`
 
-- [ ] **Step 2: Typecheck + build**
+- [x] **Step 2: Typecheck + build**
 
 Run: `npm run typecheck && npm run build`
 
-- [ ] **Step 3: (Bila ada yang kurang) lengkapi lalu commit**
+- [x] **Step 3: (Bila ada yang kurang) lengkapi lalu commit**
 
 ```bash
 git add -A
@@ -584,25 +584,25 @@ git commit -m "feat(nav): dashboard button by role, logout in sidebar, reset-ses
 **Files:**
 - Migrations + Neon
 
-- [ ] **Step 1: Buat migration slug (diff Neon → schema)**
+- [x] **Step 1: Buat migration slug (diff Neon → schema)**
 
 Buat folder `prisma/migrations/<ts>_vendor_slug`, isi SQL dari `prisma migrate diff --from-url $DIRECT_URL --to-schema-datamodel prisma/schema.prisma --script` (tanpa BOM).
 
-- [ ] **Step 2: `migrate deploy` ke Neon**
+- [x] **Step 2: `migrate deploy` ke Neon**
 
 ```bash
 npx prisma migrate deploy
 ```
 Expected: applied.
 
-- [ ] **Step 3: Seed ke Neon**
+- [x] **Step 3: Seed ke Neon**
 
 ```bash
 npm run db:seed
 ```
 Expected: 275 vendor + katalog kaya di Neon.
 
-- [ ] **Step 4: Commit migration**
+- [x] **Step 4: Commit migration**
 
 ```bash
 git add prisma/migrations
@@ -613,14 +613,14 @@ git commit -m "chore(db): migration for VendorProfile.slug"
 
 ## Verifikasi Akhir
 
-- [ ] `npx prisma validate` (kedua schema) → valid
-- [ ] `npm run typecheck` → PASS
-- [ ] `npm test` → PASS
-- [ ] `npm run build` → PASS
-- [ ] Seed: 275 vendor, ±6875 jasa, ±2750 portofolio (Neon)
-- [ ] Beranda: 6/kategori + blur CTA + "Lihat Selengkapnya"; tiap kategori tidak tercampur
-- [ ] Navbar "Dashboard →" per role; logout di sidebar; nama vendor di samping logo
-- [ ] `npm run reset-session` bekerja
+- [x] `npx prisma validate` (kedua schema) → valid
+- [x] `npm run typecheck` → PASS
+- [x] `npm test` → PASS
+- [x] `npm run build` → PASS
+- [x] Seed: 275 vendor, ±6875 jasa, ±2750 portofolio (Neon)
+- [x] Beranda: 6/kategori + blur CTA + "Lihat Selengkapnya"; tiap kategori tidak tercampur
+- [x] Navbar "Dashboard →" per role; logout di sidebar; nama vendor di samping logo
+- [x] `npm run reset-session` bekerja
 
 ## Self-Review
 
