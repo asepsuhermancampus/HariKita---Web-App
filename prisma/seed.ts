@@ -5,6 +5,8 @@ import {
   getPortfolioTemplates,
   IMG,
 } from "./seed-data/vendor-services";
+import { generateVendors } from "./seed-data/vendors";
+import { buildVendorSlug } from "../src/lib/catalog-utils";
 
 /** Peta kategori vendor → key pool gambar. */
 function categoryImgKey(category: string): keyof typeof IMG {
@@ -268,215 +270,8 @@ async function main() {
   await logPin(ba3User.id);
 
   // 2. Vendors across 11 Categories in Kebumen
-  const vendorsData = [
-    {
-      businessName: "Menganti Cinematic & Studio",
-      category: "Pre-wedding",
-      city: "Kebumen",
-      address: "Jl. Pemuda No. 45, Kebumen",
-      rating: 4.9,
-      reviewCount: 38,
-      igHandle: "@menganti.visuals",
-      bankName: "BCA",
-      bankAccount: "1234567890",
-      bankHolder: "Menganti Cinematic",
-      packageName: "Paket Prewed All-In Pantai Menganti",
-      description: "Sesi foto outdoor di Pantai Menganti & Bukit Menara, 2 busana, drone footage, 25 foto retouched, teaser Reels 60s.",
-      basePrice: 3500000,
-      unitType: "all_in",
-      slaDays: 7,
-      imageUrl: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800",
-    },
-    {
-      businessName: "Griya Busana Rarasati",
-      category: "Busana Pengantin & Fitting",
-      city: "Kebumen",
-      address: "Jl. Pahlawan No. 12, Kebumen",
-      rating: 5.0,
-      reviewCount: 52,
-      igHandle: "@rarasati.kebumen",
-      bankName: "Mandiri",
-      bankAccount: "136000987654",
-      bankHolder: "Griya Rarasati",
-      packageName: "Sewa Busana Akad & Resepsi Lengkap",
-      description: "Termasuk sewa perdana kebaya modern / beskap adat Jawa, kain jarik, aksesori lengkap, dan 2x sesi fisik fitting gratis.",
-      basePrice: 2800000,
-      unitType: "all_in",
-      slaDays: 5,
-      imageUrl: "https://images.unsplash.com/photo-1594552072238-b8a33785b261?q=80&w=800",
-    },
-    {
-      businessName: "Alula MUA & Hijab Styling",
-      category: "Makeup Artist (MUA)",
-      city: "Kebumen",
-      address: "Jl. Tentara Pelajar No. 8, Gombong, Kebumen",
-      rating: 4.9,
-      reviewCount: 44,
-      igHandle: "@alulamua.kebumen",
-      bankName: "BSI",
-      bankAccount: "7123456789",
-      bankHolder: "Alula Wedding Studio",
-      packageName: "Paket Rias Pengantin Soft Glam / Adat",
-      description: "Rias pengantin akad + resepsi, hijab do / hair styling premium, melati segar, dan touch-up standby 4 jam.",
-      basePrice: 2200000,
-      unitType: "all_in",
-      slaDays: 3,
-      imageUrl: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=800",
-    },
-    {
-      businessName: "Hantaran Lestari Kebumen",
-      category: "Kotak Seserahan & Mahar",
-      city: "Kebumen",
-      address: "Jl. Kusuma No. 29, Kebumen",
-      rating: 4.8,
-      reviewCount: 31,
-      igHandle: "@hantaranlestari.kbm",
-      bankName: "BRI",
-      bankAccount: "001234567890",
-      bankHolder: "Hantaran Lestari",
-      packageName: "Sewa & Hias Baki Akrilik Kayu Jati",
-      description: "Baki akrilik kristal kombinasi kayu jati Kebumen, bunga artifisial premium, pita satin, kalkulator fleksibel per kotak.",
-      basePrice: 1050000,
-      unitType: "baki",
-      unitPrice: 150000,
-      minUnit: 5,
-      maxUnit: 15,
-      slaDays: 5,
-      imageUrl: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800",
-    },
-    {
-      businessName: "Pradana Cinema & Story",
-      category: "Dokumentasi Foto-Video",
-      city: "Kebumen",
-      address: "Jl. Ahmad Yani No. 102, Kebumen",
-      rating: 5.0,
-      reviewCount: 60,
-      igHandle: "@pradana.cinema",
-      bankName: "BCA",
-      bankAccount: "9876543210",
-      bankHolder: "Pradana Multi Media",
-      packageName: "Liputan Hari H + Cinematic Teaser",
-      description: "2 Fotografer + 1 Videografer, drone aerial venue, all file original di flashdisk kayu eksklusif, video teaser 1 menit & full highlight 7 menit.",
-      basePrice: 4200000,
-      unitType: "all_in",
-      slaDays: 14,
-      imageUrl: "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800",
-    },
-    {
-      businessName: "Asmara Flora & Pelaminan",
-      category: "Dekorasi & Florist",
-      city: "Kebumen",
-      address: "Jl. Mayjen Soetoyo No. 15, Kebumen",
-      rating: 4.9,
-      reviewCount: 47,
-      igHandle: "@asmaraflora.kbm",
-      bankName: "Mandiri",
-      bankAccount: "136000554433",
-      bankHolder: "Asmara Flora Dekor",
-      packageName: "Dekorasi Pelaminan Intimate 4-6 Meter",
-      description: "Pelaminan bunga segar kombinasi rustic elegan, karpet jalan, standing flowers 4 titik, gate masuk, dan photobooth lamaran.",
-      basePrice: 5500000,
-      unitType: "all_in",
-      slaDays: 7,
-      imageUrl: "https://images.unsplash.com/photo-1519225424564-96fe7be8ffb6?q=80&w=800",
-    },
-    {
-      businessName: "Dapur Rasa Boga Kebumen",
-      category: "Katering & Food Stalls",
-      city: "Kebumen",
-      address: "Jl. Indrakila No. 70, Kebumen",
-      rating: 4.9,
-      reviewCount: 85,
-      igHandle: "@rasaboga.kebumen",
-      bankName: "BCA",
-      bankAccount: "5544332211",
-      bankHolder: "Dapur Rasa Boga",
-      packageName: "Prasmanan Harmoni Selera Kebumen",
-      description: "Menu komplit: Nasi, Olahan Daging Sapi, Ayam Suwir, Sup Pengantin, Es Dawet Ireng Khas Butuh, buah potong, lengkap dengan waiter & sample test food.",
-      basePrice: 4500000, // untuk 100 pax dasar
-      unitType: "pax",
-      unitPrice: 45000,
-      minUnit: 50,
-      maxUnit: 1000,
-      slaDays: 10,
-      imageUrl: "https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=800",
-    },
-    {
-      businessName: "L'Aura Patisserie & Cakes",
-      category: "Cakes & Dessert Corner",
-      city: "Kebumen",
-      address: "Jl. Kolonel Sugiono No. 22, Kebumen",
-      rating: 4.8,
-      reviewCount: 29,
-      igHandle: "@lauracakes.kbm",
-      bankName: "BCA",
-      bankAccount: "3322114455",
-      bankHolder: "L'Aura Cakes",
-      packageName: "Tiered Wedding Cake & Sweet Corner",
-      description: "Kue pengantin 2 tingkat dengan hiasan bunga segar senada dekorasi + mini dessert table (cupcakes, pudding shooters, tarts). Termasuk sample cake taster.",
-      basePrice: 1600000,
-      unitType: "all_in",
-      slaDays: 4,
-      imageUrl: "https://images.unsplash.com/photo-1535141192574-5d4897c13136?q=80&w=800",
-    },
-    {
-      businessName: "Kriya Anyam Gombong Souvenir",
-      category: "Souvenir & Favors",
-      city: "Kebumen",
-      address: "Jl. Raya Barat Gombong No. 10, Kebumen",
-      rating: 4.9,
-      reviewCount: 40,
-      igHandle: "@kriyaanyam.kbm",
-      bankName: "BRI",
-      bankAccount: "009988776655",
-      bankHolder: "Kriya Anyam Kebumen",
-      packageName: "Pouch Linen Anyaman Pandan Eksklusif",
-      description: "Pouch ramah lingkungan kombinasi anyaman pandan khas Kebumen & linen, bordir inisial pasangan, kemasan mika & kartu ucapan terima kasih.",
-      basePrice: 750000, // untuk 50 pcs dasar
-      unitType: "pcs",
-      unitPrice: 15000,
-      minUnit: 50,
-      maxUnit: 500,
-      slaDays: 12,
-      imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=800",
-    },
-    {
-      businessName: "HariKita Digital & Print Invitation",
-      category: "Undangan Digital & Amplop",
-      city: "Kebumen",
-      address: "Sentra Kreasi Kebumen Creative Hub, Kebumen",
-      rating: 5.0,
-      reviewCount: 95,
-      igHandle: "@harikita.invitation",
-      bankName: "BCA",
-      bankAccount: "8899001122",
-      bankHolder: "HariKita Kebumen",
-      packageName: "Paket All-In Undangan Digital & Cetak Wax Seal",
-      description: "Website undangan digital responsif (65+ varian tema, musik, RSVP real-time, amplop digital) + 100 pcs undangan cetak hardcover dengan cap segel lilin.",
-      basePrice: 1250000,
-      unitType: "all_in",
-      slaDays: 5,
-      imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800",
-    },
-    {
-      businessName: "Denah Kita Kartun Estetik",
-      category: "Cute Illustrated Maps",
-      city: "Kebumen",
-      address: "Jl. Veteran No. 18, Kebumen",
-      rating: 4.9,
-      reviewCount: 34,
-      igHandle: "@denahkita.kebumen",
-      bankName: "BSI",
-      bankAccount: "7766554433",
-      bankHolder: "Denah Kita Studio",
-      packageName: "Ilustrasi Denah Lokasi Kartun & Barcode QR",
-      description: "Gambar kartun lucu rute lokasi venue (gedung, masjid, patung ikonik Kebumen), siap cetak & terintegrasi navigasi langsung Google Maps.",
-      basePrice: 250000,
-      unitType: "all_in",
-      slaDays: 3,
-      imageUrl: "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800",
-    },
-  ];
+  // Data vendor di-generate: 25 vendor per 11 kategori = 275 (satu kategori masing-masing).
+  const vendorsData = generateVendors();
 
   // Vendor yang direkrut BA (berdasarkan indeks vendorsData):
   //   BA-1 (Rina): 0=Menganti, 1=Rarasati, 2=Alula MUA, 3=Hantaran, 4=Pradana
@@ -501,11 +296,13 @@ async function main() {
 
   for (let i = 0; i < vendorsData.length; i++) {
     const item = vendorsData[i];
+    const n = i + 1;
+    const phone = "081300" + String(n).padStart(6, "0"); // 081300000001..275
     const user = await prisma.user.create({
       data: {
         name: item.businessName,
-        phone: `0813000000${(i + 1).toString().padStart(2, "0")}`,
-        email: `vendor${i + 1}@harikita.id`,
+        phone,
+        email: `vendor${n}@harikita.id`,
         pin: DEFAULT_PIN,
         role: "VENDOR",
       },
@@ -515,9 +312,12 @@ async function main() {
     const vendor = await prisma.vendorProfile.create({
       data: {
         userId: user.id,
+        slug: buildVendorSlug(item.businessName, user.id),
         businessName: item.businessName,
         category: item.category,
-        city: item.city,
+        picName: item.businessName,
+        city: "Kebumen",
+        district: item.district,
         address: item.address,
         rating: item.rating,
         reviewCount: item.reviewCount,
@@ -525,7 +325,7 @@ async function main() {
         bankName: item.bankName,
         bankAccount: item.bankAccount,
         bankHolder: item.bankHolder,
-        walletBalance: 1500000,
+        walletBalance: 0,
         recruitedById: recruiterByIndex[i] ?? null,
         // Vendor demo sudah terverifikasi agar katalog demo tetap terisi
         verificationStatus: "APPROVED",
@@ -533,8 +333,8 @@ async function main() {
         profileCompleted: true,
         ktpNumber: "3305" + String(100000000000 + i).slice(0, 12),
         revenueMethod: "BANK",
-        desa: "Kebumen",
-        kecamatan: "Kebumen",
+        desa: item.district,
+        kecamatan: item.district,
         kabupaten: "Kebumen",
         postalCode: "54311",
         // Koordinat bervariasi per kecamatan Kebumen (untuk estimasi jarak)
@@ -543,29 +343,19 @@ async function main() {
       },
     });
 
-    const pkg = await prisma.servicePackage.create({
-      data: {
-        vendorId: vendor.id,
-        category: item.category,
-        name: item.packageName,
-        description: item.description,
-        basePrice: item.basePrice,
-        unitType: item.unitType,
-        unitPrice: item.unitPrice,
-        minUnit: item.minUnit,
-        maxUnit: item.maxUnit,
-        slaDays: item.slaDays,
-        imageUrl: item.imageUrl,
-      },
-    });
-
-    // ── Katalog kaya: 25 paket layanan per vendor (sesuai kategori) ──
     const svcTemplates = getServiceTemplates(item.category);
     const imgPool = IMG[categoryImgKey(item.category)];
+
+    // Paket pertama (dipakai sebagai rujukan id/basePrice untuk order demo)
+    let firstPkgId = "";
+    let firstPkgPrice = 0;
+
+    // ── Katalog kaya: 25 paket layanan per vendor (sesuai kategori) ──
     for (let s = 0; s < svcTemplates.length; s++) {
       const t = svcTemplates[s];
-      const price = Math.round((item.basePrice * t.priceFactor) / 1000) * 1000;
-      await prisma.servicePackage.create({
+      const base = 500000 + (i % 25) * 15000;
+      const price = Math.round((base * t.priceFactor) / 1000) * 1000;
+      const created = await prisma.servicePackage.create({
         data: {
           vendorId: vendor.id,
           category: item.category,
@@ -581,6 +371,10 @@ async function main() {
           includes: JSON.stringify(t.includes),
         },
       });
+      if (s === 0) {
+        firstPkgId = created.id;
+        firstPkgPrice = price;
+      }
     }
 
     // ── Portofolio feed: 10 item per vendor ──
@@ -596,7 +390,7 @@ async function main() {
           styleTags: JSON.stringify(pfStyles),
           caption: pfCaption,
           imageUrl: imgPool[p % imgPool.length],
-          likes: 20 + ((i + 1) * 7 + p * 13) % 300,
+          likes: 20 + (n * 7 + p * 13) % 300,
           isPublished: true,
         },
       });
@@ -605,8 +399,8 @@ async function main() {
     createdVendors.push({
       id: vendor.id,
       businessName: item.businessName,
-      packageId: pkg.id,
-      basePrice: item.basePrice,
+      packageId: firstPkgId,
+      basePrice: firstPkgPrice,
       category: item.category,
     });
   }
@@ -838,8 +632,8 @@ async function main() {
   const pendingVendorUser = await prisma.user.create({
     data: {
       name: "Vendor Uji PENDING",
-      phone: "081300000099",
-      email: "vendor.uji@harikita.id",
+      phone: "081399000099",
+      email: "vendor.pending@harikita.id",
       pin: DEFAULT_PIN,
       role: "VENDOR",
     },
@@ -907,7 +701,7 @@ async function main() {
   console.log("Vendor      : 081300000001  -> /auth/login");
   console.log("--- Akun uji verifikasi & geo ---");
   console.log("Client Uji  : 081900000099  (punya alamat+peta+order demo) -> /auth/login");
-  console.log("Vendor PENDING : 081300000099 -> /dashboard/vendor/profil (uji ajukan verifikasi)");
+  console.log("Vendor PENDING : 081399000099 -> /dashboard/vendor/profil (uji ajukan verifikasi)");
   console.log("Brand Ambassador:");
   console.log("  [AKTIF]   : 081200000001  (Rina BA Kebumen, komisi 5%, saldo Rp1.137.500, kode BA-KEBUMEN-2026) -> /auth/login/ba");
   console.log("  [AKTIF]   : 081200000002  (Dwi BA Gombong, komisi 7%, saldo Rp910.000, kode BA-GOMBONG-2026) -> /auth/login/ba");
