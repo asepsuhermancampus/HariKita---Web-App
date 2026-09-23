@@ -103,6 +103,7 @@ export interface PublicVendorProduct {
   callTime: string;
   features: string[];
   productTags: string[];
+  galleryImages: string[];
 }
 
 export interface PublicVendor {
@@ -119,7 +120,7 @@ export interface PublicVendor {
   verified: boolean;
   bio: string;
   products: PublicVendorProduct[];
-  portfolio: Array<{ id: string; url: string; caption: string; locationTag: string; styleTags: string[] }>;
+  portfolio: Array<{ id: string; url: string; caption: string; locationTag: string; styleTags: string[]; images: string[] }>;
 }
 
 const UNIT_LABEL: Record<UiUnitType, string> = {
@@ -140,6 +141,7 @@ function toPublicProduct(p: {
   maxUnit: number | null;
   slaDays: number;
   imageUrl: string | null;
+  galleryImages: string | null;
   includes: string | null;
   category: string;
 }): PublicVendorProduct {
@@ -151,6 +153,14 @@ function toPublicProduct(p: {
   } catch {
     features = [];
   }
+  let gallery: string[] = [];
+  try {
+    const parsed = p.galleryImages ? JSON.parse(p.galleryImages) : [];
+    if (Array.isArray(parsed)) gallery = parsed.map((x) => String(x));
+  } catch {
+    gallery = [];
+  }
+  if (gallery.length === 0 && p.imageUrl) gallery = [p.imageUrl];
   return {
     id: p.id,
     slug: buildProductSlug(p.name, p.id),
@@ -165,6 +175,7 @@ function toPublicProduct(p: {
     callTime: "Standby H-0",
     features,
     productTags: [p.category],
+    galleryImages: gallery,
   };
 }
 
@@ -192,6 +203,15 @@ export async function getPublicVendorBySlug(slug: string): Promise<PublicVendor 
         return Array.isArray(arr) ? arr.map((x) => String(x)) : [];
       } catch {
         return [];
+      }
+    })(),
+    images: (() => {
+      try {
+        const arr = p.images ? JSON.parse(p.images) : [];
+        const list = Array.isArray(arr) ? arr.map((x) => String(x)) : [];
+        return list.length > 0 ? list : [p.imageUrl];
+      } catch {
+        return [p.imageUrl];
       }
     })(),
   }));
