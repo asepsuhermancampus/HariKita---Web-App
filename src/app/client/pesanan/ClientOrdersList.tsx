@@ -20,7 +20,13 @@ import type { OrderViewModel } from "@/server/queries/orders";
  * `dbOrders` berasal dari database (server). Bila kosong (mis. belum ada pesanan
  * nyata pada environment ini), UI jatuh ke mock store agar halaman tetap terisi.
  */
-export function ClientOrdersList({ dbOrders }: { dbOrders: OrderViewModel[] }) {
+export function ClientOrdersList({
+  dbOrders,
+  distances = {},
+}: {
+  dbOrders: OrderViewModel[];
+  distances?: Record<string, Array<{ vendorName: string; km: number; minutes: number | null; source: string }>>;
+}) {
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
   const { orders: mockOrders } = useOrders();
 
@@ -155,6 +161,21 @@ export function ClientOrdersList({ dbOrders }: { dbOrders: OrderViewModel[] }) {
                       <MapPin className="w-3.5 h-3.5 text-hk-taupe" />
                       <span>{order.eventLocation}, Kec. {order.district}</span>
                     </div>
+
+                    {distances[order.id] && distances[order.id].length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {distances[order.id].map((d, i) => (
+                          <span
+                            key={i}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-hk-champagne/40 bg-white px-2.5 py-1 text-[11px] text-hk-charcoal"
+                          >
+                            <MapPin className="h-3 w-3 text-hk-taupe" aria-hidden="true" />
+                            {d.vendorName}: ± {d.km} km
+                            {d.minutes != null ? ` · ± ${d.minutes} mnt` : " (perkiraan)"}
+                          </span>
+                        ))}
+                      </div>
+                    )}
 
                     <div className="pt-2">
                       <span className="text-[11px] font-semibold text-hk-charcoal/70 uppercase tracking-wider block mb-1.5">

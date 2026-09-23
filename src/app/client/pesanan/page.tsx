@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { getClientOrderViewModels } from "@/server/queries/orders";
+import { getClientVendorDistances } from "@/server/queries/order-distances";
 import { DashPageHeader } from "@/components/dashboard";
 import { ClientOrdersList } from "./ClientOrdersList";
 
@@ -14,6 +15,7 @@ export const dynamic = "force-dynamic";
  */
 export default async function ClientPesananPage() {
   const dbOrders = await getClientOrderViewModels();
+  const distances = await getClientVendorDistances();
 
   return (
     <div className="flex flex-col gap-6">
@@ -31,7 +33,7 @@ export default async function ClientPesananPage() {
         }
       />
 
-      <ClientOrdersList dbOrders={dbOrders} />
+      <ClientOrdersList dbOrders={dbOrders} distances={distances} />
     </div>
   );
 }
