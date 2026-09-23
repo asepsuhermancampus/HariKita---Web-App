@@ -258,8 +258,35 @@ export function PublicVendorProfileClient({ vendor }: { vendor: PublicVendor }) 
                 return (
                   <div
                     key={product.id}
-                    className="p-6 rounded-3xl bg-white border border-hk-champagne/60 shadow-xs space-y-4 hover:border-hk-taupe hover:shadow-md transition-all flex flex-col justify-between"
+                    className="rounded-3xl bg-white border border-hk-champagne/60 shadow-xs hover:border-hk-taupe hover:shadow-md transition-all flex flex-col overflow-hidden"
                   >
+                    <Link href={ROUTES.PRODUCT(vendor.slug, product.slug)} className="group block">
+                      <div className="relative aspect-[4/3] w-full bg-hk-soft-beige/40 overflow-hidden">
+                        {product.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            loading="lazy"
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="grid h-full w-full place-items-center text-hk-taupe">
+                            <Sparkles className="h-7 w-7" />
+                          </div>
+                        )}
+                        <span className="absolute left-3 top-3 px-2.5 py-0.5 rounded-full text-[10px] font-manrope font-bold uppercase tracking-wider bg-white/90 text-hk-taupe border border-hk-champagne/50 backdrop-blur-sm">
+                          {product.unitLabel}
+                        </span>
+                        {product.galleryImages.length > 1 && (
+                          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-manrope font-semibold text-white backdrop-blur-sm">
+                            <Images className="h-3 w-3" /> {product.galleryImages.length}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+
+                    <div className="p-6 space-y-3 flex-1 flex flex-col justify-between">
                     <Link href={ROUTES.PRODUCT(vendor.slug, product.slug)} className="space-y-3 group">
                       <div className="flex items-center justify-between">
                         <span className="px-3 py-1 rounded-full text-[10px] font-manrope font-bold uppercase tracking-wider bg-hk-soft-beige text-hk-taupe border border-hk-champagne/40">
@@ -325,6 +352,7 @@ export function PublicVendorProfileClient({ vendor }: { vendor: PublicVendor }) 
                           </>
                         )}
                       </button>
+                    </div>
                     </div>
                   </div>
                 );
