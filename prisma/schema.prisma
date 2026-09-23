@@ -65,6 +65,7 @@ model VendorProfile {
   userId         String               @unique
   user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   businessName   String
+  slug           String?              @unique // URL slug stabil (mis. "menganti-cinematic-<id8>")
   category       String               // 11 Kategori Layanan
   picName        String?              // Nama Pemilik / PIC Vendor
   city           String               @default("Kebumen")
