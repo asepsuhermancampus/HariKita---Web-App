@@ -168,7 +168,7 @@ export function VendorPaketClient({
         <div className="bg-white rounded-2xl border border-[#C5A880]/30 shadow-sm p-5 sm:p-6 space-y-3">
           <div className="flex items-center gap-2">
             <Calculator className="w-5 h-5 text-[#C5A880]" />
-            <h3 className="font-serif text-base font-bold text-[#4A2E35]">
+            <h3 className="font-editorial text-base font-bold text-[#4A2E35]">
               Transparansi Potongan &amp; Biaya Platform HariKita
             </h3>
           </div>
@@ -197,7 +197,7 @@ export function VendorPaketClient({
                 >
                   <div className="flex flex-col sm:flex-row justify-between items-start gap-2 pb-3 border-b border-[#FAF8F5]">
                     <div>
-                      <h4 className="font-serif text-lg font-bold text-[#4A2E35]">
+                      <h4 className="font-editorial text-lg font-bold text-[#4A2E35]">
                         {pkg.name}
                       </h4>
                       <div className="flex items-center gap-2 text-xs text-[#6B5E62] mt-1">

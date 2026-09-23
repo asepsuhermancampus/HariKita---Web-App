@@ -183,7 +183,7 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                     <div className="space-y-1.5">
-                      <h3 className="font-serif text-lg font-bold text-[#4A2E35]">{v.businessName}</h3>
+                      <h3 className="font-editorial text-lg font-bold text-[#4A2E35]">{v.businessName}</h3>
                       <div className="text-[#C5A880] font-semibold">Kategori: {v.category}</div>
                       <div className="flex items-center gap-1.5 text-[#6B5E62]">
                         <MapPin className="w-3.5 h-3.5 text-[#C5A880]" aria-hidden="true" />

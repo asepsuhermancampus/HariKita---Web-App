@@ -208,7 +208,7 @@ export function VendorPortofolioClient({
 
               <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
                 <div>
-                  <h4 className="font-serif text-sm font-bold text-[#4A2E35] line-clamp-1">
+                  <h4 className="font-editorial text-sm font-bold text-[#4A2E35] line-clamp-1">
                     {item.title}
                   </h4>
                   <div className="flex items-center gap-1 text-[11px] text-[#6B5E62] mt-0.5">

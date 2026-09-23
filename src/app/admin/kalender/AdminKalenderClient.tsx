@@ -117,7 +117,7 @@ export function AdminMasterKalenderPage({
             <span className="text-[11px] text-[#6B5E62] font-semibold block">
               Total Acara Terjadwal
             </span>
-            <div className="font-serif text-2xl font-bold text-[#4A2E35] mt-1">
+            <div className="font-editorial text-2xl font-bold text-[#4A2E35] mt-1">
               {allEvents.length} Acara Pernikahan
             </div>
             <span className="text-[10px] text-emerald-700">Terkunci di Wilayah Kebumen</span>
@@ -127,7 +127,7 @@ export function AdminMasterKalenderPage({
             <span className="text-[11px] text-[#6B5E62] font-semibold block">
               Vendor Bertugas Terkoneksi
             </span>
-            <div className="font-serif text-2xl font-bold text-[#4A2E35] mt-1">
+            <div className="font-editorial text-2xl font-bold text-[#4A2E35] mt-1">
               {allEvents.reduce((acc, e) => acc + e.vendorsCount, 0)} Sesi Layanan
             </div>
             <span className="text-[10px] text-[#C5A880]">Sinkron ke Call Time Hari H</span>
@@ -137,7 +137,7 @@ export function AdminMasterKalenderPage({
             <span className="text-[11px] text-[#6B5E62] font-semibold block">
               Total Nilai Escrow Terlindungi
             </span>
-            <div className="font-serif text-xl font-bold text-emerald-800 mt-1">
+            <div className="font-editorial text-xl font-bold text-emerald-800 mt-1">
               {formatRupiah(totalEscrowManaged)}
             </div>
             <span className="text-[10px] text-emerald-600 flex items-center gap-1">
@@ -224,7 +224,7 @@ export function AdminMasterKalenderPage({
                         <span className="font-mono text-[10px] font-bold text-[#C5A880] bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#E5D7C7]">
                           {ev.id}
                         </span>
-                        <h3 className="font-serif text-base sm:text-lg font-bold text-[#4A2E35]">
+                        <h3 className="font-editorial text-base sm:text-lg font-bold text-[#4A2E35]">
                           {ev.client}
                         </h3>
                       </div>

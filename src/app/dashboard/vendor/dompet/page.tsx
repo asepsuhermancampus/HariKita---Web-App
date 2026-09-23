@@ -83,7 +83,7 @@ export default function VendorDompetPage() {
               <span>Saldo Siap Ditarik</span>
               <Wallet className="w-4 h-4 text-emerald-600" />
             </div>
-            <div className="font-serif text-3xl font-bold text-[#4A2E35]">
+            <div className="font-editorial text-3xl font-bold text-[#4A2E35]">
               {formatRupiah(readyBalance)}
             </div>
             <p className="text-[11px] text-[#6B5E62]">
@@ -97,7 +97,7 @@ export default function VendorDompetPage() {
               <span>Dana Tertahan di Escrow</span>
               <Clock className="w-4 h-4 text-amber-600" />
             </div>
-            <div className="font-serif text-3xl font-bold text-[#C5A880]">
+            <div className="font-editorial text-3xl font-bold text-[#C5A880]">
               {formatRupiah(escrowLockedBalance)}
             </div>
             <p className="text-[11px] text-[#6B5E62]">
@@ -110,7 +110,7 @@ export default function VendorDompetPage() {
         <div className="bg-white rounded-2xl border border-[#C5A880]/30 shadow-sm p-5 sm:p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-[#FAF8F5] pb-3">
             <ArrowDownCircle className="w-5 h-5 text-[#C5A880]" />
-            <h3 className="font-serif text-base font-bold text-[#4A2E35]">
+            <h3 className="font-editorial text-base font-bold text-[#4A2E35]">
               Formulir Penarikan Dana Payout (Transfer Bank)
             </h3>
           </div>
@@ -164,7 +164,7 @@ export default function VendorDompetPage() {
 
         {/* Transaction History */}
         <div className="bg-white rounded-2xl border border-[#C5A880]/30 shadow-sm p-5 sm:p-6 space-y-4">
-          <h3 className="font-serif text-base font-bold text-[#4A2E35] border-b border-[#FAF8F5] pb-3">
+          <h3 className="font-editorial text-base font-bold text-[#4A2E35] border-b border-[#FAF8F5] pb-3">
             Riwayat Mutasi & Rilis Escrow
           </h3>
 
