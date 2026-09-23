@@ -3,8 +3,52 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import type { NavGroup } from "./nav-config";
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  ShieldCheck,
+  Landmark,
+  Scale,
+  Megaphone,
+  CalendarDays,
+  FileSearch,
+  Settings,
+  Inbox,
+  Wallet,
+  Package,
+  Image as ImageIcon,
+  UserRound,
+  Store,
+  Coins,
+  ReceiptText,
+  CalendarClock,
+  Mail,
+  type LucideIcon,
+} from "lucide-react";
+import type { NavGroup, NavIconName } from "./nav-config";
+
+/** Peta nama ikon (string, aman lintas server→client) → komponen Lucide. */
+const ICONS: Record<NavIconName, LucideIcon> = {
+  dashboard: LayoutDashboard,
+  shield: ShieldCheck,
+  landmark: Landmark,
+  scale: Scale,
+  megaphone: Megaphone,
+  calendar: CalendarDays,
+  fileSearch: FileSearch,
+  settings: Settings,
+  inbox: Inbox,
+  wallet: Wallet,
+  package: Package,
+  image: ImageIcon,
+  user: UserRound,
+  store: Store,
+  coins: Coins,
+  receipt: ReceiptText,
+  calendarClock: CalendarClock,
+  mail: Mail,
+};
 
 export function DashboardSidebarNav({
   nav,
@@ -28,7 +72,7 @@ export function DashboardSidebarNav({
           {g.items.map((it) => {
             const active =
               it.href === homeHref ? pathname === it.href : pathname.startsWith(it.href);
-            const Icon = it.icon;
+            const Icon = ICONS[it.icon];
             return (
               <Link
                 key={it.href}

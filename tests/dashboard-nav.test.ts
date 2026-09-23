@@ -19,7 +19,8 @@ test("nav config covers all role routes", () => {
   for (const r of routes) assert.ok(nav.includes(r), `missing ${r}`);
 });
 
-test("nav config uses lucide icons, no emoji", () => {
-  assert.match(nav, /from "lucide-react"/);
+test("nav config uses icon names (strings), no emoji", () => {
+  // icon disimpan sebagai nama string (aman serialisasi server→client)
+  assert.match(nav, /icon:\s*"/);
   assert.doesNotMatch(nav, /[\u{1F300}-\u{1FAFF}]/u);
 });

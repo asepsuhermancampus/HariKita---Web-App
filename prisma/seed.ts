@@ -472,6 +472,7 @@ async function main() {
     businessName: string;
     packageId: string;
     basePrice: number;
+    category: string;
   }> = [];
 
   for (let i = 0; i < vendorsData.length; i++) {
@@ -539,6 +540,7 @@ async function main() {
       businessName: item.businessName,
       packageId: pkg.id,
       basePrice: item.basePrice,
+      category: item.category,
     });
   }
 
