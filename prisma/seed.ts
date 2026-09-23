@@ -1,6 +1,21 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+/** Koordinat demo per kecamatan Kebumen (untuk estimasi jarak vendor↔client). */
+const VENDOR_COORDS: Array<[number, number]> = [
+  [-7.6683, 109.6533], // Kebumen Kota
+  [-7.6067, 109.5133], // Gombong
+  [-7.6683, 109.7122], // Kutowinangun
+  [-7.7222, 109.6333], // Karanganyar
+  [-7.5833, 109.6167], // Alian
+  [-7.7206, 109.5667], // Prembun
+  [-7.7667, 109.4167], // Ayah
+  [-7.65, 109.5833], // Pejagoan
+  [-7.7, 109.6833], // Poncowarno
+  [-7.6333, 109.5333], // Kuwarasan
+  [-7.6167, 109.7], // Buluspesantren
+];
+
 /**
  * Dual-provider aware, mirroring `src/lib/prisma.ts`:
  *  - `file:`          → SQLite dev client (generated/sqlite-client)
@@ -118,6 +133,22 @@ async function main() {
     },
   });
   await logPin(clientUser.id);
+
+  // Profil klien (alamat + koordinat) untuk estimasi jarak vendor→client.
+  await prisma.clientProfile.create({
+    data: {
+      userId: clientUser.id,
+      partnerName: "Citra Kirana",
+      eventLocation: "Gedung Pertemuan Setda Kebumen",
+      district: "Kebumen",
+      kecamatan: "Kebumen",
+      kabupaten: "Kebumen",
+      desa: "Kebumen",
+      postalCode: "54311",
+      latitude: -7.66,
+      longitude: 109.65,
+    },
+  });
 
   // Brand Ambassador (BA) demo — merekrut vendor lewat kode referral.
   const baUserId = "ba-demo-001";
@@ -481,8 +512,9 @@ async function main() {
         kecamatan: "Kebumen",
         kabupaten: "Kebumen",
         postalCode: "54311",
-        latitude: -7.6683,
-        longitude: 109.6533,
+        // Koordinat bervariasi per kecamatan Kebumen (untuk estimasi jarak)
+        latitude: VENDOR_COORDS[i % VENDOR_COORDS.length][0],
+        longitude: VENDOR_COORDS[i % VENDOR_COORDS.length][1],
       },
     });
 
@@ -707,6 +739,95 @@ async function main() {
     ],
   });
 
+  // ── Data uji verifikasi & geo ──────────────────────────────────────────────
+  // Client demo (untuk uji estimasi jarak di /client/pesanan)
+  const demoClient = await prisma.user.create({
+    data: {
+      name: "Demo Client Uji",
+      phone: "081900000099",
+      email: "client.uji@harikita.id",
+      pin: DEFAULT_PIN,
+      role: "CLIENT",
+    },
+  });
+  await logPin(demoClient.id);
+  await prisma.clientProfile.create({
+    data: {
+      userId: demoClient.id,
+      partnerName: "Pasangan Demo",
+      district: "Kebumen",
+      kecamatan: "Kebumen",
+      kabupaten: "Kebumen",
+      desa: "Kebumen",
+      postalCode: "54311",
+      latitude: -7.66,
+      longitude: 109.65,
+    },
+  });
+
+  // Vendor PENDING (untuk uji alur verifikasi admin)
+  const pendingVendorUser = await prisma.user.create({
+    data: {
+      name: "Vendor Uji PENDING",
+      phone: "081300000099",
+      email: "vendor.uji@harikita.id",
+      pin: DEFAULT_PIN,
+      role: "VENDOR",
+    },
+  });
+  await logPin(pendingVendorUser.id);
+  await prisma.vendorProfile.create({
+    data: {
+      userId: pendingVendorUser.id,
+      businessName: "Vendor Uji Belum Terverifikasi",
+      category: "Katering & Food Stalls",
+      address: "Jl. Uji No. 1",
+      verificationStatus: "PENDING",
+      isVerified: false,
+      profileCompleted: false,
+    },
+  });
+
+  // Order demo untuk client demo (agar estimasi jarak tampil)
+  const demoVendor = createdVendors[0];
+  if (demoVendor) {
+    const demoPkg = await prisma.servicePackage.findFirst({ where: { vendorId: demoVendor.id } });
+    if (demoPkg) {
+      const unitPrice = demoPkg.unitPrice ?? demoPkg.basePrice;
+      const order = await prisma.order.create({
+        data: {
+          orderNumber: "HK-DEMO-0001",
+          userId: demoClient.id,
+          clientName: demoClient.name,
+          clientPhone: demoClient.phone,
+          eventDate: new Date("2027-06-15"),
+          city: "Kebumen",
+          totalAmount: unitPrice,
+          status: "IN_PROGRESS",
+          notes: "Order demo untuk testing estimasi jarak",
+          snapshotDpPct: 30,
+          snapshotSettlementPct: 70,
+          snapshotPlatformFeePct: 10,
+        },
+      });
+      await prisma.orderItem.create({
+        data: {
+          orderId: order.id,
+          vendorId: demoVendor.id,
+          packageId: demoPkg.id,
+          vendorNameSnapshot: demoVendor.businessName,
+          categorySlug: demoVendor.category,
+          serviceName: demoPkg.name,
+          packageName: demoPkg.name,
+          quantity: 1,
+          unitPrice,
+          subtotal: unitPrice,
+          status: "ACCEPTED",
+        },
+      });
+    }
+  }
+
   console.log("Seeding finished successfully! 11 Kebumen categories seeded.");
   console.log("");
   console.log("=== AKUN DEMO HARI KITA (PIN semua: 123456) ===");
@@ -715,6 +836,9 @@ async function main() {
   console.log("Finance Adm : 081234567892  (sub-role FINANCE) -> /auth/login/admin");
   console.log("Pengantin   : 081987654321  -> /auth/login");
   console.log("Vendor      : 081300000001  -> /auth/login");
+  console.log("--- Akun uji verifikasi & geo ---");
+  console.log("Client Uji  : 081900000099  (punya alamat+peta+order demo) -> /auth/login");
+  console.log("Vendor PENDING : 081300000099 -> /dashboard/vendor/profil (uji ajukan verifikasi)");
   console.log("Brand Ambassador:");
   console.log("  [AKTIF]   : 081200000001  (Rina BA Kebumen, komisi 5%, saldo Rp1.137.500, kode BA-KEBUMEN-2026) -> /auth/login/ba");
   console.log("  [AKTIF]   : 081200000002  (Dwi BA Gombong, komisi 7%, saldo Rp910.000, kode BA-GOMBONG-2026) -> /auth/login/ba");
