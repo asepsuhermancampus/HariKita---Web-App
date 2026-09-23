@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
+import { toWibDateString } from "@/lib/date-utils";
 
 /**
  * HariKita - Vendor Portal Query Layer (Phase 2)
@@ -86,7 +87,7 @@ export async function getVendorBlackouts(): Promise<VendorBlackoutDTO[]> {
     return slots.map((s) => ({
       id: s.id,
       vendorId: s.vendorId,
-      date: s.date.toISOString().split("T")[0],
+        date: toWibDateString(s.date),
       reason: "Tanggal Terkunci (Offline)",
     }));
   } catch (err) {

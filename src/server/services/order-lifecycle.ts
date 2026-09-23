@@ -1,5 +1,5 @@
 import type { Prisma } from "@prisma/client";
-import { getStartOfDayWIB, addCalendarDaysWIB } from "@/lib/date-utils";
+import { getStartOfDayWIB, addCalendarDaysWIB, toWibDateString } from "@/lib/date-utils";
 
 /**
  * HariKita - Order Lifecycle Generator
@@ -52,7 +52,7 @@ export async function generatePhysicalSessions(
   const existingTypes = new Set(existing.map((s) => s.type));
 
   let created = 0;
-  const eventDateYMD = order.eventDate.toISOString().split("T")[0];
+  const eventDateYMD = toWibDateString(order.eventDate);
 
   for (const item of order.items) {
     const sessionDefs =

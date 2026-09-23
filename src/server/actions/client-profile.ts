@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { validateClientProfileInput } from "@/lib/validations/client-profile";
+import { toWibDateString } from "@/lib/date-utils";
 
 export interface ClientProfileData {
   id: string;
@@ -56,7 +57,7 @@ export async function getClientProfile(): Promise<ClientProfileData | null> {
     email: user.email,
     partnerName: user.clientProfile?.partnerName ?? null,
     eventDate: user.clientProfile?.eventDate
-      ? user.clientProfile.eventDate.toISOString().split("T")[0]
+      ? toWibDateString(user.clientProfile.eventDate)
       : null,
     eventLocation: user.clientProfile?.eventLocation ?? null,
     district: user.clientProfile?.district ?? "Kebumen",

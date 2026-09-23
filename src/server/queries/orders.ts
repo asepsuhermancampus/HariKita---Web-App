@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { canViewAdmin } from "@/server/auth/admin-guard";
+import { toWibDateString } from "@/lib/date-utils";
 
 /**
  * HariKita - Server-side Query Layer (Phase 2)
@@ -145,7 +146,7 @@ function toViewModel(order: {
     bookingId: order.orderNumber,
     customerName: order.clientName,
     customerWhatsApp: order.clientPhone,
-    eventDate: order.eventDate.toISOString().split("T")[0],
+    eventDate: toWibDateString(order.eventDate),
     eventLocation: order.city,
     district: order.city,
     paymentStatus,
@@ -389,7 +390,7 @@ export async function getAdminCalendarEvents(): Promise<AdminCalendarEventDTO[]>
 
     return {
       id: o.orderNumber,
-      date: o.eventDate.toISOString().split("T")[0],
+      date: toWibDateString(o.eventDate),
       client: o.clientName,
       venue: o.city,
       district: o.city,
@@ -444,7 +445,7 @@ export async function getClientPhysicalSessions(): Promise<PhysicalSessionDTO[]>
     title: s.notes || s.type,
     vendor: s.order.items[0]?.vendorNameSnapshot ?? "Mitra Vendor",
     category: s.order.items[0]?.categorySlug ?? "Layanan",
-    scheduledDate: s.scheduledDate.toISOString().split("T")[0],
+    scheduledDate: toWibDateString(s.scheduledDate),
     status: s.status,
     notes: s.notes ?? "",
     location: s.location,
