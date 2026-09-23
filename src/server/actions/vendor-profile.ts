@@ -43,6 +43,56 @@ export interface VendorProfileActionResult {
   data?: VendorProfileData;
 }
 
+export interface VendorCompletenessInput {
+  businessName?: string | null;
+  category?: string | null;
+  ktpNumber?: string | null;
+  ktpPhotoUrl?: string | null;
+  businessPhotoUrl?: string | null;
+  revenueMethod?: string | null;
+  bankName?: string | null;
+  bankAccount?: string | null;
+  bankHolder?: string | null;
+  ewalletProvider?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  desa?: string | null;
+  kecamatan?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+}
+
+/** Daftar field wajib yang masih kosong untuk verifikasi vendor. */
+export function validateVendorCompleteness(v: VendorCompletenessInput): string[] {
+  const missing: string[] = [];
+  const req = (cond: boolean, label: string) => {
+    if (!cond) missing.push(label);
+  };
+  req(!!v.businessName?.trim(), "Nama usaha");
+  req(!!v.category?.trim(), "Kategori");
+  req(!!v.ktpNumber?.trim(), "Nomor KTP");
+  req(!!v.ktpPhotoUrl, "Foto KTP");
+  req(!!v.businessPhotoUrl, "Foto usaha");
+  req(!!v.phone?.trim(), "No WhatsApp");
+  req(!!v.address?.trim(), "Alamat");
+  req(!!v.desa?.trim(), "Desa/Kelurahan");
+  req(!!v.kecamatan?.trim(), "Kecamatan");
+  req(
+    typeof v.latitude === "number" && typeof v.longitude === "number",
+    "Titik lokasi peta"
+  );
+  if (v.revenueMethod === "EWALLET") {
+    req(!!v.ewalletProvider?.trim(), "Provider e-wallet");
+    req(!!v.bankAccount?.trim(), "No e-wallet");
+    req(!!v.bankHolder?.trim(), "Nama pemilik e-wallet");
+  } else {
+    req(!!v.bankName?.trim(), "Nama bank");
+    req(!!v.bankAccount?.trim(), "No rekening");
+    req(!!v.bankHolder?.trim(), "Nama pemilik rekening");
+  }
+  return missing;
+}
+
 /**
  * Mengambil profil vendor yang sedang login dari database.
  * Terlindungi anti-IDOR: hanya mengambil data milik session user saat ini.
@@ -225,3 +275,144 @@ export async function updateVendorProfileAction(
     };
   }
 }
+
+/**
+ * Simpan data usaha + verifikasi (alamat, koordinat, rekening, path dokumen).
+ * Meng-update field legal/alamat pada VendorProfile milik session user.
+ */
+export async function saveVendorVerificationAction(
+  formData: FormData
+): Promise<VendorProfileActionResult> {
+  const session = await getSession();
+  if (!session || !session.userId) {
+    return { success: false, error: "Sesi login telah berakhir. Silakan login kembali." };
+  }
+
+  const str = (k: string) => {
+    const v = formData.get(k);
+    return typeof v === "string" && v.trim() !== "" ? v.trim() : null;
+  };
+  const num = (k: string) => {
+    const v = formData.get(k);
+    if (typeof v !== "string" || v.trim() === "") return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  try {
+    await prisma.vendorProfile.upsert({
+      where: { userId: session.userId },
+      create: {
+        userId: session.userId,
+        businessName: str("businessName") ?? "Mitra Studio Kebumen",
+        category: str("category") ?? "Busana Pengantin & Fitting",
+        address: str("address") ?? "-",
+        picName: str("picName"),
+        ktpNumber: str("ktpNumber"),
+        ktpPhotoUrl: str("ktpPhotoUrl"),
+        businessPhotoUrl: str("businessPhotoUrl"),
+        revenueMethod: str("revenueMethod"),
+        ewalletProvider: str("ewalletProvider"),
+        bankName: str("bankName"),
+        bankAccount: str("bankAccount"),
+        bankHolder: str("bankHolder"),
+        rt: str("rt"),
+        rw: str("rw"),
+        dusun: str("dusun"),
+        desa: str("desa"),
+        kecamatan: str("kecamatan"),
+        kabupaten: str("kabupaten") ?? "Kebumen",
+        postalCode: str("postalCode"),
+        latitude: num("latitude"),
+        longitude: num("longitude"),
+      },
+      update: {
+        businessName: str("businessName") ?? undefined,
+        category: str("category") ?? undefined,
+        picName: str("picName") ?? undefined,
+        address: str("address") ?? undefined,
+        ktpNumber: str("ktpNumber"),
+        ktpPhotoUrl: str("ktpPhotoUrl") ?? undefined,
+        businessPhotoUrl: str("businessPhotoUrl") ?? undefined,
+        revenueMethod: str("revenueMethod"),
+        ewalletProvider: str("ewalletProvider"),
+        bankName: str("bankName"),
+        bankAccount: str("bankAccount"),
+        bankHolder: str("bankHolder"),
+        rt: str("rt"),
+        rw: str("rw"),
+        dusun: str("dusun"),
+        desa: str("desa"),
+        kecamatan: str("kecamatan"),
+        kabupaten: str("kabupaten") ?? "Kebumen",
+        postalCode: str("postalCode"),
+        latitude: num("latitude"),
+        longitude: num("longitude"),
+      },
+    });
+
+    revalidatePath("/dashboard/vendor/profil");
+    revalidatePath("/admin/verifikasi");
+    return { success: true, message: "Data usaha & verifikasi tersimpan." };
+  } catch (err) {
+    console.error("Error saveVendorVerificationAction:", err);
+    return { success: false, error: "Terjadi kendala server saat menyimpan data." };
+  }
+}
+
+/**
+ * Ajukan verifikasi. Validasi kelengkapan di SERVER; set submittedAt &
+ * status PENDING.
+ */
+export async function submitVendorVerificationAction(): Promise<VendorProfileActionResult> {
+  const session = await getSession();
+  if (!session || !session.userId) {
+    return { success: false, error: "Sesi login telah berakhir. Silakan login kembali." };
+  }
+
+  const profile = await prisma.vendorProfile.findUnique({
+    where: { userId: session.userId },
+  });
+  if (!profile) {
+    return { success: false, error: "Profil vendor belum ada. Lengkapi data dulu." };
+  }
+
+  const missing = validateVendorCompleteness({
+    businessName: profile.businessName,
+    category: profile.category,
+    ktpNumber: profile.ktpNumber,
+    ktpPhotoUrl: profile.ktpPhotoUrl,
+    businessPhotoUrl: profile.businessPhotoUrl,
+    revenueMethod: profile.revenueMethod,
+    bankName: profile.bankName,
+    bankAccount: profile.bankAccount,
+    bankHolder: profile.bankHolder,
+    ewalletProvider: profile.ewalletProvider,
+    phone: session.phone,
+    address: profile.address,
+    desa: profile.desa,
+    kecamatan: profile.kecamatan,
+    latitude: profile.latitude,
+    longitude: profile.longitude,
+  });
+  if (missing.length > 0) {
+    return {
+      success: false,
+      error: `Lengkapi dulu: ${missing.join(", ")}.`,
+    };
+  }
+
+  await prisma.vendorProfile.update({
+    where: { id: profile.id },
+    data: {
+      profileCompleted: true,
+      submittedAt: new Date(),
+      verificationStatus: "PENDING",
+    },
+  });
+
+  revalidatePath("/dashboard/vendor/profil");
+  revalidatePath("/admin/verifikasi");
+  return { success: true, message: "Pengajuan verifikasi terkirim. Menunggu review admin." };
+}
+
