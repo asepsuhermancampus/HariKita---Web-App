@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { validateVendorCompleteness } from "../src/server/actions/vendor-profile";
+import { validateVendorCompleteness } from "../src/lib/validations/vendor-verification";
 
 test("validateVendorCompleteness: kosong -> banyak error", () => {
   const errs = validateVendorCompleteness({ businessName: "", ktpPhotoUrl: null } as never);
