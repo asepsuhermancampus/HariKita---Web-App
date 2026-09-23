@@ -8,6 +8,23 @@ const ASSET_DIR = path.join(ROOT_DIR, 'public', 'assets', 'harikita');
 
 console.log('🚀 [Dev Runner] Initializing HariKita Dev Environment...');
 
+// 0. Bersihkan cache Next.js agar tidak bercampur dengan hasil `next build`/`next start`.
+//    Cache `.next` campuran (dev + produksi) menyebabkan error seperti
+//    "Cannot find module './xxxx.js'" / "MODULE_NOT_FOUND".
+//    Set KEEP_NEXT_CACHE=1 untuk melewati (dev lebih cepat, tetapi berisiko bila
+//    pernah menjalankan `build`).
+const nextDir = path.join(ROOT_DIR, '.next');
+if (process.env.KEEP_NEXT_CACHE !== '1') {
+  try {
+    if (fs.existsSync(nextDir)) {
+      fs.rmSync(nextDir, { recursive: true, force: true });
+      console.log('[Dev Runner] 🧹 Cleared .next cache (fresh dev build).');
+    }
+  } catch (err) {
+    console.warn('[Dev Runner] ⚠️ Gagal membersihkan .next:', err.message);
+  }
+}
+
 // 1. Initial Synchronous Manifest Generation
 try {
   generateManifest();
@@ -43,7 +60,6 @@ if (fs.existsSync(ASSET_DIR)) {
 }
 
 // 3. Ensure .next/routes-manifest.json exists (prevents Windows ENOENT in dev mode)
-const nextDir = path.join(ROOT_DIR, '.next');
 const routesManifestPath = path.join(nextDir, 'routes-manifest.json');
 try {
   if (!fs.existsSync(nextDir)) {
@@ -83,6 +99,19 @@ try {
 // 4. Spawn Next.js Dev Server
 const userArgs = process.argv.slice(2);
 const nextArgs = ['next', 'dev', ...userArgs];
+
+// Peringatan bila port dev sudah dipakai (mencegah dua instance dev bentrok di .next).
+const portArg = process.env.PORT || '3000';
+const net = require('net');
+const probe = net.createServer();
+probe.once('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.warn(`\n⚠️  Port ${portArg} sudah dipakai (mungkin dev server lain masih berjalan).`);
+    console.warn('    Hentikan yang lama (Ctrl+C) atau jalankan dengan port lain: npm run dev -- -p 3001\n');
+  }
+});
+probe.once('listening', () => probe.close());
+probe.listen(Number(portArg), '127.0.0.1');
 
 console.log(`[Dev Runner] 🌐 Starting Next.js: npx ${nextArgs.join(' ')}\n`);
 
