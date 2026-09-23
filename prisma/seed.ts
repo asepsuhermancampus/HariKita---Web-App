@@ -471,6 +471,18 @@ async function main() {
         bankHolder: item.bankHolder,
         walletBalance: 1500000,
         recruitedById: recruiterByIndex[i] ?? null,
+        // Vendor demo sudah terverifikasi agar katalog demo tetap terisi
+        verificationStatus: "APPROVED",
+        isVerified: true,
+        profileCompleted: true,
+        ktpNumber: "3305" + String(100000000000 + i).slice(0, 12),
+        revenueMethod: "BANK",
+        desa: "Kebumen",
+        kecamatan: "Kebumen",
+        kabupaten: "Kebumen",
+        postalCode: "54311",
+        latitude: -7.6683,
+        longitude: 109.6533,
       },
     });
 
