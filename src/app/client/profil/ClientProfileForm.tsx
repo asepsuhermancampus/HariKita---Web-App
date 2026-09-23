@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
+import dynamic from "next/dynamic";
 import {
   User,
   Heart,
@@ -25,6 +26,12 @@ import {
   EVENT_THEMES,
 } from "@/lib/validations/client-profile";
 import { DatePicker } from "@/components/harikita/ui";
+import { lookupPostalCode } from "@/lib/geo/postal-codes";
+
+const LocationPickerMap = dynamic(
+  () => import("@/components/maps/LocationPickerMap").then((m) => m.LocationPickerMap),
+  { ssr: false, loading: () => <div className="h-[280px] rounded-2xl bg-hk-ivory" /> }
+);
 
 interface ClientProfileFormProps {
   initialData: ClientProfileData;
@@ -40,12 +47,23 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
     district: initialData.district || "Kebumen",
     themePreference: initialData.themePreference || "",
     notes: initialData.notes || "",
+    rt: initialData.rt || "",
+    rw: initialData.rw || "",
+    dusun: initialData.dusun || "",
+    desa: initialData.desa || "",
+    kecamatan: initialData.kecamatan || initialData.district || "Kebumen",
+    postalCode: initialData.postalCode || "",
   });
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    typeof initialData.latitude === "number" && typeof initialData.longitude === "number"
+      ? { lat: initialData.latitude, lng: initialData.longitude }
+      : null
+  );
 
   // Hitung persentase kelengkapan profil
   const calculateCompleteness = () => {
@@ -99,6 +117,16 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
     formPayload.set("district", formData.district);
     formPayload.set("themePreference", formData.themePreference);
     formPayload.set("notes", formData.notes);
+    formPayload.set("rt", formData.rt);
+    formPayload.set("rw", formData.rw);
+    formPayload.set("dusun", formData.dusun);
+    formPayload.set("desa", formData.desa);
+    formPayload.set("kecamatan", formData.kecamatan);
+    formPayload.set("postalCode", formData.postalCode);
+    if (coords) {
+      formPayload.set("latitude", String(coords.lat));
+      formPayload.set("longitude", String(coords.lng));
+    }
 
     startTransition(async () => {
       const result = await updateClientProfileAction(formPayload);
@@ -377,6 +405,88 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
             </select>
             <p className="text-[10px] text-hk-charcoal/60 mt-1 font-manrope">
               Fokus hyperlocal pilot: memastikan bebas biaya transport vendor lokal.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION: Alamat Detail & Titik Lokasi (estimasi jarak vendor) */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-hk-champagne/40 shadow-xs space-y-6">
+        <div className="flex items-center gap-3 border-b border-hk-champagne/30 pb-4">
+          <div className="w-10 h-10 rounded-2xl bg-hk-ivory border border-hk-champagne/40 flex items-center justify-center text-hk-taupe">
+            <MapPin className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="font-editorial text-2xl font-normal text-hk-charcoal">
+              Alamat Lengkap &amp; Titik Lokasi Acara
+            </h2>
+            <p className="text-xs text-hk-charcoal/70 font-manrope">
+              Dipakai untuk estimasi jarak &amp; waktu tempuh vendor ke lokasi Anda.
+            </p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">RT</label>
+                <input name="rt" value={formData.rt} onChange={handleChange} className="w-full py-2.5 px-3.5 rounded-xl border border-hk-champagne/60 bg-hk-ivory/50 text-xs text-hk-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">RW</label>
+                <input name="rw" value={formData.rw} onChange={handleChange} className="w-full py-2.5 px-3.5 rounded-xl border border-hk-champagne/60 bg-hk-ivory/50 text-xs text-hk-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">Dusun</label>
+              <input name="dusun" value={formData.dusun} onChange={handleChange} className="w-full py-2.5 px-3.5 rounded-xl border border-hk-champagne/60 bg-hk-ivory/50 text-xs text-hk-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">Desa / Kelurahan</label>
+                <input
+                  name="desa"
+                  value={formData.desa}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setFormData((p) => {
+                      const pc = lookupPostalCode(v, p.kecamatan);
+                      return { ...p, desa: v, postalCode: pc ?? p.postalCode };
+                    });
+                  }}
+                  className="w-full py-2.5 px-3.5 rounded-xl border border-hk-champagne/60 bg-hk-ivory/50 text-xs text-hk-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">Kecamatan</label>
+                <select
+                  name="kecamatan"
+                  value={formData.kecamatan}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setFormData((p) => {
+                      const pc = lookupPostalCode(p.desa, v);
+                      return { ...p, kecamatan: v, postalCode: pc ?? p.postalCode };
+                    });
+                  }}
+                  className="w-full py-2.5 px-3.5 rounded-xl border border-hk-champagne/60 bg-hk-ivory/50 text-xs text-hk-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal"
+                >
+                  {KEBUMEN_DISTRICTS.map((kec) => (
+                    <option key={kec} value={kec}>Kecamatan {kec}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">Kode Pos (otomatis)</label>
+              <input name="postalCode" value={formData.postalCode} onChange={handleChange} placeholder="otomatis / isi manual" className="w-full py-2.5 px-3.5 rounded-xl border border-hk-champagne/60 bg-hk-ivory/50 text-xs text-hk-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="text-xs font-bold text-hk-charcoal font-manrope">Titik Lokasi di Peta</div>
+            <LocationPickerMap value={coords} onChange={setCoords} />
+            <p className="text-[11px] text-hk-charcoal/60 font-manrope">
+              {coords ? `Koordinat: ${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}` : "Klik peta untuk menandai lokasi acara."}
             </p>
           </div>
         </div>

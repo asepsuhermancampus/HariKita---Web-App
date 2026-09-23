@@ -16,6 +16,15 @@ export interface ClientProfileData {
   district: string | null;
   themePreference: string | null;
   notes: string | null;
+  rt: string | null;
+  rw: string | null;
+  dusun: string | null;
+  desa: string | null;
+  kecamatan: string | null;
+  kabupaten: string | null;
+  postalCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface ProfileActionResult {
@@ -53,6 +62,15 @@ export async function getClientProfile(): Promise<ClientProfileData | null> {
     district: user.clientProfile?.district ?? "Kebumen",
     themePreference: user.clientProfile?.themePreference ?? null,
     notes: user.clientProfile?.notes ?? null,
+    rt: user.clientProfile?.rt ?? null,
+    rw: user.clientProfile?.rw ?? null,
+    dusun: user.clientProfile?.dusun ?? null,
+    desa: user.clientProfile?.desa ?? null,
+    kecamatan: user.clientProfile?.kecamatan ?? null,
+    kabupaten: user.clientProfile?.kabupaten ?? "Kebumen",
+    postalCode: user.clientProfile?.postalCode ?? null,
+    latitude: user.clientProfile?.latitude ?? null,
+    longitude: user.clientProfile?.longitude ?? null,
   };
 }
 
@@ -103,6 +121,29 @@ export async function updateClientProfileAction(
     notes,
   } = validation.data;
 
+  // Field alamat/koordinat (opsional; dibaca langsung dari form)
+  const s = (k: string) => {
+    const v = formData.get(k);
+    return typeof v === "string" && v.trim() !== "" ? v.trim() : null;
+  };
+  const n = (k: string) => {
+    const v = formData.get(k);
+    if (typeof v !== "string" || v.trim() === "") return null;
+    const num = Number(v);
+    return Number.isFinite(num) ? num : null;
+  };
+  const geo = {
+    rt: s("rt"),
+    rw: s("rw"),
+    dusun: s("dusun"),
+    desa: s("desa"),
+    kecamatan: s("kecamatan"),
+    kabupaten: s("kabupaten") ?? "Kebumen",
+    postalCode: s("postalCode"),
+    latitude: n("latitude"),
+    longitude: n("longitude"),
+  };
+
   try {
     const parsedDate = eventDate ? new Date(eventDate) : null;
 
@@ -125,6 +166,7 @@ export async function updateClientProfileAction(
           district: district || "Kebumen",
           themePreference: themePreference || null,
           notes: notes || null,
+          ...geo,
         },
         update: {
           partnerName: partnerName || null,
@@ -133,6 +175,7 @@ export async function updateClientProfileAction(
           district: district || "Kebumen",
           themePreference: themePreference || null,
           notes: notes || null,
+          ...geo,
         },
       }),
     ]);
