@@ -120,7 +120,7 @@ export interface PublicVendor {
   verified: boolean;
   bio: string;
   products: PublicVendorProduct[];
-  portfolio: Array<{ id: string; url: string; caption: string; locationTag: string; styleTags: string[]; images: string[] }>;
+  portfolio: Array<{ id: string; title: string; url: string; caption: string; locationTag: string; styleTags: string[]; images: string[]; likes: number }>;
 }
 
 const UNIT_LABEL: Record<UiUnitType, string> = {
@@ -194,6 +194,8 @@ export async function getPublicVendorBySlug(slug: string): Promise<PublicVendor 
   const products = v.packages.map(toPublicProduct);
   const portfolio = v.portfolios.map((p) => ({
     id: p.id,
+    title: p.title,
+    likes: p.likes,
     url: p.imageUrl,
     caption: p.caption ?? "",
     locationTag: p.locationTag ?? "",

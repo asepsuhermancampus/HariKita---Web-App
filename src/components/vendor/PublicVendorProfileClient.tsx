@@ -12,6 +12,8 @@ import {
   MessageCircle,
   ChevronLeft,
   Check,
+  Heart,
+  Images,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { ROUTES } from "@/lib/routes";
@@ -23,6 +25,8 @@ import type { PublicVendor, PublicVendorProduct } from "@/server/queries/catalog
 export function PublicVendorProfileClient({ vendor }: { vendor: PublicVendor }) {
   const [activeTab, setActiveTab] = useState<"portfolio" | "produk">("portfolio");
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const [selectedPost, setSelectedPost] = useState<number | null>(null);
+  const [postPhotoIdx, setPostPhotoIdx] = useState(0);
   const [addedProductId, setAddedProductId] = useState<string | null>(null);
 
   const { addItem } = useCart();
@@ -190,45 +194,46 @@ export function PublicVendorProfileClient({ vendor }: { vendor: PublicVendor }) 
                 Belum ada portofolio.
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {vendor.portfolio.map((item) => (
-                  <div
-                    key={item.id}
-                    onClick={() => setSelectedPhoto(item.url)}
-                    className="group rounded-3xl bg-white border border-hk-champagne/50 shadow-xs hover:border-hk-taupe hover:shadow-lg transition-all overflow-hidden cursor-pointer"
-                  >
-                    <div className="relative aspect-[4/3] w-full bg-hk-charcoal overflow-hidden">
-                      <Image
-                        src={item.url}
-                        alt={item.caption}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 768px) 100vw, 400px"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4 text-white">
-                        <p className="font-manrope text-xs font-semibold">{item.caption}</p>
-                        <p className="text-[10px] text-hk-champagne flex items-center gap-1 mt-1">
-                          <MapPin className="w-3 h-3" />
-                          <span>{item.locationTag}</span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="p-4 space-y-2">
-                      <p className="font-manrope text-xs text-hk-charcoal font-medium">{item.caption}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {item.styleTags.map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="px-2 py-0.5 rounded-full text-[10px] font-manrope font-semibold bg-hk-ivory text-hk-taupe border border-hk-champagne/40"
-                          >
-                            #{tag}
+              <div className="overflow-hidden rounded-3xl border border-hk-champagne/50 bg-hk-charcoal">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-0">
+                  {vendor.portfolio.map((item, idx) => {
+                    const cover = item.images[0] ?? item.url;
+                    const multi = item.images.length > 1;
+                    return (
+                      <button
+                        type="button"
+                        key={item.id}
+                        onClick={() => {
+                          setSelectedPost(idx);
+                          setPostPhotoIdx(0);
+                        }}
+                        className="group relative aspect-square w-full overflow-hidden focus-ring"
+                        aria-label={item.title}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={cover}
+                          alt={item.title}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        {/* Overlay hover (detail singkat) */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        {/* Ikon multi-foto (kanan atas) */}
+                        {multi && (
+                          <span className="absolute right-2 top-2 text-white drop-shadow-md" aria-label="Memiliki beberapa foto">
+                            <Images className="h-4 w-4" />
                           </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                        )}
+                        {/* Ikon love (kanan bawah) */}
+                        <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 text-white drop-shadow-md">
+                          <Heart className="h-4 w-4 fill-white" />
+                          <span className="text-[10px] font-manrope font-semibold">{item.likes}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
@@ -370,6 +375,79 @@ export function PublicVendorProfileClient({ vendor }: { vendor: PublicVendor }) 
           </div>
         </div>
       )}
+      {/* Post Detail Modal (gaya IG) */}
+      {selectedPost !== null && vendor.portfolio[selectedPost] && (() => {
+        const post = vendor.portfolio[selectedPost];
+        const photos = post.images.length > 0 ? post.images : [post.url];
+        const active = photos[Math.min(postPhotoIdx, photos.length - 1)];
+        return (
+          <div
+            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4"
+            onClick={() => setSelectedPost(null)}
+          >
+            <div
+              className="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-hk-champagne/60 grid grid-cols-1 md:grid-cols-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Foto besar */}
+              <div className="relative aspect-square w-full bg-hk-charcoal">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={active} alt={post.title} className="h-full w-full object-cover" />
+                {photos.length > 1 && (
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {photos.map((_, i) => (
+                      <span
+                        key={i}
+                        className={`h-1.5 w-1.5 rounded-full ${i === Math.min(postPhotoIdx, photos.length - 1) ? "bg-white" : "bg-white/50"}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Detail */}
+              <div className="flex flex-col">
+                <div className="flex items-center justify-between p-4 border-b border-hk-champagne/30">
+                  <span className="font-editorial text-lg font-bold text-hk-charcoal">{post.title}</span>
+                  <button onClick={() => setSelectedPost(null)} className="text-hk-charcoal/60 hover:text-hk-charcoal text-lg leading-none">✕</button>
+                </div>
+
+                <div className="p-4 space-y-3 flex-1 overflow-y-auto">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-manrope font-semibold text-hk-taupe">
+                    <MapPin className="w-3.5 h-3.5" /> {post.locationTag || "Kebumen"}
+                  </span>
+                  <p className="font-manrope text-sm text-hk-charcoal/80 leading-relaxed">{post.caption}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {post.styleTags.map((tag, i) => (
+                      <span key={i} className="px-2 py-0.5 rounded-full text-[10px] font-manrope font-semibold bg-hk-ivory text-hk-taupe border border-hk-champagne/40">#{tag}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {photos.length > 1 && (
+                  <div className="p-4 border-t border-hk-champagne/30 flex gap-2 overflow-x-auto">
+                    {photos.map((img, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setPostPhotoIdx(i)}
+                        className={`relative h-14 w-14 shrink-0 rounded-lg overflow-hidden border-2 ${i === Math.min(postPhotoIdx, photos.length - 1) ? "border-hk-taupe" : "border-transparent"}`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={img} alt="" className="h-full w-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="p-4 border-t border-hk-champagne/30 flex items-center gap-2">
+                  <Heart className="w-4 h-4 fill-red-500 text-red-500" />
+                  <span className="text-xs font-manrope font-bold text-hk-charcoal">{post.likes} suka</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
