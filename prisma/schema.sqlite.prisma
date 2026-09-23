@@ -146,6 +146,7 @@ model VendorPortfolio {
   styleTags    String?       // JSON stringified array
   caption      String?
   imageUrl     String
+  images       String?       // JSON array URL (multi-foto post; foto ke-1 = cover)
   likes        Int           @default(0)
   isPublished  Boolean       @default(true)
   createdAt    DateTime      @default(now())
@@ -179,6 +180,7 @@ model ServicePackage {
   maxUnit     Int?
   slaDays     Int            @default(7)
   imageUrl    String?
+  galleryImages String?      // JSON array URL ~8 foto event (galeri produk)
   includes    String?        // JSON stringified array fitur
   orderItems  OrderItem[]
   createdAt   DateTime       @default(now())
