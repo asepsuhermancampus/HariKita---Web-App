@@ -1,5 +1,28 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import {
+  getServiceTemplates,
+  getPortfolioTemplates,
+  IMG,
+} from "./seed-data/vendor-services";
+
+/** Peta kategori vendor → key pool gambar. */
+function categoryImgKey(category: string): keyof typeof IMG {
+  const map: Record<string, keyof typeof IMG> = {
+    "Pre-wedding": "prewed",
+    "Busana Pengantin & Fitting": "busana",
+    "Makeup Artist (MUA)": "mua",
+    "Kotak Seserahan & Mahar": "seserahan",
+    "Dokumentasi Foto-Video": "dokumentasi",
+    "Dekorasi & Florist": "dekorasi",
+    "Katering & Food Stalls": "katering",
+    "Cakes & Dessert Corner": "cake",
+    "Souvenir & Favors": "souvenir",
+    "Undangan Digital & Amplop": "undangan",
+    "Cute Illustrated Maps": "map",
+  };
+  return map[category] ?? "prewed";
+}
 
 /** Koordinat demo per kecamatan Kebumen (untuk estimasi jarak vendor↔client). */
 const VENDOR_COORDS: Array<[number, number]> = [
@@ -49,6 +72,7 @@ async function main() {
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
   await prisma.servicePackage.deleteMany();
+  await prisma.vendorPortfolio.deleteMany();
   await prisma.blackoutDate.deleteMany();
   await prisma.ambassadorCommission.deleteMany();
   await prisma.ambassadorWithdrawal.deleteMany();
@@ -534,6 +558,49 @@ async function main() {
         imageUrl: item.imageUrl,
       },
     });
+
+    // ── Katalog kaya: 25 paket layanan per vendor (sesuai kategori) ──
+    const svcTemplates = getServiceTemplates(item.category);
+    const imgPool = IMG[categoryImgKey(item.category)];
+    for (let s = 0; s < svcTemplates.length; s++) {
+      const t = svcTemplates[s];
+      const price = Math.round((item.basePrice * t.priceFactor) / 1000) * 1000;
+      await prisma.servicePackage.create({
+        data: {
+          vendorId: vendor.id,
+          category: item.category,
+          name: t.name,
+          description: t.description,
+          basePrice: price,
+          unitType: t.unitType,
+          unitPrice: t.unitType === "all_in" ? null : price,
+          minUnit: t.minUnit ?? 1,
+          maxUnit: t.maxUnit ?? null,
+          slaDays: t.slaDays,
+          imageUrl: imgPool[s % imgPool.length],
+          includes: JSON.stringify(t.includes),
+        },
+      });
+    }
+
+    // ── Portofolio feed: 10 item per vendor ──
+    const pfTemplates = getPortfolioTemplates(item.category);
+    for (let p = 0; p < pfTemplates.length; p++) {
+      const [pfTitle, pfLocation, pfCategory, pfStyles, pfCaption] = pfTemplates[p];
+      await prisma.vendorPortfolio.create({
+        data: {
+          vendorId: vendor.id,
+          title: pfTitle,
+          locationTag: pfLocation,
+          categoryTag: pfCategory,
+          styleTags: JSON.stringify(pfStyles),
+          caption: pfCaption,
+          imageUrl: imgPool[p % imgPool.length],
+          likes: 20 + ((i + 1) * 7 + p * 13) % 300,
+          isPublished: true,
+        },
+      });
+    }
 
     createdVendors.push({
       id: vendor.id,
