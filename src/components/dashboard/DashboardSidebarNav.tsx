@@ -6,6 +6,7 @@ import { useState } from "react";
 import {
   Menu,
   X,
+  LogOut,
   LayoutDashboard,
   ShieldCheck,
   Landmark,
@@ -27,6 +28,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { NavGroup, NavIconName } from "./nav-config";
+import { logoutAction } from "@/server/actions/auth";
 
 /** Peta nama ikon (string, aman lintas server→client) → komponen Lucide. */
 const ICONS: Record<NavIconName, LucideIcon> = {
@@ -54,10 +56,12 @@ export function DashboardSidebarNav({
   nav,
   roleLabel,
   homeHref,
+  userName,
 }: {
   nav: NavGroup[];
   roleLabel: string;
   homeHref: string;
+  userName?: string;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -96,14 +100,30 @@ export function DashboardSidebarNav({
 
   const brand = (
     <div className="flex items-center gap-2.5 px-2.5 pb-4 pt-1.5">
-      <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-hk-champagne to-hk-taupe font-extrabold text-white">
+      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-hk-champagne to-hk-taupe font-extrabold text-white">
         H
       </div>
-      <div>
-        <div className="text-sm font-bold text-white">HariKita</div>
-        <div className="text-[10px] uppercase tracking-[0.12em] text-hk-champagne">{roleLabel}</div>
+      <div className="min-w-0">
+        <div className="truncate text-sm font-bold text-white" title={userName || roleLabel}>
+          {userName || "HariKita"}
+        </div>
+        <div className="text-[10px] uppercase tracking-[0.12em] text-hk-champagne">
+          {roleLabel}
+        </div>
       </div>
     </div>
+  );
+
+  const logoutBtn = (
+    <form action={logoutAction} className="border-t border-white/10 pt-3">
+      <button
+        type="submit"
+        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-semibold text-white/70 transition-colors hover:bg-red-500/15 hover:text-red-300"
+      >
+        <LogOut className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
+        <span>Keluar</span>
+      </button>
+    </form>
   );
 
   return (
@@ -120,6 +140,7 @@ export function DashboardSidebarNav({
       <aside className="sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col bg-hk-charcoal p-3.5 lg:flex">
         {brand}
         {body}
+        {logoutBtn}
       </aside>
 
       {open && (
@@ -138,6 +159,7 @@ export function DashboardSidebarNav({
               </button>
             </div>
             {body}
+            {logoutBtn}
           </aside>
         </div>
       )}

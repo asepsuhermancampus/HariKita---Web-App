@@ -9,9 +9,14 @@ export const metadata = {
 };
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
-  await getSession();
+  const session = await getSession();
   return (
-    <DashboardShell nav={CLIENT_NAV} roleLabel="Klien" homeHref="/client">
+    <DashboardShell
+      nav={CLIENT_NAV}
+      roleLabel="Klien"
+      homeHref="/client"
+      userName={session?.name}
+    >
       {children}
     </DashboardShell>
   );

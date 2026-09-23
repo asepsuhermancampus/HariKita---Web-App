@@ -9,9 +9,14 @@ export const metadata = {
 };
 
 export default async function VendorLayout({ children }: { children: React.ReactNode }) {
-  await getVendorProfile(); // pastikan profil ter-resolve
+  const profile = await getVendorProfile(); // pastikan profil ter-resolve
   return (
-    <DashboardShell nav={VENDOR_NAV} roleLabel="Mitra Vendor" homeHref="/dashboard/vendor">
+    <DashboardShell
+      nav={VENDOR_NAV}
+      roleLabel="Mitra Vendor"
+      homeHref="/dashboard/vendor"
+      userName={profile?.businessName}
+    >
       {children}
     </DashboardShell>
   );
