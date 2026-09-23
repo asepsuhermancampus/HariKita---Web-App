@@ -346,55 +346,53 @@ async function main() {
     const svcTemplates = getServiceTemplates(item.category);
     const imgPool = IMG[categoryImgKey(item.category)];
 
-    // Paket pertama (dipakai sebagai rujukan id/basePrice untuk order demo)
-    let firstPkgId = "";
-    let firstPkgPrice = 0;
+    const base = 500000 + (i % 25) * 15000;
 
-    // ── Katalog kaya: 25 paket layanan per vendor (sesuai kategori) ──
-    for (let s = 0; s < svcTemplates.length; s++) {
-      const t = svcTemplates[s];
-      const base = 500000 + (i % 25) * 15000;
+    // ── Katalog kaya: 25 paket layanan per vendor (batch createMany) ──
+    const pkgRows = svcTemplates.map((t, s) => {
       const price = Math.round((base * t.priceFactor) / 1000) * 1000;
-      const created = await prisma.servicePackage.create({
-        data: {
-          vendorId: vendor.id,
-          category: item.category,
-          name: t.name,
-          description: t.description,
-          basePrice: price,
-          unitType: t.unitType,
-          unitPrice: t.unitType === "all_in" ? null : price,
-          minUnit: t.minUnit ?? 1,
-          maxUnit: t.maxUnit ?? null,
-          slaDays: t.slaDays,
-          imageUrl: imgPool[s % imgPool.length],
-          includes: JSON.stringify(t.includes),
-        },
-      });
-      if (s === 0) {
-        firstPkgId = created.id;
-        firstPkgPrice = price;
-      }
-    }
+      return {
+        vendorId: vendor.id,
+        category: item.category,
+        name: t.name,
+        description: t.description,
+        basePrice: price,
+        unitType: t.unitType,
+        unitPrice: t.unitType === "all_in" ? null : price,
+        minUnit: t.minUnit ?? 1,
+        maxUnit: t.maxUnit ?? null,
+        slaDays: t.slaDays,
+        imageUrl: imgPool[s % imgPool.length],
+        includes: JSON.stringify(t.includes),
+      };
+    });
+    await prisma.servicePackage.createMany({ data: pkgRows });
 
-    // ── Portofolio feed: 10 item per vendor ──
+    // Paket pertama (dipakai sebagai rujukan id/basePrice untuk order demo)
+    const firstPkg = await prisma.servicePackage.findFirst({
+      where: { vendorId: vendor.id },
+      orderBy: { basePrice: "asc" },
+    });
+    const firstPkgId = firstPkg?.id ?? "";
+    const firstPkgPrice = firstPkg?.basePrice ?? 0;
+
+    // ── Portofolio feed: 10 item per vendor (batch createMany) ──
     const pfTemplates = getPortfolioTemplates(item.category);
-    for (let p = 0; p < pfTemplates.length; p++) {
-      const [pfTitle, pfLocation, pfCategory, pfStyles, pfCaption] = pfTemplates[p];
-      await prisma.vendorPortfolio.create({
-        data: {
-          vendorId: vendor.id,
-          title: pfTitle,
-          locationTag: pfLocation,
-          categoryTag: pfCategory,
-          styleTags: JSON.stringify(pfStyles),
-          caption: pfCaption,
-          imageUrl: imgPool[p % imgPool.length],
-          likes: 20 + (n * 7 + p * 13) % 300,
-          isPublished: true,
-        },
-      });
-    }
+    const pfRows = pfTemplates.map((pf, p) => {
+      const [pfTitle, pfLocation, pfCategory, pfStyles, pfCaption] = pf;
+      return {
+        vendorId: vendor.id,
+        title: pfTitle,
+        locationTag: pfLocation,
+        categoryTag: pfCategory,
+        styleTags: JSON.stringify(pfStyles),
+        caption: pfCaption,
+        imageUrl: imgPool[p % imgPool.length],
+        likes: 20 + (n * 7 + p * 13) % 300,
+        isPublished: true,
+      };
+    });
+    await prisma.vendorPortfolio.createMany({ data: pfRows });
 
     createdVendors.push({
       id: vendor.id,
