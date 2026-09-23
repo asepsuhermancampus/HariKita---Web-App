@@ -58,3 +58,6 @@ public/HariKita-Design*.png
 public/preview-*.html
 references/kadio-assets/harvested/
 
+
+# Upload dokumen vendor (jangan commit file user)
+public/uploads/
