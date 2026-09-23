@@ -1,6 +1,7 @@
 import React from "react";
 import { getVendorProfile } from "@/server/actions/vendor-profile";
 import { VendorProfilWorkspace } from "./VendorProfilWorkspace";
+import { VendorVerificationForm } from "@/components/vendor/VendorVerificationForm";
 
 export const metadata = {
   title: "Atelier Studio & Dashboard Statistik Vendor | HariKita Kebumen",
@@ -42,7 +43,30 @@ export default async function VendorProfilPage() {
     bookmarksCount: 28,
     ordersSolo: 9,
     ordersCombo: 16,
+    verificationStatus: "APPROVED",
+    verificationNote: null,
+    ktpNumber: null,
+    ktpPhotoUrl: null,
+    businessPhotoUrl: null,
+    revenueMethod: "BANK",
+    ewalletProvider: null,
+    rt: null,
+    rw: null,
+    dusun: null,
+    desa: null,
+    kecamatan: "Kebumen",
+    kabupaten: "Kebumen",
+    postalCode: null,
+    latitude: -7.6683,
+    longitude: 109.6533,
+    profileCompleted: true,
+    submittedAt: null,
   };
 
-  return <VendorProfilWorkspace data={data} />;
+  return (
+    <div className="flex flex-col gap-6">
+      <VendorVerificationForm data={data} />
+      <VendorProfilWorkspace data={data} />
+    </div>
+  );
 }

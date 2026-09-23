@@ -28,6 +28,24 @@ export interface VendorProfileData {
   bankHolder: string;
   walletBalance: number;
   isVerified: boolean;
+  verificationStatus: string;
+  verificationNote: string | null;
+  ktpNumber: string | null;
+  ktpPhotoUrl: string | null;
+  businessPhotoUrl: string | null;
+  revenueMethod: string | null;
+  ewalletProvider: string | null;
+  rt: string | null;
+  rw: string | null;
+  dusun: string | null;
+  desa: string | null;
+  kecamatan: string | null;
+  kabupaten: string | null;
+  postalCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  profileCompleted: boolean;
+  submittedAt: Date | null;
   viewsGuest: number;
   viewsAuth: number;
   builderTrials: number;
@@ -110,6 +128,24 @@ export async function getVendorProfile(): Promise<VendorProfileData | null> {
     bankHolder: profile.bankHolder || "",
     walletBalance: profile.walletBalance,
     isVerified: profile.isVerified,
+    verificationStatus: profile.verificationStatus,
+    verificationNote: profile.verificationNote,
+    ktpNumber: profile.ktpNumber,
+    ktpPhotoUrl: profile.ktpPhotoUrl,
+    businessPhotoUrl: profile.businessPhotoUrl,
+    revenueMethod: profile.revenueMethod,
+    ewalletProvider: profile.ewalletProvider,
+    rt: profile.rt,
+    rw: profile.rw,
+    dusun: profile.dusun,
+    desa: profile.desa,
+    kecamatan: profile.kecamatan,
+    kabupaten: profile.kabupaten,
+    postalCode: profile.postalCode,
+    latitude: profile.latitude,
+    longitude: profile.longitude,
+    profileCompleted: profile.profileCompleted,
+    submittedAt: profile.submittedAt,
     viewsGuest: profile.viewsGuest,
     viewsAuth: profile.viewsAuth,
     builderTrials: profile.builderTrials,
