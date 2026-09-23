@@ -8,7 +8,6 @@ import {
   MapPin,
   Wallet,
   Upload,
-  FileCheck2,
   CheckCircle2,
   AlertCircle,
   Loader2,
@@ -192,6 +191,14 @@ export function VendorVerificationForm({ data }: { data: VendorProfileData }) {
               <input className={inputCls} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08xxxxxxxxxx" />
             </Field>
           </div>
+          <div className="space-y-2 pt-1">
+            <span className="block text-xs font-semibold text-hk-charcoal">Foto Tempat Usaha</span>
+            <FileUpload
+              label="Unggah Foto Usaha"
+              current={businessPhotoUrl}
+              onPick={(f) => uploadFile(f, "business")}
+            />
+          </div>
         </section>
 
         {/* Data Pemilik / KTP */}
@@ -284,14 +291,6 @@ export function VendorVerificationForm({ data }: { data: VendorProfileData }) {
               <Field label="Nama Pemilik"><input className={inputCls} value={bankHolder} onChange={(e) => setBankHolder(e.target.value)} /></Field>
             </div>
           )}
-        </section>
-
-        {/* Dokumen Usaha */}
-        <section className="space-y-3 border-t border-hk-soft-beige pt-4">
-          <h4 className="flex items-center gap-2 text-sm font-bold text-hk-charcoal">
-            <FileCheck2 className="h-4 w-4 text-hk-taupe" /> Foto Usaha
-          </h4>
-          <FileUpload label="Foto Tempat Usaha" current={businessPhotoUrl} onPick={(f) => uploadFile(f, "business")} />
         </section>
 
         {msg && (
