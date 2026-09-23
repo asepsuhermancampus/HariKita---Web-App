@@ -17,6 +17,7 @@ export function ProductDetailClient({
   const { addItem } = useCart();
   const [qty, setQty] = useState(product.minQuantity ?? 1);
   const [added, setAdded] = useState(false);
+  const [activeImage, setActiveImage] = useState(product.galleryImages[0] ?? product.image);
 
   const locked = product.unitType === "package";
   const min = product.minQuantity ?? 1;
@@ -63,14 +64,42 @@ export function ProductDetailClient({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-hk-champagne/50 bg-hk-charcoal">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width:1024px) 100vw, 600px"
-          />
+        <div className="space-y-3">
+          <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-hk-champagne/50 bg-hk-charcoal">
+            {activeImage ? (
+              <Image
+                src={activeImage}
+                alt={product.name}
+                fill
+                className="object-cover"
+                sizes="(max-width:1024px) 100vw, 600px"
+              />
+            ) : (
+              <div className="grid h-full w-full place-items-center text-hk-taupe">
+                <Sparkles className="h-8 w-8" />
+              </div>
+            )}
+          </div>
+
+          {/* Jejeran thumbnail foto event */}
+          {product.galleryImages.length > 1 && (
+            <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+              {product.galleryImages.map((img, i) => (
+                <button
+                  type="button"
+                  key={i}
+                  onClick={() => setActiveImage(img)}
+                  className={`relative aspect-square w-full overflow-hidden rounded-lg border-2 transition-all ${
+                    activeImage === img ? "border-hk-taupe" : "border-hk-champagne/40 hover:border-hk-taupe"
+                  }`}
+                  aria-label={`Foto ${i + 1}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={img} alt="" loading="lazy" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="space-y-6">
