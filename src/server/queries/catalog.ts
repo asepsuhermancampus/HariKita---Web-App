@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { categoryNameToId } from "@/lib/catalog-utils";
+import { categoryNameToId, buildProductSlug, unitTypeDbToUi, type UiUnitType } from "@/lib/catalog-utils";
 
 /**
  * HariKita - Katalog Query (DB)
@@ -85,4 +85,143 @@ export async function getVendorsByCategoryFromDb(categoryId: string): Promise<Ho
   return rows
     .filter((v) => categoryNameToId(v.category) === categoryId)
     .map((v) => toCard(v as VendorRow, categoryId));
+}
+
+// -- Profil publik vendor & produk (dari DB) ------------------------------
+
+export interface PublicVendorProduct {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;
+  unitType: UiUnitType;
+  unitLabel: string;
+  minQuantity?: number;
+  maxQuantity?: number;
+  image: string;
+  desc: string;
+  callTime: string;
+  features: string[];
+  productTags: string[];
+}
+
+export interface PublicVendor {
+  id: string;
+  slug: string;
+  name: string;
+  categoryId: string;
+  categoryTitle: string;
+  district: string;
+  avatar: string;
+  coverImage: string;
+  rating: number;
+  reviewCount: number;
+  verified: boolean;
+  bio: string;
+  products: PublicVendorProduct[];
+  portfolio: Array<{ id: string; url: string; caption: string; locationTag: string; styleTags: string[] }>;
+}
+
+const UNIT_LABEL: Record<UiUnitType, string> = {
+  package: "per paket",
+  pax: "per pax",
+  piece: "per pcs",
+  portion: "per porsi",
+};
+
+function toPublicProduct(p: {
+  id: string;
+  name: string;
+  description: string;
+  basePrice: number;
+  unitType: string | null;
+  unitPrice: number | null;
+  minUnit: number | null;
+  maxUnit: number | null;
+  slaDays: number;
+  imageUrl: string | null;
+  includes: string | null;
+  category: string;
+}): PublicVendorProduct {
+  const uiUnit = unitTypeDbToUi(p.unitType);
+  let features: string[] = [];
+  try {
+    const parsed = p.includes ? JSON.parse(p.includes) : [];
+    if (Array.isArray(parsed)) features = parsed.map((x) => String(x));
+  } catch {
+    features = [];
+  }
+  return {
+    id: p.id,
+    slug: buildProductSlug(p.name, p.id),
+    name: p.name,
+    price: p.basePrice,
+    unitType: uiUnit,
+    unitLabel: UNIT_LABEL[uiUnit],
+    minQuantity: p.minUnit ?? undefined,
+    maxQuantity: p.maxUnit ?? undefined,
+    image: p.imageUrl ?? "",
+    desc: p.description,
+    callTime: "Standby H-0",
+    features,
+    productTags: [p.category],
+  };
+}
+
+/** Profil vendor publik (APPROVED) berdasarkan slug. */
+export async function getPublicVendorBySlug(slug: string): Promise<PublicVendor | null> {
+  const v = await prisma.vendorProfile.findFirst({
+    where: { slug, verificationStatus: "APPROVED" },
+    include: {
+      packages: { orderBy: { basePrice: "asc" } },
+      portfolios: { orderBy: { likes: "desc" } },
+    },
+  });
+  if (!v) return null;
+
+  const categoryId = categoryNameToId(v.category);
+  const products = v.packages.map(toPublicProduct);
+  const portfolio = v.portfolios.map((p) => ({
+    id: p.id,
+    url: p.imageUrl,
+    caption: p.caption ?? "",
+    locationTag: p.locationTag ?? "",
+    styleTags: (() => {
+      try {
+        const arr = p.styleTags ? JSON.parse(p.styleTags) : [];
+        return Array.isArray(arr) ? arr.map((x) => String(x)) : [];
+      } catch {
+        return [];
+      }
+    })(),
+  }));
+
+  return {
+    id: v.id,
+    slug: v.slug ?? v.id,
+    name: v.businessName,
+    categoryId,
+    categoryTitle: v.category,
+    district: v.district ?? "Kebumen",
+    avatar: portfolio[0]?.url ?? products[0]?.image ?? "",
+    coverImage: portfolio[0]?.url ?? products[0]?.image ?? "",
+    rating: v.rating,
+    reviewCount: v.reviewCount,
+    verified: v.isVerified,
+    bio: v.description ?? "",
+    products,
+    portfolio,
+  };
+}
+
+/** Detail produk vendor publik. */
+export async function getPublicProductBySlug(
+  vendorSlug: string,
+  productSlug: string
+): Promise<{ vendor: PublicVendor; product: PublicVendorProduct } | null> {
+  const vendor = await getPublicVendorBySlug(vendorSlug);
+  if (!vendor) return null;
+  const product = vendor.products.find((p) => p.slug === productSlug);
+  if (!product) return null;
+  return { vendor, product };
 }
