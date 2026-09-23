@@ -4,6 +4,9 @@ import {
   getServiceTemplates,
   getPortfolioTemplates,
   IMG,
+  pickFeatures,
+  pickPostImages,
+  pickGalleryImages,
 } from "./seed-data/vendor-services";
 import { generateVendors } from "./seed-data/vendors";
 import { buildVendorSlug } from "../src/lib/catalog-utils";
@@ -351,6 +354,8 @@ async function main() {
     // ── Katalog kaya: 25 paket layanan per vendor (batch createMany) ──
     const pkgRows = svcTemplates.map((t, s) => {
       const price = Math.round((base * t.priceFactor) / 1000) * 1000;
+      const seedIdx = i * 100 + s;
+      const gallery = pickGalleryImages(imgPool, seedIdx, 8);
       return {
         vendorId: vendor.id,
         category: item.category,
@@ -362,8 +367,10 @@ async function main() {
         minUnit: t.minUnit ?? 1,
         maxUnit: t.maxUnit ?? null,
         slaDays: t.slaDays,
-        imageUrl: imgPool[s % imgPool.length],
-        includes: JSON.stringify(t.includes),
+        imageUrl: gallery[0],
+        galleryImages: JSON.stringify(gallery),
+        // Kelengkapan bervariasi per paket (bukan sama semua)
+        includes: JSON.stringify(pickFeatures(item.category, seedIdx)),
       };
     });
     await prisma.servicePackage.createMany({ data: pkgRows });
@@ -380,6 +387,7 @@ async function main() {
     const pfTemplates = getPortfolioTemplates(item.category);
     const pfRows = pfTemplates.map((pf, p) => {
       const [pfTitle, pfLocation, pfCategory, pfStyles, pfCaption] = pf;
+      const images = pickPostImages(imgPool, i * 100 + p);
       return {
         vendorId: vendor.id,
         title: pfTitle,
@@ -387,7 +395,8 @@ async function main() {
         categoryTag: pfCategory,
         styleTags: JSON.stringify(pfStyles),
         caption: pfCaption,
-        imageUrl: imgPool[p % imgPool.length],
+        imageUrl: images[0],
+        images: JSON.stringify(images),
         likes: 20 + (n * 7 + p * 13) % 300,
         isPublished: true,
       };

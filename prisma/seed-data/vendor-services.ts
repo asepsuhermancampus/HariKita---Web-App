@@ -672,3 +672,101 @@ export function getServiceTemplates(category: string): ServiceTemplate[] {
 }
 
 export { IMG };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// KELENGKAPAN (includes) bervariasi per kategori
+// ─────────────────────────────────────────────────────────────────────────────
+const FEATURE_SETS: Record<string, string[]> = {
+  "Pre-wedding": [
+    "Fotografer profesional", "Editor retouch premium", "2 busana ganti", "Drone aerial",
+    "Album cetak premium", "Semua file softcopy", "Teaser Reels 60s", "Makeup touch-up",
+    "Lokasi outdoor pilihan", "Kru standby 4 jam", "Cetak 20 foto 10R", "USB eksklusif",
+  ],
+  "Busana Pengantin & Fitting": [
+    "Sewa busana akad & resepsi", "Aksesori lengkap", "2x sesi fitting gratis", "Jaminan bersih & wangi",
+    "Alas kaki & hias", "Penyesuaian ukuran", "Sewa sampir/kerudung", "Free konsultasi gaya",
+    "Penyimpanan garmen", "Laundry setelah acara", "Jaminan tidak double", "Garansi tukar ukuran",
+  ],
+  "Makeup Artist (MUA)": [
+    "Rias pengantin full", "Hijab/hair do", "Melati segar", "Touch-up standby 4 jam",
+    "Makeup keluarga 2 orang", "Bulu mata premium", "Konsultasi look", "False lashes",
+    "Setting spray tahan lama", "Rias akad + resepsi", "Paket retouch", "Alat makeup steril",
+  ],
+  "Kotak Seserahan & Mahar": [
+    "Sewa baki akrilik", "Hias bunga premium", "Penataan hantaran", "Box eksklusif",
+    "Pigura mahar custom", "Renda & satin", "Kartu ucapan", "Jaminan rapi & bersih",
+    "Setterangan hantaran", "Baki kaca", "Variasi warna", "Packing aman",
+  ],
+  "Dokumentasi Foto-Video": [
+    "Fotografer + videografer", "Editing cinematic", "Drone footage", "Semua file HD",
+    "Teaser 60 detik", "Album premium", "Flashdisk eksklusif", "Same day edit",
+    "Live streaming", "Photo print 20L", "Kru standby", "Highlight 3 menit",
+  ],
+  "Dekorasi & Florist": [
+    "Backdrop utama", "Bunga segar", "Pelaminan full", "Welcome sign",
+    "Aisle & standing flower", "Lighting dekoratif", "Tim pemasangan", "Bongkar ulang",
+    "Kursi pengantin hias", "Photobooth decor", "Karpet & panggung", "Konsultasi konsep",
+  ],
+  "Katering & Food Stalls": [
+    "Menu prasmanan lengkap", "Peralatan & meja", "Tim pelayanan", "Food tester",
+    "Live cooking", "Air mineral & es", "Setup & dekor meja", "Waiter standby",
+    "Pondokan nasi", "Dessert corner", "Snack box", "Menu custom permintaan",
+  ],
+  "Cakes & Dessert Corner": [
+    "Kue custom desain", "Setup dessert table", "Peralatan display", "5 varian tester",
+    "Topper & hias", "Kemasan eksklusif", "Penyerahan on-site", "Dessert cup",
+    "Kue tambahan family", "Penyajian tepat waktu", "Pilihan rasa", "Garansi kualitas",
+  ],
+  "Souvenir & Favors": [
+    "Desain custom", "Bahan pilihan premium", "Kemasan estetik", "Label nama",
+    "Packing aman", "Sampel sebelum produksi", "Pengiriman on-time", "Variasi warna",
+    "Kartu terima kasih", "Jumlah fleksibel", "Bonus aneka", "Kerajinan lokal",
+  ],
+  "Undangan Digital & Amplop": [
+    "Undangan digital interaktif", "Multi tamu & slug", "RSVP online", "Amplop digital QRIS",
+    "Musik backsound", "Countdown & maps", "12 foto prewed", "Cetak fisik (bundel)",
+    "Wax seal / foil", "Revisi hingga puas", "Support 1 tahun", "Custom domain",
+  ],
+  "Cute Illustrated Maps": [
+    "Ilustrasi kartun custom", "Integrasi QR maps", "Versi cetak", "Versi digital",
+    "Warna custom", "Ikon lokasi", "Countdown", "Animasi loading",
+    "Multi titik", "Gaya watercolor", "Revisi 2x", "Format WhatsApp siap",
+  ],
+};
+
+/**
+ * Pilih subset fitur bervariasi deterministik (berdasar seedIndex) dari kumpulan
+ * fitur kategori. Menghasilkan 3–6 item yang berbeda antar card.
+ */
+export function pickFeatures(category: string, seedIndex: number): string[] {
+  const pool = FEATURE_SETS[category] ?? FEATURE_SETS["Pre-wedding"];
+  const count = 3 + (seedIndex % 4); // 3..6
+  const out: string[] = [];
+  for (let k = 0; k < count; k++) {
+    out.push(pool[(seedIndex * 3 + k * 5) % pool.length]);
+  }
+  // dedupe
+  return Array.from(new Set(out));
+}
+
+/**
+ * Pilih subset gambar (1–4) untuk post portofolio dari pool kategori,
+ * deterministik berdasar seedIndex. Foto pertama = cover.
+ */
+export function pickPostImages(imgPool: string[], seedIndex: number): string[] {
+  const count = 1 + (seedIndex % 4); // 1..4
+  const out: string[] = [];
+  for (let k = 0; k < count; k++) {
+    out.push(imgPool[(seedIndex + k) % imgPool.length]);
+  }
+  return Array.from(new Set(out));
+}
+
+/** Ambil ~8 foto galeri produk dari pool kategori. */
+export function pickGalleryImages(imgPool: string[], seedIndex: number, n = 8): string[] {
+  const out: string[] = [];
+  for (let k = 0; k < n; k++) {
+    out.push(imgPool[(seedIndex * 2 + k) % imgPool.length]);
+  }
+  return out;
+}
