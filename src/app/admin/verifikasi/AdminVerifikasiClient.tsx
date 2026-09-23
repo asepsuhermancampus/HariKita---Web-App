@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import {
   CheckCircle2,
   XCircle,
@@ -17,6 +18,11 @@ import { Modal } from "@/components/harikita/ui";
 import { DashPageHeader } from "@/components/dashboard";
 import type { VendorVerificationDTO } from "@/server/queries/admin";
 
+const LocationPreviewMap = dynamic(
+  () => import("@/components/maps/LocationPreviewMap").then((m) => m.LocationPreviewMap),
+  { ssr: false, loading: () => <div className="h-[180px] rounded-xl bg-white" /> }
+);
+
 /**
  * Pusat Verifikasi Mitra (client) — DB-first.
  * `dbVendors` dari database (VendorProfile.verificationStatus). Mock fallback
@@ -30,6 +36,7 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
   const [searchQuery, setSearchQuery] = useState("");
   // Modal penolakan aksesibel (menggantikan window.prompt yang tidak accessible).
   const [rejectTarget, setRejectTarget] = useState<VendorVerificationDTO | null>(null);
+  const [zoomUrl, setZoomUrl] = useState<string | null>(null);
   const [rejectNote, setRejectNote] = useState("");
 
   const vendors = dbVendors;
@@ -201,6 +208,46 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
                     </div>
                   </div>
 
+                  {/* Data legal & dokumen verifikasi */}
+                  <div className="rounded-xl bg-[#FAF8F5] border border-[#E5D7C7] p-4 space-y-3 text-xs">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[#6B5E62]">
+                      <div>No KTP: <strong className="text-[#4A2E35]">{v.ktpNumber ?? "-"}</strong></div>
+                      <div>
+                        Rekening:{" "}
+                        <strong className="text-[#4A2E35]">
+                          {v.revenueMethod === "EWALLET"
+                            ? `${v.ewalletProvider ?? "-"} · ${v.bankAccount ?? "-"} (${v.bankHolder ?? "-"})`
+                            : `${v.bankName ?? "-"} · ${v.bankAccount ?? "-"} (${v.bankHolder ?? "-"})`}
+                        </strong>
+                      </div>
+                      <div className="sm:col-span-2">
+                        Alamat: RT {v.rt ?? "-"}/RW {v.rw ?? "-"}, Dusun {v.dusun ?? "-"}, Desa {v.desa ?? "-"},
+                        Kec. {v.kecamatan ?? "-"}, {v.kabupaten ?? "Kebumen"} {v.postalCode ?? ""}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3">
+                      {v.ktpPhotoUrl && (
+                        <button type="button" onClick={() => setZoomUrl(v.ktpPhotoUrl!)} className="focus-ring rounded-lg">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={v.ktpPhotoUrl} alt="KTP" className="h-20 w-28 rounded-lg border border-[#E5D7C7] object-cover" />
+                          <span className="mt-1 block text-[10px] text-[#6B5E62]">KTP (klik zoom)</span>
+                        </button>
+                      )}
+                      {v.businessPhotoUrl && (
+                        <button type="button" onClick={() => setZoomUrl(v.businessPhotoUrl!)} className="focus-ring rounded-lg">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={v.businessPhotoUrl} alt="Usaha" className="h-20 w-28 rounded-lg border border-[#E5D7C7] object-cover" />
+                          <span className="mt-1 block text-[10px] text-[#6B5E62]">Foto Usaha (klik zoom)</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {typeof v.latitude === "number" && typeof v.longitude === "number" && (
+                      <LocationPreviewMap lat={v.latitude} lng={v.longitude} height={180} />
+                    )}
+                  </div>
+
                   <div className="flex justify-end gap-2 pt-2 border-t border-[#FAF8F5]">
                     {!isApproved && (
                       <button
@@ -285,6 +332,20 @@ export function AdminVerifikasiClient({ dbVendors }: { dbVendors: VendorVerifica
           </div>
         </div>
       </Modal>
+
+      {zoomUrl && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4"
+          onClick={() => setZoomUrl(null)}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={zoomUrl}
+            alt="Dokumen"
+            className="max-h-[85vh] max-w-[90vw] rounded-xl border-2 border-white object-contain"
+          />
+        </div>
+      )}
     </div>
   );
 }

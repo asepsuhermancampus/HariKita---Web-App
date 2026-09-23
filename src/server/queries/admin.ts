@@ -24,6 +24,26 @@ export interface VendorVerificationDTO {
   verificationNote: string | null;
   isVerified: boolean;
   createdAt: string;
+  // Verifikasi & geo
+  ktpNumber: string | null;
+  ktpPhotoUrl: string | null;
+  businessPhotoUrl: string | null;
+  revenueMethod: string | null;
+  ewalletProvider: string | null;
+  bankName: string | null;
+  bankAccount: string | null;
+  bankHolder: string | null;
+  rt: string | null;
+  rw: string | null;
+  dusun: string | null;
+  desa: string | null;
+  kecamatan: string | null;
+  kabupaten: string | null;
+  postalCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  profileCompleted: boolean;
+  submittedAt: string | null;
 }
 
 /** Daftar vendor untuk kurasi/verifikasi. */
@@ -53,6 +73,25 @@ export async function getVendorVerifications(
     verificationNote: v.verificationNote,
     isVerified: v.isVerified,
     createdAt: v.createdAt.toISOString().split("T")[0],
+    ktpNumber: v.ktpNumber,
+    ktpPhotoUrl: v.ktpPhotoUrl,
+    businessPhotoUrl: v.businessPhotoUrl,
+    revenueMethod: v.revenueMethod,
+    ewalletProvider: v.ewalletProvider,
+    bankName: v.bankName,
+    bankAccount: v.bankAccount,
+    bankHolder: v.bankHolder,
+    rt: v.rt,
+    rw: v.rw,
+    dusun: v.dusun,
+    desa: v.desa,
+    kecamatan: v.kecamatan,
+    kabupaten: v.kabupaten,
+    postalCode: v.postalCode,
+    latitude: v.latitude,
+    longitude: v.longitude,
+    profileCompleted: v.profileCompleted,
+    submittedAt: v.submittedAt ? v.submittedAt.toISOString().split("T")[0] : null,
   }));
 }
 
