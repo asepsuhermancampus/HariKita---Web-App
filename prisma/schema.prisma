@@ -42,6 +42,20 @@ model ClientProfile {
   themePreference String?   // Preferensi tema/adat (contoh: "Jawa Klasik Modern", "Minimalist Floral")
   notes           String?   // Catatan khusus impian calon pengantin
   avatarUrl       String?
+
+  // Alamat terstruktur
+  rt              String?
+  rw              String?
+  dusun           String?
+  desa            String?
+  kecamatan       String?
+  kabupaten       String?   @default("Kebumen")
+  postalCode      String?
+
+  // Koordinat peta (estimasi jarak)
+  latitude        Float?
+  longitude       Float?
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }
@@ -66,11 +80,37 @@ model VendorProfile {
   bankAccount    String?
   bankHolder     String?
   walletBalance  Int                  @default(0) // Integer Rupiah
-  isVerified     Boolean              @default(true)
+  isVerified     Boolean              @default(false)
 
   // Status Kurasi/Verifikasi Vendor
-  verificationStatus String           @default("APPROVED") // "PENDING", "APPROVED", "REJECTED"
+  verificationStatus String           @default("PENDING") // "PENDING", "APPROVED", "REJECTED"
   verificationNote   String?          // Catatan revisi/penolakan Super Admin
+
+  // Data Pemilik & Dokumen Legal
+  ktpNumber        String?
+  ktpPhotoUrl      String?
+  businessPhotoUrl String?
+
+  // Rekening pencairan (bank atau e-wallet)
+  revenueMethod    String? // "BANK" | "EWALLET"
+  ewalletProvider  String?
+
+  // Alamat terstruktur
+  rt               String?
+  rw               String?
+  dusun            String?
+  desa             String?
+  kecamatan        String?
+  kabupaten        String?             @default("Kebumen")
+  postalCode       String?
+
+  // Koordinat peta (estimasi jarak)
+  latitude         Float?
+  longitude        Float?
+
+  // Kelengkapan & pengajuan verifikasi
+  profileCompleted Boolean             @default(false)
+  submittedAt      DateTime?
 
   // Statistik & Multi-Tier Analytics
   viewsGuest     Int                  @default(142) // Dilihat pengunjung belum memiliki akun
