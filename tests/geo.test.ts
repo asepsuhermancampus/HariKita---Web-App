@@ -22,3 +22,27 @@ test("lookupPostalCode: kontrak (null atau 5 digit)", () => {
 test("lookupPostalCode: desa tidak dikenal -> null", () => {
   assert.equal(lookupPostalCode("DesaTidakAda123", "Kebumen"), null);
 });
+
+import { estimateDrivingDistance } from "../src/lib/geo/osrm";
+
+test("estimateDrivingDistance: pakai OSRM bila sukses", async () => {
+  const fakeFetch = (async () =>
+    ({
+      ok: true,
+      json: async () => ({ routes: [{ distance: 12345.6, duration: 900 }] }),
+    }) as unknown as Response) as unknown as typeof fetch;
+  const r = await estimateDrivingDistance({ lat: -7.6, lng: 109.6 }, { lat: -7.7, lng: 109.7 }, fakeFetch);
+  assert.equal(r.source, "osrm");
+  assert.ok(r.km > 12 && r.km < 13);
+  assert.equal(r.minutes, 15);
+});
+
+test("estimateDrivingDistance: fallback haversine bila OSRM gagal", async () => {
+  const failFetch = (async () => {
+    throw new Error("network");
+  }) as unknown as typeof fetch;
+  const r = await estimateDrivingDistance({ lat: -7.6, lng: 109.6 }, { lat: -7.7, lng: 109.7 }, failFetch);
+  assert.equal(r.source, "haversine");
+  assert.equal(r.minutes, null);
+  assert.ok(r.km > 0);
+});
