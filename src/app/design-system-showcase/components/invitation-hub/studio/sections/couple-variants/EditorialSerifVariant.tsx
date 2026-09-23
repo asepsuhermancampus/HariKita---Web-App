@@ -56,7 +56,7 @@ export function EditorialSerifVariant({ themeColor, ornamentId, content }: Varia
           </span>
           <span className="font-manrope text-[10px] text-hk-charcoal/50">{groom.origin}</span>
         </div>
-        <div className="relative aspect-4/5 w-full overflow-hidden rounded-xs bg-black/5">
+        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xs bg-black/5">
           <img src={groom.photo} alt={groomFullName} className="h-full w-full object-cover filter contrast-[1.05]" />
           <div className="absolute inset-0 border border-black/10 pointer-events-none" />
         </div>
@@ -84,7 +84,7 @@ export function EditorialSerifVariant({ themeColor, ornamentId, content }: Varia
           </span>
           <span className="font-manrope text-[10px] text-hk-charcoal/50">{bride.origin}</span>
         </div>
-        <div className="relative aspect-4/5 w-full overflow-hidden rounded-xs bg-black/5">
+        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xs bg-black/5">
           <img src={bride.photo} alt={brideFullName} className="h-full w-full object-cover filter contrast-[1.05]" />
           <div className="absolute inset-0 border border-black/10 pointer-events-none" />
         </div>

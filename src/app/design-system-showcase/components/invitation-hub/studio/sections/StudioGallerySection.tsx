@@ -31,7 +31,7 @@ export function StudioGallerySection({ galleryVariant, themeColor }: StudioGalle
                   key={photo.id}
                   className="snap-center shrink-0 w-56 group relative overflow-hidden rounded-md border border-neutral-800 bg-neutral-950 shadow-md"
                 >
-                  <div className="aspect-4/3 w-full overflow-hidden">
+                  <div className="aspect-[4/3] w-full overflow-hidden">
                     <img
                       src={photo.src}
                       alt={photo.title}
@@ -127,7 +127,7 @@ export function StudioGallerySection({ galleryVariant, themeColor }: StudioGalle
               <div
                 key={photo.id}
                 className={`group relative overflow-hidden rounded-xl border border-hk-champagne/40 bg-white shadow-2xs ${
-                  i === 0 || i === 3 ? 'row-span-2 aspect-3/4' : 'aspect-square'
+                  i === 0 || i === 3 ? 'row-span-2 aspect-[3/4]' : 'aspect-square'
                 }`}
               >
                 <img

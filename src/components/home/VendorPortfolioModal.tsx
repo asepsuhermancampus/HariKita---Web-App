@@ -193,7 +193,7 @@ export function VendorPortfolioModal({
                 {vendor.photos.map((photo, index) => (
                   <div
                     key={index}
-                    className="relative aspect-4/3 rounded-xl overflow-hidden border border-hk-champagne/60 group bg-hk-ivory"
+                    className="relative aspect-[4/3] rounded-xl overflow-hidden border border-hk-champagne/60 group bg-hk-ivory"
                   >
                     <Image
                       src={photo.url}

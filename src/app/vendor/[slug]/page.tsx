@@ -227,7 +227,7 @@ export default function PublicVendorProfilePage({ params }: PageProps) {
                   onClick={() => setSelectedPhoto(item.url)}
                   className="group rounded-3xl bg-white border border-hk-champagne/50 shadow-xs hover:border-hk-taupe hover:shadow-lg transition-all overflow-hidden cursor-pointer"
                 >
-                  <div className="relative aspect-4/3 w-full bg-hk-charcoal overflow-hidden">
+                  <div className="relative aspect-[4/3] w-full bg-hk-charcoal overflow-hidden">
                     <Image
                       src={item.url}
                       alt={item.caption}
@@ -373,7 +373,7 @@ export default function PublicVendorProfilePage({ params }: PageProps) {
             className="relative max-w-3xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl border border-hk-champagne/60"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative aspect-16/10 w-full bg-hk-charcoal">
+            <div className="relative aspect-[16/10] w-full bg-hk-charcoal">
               <Image
                 src={selectedPhoto}
                 alt="Portofolio Estetik HariKita"

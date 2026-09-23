@@ -187,7 +187,7 @@ export function VendorPortofolioClient({
               key={item.id}
               className="bg-white rounded-2xl border border-[#C5A880]/30 overflow-hidden shadow-sm hover:border-[#C5A880] transition-all flex flex-col justify-between group"
             >
-              <div className="relative aspect-4/3 w-full bg-[#FAF8F5] overflow-hidden">
+              <div className="relative aspect-[4/3] w-full bg-[#FAF8F5] overflow-hidden">
                 <Image
                   src={item.imageUrl}
                   alt={item.title}

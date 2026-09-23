@@ -76,7 +76,7 @@ export default function ProductDetailPage({ params }: PageProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="relative aspect-4/3 rounded-3xl overflow-hidden border border-hk-champagne/50 bg-hk-charcoal">
+        <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-hk-champagne/50 bg-hk-charcoal">
           <Image
             src={product.image}
             alt={product.name}
