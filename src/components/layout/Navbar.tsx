@@ -4,12 +4,34 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HariKitaLogo } from "@/components/brand/HariKitaLogo";
-import { Sparkles, Compass, Mail, UserCheck, Menu, X, ArrowRight } from "lucide-react";
+import { Sparkles, Compass, Mail, UserCheck, Menu, X, ArrowRight, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
+/** Rute dashboard per role. */
+function dashboardPathForRole(role: string | null | undefined): string {
+  switch (role) {
+    case "ADMIN":
+      return "/admin";
+    case "VENDOR":
+      return "/dashboard/vendor/profil";
+    case "BA":
+      return "/dashboard/ba";
+    case "CLIENT":
+    default:
+      return "/client/profil";
+  }
+}
+
+export const Navbar = ({
+  isLoggedIn = false,
+  userRole = null,
+}: {
+  isLoggedIn?: boolean;
+  userRole?: string | null;
+}) => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const dashboardHref = dashboardPathForRole(userRole);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -81,14 +103,23 @@ export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
 
         {/* Sisi Kanan: Action Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Login Button — hanya tampil bila belum login */}
-          {!isLoggedIn && (
+          {/* Login (belum masuk) atau Dashboard (sudah masuk) */}
+          {!isLoggedIn ? (
             <Link
               href="/auth/login"
               className="flex h-8 items-center gap-1.5 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:border-hk-taupe hover:bg-hk-ivory transition-all"
             >
               <UserCheck className="h-3.5 w-3.5 text-hk-taupe" />
               <span>Login</span>
+            </Link>
+          ) : (
+            <Link
+              href={dashboardHref}
+              className="flex h-8 items-center gap-1.5 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:border-hk-taupe hover:bg-hk-ivory transition-all"
+            >
+              <LayoutDashboard className="h-3.5 w-3.5 text-hk-taupe" />
+              <span>Dashboard</span>
+              <ArrowRight className="h-3.5 w-3.5 text-hk-taupe" />
             </Link>
           )}
 
@@ -150,9 +181,9 @@ export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
             })}
           </div>
 
-          {/* Login Link — hanya tampil bila belum login */}
-          {!isLoggedIn && (
-            <div className="pt-2 border-t border-hk-champagne/40">
+          {/* Login (belum masuk) atau Dashboard (sudah masuk) — mobile */}
+          <div className="pt-2 border-t border-hk-champagne/40">
+            {!isLoggedIn ? (
               <Link
                 href="/auth/login"
                 onClick={() => setMobileMenuOpen(false)}
@@ -161,8 +192,18 @@ export const Navbar = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
                 <UserCheck className="h-4 w-4 text-hk-taupe" />
                 <span>Login</span>
               </Link>
-            </div>
-          )}
+            ) : (
+              <Link
+                href={dashboardHref}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full rounded-xl border border-hk-champagne/60 bg-white py-2.5 text-xs font-manrope font-semibold text-hk-charcoal shadow-2xs hover:bg-hk-ivory transition-all"
+              >
+                <LayoutDashboard className="h-4 w-4 text-hk-taupe" />
+                <span>Dashboard</span>
+                <ArrowRight className="h-3.5 w-3.5 text-hk-taupe" />
+              </Link>
+            )}
+          </div>
 
           {/* Full-width Builder Button */}
           <div className="pt-1">

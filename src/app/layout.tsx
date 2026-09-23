@@ -108,7 +108,7 @@ export default async function RootLayout({
         <a href="#main-content" className="skip-link">
           Lewati ke konten utama
         </a>
-        <Navbar isLoggedIn={Boolean(session)} />
+        <Navbar isLoggedIn={Boolean(session)} userRole={session?.role ?? null} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
         <InstallPrompt />

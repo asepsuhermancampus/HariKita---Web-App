@@ -9,9 +9,14 @@ export const metadata = {
 };
 
 export default async function BaLayout({ children }: { children: React.ReactNode }) {
-  await getAmbassadorSummary();
+  const summary = await getAmbassadorSummary();
   return (
-    <DashboardShell nav={BA_NAV} roleLabel="Brand Ambassador" homeHref="/dashboard/ba">
+    <DashboardShell
+      nav={BA_NAV}
+      roleLabel="Brand Ambassador"
+      homeHref="/dashboard/ba"
+      userName={summary?.displayName}
+    >
       {children}
     </DashboardShell>
   );
