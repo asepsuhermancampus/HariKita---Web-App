@@ -7,6 +7,7 @@ import {
   PLANNER_STAGES,
   BUDGET_CATEGORIES,
 } from "../src/lib/validations/wedding-planner";
+import { DEFAULT_TASKS, DEFAULT_KUA, DEFAULT_EMERGENCY } from "../src/server/services/wedding-planner-seed";
 
 test("validateBudgetItemInput accepts a valid item and coerces amounts to Int", () => {
   const res = validateBudgetItemInput({
@@ -51,4 +52,12 @@ test("validateProofInput requires a fileUrl", () => {
 test("PLANNER_STAGES has 7 stages and BUDGET_CATEGORIES is non-empty", () => {
   assert.equal(PLANNER_STAGES.length, 7);
   assert.ok(BUDGET_CATEGORIES.length > 0);
+});
+
+test("default seed arrays have expected sizes and shapes", () => {
+  assert.equal(DEFAULT_TASKS.length, 22);
+  assert.equal(DEFAULT_KUA.length, 32); // 26 wajib + 6 opsional
+  assert.equal(DEFAULT_EMERGENCY.length, 13);
+  assert.ok(DEFAULT_TASKS.every((t) => t.stage >= 1 && t.stage <= 7));
+  assert.equal(DEFAULT_KUA.filter((k) => k.isRequired).length, 26);
 });
