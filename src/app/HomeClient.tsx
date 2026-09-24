@@ -128,34 +128,112 @@ const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>
     },
   ];
 
+type VendorCardItem = {
+  slug: string;
+  businessName: string;
+  categoryId: string;
+  categoryTitle: string;
+  district: string;
+  rating: number;
+  reviewCount: number;
+  priceFrom: number | null;
+  imageUrl: string | null;
+};
+
+function VendorCard({ v }: { v: VendorCardItem }) {
+  return (
+    <Link
+      href={`/vendor/${v.slug}`}
+      className="group rounded-3xl overflow-hidden bg-white border border-hk-champagne/50 shadow-xs hover:border-hk-taupe hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col"
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-hk-soft-beige/40">
+        {v.imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={v.imageUrl}
+            alt={v.businessName}
+            loading="lazy"
+            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="grid h-full w-full place-items-center text-hk-taupe">
+            <Store className="h-8 w-8" />
+          </div>
+        )}
+        <span className="absolute left-3 top-3 px-2.5 py-0.5 rounded-full text-[10px] font-manrope font-bold uppercase tracking-wider bg-white/90 text-hk-taupe border border-hk-champagne/50 backdrop-blur-sm">
+          {v.categoryTitle.split(" (")[0]}
+        </span>
+      </div>
+      <div className="p-5 flex flex-col gap-3 flex-1">
+        <div className="flex-1">
+          <h4 className="font-editorial text-lg font-bold text-hk-charcoal group-hover:text-hk-taupe transition-colors leading-snug line-clamp-1">
+            {v.businessName}
+          </h4>
+          <p className="font-manrope text-xs text-hk-charcoal/60 mt-0.5">
+            Kec. {v.district}
+          </p>
+        </div>
+        <div className="flex items-center justify-between pt-3 border-t border-hk-champagne/30">
+          <span className="inline-flex items-center gap-1 text-xs font-manrope font-semibold text-hk-charcoal">
+            <Star className="h-3.5 w-3.5 text-hk-champagne fill-hk-champagne" />
+            {v.rating.toFixed(1)}
+            <span className="text-hk-charcoal/50 font-normal">
+              ({v.reviewCount})
+            </span>
+          </span>
+          {v.priceFrom != null && (
+            <span className="font-mono text-xs font-bold text-hk-charcoal">
+              Mulai Rp{(v.priceFrom / 1000).toFixed(0)}rb
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default function HomeClient({
   vendorsByCategory,
 }: {
-  vendorsByCategory: Record<
-    string,
-    Array<{
-      slug: string;
-      businessName: string;
-      categoryId: string;
-      categoryTitle: string;
-      district: string;
-      rating: number;
-      reviewCount: number;
-      priceFrom: number | null;
-      imageUrl: string | null;
-    }>
-  >;
+  vendorsByCategory: Record<string, VendorCardItem[]>;
 }) {
   const [activePhase, setActivePhase] = useState<EventPhase>("all");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [activeArchetype, setActiveArchetype] = useState<"motion" | "adat" | "botanical" | "syari">("motion");
   const [activeEscrowStep, setActiveEscrowStep] = useState<number>(1);
 
-  // Kategori yang tampil: "all" → semua; selain itu → satu kategori.
-  const shownCategories = React.useMemo(() => {
-    if (activeCategory === "all") return VENDOR_CATEGORIES;
-    return VENDOR_CATEGORIES.filter((c) => c.id === activeCategory);
-  }, [activeCategory]);
+  // 6 Vendor Unggulan Lintas Kategori untuk Tab "Semua Layanan" (Curated Spotlight)
+  const spotlightVendors = React.useMemo(() => {
+    const priorityCategoryIds = [
+      "prewed",
+      "busana",
+      "mua",
+      "dekor",
+      "katering",
+      "seserahan",
+    ];
+    const picked: VendorCardItem[] = [];
+
+    // Ambil 1 vendor unggulan dari setiap kategori prioritas
+    for (const catId of priorityCategoryIds) {
+      const list = vendorsByCategory[catId];
+      if (list && list.length > 0) {
+        picked.push(list[0]);
+      }
+    }
+
+    // Jika belum mencukupi 6, tambahkan dari kategori lain
+    if (picked.length < 6) {
+      for (const [catId, list] of Object.entries(vendorsByCategory)) {
+        if (!priorityCategoryIds.includes(catId) && list && list.length > 0) {
+          picked.push(list[0]);
+          if (picked.length >= 6) break;
+        }
+      }
+    }
+
+    return picked.slice(0, 6);
+  }, [vendorsByCategory]);
 
   const currentArchetype = ARCHETYPES[activeArchetype];
   const escrowSteps = ESCROW_STEPS;
@@ -305,99 +383,159 @@ export default function HomeClient({
           })}
         </div>
 
-        {/* Vendor per kategori (6 kartu + blur CTA + Lihat Selengkapnya) */}
-        <div className="space-y-14">
-          {shownCategories.map((cat) => {
+        {/* Konten Tab: Curated Spotlight (Saat Semua Layanan) ATAU 6 Vendor Kategori Terpilih */}
+        {activeCategory === "all" ? (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+              <div>
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-manrope font-bold text-hk-taupe uppercase tracking-wider mb-1">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Curated Spotlight Kebumen</span>
+                </div>
+                <h3 className="font-editorial text-2xl sm:text-3xl text-hk-charcoal font-normal">
+                  Vendor Pilihan &amp; Terpopuler di Kebumen
+                </h3>
+                <p className="font-manrope text-xs sm:text-sm text-hk-charcoal/70 mt-1 max-w-2xl leading-relaxed">
+                  Inspirasi vendor dengan portofolio terbaik dan ulasan terpercaya lintas 11 kategori layanan. Pilih tab kategori di atas untuk menyaring per kebutuhan acara Anda.
+                </p>
+              </div>
+              <span className="text-xs font-manrope font-semibold text-hk-taupe px-3 py-1 rounded-full bg-hk-soft-beige/70 border border-hk-champagne/40 whitespace-nowrap self-start sm:self-auto">
+                {spotlightVendors.length} vendor rekomendasi
+              </span>
+            </div>
+
+            {spotlightVendors.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-hk-champagne/50 bg-hk-ivory/50 p-8 text-center text-xs font-manrope text-hk-charcoal/60">
+                Belum ada data vendor terkurasi.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {spotlightVendors.map((v) => (
+                  <VendorCard key={v.slug} v={v} />
+                ))}
+              </div>
+            )}
+
+            {/* Panel Eksplorasi Cepat 11 Kategori Layanan */}
+            <div className="rounded-3xl border border-hk-champagne/60 bg-gradient-to-br from-white via-hk-ivory/40 to-hk-soft-beige/30 p-6 sm:p-8 shadow-xs mt-6">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="space-y-1.5 text-center md:text-left">
+                  <span className="text-[11px] font-manrope font-bold uppercase tracking-wider text-hk-taupe">
+                    11 Layanan Terpadu Siap Sinkron
+                  </span>
+                  <h4 className="font-editorial text-xl sm:text-2xl text-hk-charcoal font-normal">
+                    Ingin merancang paket acara sesuai anggaran keluarga?
+                  </h4>
+                  <p className="font-manrope text-xs sm:text-sm text-hk-charcoal/70 max-w-xl leading-relaxed">
+                    Gunakan Simulator Racik untuk memilih vendor, mengatur baki seserahan, hingga porsi katering dengan kalkulasi harga transparan seketika.
+                  </p>
+                </div>
+                <div className="flex items-center justify-center shrink-0">
+                  <Link
+                    href="/builder"
+                    className="inline-flex items-center gap-2 rounded-full bg-hk-taupe px-6 py-3 text-xs sm:text-sm font-manrope font-bold text-white shadow-md hover:bg-hk-charcoal transition-all hover:scale-[1.02]"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>Buka Simulator Racik</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Quick Jump Category Chips */}
+              <div className="mt-6 pt-5 border-t border-hk-champagne/40">
+                <span className="text-[11px] font-manrope font-bold text-hk-charcoal/60 uppercase tracking-wider block mb-3 text-center md:text-left">
+                  Pilih Kategori Layanan Spesifik:
+                </span>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                  {VENDOR_CATEGORIES.map((cat) => {
+                    const CatIcon = CATEGORY_ICONS[cat.iconName] ?? Store;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => {
+                          setActiveCategory(cat.id);
+                          const el = document.getElementById("layanan");
+                          el?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-hk-champagne/60 text-xs font-manrope font-medium text-hk-charcoal/80 hover:bg-hk-taupe hover:text-white hover:border-hk-taupe transition-all shadow-2xs cursor-pointer"
+                      >
+                        <CatIcon className="w-3 h-3 text-hk-taupe group-hover:text-white" />
+                        <span>{cat.title}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          (() => {
+            const cat = VENDOR_CATEGORIES.find((c) => c.id === activeCategory);
+            if (!cat) return null;
             const vendors = vendorsByCategory[cat.id] ?? [];
             return (
-              <div key={cat.id} className="space-y-5">
+              <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                   <div>
-                    <h3 className="font-editorial text-2xl text-hk-charcoal font-normal">{cat.title}</h3>
-                    <p className="font-manrope text-xs text-hk-charcoal/65 mt-0.5">{cat.shortDesc}</p>
+                    <div className="inline-flex items-center gap-1.5 text-[11px] font-manrope font-bold text-hk-taupe uppercase tracking-wider mb-1">
+                      <span>Kategori Terpilih</span>
+                    </div>
+                    <h3 className="font-editorial text-2xl sm:text-3xl text-hk-charcoal font-normal">{cat.title}</h3>
+                    <p className="font-manrope text-xs sm:text-sm text-hk-charcoal/65 mt-0.5">{cat.shortDesc}</p>
                   </div>
-                  <span className="text-[11px] font-manrope font-semibold text-hk-taupe whitespace-nowrap">
-                    {vendors.length} vendor terkurasi
-                  </span>
+                  <div className="flex items-center gap-3 self-start sm:self-auto">
+                    <span className="text-xs font-manrope font-semibold text-hk-taupe px-3 py-1 rounded-full bg-hk-soft-beige/70 border border-hk-champagne/40 whitespace-nowrap">
+                      {vendors.length} vendor terkurasi
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setActiveCategory("all")}
+                      className="text-xs font-manrope font-semibold text-hk-charcoal/60 hover:text-hk-charcoal underline underline-offset-4 transition-colors cursor-pointer"
+                    >
+                      Lihat Semua Layanan
+                    </button>
+                  </div>
                 </div>
 
                 {vendors.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-hk-champagne/50 bg-hk-ivory/50 p-8 text-center text-xs font-manrope text-hk-charcoal/60">
-                    Belum ada vendor untuk kategori ini.
+                  <div className="rounded-2xl border border-dashed border-hk-champagne/50 bg-hk-ivory/50 p-12 text-center space-y-2">
+                    <Store className="w-8 h-8 text-hk-taupe mx-auto" />
+                    <p className="text-xs font-manrope font-medium text-hk-charcoal/70">
+                      Belum ada vendor untuk kategori ini.
+                    </p>
                   </div>
                 ) : (
-                  <div className="relative">
+                  <div className="space-y-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       {vendors.slice(0, 6).map((v) => (
-                        <Link
-                          key={v.slug}
-                          href={`/vendor/${v.slug}`}
-                          className="group rounded-3xl overflow-hidden bg-white border border-hk-champagne/50 shadow-xs hover:border-hk-taupe hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col"
-                        >
-                          <div className="relative aspect-[4/3] overflow-hidden bg-hk-soft-beige/40">
-                            {v.imageUrl ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={v.imageUrl}
-                                alt={v.businessName}
-                                loading="lazy"
-                                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                              />
-                            ) : (
-                              <div className="grid h-full w-full place-items-center text-hk-taupe">
-                                <Store className="h-8 w-8" />
-                              </div>
-                            )}
-                            <span className="absolute left-3 top-3 px-2.5 py-0.5 rounded-full text-[10px] font-manrope font-bold uppercase tracking-wider bg-white/90 text-hk-taupe border border-hk-champagne/50 backdrop-blur-sm">
-                              {v.categoryTitle.split(" (")[0]}
-                            </span>
-                          </div>
-                          <div className="p-5 flex flex-col gap-3 flex-1">
-                            <div className="flex-1">
-                              <h4 className="font-editorial text-lg font-bold text-hk-charcoal group-hover:text-hk-taupe transition-colors leading-snug line-clamp-1">
-                                {v.businessName}
-                              </h4>
-                              <p className="font-manrope text-xs text-hk-charcoal/60 mt-0.5">
-                                Kec. {v.district}
-                              </p>
-                            </div>
-                            <div className="flex items-center justify-between pt-3 border-t border-hk-champagne/30">
-                              <span className="inline-flex items-center gap-1 text-xs font-manrope font-semibold text-hk-charcoal">
-                                <Star className="h-3.5 w-3.5 text-hk-champagne fill-hk-champagne" />
-                                {v.rating.toFixed(1)}
-                                <span className="text-hk-charcoal/50 font-normal">
-                                  ({v.reviewCount})
-                                </span>
-                              </span>
-                              {v.priceFrom != null && (
-                                <span className="font-mono text-xs font-bold text-hk-charcoal">
-                                  Mulai Rp{(v.priceFrom / 1000).toFixed(0)}rb
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </Link>
+                        <VendorCard key={v.slug} v={v} />
                       ))}
                     </div>
 
-                    {/* Blur gradient CTA (baris terbawah) — warna brand ivory */}
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-hk-canvas via-hk-canvas/80 to-transparent" />
-
-                    <div className="absolute inset-x-0 -bottom-2 flex justify-center">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                       <Link
                         href={`/vendor/kategori/${cat.id}`}
-                        className="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-hk-taupe px-7 py-3 text-sm font-manrope font-bold text-white shadow-md hover:bg-hk-charcoal transition-all hover:scale-[1.02]"
+                        className="inline-flex items-center gap-2 rounded-full bg-hk-taupe px-7 py-3 text-xs sm:text-sm font-manrope font-bold text-white shadow-md hover:bg-hk-charcoal transition-all hover:scale-[1.02]"
                       >
-                        <span>Lihat Selengkapnya</span>
+                        <span>Lihat Selengkapnya di Kategori Ini</span>
                         <ArrowRight className="w-4 h-4" />
                       </Link>
+                      <button
+                        type="button"
+                        onClick={() => setActiveCategory("all")}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-hk-champagne/60 bg-white px-5 py-3 text-xs sm:text-sm font-manrope font-semibold text-hk-charcoal/80 hover:bg-hk-ivory transition-all cursor-pointer"
+                      >
+                        <span>Kembali ke Semua Layanan</span>
+                      </button>
                     </div>
                   </div>
                 )}
               </div>
             );
-          })}
-        </div>
+          })()
+        )}
       </section>
 
       {/* Decorative Divider: Botanical */}
