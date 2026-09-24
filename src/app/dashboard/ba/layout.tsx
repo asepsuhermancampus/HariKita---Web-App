@@ -1,5 +1,6 @@
 import React from "react";
 import { getAmbassadorSummary } from "@/server/queries/ambassador";
+import { getSession } from "@/lib/session";
 import { DashboardShell, BA_NAV } from "@/components/dashboard";
 
 export const metadata = {
@@ -9,13 +10,14 @@ export const metadata = {
 };
 
 export default async function BaLayout({ children }: { children: React.ReactNode }) {
-  const summary = await getAmbassadorSummary();
+  const [summary, session] = await Promise.all([getAmbassadorSummary(), getSession()]);
+  const userName = summary?.displayName || session?.name || undefined;
   return (
     <DashboardShell
       nav={BA_NAV}
       roleLabel="Brand Ambassador"
       homeHref="/dashboard/ba"
-      userName={summary?.displayName}
+      userName={userName}
     >
       {children}
     </DashboardShell>

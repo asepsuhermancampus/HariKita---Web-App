@@ -16,6 +16,7 @@ export default async function VendorProfilPage() {
   const data = profile || {
     id: "guest-vendor",
     userId: "guest",
+    slug: "",
     phone: "0812-3456-7890",
     email: "mitra@harikita.id",
     businessName: "Menganti Studio & Cinematic",

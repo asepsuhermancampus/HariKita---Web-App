@@ -4,11 +4,13 @@ import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { validateVendorProfileInput, UpdateVendorProfileInput } from "@/lib/validations/vendor-profile";
 import { validateVendorCompleteness } from "@/lib/validations/vendor-verification";
+import { buildVendorSlug } from "@/lib/catalog-utils";
 import { revalidatePath } from "next/cache";
 
 export interface VendorProfileData {
   id: string;
   userId: string;
+  slug: string;
   phone: string;
   email: string;
   businessName: string;
@@ -82,10 +84,12 @@ export async function getVendorProfile(): Promise<VendorProfileData | null> {
   // Jika belum ada profile, buat record default
   let profile = user.vendorProfile;
   if (!profile) {
+    const businessName = user.name || "Mitra Studio Kebumen";
     profile = await prisma.vendorProfile.create({
       data: {
         userId: user.id,
-        businessName: user.name || "Mitra Studio Kebumen",
+        slug: buildVendorSlug(businessName, user.id),
+        businessName,
         category: "Busana Pengantin & Fitting",
         picName: user.name || "Penanggung Jawab Studio",
         city: "Kebumen",
@@ -104,11 +108,26 @@ export async function getVendorProfile(): Promise<VendorProfileData | null> {
         ordersCombo: 16,
       },
     });
+  } else if (!profile.slug) {
+    // Self-healing: profil lama tanpa slug (mis. dibuat sebelum backfill)
+    // diberi slug stabil agar link "Lihat Profil Publik" tidak jatuh ke direktori.
+    const fallbackSlug = buildVendorSlug(profile.businessName || user.name || "mitra", user.id);
+    // Hindari tabrakan unique: jika sudah dipakai, tambahkan sufiks unik.
+    const existing = await prisma.vendorProfile.findUnique({ where: { slug: fallbackSlug } });
+    const uniqueSlug =
+      existing && existing.id !== profile.id
+        ? buildVendorSlug(profile.businessName || user.name || "mitra", profile.id + Date.now())
+        : fallbackSlug;
+    profile = await prisma.vendorProfile.update({
+      where: { id: profile.id },
+      data: { slug: uniqueSlug },
+    });
   }
 
   return {
     id: profile.id,
     userId: user.id,
+    slug: profile.slug ?? "",
     phone: user.phone,
     email: user.email || "",
     businessName: profile.businessName,

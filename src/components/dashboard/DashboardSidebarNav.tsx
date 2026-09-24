@@ -105,7 +105,7 @@ export function DashboardSidebarNav({
       </div>
       <div className="min-w-0">
         <div className="truncate text-sm font-bold text-white" title={userName || roleLabel}>
-          {userName || "HariKita"}
+          {userName || roleLabel}
         </div>
         <div className="text-[10px] uppercase tracking-[0.12em] text-hk-champagne">
           {roleLabel}

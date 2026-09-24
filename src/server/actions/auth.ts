@@ -15,6 +15,7 @@ import {
   SessionData,
 } from "@/lib/session";
 import { attributeVendorToReferral } from "@/server/services/ambassador-service";
+import { buildVendorSlug } from "@/lib/catalog-utils";
 import { runAction, type ActionResult } from "./_shared";
 import { DomainError } from "@/server/services/errors";
 import {
@@ -222,15 +223,22 @@ export async function completeRegistrationAction(input: {
           email,
           pin: hashedPin,
           role,
-          ...(role === "VENDOR"
-            ? {
-                vendorProfile: {
-                  create: { businessName: name, category: "katering", address: "-", city: "Kebumen" },
-                },
-              }
-            : {}),
         },
       });
+      // Vendor baru: buat profil dengan slug stabil agar link "Lihat Profil
+      // Publik" dan halaman /vendor/[slug] langsung berfungsi.
+      if (role === "VENDOR") {
+        await tx.vendorProfile.create({
+          data: {
+            userId: u.id,
+            slug: buildVendorSlug(name, u.id),
+            businessName: name,
+            category: "katering",
+            address: "-",
+            city: "Kebumen",
+          },
+        });
+      }
       await tx.pinChangeLog.create({ data: { userId: u.id } });
       await tx.otpCode.update({ where: { id: otpId }, data: { status: "CONSUMED" } });
       return u;

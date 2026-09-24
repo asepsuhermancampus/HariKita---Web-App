@@ -21,6 +21,7 @@ import { detectOffPlatformContact } from "@/lib/content-guard";
 import { usePortfolio, portfolioStore, PortfolioPost } from "@/lib/portfolio-store";
 import { Modal } from "@/components/harikita/ui";
 import { DashPageHeader } from "@/components/dashboard";
+import { ROUTES } from "@/lib/routes";
 import {
   createPortfolioAction,
   deletePortfolioAction,
@@ -153,14 +154,26 @@ export function VendorPortofolioClient({
         description="Unggah karya foto/video pernikahan Anda. Ditampilkan langsung di profil publik dan direktori calon pengantin."
         action={
           <div className="flex items-center gap-2">
-            <Link
-              href={currentVendorSlug ? `/vendor/${currentVendorSlug}` : "/vendor"}
-              target="_blank"
-              className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-hk-champagne bg-white px-3.5 text-xs font-semibold text-hk-charcoal hover:bg-hk-ivory"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-hk-champagne" />
-              Lihat Profil Publik
-            </Link>
+            {currentVendorSlug ? (
+              <Link
+                href={ROUTES.VENDOR_PROFILE(currentVendorSlug)}
+                target="_blank"
+                className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-hk-champagne bg-white px-3.5 text-xs font-semibold text-hk-charcoal hover:bg-hk-ivory"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-hk-champagne" />
+                Lihat Profil Publik
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                title="Profil publik belum tersedia. Simpan profil studio Anda terlebih dahulu."
+                className="focus-ring inline-flex min-h-11 cursor-not-allowed items-center gap-1.5 rounded-xl border border-hk-champagne/50 bg-white px-3.5 text-xs font-semibold text-hk-charcoal/40"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-hk-champagne/50" />
+                Lihat Profil Publik
+              </button>
+            )}
             <button
               onClick={() => setShowAddModal(true)}
               className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-hk-taupe px-3.5 text-xs font-semibold text-white hover:bg-hk-charcoal"

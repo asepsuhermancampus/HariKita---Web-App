@@ -55,8 +55,24 @@ export function PublicVendorProfileClient({ vendor }: { vendor: PublicVendor }) 
     `Halo Tim HariKita Kebumen, saya ingin menanyakan jadwal ketersediaan untuk mitra vendor "${vendor.name}" (Kategori: ${vendor.categoryTitle}). Mohon info tanggal yang masih terbuka.`
   );
 
+  const isApproved = vendor.verificationStatus === "APPROVED";
+
   return (
     <div className="min-h-screen pb-20 bg-hk-ivory/30">
+      {/* Banner status verifikasi: hanya untuk vendor yang belum tayang penuh */}
+      {!isApproved && (
+        <div className="bg-amber-50 border-b border-amber-200">
+          <div className="mx-auto flex max-w-6xl items-start gap-2.5 px-4 py-3 sm:px-6">
+            <Clock className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" aria-hidden="true" />
+            <p className="font-manrope text-xs leading-relaxed text-amber-900 sm:text-sm">
+              <strong className="font-bold">Profil ini sedang menunggu verifikasi.</strong>{" "}
+              Data ditampilkan sebagai pratinjau dan belum sepenuhnya tayang di direktori publik
+              sampai disetujui oleh tim HariKita.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Cover Banner */}
       <div className="relative h-64 sm:h-80 w-full bg-hk-charcoal overflow-hidden">
         {vendor.coverImage && (
@@ -98,10 +114,17 @@ export function PublicVendorProfileClient({ vendor }: { vendor: PublicVendor }) 
                   <span className="px-3 py-0.5 rounded-full text-xs font-manrope font-bold uppercase tracking-wider bg-hk-soft-beige text-hk-taupe border border-hk-champagne/40">
                     {vendor.categoryTitle}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-manrope font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>Mitra Terverifikasi HariKita</span>
-                  </span>
+                  {isApproved ? (
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-manrope font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>Mitra Terverifikasi HariKita</span>
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-manrope font-semibold bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-amber-700" />
+                      <span>Menunggu Verifikasi</span>
+                    </span>
+                  )}
                 </div>
 
                 <h1 className="font-editorial text-3xl sm:text-4xl font-bold text-hk-charcoal leading-tight">

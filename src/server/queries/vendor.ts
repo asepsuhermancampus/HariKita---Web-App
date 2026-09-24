@@ -109,6 +109,50 @@ export async function getVendorSummary() {
   };
 }
 
+export interface VendorRingkasanDTO {
+  id: string;
+  businessName: string;
+  category: string;
+  city: string;
+  slug: string;
+  isVerified: boolean;
+  verificationStatus: string;
+  rating: number;
+  reviewCount: number;
+  walletBalance: number;
+  // Statistik & Multi-Tier Analytics
+  viewsGuest: number;
+  viewsAuth: number;
+  builderTrials: number;
+  bookmarksCount: number;
+  ordersSolo: number;
+  ordersCombo: number;
+}
+
+/** Ringkasan lengkap vendor yang login untuk halaman Ringkasan portal. */
+export async function getVendorRingkasan(): Promise<VendorRingkasanDTO | null> {
+  const vendor = await getCurrentVendor();
+  if (!vendor) return null;
+  return {
+    id: vendor.id,
+    businessName: vendor.businessName,
+    category: vendor.category,
+    city: vendor.city,
+    slug: vendor.slug ?? "",
+    isVerified: vendor.isVerified,
+    verificationStatus: vendor.verificationStatus,
+    rating: vendor.rating,
+    reviewCount: vendor.reviewCount,
+    walletBalance: vendor.walletBalance,
+    viewsGuest: vendor.viewsGuest,
+    viewsAuth: vendor.viewsAuth,
+    builderTrials: vendor.builderTrials,
+    bookmarksCount: vendor.bookmarksCount,
+    ordersSolo: vendor.ordersSolo,
+    ordersCombo: vendor.ordersCombo,
+  };
+}
+
 export interface VendorPortfolioDTO {
   id: string;
   title: string;

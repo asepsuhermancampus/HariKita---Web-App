@@ -119,6 +119,8 @@ export interface PublicVendor {
   reviewCount: number;
   verified: boolean;
   bio: string;
+  /** Status kurasi vendor: "PENDING" | "APPROVED" | "REJECTED". */
+  verificationStatus: "PENDING" | "APPROVED" | "REJECTED";
   products: PublicVendorProduct[];
   portfolio: Array<{ id: string; title: string; url: string; caption: string; locationTag: string; styleTags: string[]; images: string[]; likes: number }>;
 }
@@ -179,10 +181,16 @@ function toPublicProduct(p: {
   };
 }
 
-/** Profil vendor publik (APPROVED) berdasarkan slug. */
+/**
+ * Profil vendor publik berdasarkan slug.
+ *
+ * Vendor APPROVED tayang penuh. Vendor PENDING juga dapat dibuka (owner bisa
+ * memeriksa profilnya sendiri) dengan penanda "Menunggu Verifikasi". Vendor
+ * REJECTED diblokir dari publik.
+ */
 export async function getPublicVendorBySlug(slug: string): Promise<PublicVendor | null> {
   const v = await prisma.vendorProfile.findFirst({
-    where: { slug, verificationStatus: "APPROVED" },
+    where: { slug, verificationStatus: { not: "REJECTED" } },
     include: {
       packages: { orderBy: { basePrice: "asc" } },
       portfolios: { orderBy: { likes: "desc" } },
@@ -231,6 +239,7 @@ export async function getPublicVendorBySlug(slug: string): Promise<PublicVendor 
     reviewCount: v.reviewCount,
     verified: v.isVerified,
     bio: v.description ?? "",
+    verificationStatus: (v.verificationStatus as "PENDING" | "APPROVED" | "REJECTED") ?? "PENDING",
     products,
     portfolio,
   };
