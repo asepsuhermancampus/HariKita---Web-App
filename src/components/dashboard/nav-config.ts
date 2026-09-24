@@ -108,6 +108,16 @@ export const CLIENT_NAV: NavGroup[] = [
     ],
   },
   {
+    group: "Persiapan Pernikahan",
+    items: [
+      { label: "Timeline & Progres", href: "/client/perencanaan", icon: "calendar" },
+      { label: "Berkas & Administrasi", href: "/client/berkas-kua", icon: "fileSearch" },
+      { label: "Anggaran & Realisasi", href: "/client/anggaran", icon: "coins" },
+      { label: "Katering Resepsi", href: "/client/katering", icon: "package" },
+      { label: "Emergency Kit Hari-H", href: "/client/emergency", icon: "shield" },
+    ],
+  },
+  {
     group: "Akun",
     items: [{ label: "Data Diri & Profil", href: "/client/profil", icon: "user" }],
   },
