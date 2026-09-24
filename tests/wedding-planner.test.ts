@@ -8,6 +8,7 @@ import {
   BUDGET_CATEGORIES,
 } from "../src/lib/validations/wedding-planner";
 import { DEFAULT_TASKS, DEFAULT_KUA, DEFAULT_EMERGENCY } from "../src/server/services/wedding-planner-seed";
+import { computeReadiness } from "../src/server/queries/wedding-planner";
 
 test("validateBudgetItemInput accepts a valid item and coerces amounts to Int", () => {
   const res = validateBudgetItemInput({
@@ -60,4 +61,36 @@ test("default seed arrays have expected sizes and shapes", () => {
   assert.equal(DEFAULT_EMERGENCY.length, 13);
   assert.ok(DEFAULT_TASKS.every((t) => t.stage >= 1 && t.stage <= 7));
   assert.equal(DEFAULT_KUA.filter((k) => k.isRequired).length, 26);
+});
+
+test("computeReadiness returns 0 overall when nothing done", () => {
+  const r = computeReadiness({
+    timelineDone: 0, timelineTotal: 22,
+    kuaDone: 0, kuaTotal: 26,
+    budgetEstimated: 0, budgetPaid: 0,
+  });
+  assert.equal(r.overallPct, 0);
+  assert.equal(r.timeline.pct, 0);
+});
+
+test("computeReadiness averages the three module percentages", () => {
+  const r = computeReadiness({
+    timelineDone: 11, timelineTotal: 22,   // 50
+    kuaDone: 13, kuaTotal: 26,             // 50
+    budgetEstimated: 1000000, budgetPaid: 500000, // 50
+  });
+  assert.equal(r.timeline.pct, 50);
+  assert.equal(r.kua.pct, 50);
+  assert.equal(r.budget.pctRealized, 50);
+  assert.equal(r.overallPct, 50);
+});
+
+test("computeReadiness handles divide-by-zero safely", () => {
+  const r = computeReadiness({
+    timelineDone: 0, timelineTotal: 0,
+    kuaDone: 0, kuaTotal: 0,
+    budgetEstimated: 0, budgetPaid: 0,
+  });
+  assert.equal(r.overallPct, 0);
+  assert.equal(r.budget.pctRealized, 0);
 });
