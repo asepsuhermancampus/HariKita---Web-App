@@ -21,7 +21,7 @@
 
 **Files:** Modify `src/lib/catalog-utils.ts`; Test `tests/catalog-utils.test.ts`
 
-- [ ] **Step 1: Test gagal**
+- [x] **Step 1: Test gagal**
 ```ts
 import { unitTypeDbToUi, buildProductSlug } from "../src/lib/catalog-utils";
 test("unitTypeDbToUi maps", () => {
@@ -34,8 +34,8 @@ test("buildProductSlug url-safe", () => {
   assert.match(buildProductSlug("Paket Sewa Kebaya Beaded", "abc12345"), /^[a-z0-9-]+$/);
 });
 ```
-- [ ] **Step 2: Run — gagal** (`npx tsx --test tests/catalog-utils.test.ts`)
-- [ ] **Step 3: Implementasi**
+- [x] **Step 2: Run — gagal** (`npx tsx --test tests/catalog-utils.test.ts`)
+- [x] **Step 3: Implementasi**
 ```ts
 export type UiUnitType = "package" | "pax" | "piece" | "portion";
 export function unitTypeDbToUi(db?: string | null): UiUnitType {
@@ -50,8 +50,8 @@ export function buildProductSlug(name: string, id: string): string {
   return `${slugify(name)}-${id.slice(-8)}`;
 }
 ```
-- [ ] **Step 4: Run — lulus** + `npm run typecheck`
-- [ ] **Step 5: Commit** `feat(catalog): add unitType map + product slug utils`
+- [x] **Step 4: Run — lulus** + `npm run typecheck`
+- [x] **Step 5: Commit** `feat(catalog): add unitType map + product slug utils`
 
 ---
 
@@ -59,10 +59,10 @@ export function buildProductSlug(name: string, id: string): string {
 
 **Files:** Modify `src/server/queries/catalog.ts`
 
-- [ ] **Step 1: Implementasi**
+- [x] **Step 1: Implementasi**
 Definisikan `PublicVendorProduct`, `PublicVendor`; `getPublicVendorBySlug(slug)`, `getPublicProductBySlug(vendorSlug, productSlug)`.
-- [ ] **Step 2: Typecheck**
-- [ ] **Step 3: Commit** `feat(catalog): public vendor/product queries from DB`
+- [x] **Step 2: Typecheck**
+- [x] **Step 3: Commit** `feat(catalog): public vendor/product queries from DB`
 
 ---
 
@@ -70,10 +70,10 @@ Definisikan `PublicVendorProduct`, `PublicVendor`; `getPublicVendorBySlug(slug)`
 
 **Files:** Modify `src/app/vendor/[slug]/page.tsx` → server; Create `src/components/vendor/PublicVendorProfileClient.tsx` (dari page lama).
 
-- [ ] **Step 1:** Pindahkan isi lama ke client, terima `vendor` prop (bentuk `PublicVendor`).
-- [ ] **Step 2:** `page.tsx` server: `getPublicVendorBySlug`, `notFound()` bila null.
-- [ ] **Step 3:** typecheck + build.
-- [ ] **Step 4: Commit** `feat(vendor): public profile reads from DB`
+- [x] **Step 1:** Pindahkan isi lama ke client, terima `vendor` prop (bentuk `PublicVendor`).
+- [x] **Step 2:** `page.tsx` server: `getPublicVendorBySlug`, `notFound()` bila null.
+- [x] **Step 3:** typecheck + build.
+- [x] **Step 4: Commit** `feat(vendor): public profile reads from DB`
 
 ---
 
@@ -81,16 +81,16 @@ Definisikan `PublicVendorProduct`, `PublicVendor`; `getPublicVendorBySlug(slug)`
 
 **Files:** Modify halaman produk.
 
-- [ ] **Step 1:** Server fetch `getPublicProductBySlug` → render (client terima prop).
-- [ ] **Step 2:** typecheck + build.
-- [ ] **Step 3: Commit** `feat(vendor): product detail reads from DB`
+- [x] **Step 1:** Server fetch `getPublicProductBySlug` → render (client terima prop).
+- [x] **Step 2:** typecheck + build.
+- [x] **Step 3: Commit** `feat(vendor): product detail reads from DB`
 
 ---
 
 ### Verifikasi Akhir
-- [ ] `npm run typecheck` / `npm test` / `npm run build` PASS
-- [ ] `/vendor/griya-busana-rarasati` menampilkan vendor BUSANA (bukan Prasmanan)
-- [ ] Vendor tak ada → 404
+- [x] `npm run typecheck` / `npm test` / `npm run build` PASS
+- [x] `/vendor/griya-busana-rarasati` menampilkan vendor BUSANA (bukan Prasmanan)
+- [x] Vendor tak ada → 404
 
 ## Self-Review
 - Spec coverage: query DB (T2), halaman profil (T3), produk (T4), util (T1). ✅
