@@ -649,6 +649,7 @@ async function main() {
   await prisma.vendorProfile.create({
     data: {
       userId: pendingVendorUser.id,
+      slug: buildVendorSlug("Vendor Uji Belum Terverifikasi", pendingVendorUser.id),
       businessName: "Vendor Uji Belum Terverifikasi",
       category: "Katering & Food Stalls",
       address: "Jl. Uji No. 1",
