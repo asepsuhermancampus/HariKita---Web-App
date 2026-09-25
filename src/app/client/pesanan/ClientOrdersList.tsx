@@ -11,14 +11,12 @@ import {
   Sparkles,
   MapPin,
 } from "lucide-react";
-import { useOrders } from "@/lib/order-store";
 import type { OrderViewModel } from "@/server/queries/orders";
 
 /**
  * Daftar pesanan klien (client component).
  *
- * `dbOrders` berasal dari database (server). Bila kosong (mis. belum ada pesanan
- * nyata pada environment ini), UI jatuh ke mock store agar halaman tetap terisi.
+ * `dbOrders` berasal dari database dan selalu owner-scoped di server.
  */
 export function ClientOrdersList({
   dbOrders,
@@ -28,45 +26,12 @@ export function ClientOrdersList({
   distances?: Record<string, Array<{ vendorName: string; km: number; minutes: number | null; source: string }>>;
 }) {
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
-  const { orders: mockOrders } = useOrders();
-
-  // Normalisasi sumber: pakai DB bila ada, jika tidak pakai mock (bentuk disamakan).
-  const orders: OrderViewModel[] =
-    dbOrders.length > 0
-      ? dbOrders
-      : mockOrders.map((o) => ({
-          id: o.id,
-          bookingId: o.bookingId,
-          customerName: o.customerName,
-          customerWhatsApp: o.customerWhatsApp,
-          eventDate: o.eventDate,
-          eventLocation: o.eventLocation,
-          district: o.district,
-          paymentStatus: o.paymentStatus,
-          paymentType: o.paymentType,
-          status: o.paymentStatus,
-          notes: o.notes ?? "",
-          financials: o.financials,
-          items: o.items.map((i) => ({
-            id: i.id,
-            vendorName: i.vendorName,
-            categoryTitle: i.categoryTitle,
-            categoryId: i.categoryId,
-            packageName: i.packageName,
-            unitPrice: i.unitPrice,
-            quantity: i.quantity,
-            status: i.status,
-          })),
-          escrowStatus: {
-            dpReleased: o.escrowStatus.dpReleased,
-            settlementReleased: o.escrowStatus.settlementReleased,
-          },
-          createdAt: o.createdAt,
-        }));
+  const orders = dbOrders;
 
   const filteredOrders = orders.filter((o) => {
-    if (filter === "active") return o.paymentStatus !== "FULLY_PAID";
-    if (filter === "completed") return o.paymentStatus === "FULLY_PAID";
+    const isTerminal = ["COMPLETED", "REFUNDED", "CANCELLED", "EXPIRED"].includes(o.status);
+    if (filter === "active") return !isTerminal;
+    if (filter === "completed") return isTerminal;
     return true;
   });
 
@@ -92,7 +57,7 @@ export function ClientOrdersList({
               : "bg-white text-hk-charcoal/75 hover:text-hk-charcoal border border-hk-champagne/40 font-medium"
           }`}
         >
-          Aktif / Terbayar DP ({orders.filter((o) => o.paymentStatus !== "FULLY_PAID").length})
+          Aktif ({orders.filter((o) => !["COMPLETED", "REFUNDED", "CANCELLED", "EXPIRED"].includes(o.status)).length})
         </button>
         <button
           onClick={() => setFilter("completed")}
@@ -102,7 +67,7 @@ export function ClientOrdersList({
               : "bg-white text-hk-charcoal/75 hover:text-hk-charcoal border border-hk-champagne/40 font-medium"
           }`}
         >
-          Selesai ({orders.filter((o) => o.paymentStatus === "FULLY_PAID").length})
+          Selesai ({orders.filter((o) => ["COMPLETED", "REFUNDED", "CANCELLED", "EXPIRED"].includes(o.status)).length})
         </button>
       </div>
 
@@ -121,6 +86,9 @@ export function ClientOrdersList({
         ) : (
           filteredOrders.map((order) => {
             const isCompleted = order.paymentStatus === "FULLY_PAID";
+            const isDpPaid = order.paymentStatus === "DP_PAID";
+            const isRefunded = ["REFUND_PENDING", "REFUNDED"].includes(order.status);
+            const isCancelled = ["CANCELLED", "EXPIRED"].includes(order.status);
 
             return (
               <div
@@ -146,9 +114,17 @@ export function ClientOrdersList({
                     }`}
                   >
                     <ShieldCheck className="w-3.5 h-3.5" />
-                    {isCompleted
-                      ? "Selesai & Rekber Tuntas"
-                      : "DP 30% Terverifikasi (Escrow Aman)"}
+                    {isRefunded
+                      ? order.status === "REFUNDED" ? "Dana Telah Dikembalikan" : "Pengembalian Dana Diproses"
+                      : isCancelled
+                        ? "Pesanan Dibatalkan"
+                        : order.status === "COMPLETED"
+                          ? "Acara Selesai"
+                        : isCompleted
+                      ? "Lunas, Dana dalam Rekber"
+                      : isDpPaid
+                        ? "DP Terverifikasi (Escrow Aman)"
+                        : "Menunggu Pembayaran DP"}
                   </span>
                 </div>
 
@@ -201,16 +177,20 @@ export function ClientOrdersList({
                         Rp {order.financials.totalAmount.toLocaleString("id-ID")}
                       </span>
                     </div>
-                    <div className="flex justify-between font-bold text-emerald-800">
-                      <span>DP 30% Terbayar:</span>
+                    <div className={`flex justify-between font-bold ${isDpPaid || isCompleted ? "text-emerald-800" : "text-amber-800"}`}>
+                      <span>{isRefunded ? "Pembayaran Tercatat:" : isCompleted ? "Total Terbayar:" : isDpPaid ? "DP Terbayar:" : isCancelled ? "Tagihan:" : "Tagihan DP:"}</span>
                       <span className="font-manrope tabular-nums">
-                        Rp {order.financials.dpAmount.toLocaleString("id-ID")}
+                        Rp {(isRefunded || isCompleted ? order.financials.paidAmount : isDpPaid ? order.financials.paidDpAmount : order.financials.dpAmount).toLocaleString("id-ID")}
                       </span>
                     </div>
                     <div className="flex justify-between text-hk-charcoal/70 text-[11px]">
-                      <span>Sisa Pelunasan 70% (H-7):</span>
+                      <span>{isRefunded ? "Status Dana:" : isCompleted ? "Sisa Tagihan:" : isCancelled ? "Status Pesanan:" : "Sisa Pelunasan (H-7):"}</span>
                       <span className="font-manrope tabular-nums">
-                        Rp {order.financials.pelunasanAmount.toLocaleString("id-ID")}
+                        {isRefunded
+                          ? order.status === "REFUNDED" ? "Dikembalikan" : "Diproses"
+                          : isCancelled
+                            ? "Dibatalkan"
+                            : `Rp ${(isCompleted ? Math.max(0, order.financials.totalAmount - order.financials.paidAmount) : order.financials.pelunasanAmount).toLocaleString("id-ID")}`}
                       </span>
                     </div>
                   </div>

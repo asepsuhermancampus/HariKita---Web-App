@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  getClientOrderViewModels,
   getClientPhysicalSessions,
   getClientRundown,
 } from "@/server/queries/orders";
@@ -13,10 +14,14 @@ export const dynamic = "force-dynamic";
  * Fallback mock tetap ada di klien bila belum ada data.
  */
 export default async function Page() {
-  const [dbSessions, dbRundown] = await Promise.all([
-    getClientPhysicalSessions(),
-    getClientRundown(),
-  ]);
+  const orders = await getClientOrderViewModels();
+  const activeOrder = orders[0] ?? null;
+  const [dbSessions, dbRundown] = activeOrder
+    ? await Promise.all([
+        getClientPhysicalSessions(activeOrder.id),
+        getClientRundown(activeOrder.id),
+      ])
+    : [[], []];
 
-  return <ClientJadwalClient dbSessions={dbSessions} dbRundown={dbRundown} />;
+  return <ClientJadwalClient activeOrder={activeOrder} dbSessions={dbSessions} dbRundown={dbRundown} />;
 }

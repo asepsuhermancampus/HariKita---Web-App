@@ -1,15 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import {
-  ExternalLink,
   Plus,
   Search,
   Trash2,
-  MessageCircle,
-  Copy,
-  CheckCircle2,
   Filter,
 } from "lucide-react";
 import { Modal } from "@/components/harikita/ui";
@@ -27,59 +22,12 @@ interface Guest {
 }
 
 export default function ClientUndanganPage() {
-  const [copiedIndex, setCopiedIndex] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [rsvpFilter, setRsvpFilter] = useState("ALL");
   const [showAddModal, setShowAddModal] = useState(false);
 
   // Guest List State
-  const [guests, setGuests] = useState<Guest[]>([
-    {
-      id: "g-1",
-      name: "Keluarga Besar Bpk. H. Soedirman",
-      category: "Keluarga Inti",
-      pax: 4,
-      rsvp: "HADIR",
-      sessions: "Sesi 1 (Akad & Resepsi Pagi)",
-      sesiParam: "s1",
-    },
-    {
-      id: "g-2",
-      name: "dr. Hendra & Rekan RSUD Kebumen",
-      category: "Rekan Kerja",
-      pax: 2,
-      rsvp: "HADIR",
-      sessions: "Sesi 2 (Resepsi Sore)",
-      sesiParam: "s2",
-    },
-    {
-      id: "g-3",
-      name: "Alumni SMA Negeri 1 Kebumen '18",
-      category: "Sahabat",
-      pax: 8,
-      rsvp: "HADIR",
-      sessions: "Sesi 2 (Resepsi Sore)",
-      sesiParam: "s2",
-    },
-    {
-      id: "g-4",
-      name: "Ibu Hj. Siti Aminah & Suami",
-      category: "Keluarga",
-      pax: 2,
-      rsvp: "RAGU",
-      sessions: "Sesi 1 (Akad & Resepsi Pagi)",
-      sesiParam: "s1",
-    },
-    {
-      id: "g-5",
-      name: "Bapak Lurah Kebumen Kota & Istri",
-      category: "Tokoh Masyarakat",
-      pax: 2,
-      rsvp: "BELUM_KONFIRMASI",
-      sessions: "Sesi 1 (Akad & Resepsi Pagi)",
-      sesiParam: "s1",
-    },
-  ]);
+  const [guests, setGuests] = useState<Guest[]>([]);
 
   // Form State
   const [newName, setNewName] = useState("");
@@ -87,31 +35,12 @@ export default function ClientUndanganPage() {
   const [newPax, setNewPax] = useState(2);
   const [newSession, setNewSession] = useState("s1");
 
-  const slug = "bima-dan-citra";
-
   // Dynamic KPI Calculations
   const totalPaxInvited = guests.reduce((acc, g) => acc + g.pax, 0);
   const totalHadirPax = guests
     .filter((g) => g.rsvp === "HADIR")
     .reduce((acc, g) => acc + g.pax, 0);
   const totalRaguCount = guests.filter((g) => g.rsvp === "RAGU" || g.rsvp === "BELUM_KONFIRMASI").length;
-
-  const handleCopyLink = (guest: Guest) => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "https://harikita.id";
-    const url = `${origin}/undangan/${slug}?to=${encodeURIComponent(guest.name)}&sesi=${guest.sesiParam}`;
-    navigator.clipboard.writeText(url);
-    setCopiedIndex(guest.id);
-    setTimeout(() => setCopiedIndex(null), 2500);
-  };
-
-  const getWhatsAppMessage = (guest: Guest) => {
-    const origin = typeof window !== "undefined" ? window.location.origin : "https://harikita.id";
-    const url = `${origin}/undangan/${slug}?to=${encodeURIComponent(guest.name)}&sesi=${guest.sesiParam}`;
-
-    return encodeURIComponent(
-      `Assalamu’alaikum Wr. Wb. / Salam Sejahtera,\n\nKepada Yth. ${guest.name},\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Anda untuk hadir dan memberikan doa restu pada hari bahagia pernikahan kami.\n\nDetail waktu, tempat acara, dan buku tamu digital personal Anda dapat diakses melalui tautan resmi berikut:\n${url}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Anda berkenan hadir.\nTerima kasih.\n\nSalam hangat,\nBima & Citra`
-    );
-  };
 
   const handleAddGuest = (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,14 +81,9 @@ export default function ClientUndanganPage() {
         description="Kelola daftar tamu, buat tautan personalisasi WhatsApp otomatis, dan pantau amplop digital QRIS."
         action={
           <div className="flex flex-wrap items-center gap-2.5">
-            <Link
-              href={`/undangan/${slug}`}
-              target="_blank"
-              className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-semibold text-hk-charcoal hover:bg-hk-soft-beige/40"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-hk-taupe" />
-              <span>Buka Web Undangan</span>
-            </Link>
+            <span className="inline-flex min-h-11 items-center rounded-full border border-hk-champagne/60 bg-white px-4 text-xs font-semibold text-hk-charcoal/60">
+              Web undangan belum diterbitkan
+            </span>
             <button
               onClick={() => setShowAddModal(true)}
               className="focus-ring inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-hk-taupe px-4 text-xs font-semibold text-white hover:bg-hk-charcoal"
@@ -200,9 +124,9 @@ export default function ClientUndanganPage() {
         <div className="bg-white p-5 rounded-3xl border border-hk-champagne/40 shadow-xs text-center font-manrope">
           <span className="text-[11px] text-hk-taupe font-semibold uppercase tracking-wider block">Amplop Digital QRIS</span>
           <div className="font-editorial text-3xl font-bold text-hk-charcoal mt-1">
-            Rp 4.850.000
+            Rp 0
           </div>
-          <span className="text-[10px] text-emerald-700 mt-0.5 block">Langsung ke Rek. Pengantin</span>
+          <span className="text-[10px] text-hk-charcoal/60 mt-0.5 block">Belum ada transaksi tercatat</span>
         </div>
       </div>
 
@@ -300,34 +224,7 @@ export default function ClientUndanganPage() {
                       </span>
                     </td>
                     <td className="p-3.5 text-right space-x-1.5">
-                      <button
-                        onClick={() => handleCopyLink(guest)}
-                        aria-label={`Salin tautan unik undangan untuk ${guest.name}`}
-                        className="focus-ring px-3 py-1.5 rounded-full bg-white border border-hk-champagne/60 text-hk-charcoal hover:bg-hk-soft-beige/40 text-[11px] font-medium inline-flex items-center gap-1 shadow-2xs cursor-pointer min-h-[36px]"
-                      >
-                        {copiedIndex === guest.id ? (
-                          <>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
-                            <span>Disalin!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3.5 h-3.5 text-hk-taupe" aria-hidden="true" />
-                            <span>Salin URL</span>
-                          </>
-                        )}
-                      </button>
-
-                      <a
-                        href={`https://wa.me/?text=${getWhatsAppMessage(guest)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Kirim undangan WhatsApp untuk ${guest.name}`}
-                        className="focus-ring px-3 py-1.5 rounded-full bg-emerald-700 text-white hover:bg-emerald-800 text-[11px] font-medium inline-flex items-center gap-1 shadow-2xs min-h-[36px]"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" aria-hidden="true" />
-                        <span className="hidden sm:inline">Kirim WA</span>
-                      </a>
+                      <span className="text-[11px] text-hk-charcoal/60">Terbitkan undangan untuk membagikan tautan.</span>
 
                       <button
                         onClick={() => handleDeleteGuest(guest.id)}

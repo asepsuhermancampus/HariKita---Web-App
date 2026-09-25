@@ -64,6 +64,8 @@ export interface OrderViewModel {
     totalAmount: number;
     dpAmount: number;
     pelunasanAmount: number;
+    paidAmount: number;
+    paidDpAmount: number;
   };
   items: Array<{
     id: string;
@@ -106,12 +108,18 @@ function toSummary(order: {
   };
 }
 
-/** Derive paymentStatus (UNPAID/DP_PAID/FULLY_PAID) dari status order. */
-function derivePaymentStatus(status: string): "UNPAID" | "DP_PAID" | "FULLY_PAID" {
-  if (["FULLY_PAID", "COMPLETED"].includes(status)) return "FULLY_PAID";
-  if (["DP_PAID", "IN_PROGRESS", "WAITING_SETTLEMENT", "DISPUTED", "REFUND_PENDING", "REFUNDED"].includes(status)) {
-    return "DP_PAID";
+/** Derive payment status only from verified paid installments. */
+export function derivePaymentStatus(
+  status: string,
+  installments: Array<{ type: string; status: string }>
+): "UNPAID" | "DP_PAID" | "FULLY_PAID" {
+  if (["REFUND_PENDING", "REFUNDED"].includes(status)) return "UNPAID";
+  const paid = installments.filter((item) => item.status === "PAID");
+  if (paid.some((item) => item.type === "FULL_100") ||
+      (paid.some((item) => item.type === "DP_30") && paid.some((item) => item.type === "SETTLEMENT_70"))) {
+    return "FULLY_PAID";
   }
+  if (paid.some((item) => item.type === "DP_30")) return "DP_PAID";
   return "UNPAID";
 }
 
@@ -124,9 +132,11 @@ function toViewModel(order: {
   eventDate: Date;
   city: string;
   totalAmount: number;
+  snapshotDpPct: number | null;
   status: string;
   notes: string | null;
   createdAt: Date;
+  installments: Array<{ type: string; amount: number; status: string }>;
   items: Array<{
     id: string;
     vendorNameSnapshot: string;
@@ -138,9 +148,16 @@ function toViewModel(order: {
     status: string;
   }>;
 }): OrderViewModel {
-  const dpAmount = Math.floor((order.totalAmount * 30) / 100);
+  const configuredDp = Math.floor((order.totalAmount * (order.snapshotDpPct ?? 30)) / 100);
+  const dpAmount = configuredDp;
   const pelunasanAmount = order.totalAmount - dpAmount;
-  const paymentStatus = derivePaymentStatus(order.status);
+  const paidAmount = order.installments
+    .filter((item) => item.status === "PAID")
+    .reduce((sum, item) => sum + item.amount, 0);
+  const paidDpAmount = order.installments.find(
+    (item) => item.type === "DP_30" && item.status === "PAID"
+  )?.amount ?? 0;
+  const paymentStatus = derivePaymentStatus(order.status, order.installments);
   return {
     id: order.id,
     bookingId: order.orderNumber,
@@ -159,6 +176,8 @@ function toViewModel(order: {
       totalAmount: order.totalAmount,
       dpAmount,
       pelunasanAmount,
+      paidAmount,
+      paidDpAmount,
     },
     items: order.items.map((i) => ({
       id: i.id,
@@ -185,7 +204,7 @@ export async function getClientOrderViewModels(): Promise<OrderViewModel[]> {
 
   const orders = await prisma.order.findMany({
     where: { userId: session.userId },
-    include: { items: true },
+    include: { items: true, installments: true },
     orderBy: { createdAt: "desc" },
   });
   return orders.map(toViewModel);
@@ -200,7 +219,7 @@ export async function getClientOrderViewModelByBooking(
 
   const order = await prisma.order.findFirst({
     where: { OR: [{ orderNumber: bookingId }, { id: bookingId }] },
-    include: { items: true },
+    include: { items: true, installments: true },
   });
   if (!order) return null;
   if (order.userId !== session.userId && session.role !== "ADMIN") return null;
@@ -212,7 +231,7 @@ export async function getAdminOrderViewModels(): Promise<OrderViewModel[]> {
   if (!(await canViewAdmin())) return [];
 
   const orders = await prisma.order.findMany({
-    include: { items: true },
+    include: { items: true, installments: true },
     orderBy: { createdAt: "desc" },
     take: 100,
   });
@@ -429,12 +448,12 @@ export interface RundownRowDTO {
 }
 
 /** Mengambil sesi fisik milik order klien yang login. */
-export async function getClientPhysicalSessions(): Promise<PhysicalSessionDTO[]> {
+export async function getClientPhysicalSessions(orderId: string): Promise<PhysicalSessionDTO[]> {
   const session = await getSession();
   if (!session) return [];
 
   const sessions = await prisma.physicalSession.findMany({
-    where: { order: { userId: session.userId } },
+    where: { orderId, order: { userId: session.userId } },
     include: { order: { include: { items: true } } },
     orderBy: { scheduledDate: "asc" },
   });
@@ -453,12 +472,12 @@ export async function getClientPhysicalSessions(): Promise<PhysicalSessionDTO[]>
 }
 
 /** Mengambil rundown hari H milik order klien yang login. */
-export async function getClientRundown(): Promise<RundownRowDTO[]> {
+export async function getClientRundown(orderId: string): Promise<RundownRowDTO[]> {
   const session = await getSession();
   if (!session) return [];
 
   const rows = await prisma.eventRundown.findMany({
-    where: { order: { userId: session.userId } },
+    where: { orderId, order: { userId: session.userId } },
     orderBy: { sortOrder: "asc" },
   });
 
@@ -481,11 +500,11 @@ export async function getCoordinationData(bookingId?: string) {
         where: {
           OR: [{ orderNumber: bookingId }, { id: bookingId }],
         },
-        include: { items: true, rundowns: { orderBy: { sortOrder: "asc" } } },
+        include: { items: true, installments: true, rundowns: { orderBy: { sortOrder: "asc" } } },
       })
     : await prisma.order.findFirst({
         where: { userId: session.userId },
-        include: { items: true, rundowns: { orderBy: { sortOrder: "asc" } } },
+        include: { items: true, installments: true, rundowns: { orderBy: { sortOrder: "asc" } } },
         orderBy: { createdAt: "desc" },
       });
 

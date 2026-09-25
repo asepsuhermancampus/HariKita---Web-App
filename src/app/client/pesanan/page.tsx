@@ -10,8 +10,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * Riwayat Pesanan Klien — Server Component.
- * Sumber utama: database (owner-scoped). Fallback ke mock store bila kosong,
- * sehingga UI tetap terisi pada environment tanpa data pesanan.
+ * Sumber: database owner-scoped. Akun tanpa pesanan mendapat empty state.
  */
 export default async function ClientPesananPage() {
   const dbOrders = await getClientOrderViewModels();

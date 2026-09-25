@@ -11,10 +11,9 @@ import {
   Sparkles,
   ExternalLink,
 } from "lucide-react";
-import { useOrders } from "@/lib/order-store";
 import { Modal, DatePicker } from "@/components/harikita/ui";
 import { DashPageHeader } from "@/components/dashboard";
-import type { PhysicalSessionDTO, RundownRowDTO } from "@/server/queries/orders";
+import type { OrderViewModel, PhysicalSessionDTO, RundownRowDTO } from "@/server/queries/orders";
 
 interface PhysicalSession {
   id: string;
@@ -32,25 +31,16 @@ interface PhysicalSession {
 }
 
 export function ClientJadwalClient({
+  activeOrder,
   dbSessions,
   dbRundown,
 }: {
+  activeOrder: OrderViewModel | null;
   dbSessions: PhysicalSessionDTO[];
   dbRundown: RundownRowDTO[];
 }) {
   const [activeTab, setActiveTab] = useState<"sessions" | "rundown">("sessions");
-  const { orders } = useOrders();
-
-  // Active order fallback or latest booked order
-  const activeOrder = orders[0] || {
-    id: "HKB-2026-001",
-    customerName: "Aditya & Larasati",
-    eventDate: "2026-10-18",
-    eventLocation: "Pendopo Ronggowarsito Kebumen",
-    items: [],
-  };
-
-  // Sesi: DB bila ada, jika tidak fallback mock di bawah.
+  // Sesi hanya berasal dari database owner-scoped.
   const dbMappedSessions: PhysicalSession[] = dbSessions.map((s) => ({
     id: s.id,
     title: s.title,
@@ -73,54 +63,7 @@ export function ClientJadwalClient({
   }));
 
   // State: Dynamic Physical Sessions
-  const [sessions, setSessions] = useState<PhysicalSession[]>(
-    dbMappedSessions.length > 0
-      ? dbMappedSessions
-      : [
-    {
-      id: "ses-1",
-      title: "Fitting Pertama Busana Pengantin (1st Fitting)",
-      vendor: "Griya Busana Rarasati",
-      category: "Busana Pengantin",
-      date: "15 September 2026",
-      time: "10:00 - 12:00 WIB",
-      location: "Studio Rarasati, Jl. Pahlawan No. 12, Kebumen",
-      status: "COMPLETED",
-      statusLabel: "Selesai Sesi",
-      notes: "Pengukuran badan mempelai pria & wanita selesai, penyesuaian kain jarik.",
-      icon: Scissors,
-      mapsUrl: "https://maps.google.com/?q=Kebumen",
-    },
-    {
-      id: "ses-2",
-      title: "Pengiriman Sample Box Test Food Katering",
-      vendor: "Dapur Rasa Boga Kebumen",
-      category: "Katering",
-      date: "28 September 2026",
-      time: "11:30 WIB",
-      location: "Kediaman Mempelai Wanita (Perum Kebumen Indah B-12)",
-      status: "CONFIRMED",
-      statusLabel: "Terkonfirmasi",
-      notes: "Pengantaran sample box 5 menu utama & es dawet ireng butuh untuk dicicipi keluarga.",
-      icon: Calendar,
-      mapsUrl: "https://maps.google.com/?q=Kebumen",
-    },
-    {
-      id: "ses-3",
-      title: "Fitting Final Busana & Seragam Orang Tua",
-      vendor: "Griya Busana Rarasati",
-      category: "Busana Pengantin",
-      date: "10 Oktober 2026",
-      time: "14:00 - 16:00 WIB",
-      location: "Studio Rarasati, Jl. Pahlawan No. 12, Kebumen",
-      status: "SCHEDULED",
-      statusLabel: "Terjadwal",
-      notes: "Pengecekan akhir kebaya akad, beskap resepsi, dan seragam kedua belah pihak orang tua.",
-      icon: Scissors,
-      mapsUrl: "https://maps.google.com/?q=Kebumen",
-    },
-  ]
-  );
+  const [sessions, setSessions] = useState<PhysicalSession[]>(dbMappedSessions);
 
   // Modal Reschedule State
   const [rescheduleModal, setRescheduleModal] = useState<{
@@ -178,74 +121,20 @@ export function ClientJadwalClient({
     setRescheduleModal({ isOpen: false, sessionId: "", newDate: "", reason: "" });
   };
 
-  // Dynamic Rundown Hari H: prefer DB rundown, fallback hardcoded mock.
-  const dynamicRundown =
-    dbRundown.length > 0
-      ? dbRundown.map((r) => ({
+  const dynamicRundown = dbRundown.map((r) => ({
           time: r.timeSlot,
           activity: r.activity,
           vendor: r.picName ?? "Mitra Vendor",
-          location: r.location ?? activeOrder.eventLocation,
+          location: r.location ?? activeOrder?.eventLocation ?? "Lokasi belum ditentukan",
           role: "",
-        }))
-      : [
-    {
-      time: "04:30 - 06:30 WIB",
-      activity: "MUA Standby & Makeup Pengantin + Ibu",
-      vendor: "Alula MUA & Hijab Styling",
-      location: "Ruang Rias Lokasi Acara",
-      role: "MUA",
-    },
-    {
-      time: "05:30 - 07:00 WIB",
-      activity: "Dokumentasi Detail Gaun, Kotak Mahar & Flatlay Cincin",
-      vendor: "Pradana Cinema & Story",
-      location: activeOrder.eventLocation,
-      role: "Foto-Video",
-    },
-    {
-      time: "06:30 - 07:30 WIB",
-      activity: "Fitting Final & Pasang Ronce Melati Asli",
-      vendor: "Griya Busana Rarasati",
-      location: "Ruang Rias Mempelai",
-      role: "Busana",
-    },
-    {
-      time: "07:30 - 08:30 WIB",
-      activity: "Prosesi Ijab Kabul / Akad Nikah Khidmat",
-      vendor: "Seluruh Vendor Terkoneksi Standby",
-      location: `Meja Akad, ${activeOrder.eventLocation}`,
-      role: "All In",
-    },
-    {
-      time: "08:30 - 09:30 WIB",
-      activity: "Sesi Foto Formal Buku Nikah & Keluarga Inti",
-      vendor: "Pradana Cinema & Story",
-      location: "Pelaminan Adat",
-      role: "Foto",
-    },
-    {
-      time: "09:30 - 13:00 WIB",
-      activity: "Ramah Tamah Resepsi, Pembukaan Prasmanan & Live Music",
-      vendor: "Dapur Rasa Boga Kebumen",
-      location: "Area Jamuan Tamu",
-      role: "Katering",
-    },
-    {
-      time: "13:00 - 14:00 WIB",
-      activity: "Penyerahan Souvenir & Serah Terima Box Flashdisk Liputan",
-      vendor: "Pradana Cinema & Story",
-      location: activeOrder.eventLocation,
-      role: "Dokumentasi",
-    },
-  ];
+        }));
 
   return (
     <div className="flex flex-col gap-6">
       <DashPageHeader
         title="Pelacak Sesi Fisik & Rundown Hari H"
         description="Kelola sesi fitting di Kebumen, pengantaran sample box test food, dan susunan rundown hari H terkoordinasi."
-        action={
+        action={activeOrder ?
           <Link
             href={`/hub-koordinasi?orderId=${activeOrder.id}`}
             className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-hk-taupe px-4 text-xs font-semibold text-white hover:bg-hk-charcoal"
@@ -253,11 +142,11 @@ export function ClientJadwalClient({
             <Sparkles className="w-3.5 h-3.5 text-hk-champagne" />
             <span>Radar Hub Koordinasi</span>
           </Link>
-        }
+        : undefined}
       />
 
       {/* Info Card Active Order */}
-      <div className="bg-white rounded-3xl border border-hk-champagne/40 shadow-xs p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {activeOrder ? <div className="bg-white rounded-3xl border border-hk-champagne/40 shadow-xs p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <span className="text-[10px] font-manrope uppercase tracking-wider font-bold text-hk-taupe">
             Acara Terkoneksi ({activeOrder.id})
@@ -285,6 +174,9 @@ export function ClientJadwalClient({
           Lihat Invoice Resmi
         </Link>
       </div>
+      : <div className="rounded-3xl border border-hk-champagne/40 bg-white p-8 text-center font-manrope text-sm text-hk-charcoal/70">
+          Belum ada pesanan aktif. Jadwal sesi dan rundown akan muncul setelah pesanan dibuat.
+        </div>}
 
       {/* Tab Switcher */}
       <div className="flex flex-wrap gap-2 border-b border-hk-champagne/30 pb-3">
@@ -297,7 +189,7 @@ export function ClientJadwalClient({
           }`}
         >
           <Scissors className="w-4 h-4" />
-          <span>3 Sesi Fisik Wajib (Fitting &amp; Test Food)</span>
+          <span>Sesi Fisik ({sessions.length})</span>
         </button>
         <button
           onClick={() => setActiveTab("rundown")}
@@ -308,13 +200,18 @@ export function ClientJadwalClient({
           }`}
         >
           <Clock className="w-4 h-4" />
-          <span>Rundown Hari H Otomatis ({activeOrder.eventDate})</span>
+          <span>Rundown Hari H Otomatis{activeOrder ? ` (${activeOrder.eventDate})` : ""}</span>
         </button>
       </div>
 
       {activeTab === "sessions" ? (
         /* TAB 1: Sesi Fisik List */
         <div className="space-y-4">
+          {sessions.length === 0 && (
+            <div className="rounded-3xl border border-hk-champagne/40 bg-white p-8 text-center font-manrope text-sm text-hk-charcoal/70">
+              Belum ada sesi fisik terjadwal.
+            </div>
+          )}
           {sessions.map((ses) => {
             const IconComponent = ses.icon;
             return (
@@ -421,11 +318,16 @@ export function ClientJadwalClient({
               </p>
             </div>
             <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-manrope font-semibold border border-emerald-200 self-start sm:self-auto">
-              Status: Seluruh Vendor Standby
+              Status: Rundown tersinkron
             </span>
           </div>
 
           <div className="space-y-3">
+            {dynamicRundown.length === 0 && (
+              <p className="py-8 text-center font-manrope text-sm text-hk-charcoal/70">
+                Rundown belum tersedia untuk pesanan ini.
+              </p>
+            )}
             {dynamicRundown.map((item, index) => (
               <div
                 key={index}
