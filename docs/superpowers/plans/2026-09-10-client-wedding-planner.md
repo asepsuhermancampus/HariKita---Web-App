@@ -2872,10 +2872,9 @@ git commit -m "test(planner): verify wedding planner suite end-to-end"
 
 **2. Placeholder scan:** tidak ada TBD/TODO; semua step berisi kode nyata.
 
-**3. Type consistency:** 
+**3. Type consistency:**
 - `DashBadge` tone = `ok|warn|error|info|neutral` (dikoreksi dari rencana awal).
 - `DashStatCard` pakai `delta`/`deltaTone` (dikoreksi dari `hint`).
 - `DashboardSemiDonutGauge` menerima TEPAT 2 segmen (disesuaikan).
 - `computeReadiness` signature konsisten antara test (Task 5) & implementasi.
 - Nama action konsisten antara Task 4 (definisi) & Task 8-13 (pemakaian).
-
