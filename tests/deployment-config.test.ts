@@ -56,4 +56,6 @@ test("Vercel preview builds cannot migrate the production database", () => {
   assert.equal(pkg.scripts["vercel:build"], "node scripts/vercel_build.mjs");
   assert.match(script, /VERCEL_ENV === "production"/);
   assert.match(script, /db:migrate:deploy/);
+  assert.match(script, /DIRECT_URL/);
+  assert.match(script, /DATABASE_URL/);
 });
