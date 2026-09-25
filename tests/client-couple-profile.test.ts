@@ -22,6 +22,20 @@ test("both Prisma schemas expose canonical couple profile fields", () => {
   }
 });
 
+test("client profile action reads and writes canonical couple fields", () => {
+  const source = read("src/server/actions/client-profile.ts");
+  for (const field of [
+    "accountOwnerRole",
+    "groomName",
+    "brideName",
+    "coupleDisplayName",
+  ]) {
+    assert.match(source, new RegExp(field));
+  }
+  assert.match(source, /mapCoupleProfileOwner/);
+  assert.match(source, /session\.role !== "CLIENT"/);
+});
+
 test("GROOM owner maps groom to User.name and bride to legacy partnerName", () => {
   assert.deepEqual(
     mapCoupleProfileOwner({
