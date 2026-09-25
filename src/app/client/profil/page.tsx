@@ -26,6 +26,15 @@ export default async function ClientProfilePage() {
     redirect("/auth/login?callbackUrl=/client/profil");
   }
 
+  const groomName =
+    profile.groomName ||
+    (profile.accountOwnerRole === "GROOM" ? profile.name : profile.partnerName) ||
+    (profile.accountOwnerRole ? "Mempelai Pria" : profile.name);
+  const brideName =
+    profile.brideName ||
+    (profile.accountOwnerRole === "BRIDE" ? profile.name : profile.partnerName) ||
+    (profile.accountOwnerRole ? "Mempelai Wanita" : profile.partnerName || "Pasangan");
+
   // Hitung sisa hari menuju hari H jika tanggal acara sudah diisi
   let daysUntilEvent: number | null = null;
   if (profile.eventDate) {
@@ -40,7 +49,7 @@ export default async function ClientProfilePage() {
   return (
     <div className="flex flex-col gap-8">
       <DashPageHeader
-        title={`Data Diri: ${profile.name}${profile.partnerName ? ` & ${profile.partnerName}` : ""}`}
+        title={`Data Diri: ${profile.coupleDisplayName || `${groomName} & ${brideName}`}`}
         description="Data ini digunakan untuk kontrak digital SLA, sinkronisasi jadwal fitting, dan penentuan logistik vendor se-Kebumen."
         action={
           <Link
@@ -70,9 +79,9 @@ export default async function ClientProfilePage() {
               </span>
             </div>
             <h2 className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal flex items-center gap-2.5">
-              <span>{profile.name}</span>
+              <span>{groomName}</span>
               <Heart className="w-5 h-5 text-hk-taupe fill-hk-taupe/30" />
-              <span>{profile.partnerName || "Mempelai Pasangan"}</span>
+              <span>{brideName}</span>
             </h2>
 
             <div className="flex flex-wrap items-center gap-4 text-xs font-manrope text-hk-charcoal/80 pt-1">

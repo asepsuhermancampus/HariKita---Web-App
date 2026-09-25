@@ -12,6 +12,18 @@ import { createUpdateClientProfileAction } from "../src/server/actions/client-pr
 const read = (file: string) =>
   readFileSync(path.join(process.cwd(), file), "utf8");
 
+test("profile form renders one canonical two-person section", () => {
+  const source = read("src/app/client/profil/ClientProfileForm.tsx");
+  assert.match(source, /Identitas Kedua Mempelai/);
+  assert.match(source, /Mempelai Pria/);
+  assert.match(source, /Mempelai Wanita/);
+  assert.match(source, /name="accountOwnerRole"/);
+  assert.match(source, /name="groomName"/);
+  assert.match(source, /name="brideName"/);
+  assert.match(source, /name="coupleDisplayName"/);
+  assert.match(source, /md:grid-cols-2/);
+});
+
 test("both Prisma schemas expose canonical couple profile fields", () => {
   for (const file of ["prisma/schema.prisma", "prisma/schema.sqlite.prisma"]) {
     const schema = read(file);

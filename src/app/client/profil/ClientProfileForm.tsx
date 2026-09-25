@@ -5,12 +5,8 @@ import dynamic from "next/dynamic";
 import {
   User,
   Heart,
-  Calendar,
   MapPin,
   Sparkles,
-  Phone,
-  Mail,
-  FileEdit,
   CheckCircle2,
   AlertCircle,
   Loader2,
@@ -38,10 +34,14 @@ interface ClientProfileFormProps {
 }
 
 export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
+  const legacyOwnerName = initialData.name;
+  const legacyPartnerName = initialData.partnerName ?? "";
   const [formData, setFormData] = useState({
-    name: initialData.name || "",
+    accountOwnerRole: initialData.accountOwnerRole ?? "",
+    groomName: initialData.groomName ?? "",
+    brideName: initialData.brideName ?? "",
+    coupleDisplayName: initialData.coupleDisplayName ?? "",
     email: initialData.email || "",
-    partnerName: initialData.partnerName || "",
     eventDate: initialData.eventDate || "",
     eventLocation: initialData.eventLocation || "",
     district: initialData.district || "Kebumen",
@@ -69,9 +69,10 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
   const calculateCompleteness = () => {
     let filled = 0;
     const fields = [
-      formData.name,
+      formData.accountOwnerRole,
+      formData.groomName,
+      formData.brideName,
       initialData.phone,
-      formData.partnerName,
       formData.eventDate,
       formData.eventLocation,
       formData.district,
@@ -84,6 +85,24 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
   };
 
   const completeness = calculateCompleteness();
+
+  const selectOwnerRole = (role: "GROOM" | "BRIDE") => {
+    setFormData((current) => ({
+      ...current,
+      accountOwnerRole: role,
+      groomName:
+        current.groomName ||
+        (role === "GROOM" ? legacyOwnerName : legacyPartnerName),
+      brideName:
+        current.brideName ||
+        (role === "BRIDE" ? legacyOwnerName : legacyPartnerName),
+    }));
+    setFieldErrors((current) => {
+      const next = { ...current };
+      delete next.accountOwnerRole;
+      return next;
+    });
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -109,9 +128,11 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
     setFieldErrors({});
 
     const formPayload = new FormData();
-    formPayload.set("name", formData.name);
+    formPayload.set("accountOwnerRole", formData.accountOwnerRole);
+    formPayload.set("groomName", formData.groomName);
+    formPayload.set("brideName", formData.brideName);
+    formPayload.set("coupleDisplayName", formData.coupleDisplayName);
     formPayload.set("email", formData.email);
-    formPayload.set("partnerName", formData.partnerName);
     formPayload.set("eventDate", formData.eventDate);
     formPayload.set("eventLocation", formData.eventLocation);
     formPayload.set("district", formData.district);
@@ -131,6 +152,33 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
     startTransition(async () => {
       const result = await updateClientProfileAction(formPayload);
       if (result.success) {
+        if (result.data) {
+          setFormData((current) => ({
+            ...current,
+            accountOwnerRole: result.data?.accountOwnerRole ?? "",
+            groomName: result.data?.groomName ?? "",
+            brideName: result.data?.brideName ?? "",
+            coupleDisplayName: result.data?.coupleDisplayName ?? "",
+            email: result.data?.email ?? "",
+            eventDate: result.data?.eventDate ?? "",
+            eventLocation: result.data?.eventLocation ?? "",
+            district: result.data?.district ?? "Kebumen",
+            themePreference: result.data?.themePreference ?? "",
+            notes: result.data?.notes ?? "",
+            rt: result.data?.rt ?? "",
+            rw: result.data?.rw ?? "",
+            dusun: result.data?.dusun ?? "",
+            desa: result.data?.desa ?? "",
+            kecamatan: result.data?.kecamatan ?? "Kebumen",
+            postalCode: result.data?.postalCode ?? "",
+          }));
+          setCoords(
+            typeof result.data.latitude === "number" &&
+              typeof result.data.longitude === "number"
+              ? { lat: result.data.latitude, lng: result.data.longitude }
+              : null
+          );
+        }
         setSuccessMessage(result.message || "Profil berhasil diperbarui!");
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
@@ -192,7 +240,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
         </p>
       </div>
 
-      {/* SECTION 1: Akun & Kontak Utama */}
+      {/* SECTION 1: Identitas Kedua Mempelai */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-hk-champagne/40 shadow-xs space-y-6">
         <div className="flex items-center gap-3 border-b border-hk-champagne/30 pb-4">
           <div className="w-10 h-10 rounded-2xl bg-hk-ivory border border-hk-champagne/40 flex items-center justify-center text-hk-taupe">
@@ -200,44 +248,81 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
           </div>
           <div>
             <h2 className="font-editorial text-2xl font-normal text-hk-charcoal">
-              1. Akun &amp; Kontak Utama
+              1. Identitas Kedua Mempelai
             </h2>
             <p className="text-xs text-hk-charcoal/70 font-manrope">
-              Identitas resmi pemesan paket acara dan penerima konfirmasi escrow.
+              Susunan nama tetap menempatkan mempelai pria di kiri dan mempelai wanita di kanan.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Nama Lengkap */}
-          <div>
-            <label htmlFor="cpf-name" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
-              Nama Lengkap Klien <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <input
-                id="cpf-name"
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Contoh: Bima Pratama"
-                required
-                className={`w-full py-2.5 px-3.5 rounded-xl border text-xs text-hk-charcoal placeholder:text-hk-charcoal/40 font-manrope transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal ${
-                  fieldErrors.name
-                    ? "border-red-400 bg-red-50/50"
-                    : "border-hk-champagne/60 focus:border-hk-taupe bg-hk-ivory/50 focus:bg-white"
+        <div className="space-y-3">
+          <span className="block text-xs font-bold text-hk-charcoal">Posisi pemilik akun</span>
+          <div role="group" aria-label="Posisi pemilik akun" className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {(["GROOM", "BRIDE"] as const).map((role) => (
+              <button
+                key={role}
+                type="button"
+                name="accountOwnerRole"
+                aria-pressed={formData.accountOwnerRole === role}
+                onClick={() => selectOwnerRole(role)}
+                className={`min-h-11 rounded-xl border px-4 py-2 text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal focus-visible:ring-offset-2 ${
+                  formData.accountOwnerRole === role
+                    ? "border-hk-charcoal bg-hk-charcoal text-white"
+                    : "border-hk-champagne/60 bg-hk-ivory/50 text-hk-charcoal hover:bg-hk-soft-beige/60"
                 }`}
-              />
-            </div>
-            {fieldErrors.name && (
-              <p className="text-[11px] text-red-600 mt-1 font-manrope">
-                {fieldErrors.name[0]}
-              </p>
-            )}
+              >
+                {role === "GROOM" ? "Saya mempelai pria" : "Saya mempelai wanita"}
+              </button>
+            ))}
           </div>
+          {fieldErrors.accountOwnerRole && (
+            <p role="alert" className="text-[11px] text-red-600">{fieldErrors.accountOwnerRole[0]}</p>
+          )}
+          {!formData.accountOwnerRole && (
+            <div className="rounded-xl border border-hk-champagne/50 bg-hk-soft-beige/30 p-3 text-[11px] text-hk-charcoal/75">
+              <p>Pilih posisi Anda agar HariKita dapat menempatkan data lama dengan benar.</p>
+              <p className="mt-1 font-semibold">Data lama: {legacyOwnerName} &amp; {legacyPartnerName || "belum diisi"}</p>
+            </div>
+          )}
+        </div>
 
-          {/* Nomor WhatsApp (Read-Only) */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+          <div className="rounded-2xl border border-hk-champagne/40 bg-hk-ivory/40 p-5">
+            <div className="mb-4 flex min-h-6 items-center justify-between gap-3"><h3 className="font-editorial text-xl text-hk-charcoal">Mempelai Pria</h3>{formData.accountOwnerRole === "GROOM" && <span className="rounded-full border border-hk-champagne/60 bg-white px-2.5 py-1 text-[10px] font-bold text-hk-taupe">Pemilik akun</span>}</div>
+            <label htmlFor="cpf-groom-name" className="mb-1.5 block text-xs font-bold text-hk-charcoal">Nama lengkap <span className="text-red-500">*</span></label>
+            <input id="cpf-groom-name" type="text" name="groomName" value={formData.groomName} onChange={handleChange} placeholder="Contoh: Muhammad Rizky" required aria-invalid={Boolean(fieldErrors.groomName)} aria-describedby={fieldErrors.groomName ? "cpf-groom-name-error" : undefined} className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-hk-charcoal placeholder:text-hk-charcoal/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal ${fieldErrors.groomName ? "border-red-400 bg-red-50/50" : "border-hk-champagne/60 bg-hk-ivory/50 focus:bg-white"}`} />
+            {fieldErrors.groomName && <p id="cpf-groom-name-error" role="alert" className="mt-1 text-[11px] text-red-600">{fieldErrors.groomName[0]}</p>}
+          </div>
+          <div className="rounded-2xl border border-hk-champagne/40 bg-hk-ivory/40 p-5">
+            <div className="mb-4 flex min-h-6 items-center justify-between gap-3"><h3 className="font-editorial text-xl text-hk-charcoal">Mempelai Wanita</h3>{formData.accountOwnerRole === "BRIDE" && <span className="rounded-full border border-hk-champagne/60 bg-white px-2.5 py-1 text-[10px] font-bold text-hk-taupe">Pemilik akun</span>}</div>
+            <label htmlFor="cpf-bride-name" className="mb-1.5 block text-xs font-bold text-hk-charcoal">Nama lengkap <span className="text-red-500">*</span></label>
+            <input id="cpf-bride-name" type="text" name="brideName" value={formData.brideName} onChange={handleChange} placeholder="Contoh: Siti Aisyah" required aria-invalid={Boolean(fieldErrors.brideName)} aria-describedby={fieldErrors.brideName ? "cpf-bride-name-error" : undefined} className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-hk-charcoal placeholder:text-hk-charcoal/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal ${fieldErrors.brideName ? "border-red-400 bg-red-50/50" : "border-hk-champagne/60 bg-hk-ivory/50 focus:bg-white"}`} />
+            {fieldErrors.brideName && <p id="cpf-bride-name-error" role="alert" className="mt-1 text-[11px] text-red-600">{fieldErrors.brideName[0]}</p>}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-hk-champagne/40 bg-hk-soft-beige/20 p-5">
+          <div className="mb-2 flex items-center justify-between gap-3">
+            <label htmlFor="cpf-display-name" className="text-xs font-bold text-hk-charcoal">Nama tampilan pasangan</label>
+            <span className="text-[11px] tabular-nums text-hk-charcoal/60">{formData.coupleDisplayName.length}/40</span>
+          </div>
+          <input id="cpf-display-name" name="coupleDisplayName" value={formData.coupleDisplayName} onChange={handleChange} maxLength={40} aria-invalid={Boolean(fieldErrors.coupleDisplayName)} aria-describedby={fieldErrors.coupleDisplayName ? "cpf-display-name-error" : "cpf-display-name-preview"} placeholder="Rizky & Aisyah" className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-hk-charcoal focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal ${fieldErrors.coupleDisplayName ? "border-red-400 bg-red-50/50" : "border-hk-champagne/60 bg-white"}`} />
+          {fieldErrors.coupleDisplayName && <p id="cpf-display-name-error" role="alert" className="mt-1 text-[11px] text-red-600">{fieldErrors.coupleDisplayName[0]}</p>}
+          <div id="cpf-display-name-preview" className="mt-3 border-t border-hk-champagne/40 pt-3">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-hk-taupe">Pratinjau sidebar</span>
+            <p className="mt-1 font-editorial text-xl text-hk-charcoal">{formData.coupleDisplayName || "Rizky & Aisyah"}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 2: Kontak Pemilik Akun */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-hk-champagne/40 shadow-xs space-y-6">
+        <div className="flex items-center gap-3 border-b border-hk-champagne/30 pb-4">
+          <div className="w-10 h-10 rounded-2xl bg-hk-ivory border border-hk-champagne/40 flex items-center justify-center text-hk-taupe"><User className="w-5 h-5" /></div>
+          <div><h2 className="font-editorial text-2xl text-hk-charcoal">2. Kontak Pemilik Akun</h2><p className="text-xs text-hk-charcoal/70">Penerima konfirmasi escrow, kontrak, dan kabar vendor.</p></div>
+        </div>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
             <label className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Nomor WhatsApp (Akun Utama)
@@ -259,8 +344,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
             </p>
           </div>
 
-          {/* Email */}
-          <div className="md:col-span-2">
+          <div>
             <label htmlFor="cpf-email" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
               Alamat Email (Opsional)
             </label>
@@ -272,6 +356,8 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="nama@email.com (Untuk pengiriman e-invoice & kontrak)"
+                aria-invalid={Boolean(fieldErrors.email)}
+                aria-describedby={fieldErrors.email ? "cpf-email-error" : undefined}
                 className={`w-full py-2.5 px-3.5 rounded-xl border text-xs text-hk-charcoal placeholder:text-hk-charcoal/40 font-manrope transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal ${
                   fieldErrors.email
                     ? "border-red-400 bg-red-50/50"
@@ -280,7 +366,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
               />
             </div>
             {fieldErrors.email && (
-              <p className="text-[11px] text-red-600 mt-1 font-manrope">
+              <p id="cpf-email-error" role="alert" className="text-[11px] text-red-600 mt-1 font-manrope">
                 {fieldErrors.email[0]}
               </p>
             )}
@@ -291,7 +377,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
         </div>
       </div>
 
-      {/* SECTION 2: Identitas Pasangan & Tanggal Acara */}
+      {/* SECTION 3: Rencana Hari H */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-hk-champagne/40 shadow-xs space-y-6">
         <div className="flex items-center gap-3 border-b border-hk-champagne/30 pb-4">
           <div className="w-10 h-10 rounded-2xl bg-hk-ivory border border-hk-champagne/40 flex items-center justify-center text-hk-taupe">
@@ -299,7 +385,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
           </div>
           <div>
             <h2 className="font-editorial text-2xl font-normal text-hk-charcoal">
-              2. Pasangan &amp; Rencana Hari H
+              3. Rencana Hari H
             </h2>
             <p className="text-xs text-hk-charcoal/70 font-manrope">
               Rincian mempelai dan koordinasi tempat pelaksanaan di wilayah Kebumen.
@@ -308,34 +394,6 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Nama Pasangan */}
-          <div>
-            <label htmlFor="cpf-partner" className="block text-xs font-bold text-hk-charcoal font-manrope mb-1.5">
-              Nama Pasangan Mempelai
-            </label>
-            <input
-              id="cpf-partner"
-              type="text"
-              name="partnerName"
-              value={formData.partnerName}
-              onChange={handleChange}
-              placeholder="Contoh: Citra Kirana"
-              className={`w-full py-2.5 px-3.5 rounded-xl border text-xs text-hk-charcoal placeholder:text-hk-charcoal/40 font-manrope transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-hk-charcoal ${
-                fieldErrors.partnerName
-                  ? "border-red-400 bg-red-50/50"
-                  : "border-hk-champagne/60 focus:border-hk-taupe bg-hk-ivory/50 focus:bg-white"
-              }`}
-            />
-            {fieldErrors.partnerName && (
-              <p className="text-[11px] text-red-600 mt-1 font-manrope">
-                {fieldErrors.partnerName[0]}
-              </p>
-            )}
-            <p className="text-[10px] text-hk-charcoal/60 mt-1 font-manrope">
-              Akan tertera di sampul undangan dan kontrak kerja vendor bersama.
-            </p>
-          </div>
-
           {/* Tanggal Hari H Acara */}
           <div>
             <DatePicker
@@ -418,7 +476,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
           </div>
           <div>
             <h2 className="font-editorial text-2xl font-normal text-hk-charcoal">
-              Alamat Lengkap &amp; Titik Lokasi Acara
+              4. Alamat Lengkap &amp; Titik Lokasi Acara
             </h2>
             <p className="text-xs text-hk-charcoal/70 font-manrope">
               Dipakai untuk estimasi jarak &amp; waktu tempuh vendor ke lokasi Anda.
@@ -500,7 +558,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
           </div>
           <div>
             <h2 className="font-editorial text-2xl font-normal text-hk-charcoal">
-              3. Preferensi Konsep &amp; Catatan Khusus
+              5. Preferensi Konsep &amp; Catatan Khusus
             </h2>
             <p className="text-xs text-hk-charcoal/70 font-manrope">
               Tuntunan tema riasan MUA, dekorasi panggung, dan arahan bagi vendor.
