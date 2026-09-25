@@ -6,6 +6,7 @@ import { DashCard } from "@/components/dashboard";
 
 interface BudgetItem {
   id: string; itemName: string; isExternal: boolean;
+  isReadOnly: boolean;
   proofs: { id: string; fileUrl: string; fileName: string | null; amount: number | null }[];
 }
 

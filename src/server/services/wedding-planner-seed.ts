@@ -96,8 +96,39 @@ export const DEFAULT_EMERGENCY: SeedEmergency[] = [
   { itemText: "Koper Baju Ganti Santai" },
 ];
 
+export function expectedWeddingPlannerSeedKeys() {
+  return {
+    tasks: DEFAULT_TASKS.map((_, index) => `task-${index}`),
+    kua: DEFAULT_KUA.map((_, index) => `kua-${index}`),
+    emergency: DEFAULT_EMERGENCY.map((_, index) => `emergency-${index}`),
+  };
+}
+
+export function isWeddingPlannerSeedComplete(keys: {
+  tasks: string[];
+  kua: string[];
+  emergency: string[];
+}): boolean {
+  const expected = expectedWeddingPlannerSeedKeys();
+  return (["tasks", "kua", "emergency"] as const).every((type) =>
+    keys[type].length === expected[type].length &&
+    expected[type].every((key) => keys[type].includes(key))
+  );
+}
+
 /** Rekonsiliasi default berdasarkan key stabil; aman dipanggil ulang atau paralel. */
 export async function ensureWeddingPlannerSeeded(userId: string): Promise<void> {
+  const [taskRows, kuaRows, emergencyRows] = await Promise.all([
+    prisma.weddingTask.findMany({ where: { userId, seedKey: { not: null } }, select: { seedKey: true } }),
+    prisma.kuaRequirement.findMany({ where: { userId, seedKey: { not: null } }, select: { seedKey: true } }),
+    prisma.weddingEmergencyItem.findMany({ where: { userId, seedKey: { not: null } }, select: { seedKey: true } }),
+  ]);
+  if (isWeddingPlannerSeedComplete({
+    tasks: taskRows.flatMap((row) => row.seedKey ?? []),
+    kua: kuaRows.flatMap((row) => row.seedKey ?? []),
+    emergency: emergencyRows.flatMap((row) => row.seedKey ?? []),
+  })) return;
+
   await prisma.$transaction(async (tx) => {
     await Promise.all([
       ...DEFAULT_TASKS.map((task, index) =>

@@ -7,8 +7,19 @@ import {
   PLANNER_STAGES,
   BUDGET_CATEGORIES,
 } from "../src/lib/validations/wedding-planner";
-import { DEFAULT_TASKS, DEFAULT_KUA, DEFAULT_EMERGENCY } from "../src/server/services/wedding-planner-seed";
-import { computeReadiness, resolveBudgetAmounts } from "../src/server/queries/wedding-planner";
+import {
+  DEFAULT_TASKS,
+  DEFAULT_KUA,
+  DEFAULT_EMERGENCY,
+  isWeddingPlannerSeedComplete,
+  expectedWeddingPlannerSeedKeys,
+} from "../src/server/services/wedding-planner-seed";
+import {
+  computeReadiness,
+  resolveBudgetAmounts,
+  selectPlannerEventDate,
+  sumResolvedBudget,
+} from "../src/server/queries/wedding-planner";
 
 test("validateBudgetItemInput accepts a valid item and coerces amounts to Int", () => {
   const res = validateBudgetItemInput({
@@ -61,6 +72,26 @@ test("default seed arrays have expected sizes and shapes", () => {
   assert.equal(DEFAULT_EMERGENCY.length, 13);
   assert.ok(DEFAULT_TASKS.every((t) => t.stage >= 1 && t.stage <= 7));
   assert.equal(DEFAULT_KUA.filter((k) => k.isRequired).length, 26);
+});
+
+test("planner seed fast-path only accepts every keyed default", () => {
+  const keys = expectedWeddingPlannerSeedKeys();
+  assert.equal(
+    isWeddingPlannerSeedComplete({
+      tasks: keys.tasks,
+      kua: keys.kua,
+      emergency: keys.emergency,
+    }),
+    true
+  );
+  assert.equal(
+    isWeddingPlannerSeedComplete({
+      tasks: keys.tasks.slice(1),
+      kua: keys.kua,
+      emergency: keys.emergency,
+    }),
+    false
+  );
 });
 
 test("computeReadiness returns 0 overall when nothing done", () => {
@@ -197,5 +228,49 @@ test("MANUAL budget preserves the user's explicit status", () => {
       linkedOrderItem: null,
     }),
     { estimatedAmount: 500_000, paidAmount: 0, status: "SIAPKAN" }
+  );
+});
+
+test("persisted AUTO budget excludes terminal order states", () => {
+  assert.deepEqual(
+    resolveBudgetAmounts({
+      linkMode: "AUTO",
+      estimatedAmount: 0,
+      paidAmount: 0,
+      linkedOrderItem: {
+        subtotal: 350_000,
+        status: "ACCEPTED",
+        order: {
+          status: "REFUNDED",
+          totalAmount: 350_000,
+          installments: [{ amount: 350_000, status: "PAID" }],
+          refunds: [{ amount: 350_000, status: "PAID" }],
+        },
+      },
+    }),
+    { estimatedAmount: 0, paidAmount: 0, status: "BELUM" }
+  );
+});
+
+test("planner event date prefers profile then falls back to nearest order", () => {
+  assert.equal(selectPlannerEventDate("2027-01-02", "2027-06-15"), "2027-01-02");
+  assert.equal(selectPlannerEventDate(null, "2027-06-15"), "2027-06-15");
+  assert.equal(selectPlannerEventDate(null, null), null);
+});
+
+test("planner ignores past profile event date when a future order exists", () => {
+  assert.equal(
+    selectPlannerEventDate("2020-01-01", "2027-06-15", "2026-09-25"),
+    "2027-06-15"
+  );
+});
+
+test("planner readiness sums persisted and automatic order budget amounts", () => {
+  assert.deepEqual(
+    sumResolvedBudget([
+      { estimatedAmount: 500_000, paidAmount: 100_000 },
+      { estimatedAmount: 350_000, paidAmount: 0 },
+    ]),
+    { estimated: 850_000, paid: 100_000 }
   );
 });

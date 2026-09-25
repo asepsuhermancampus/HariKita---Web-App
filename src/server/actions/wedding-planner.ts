@@ -302,18 +302,31 @@ export async function linkBudgetToOrderItem(
     where: { id: orderItemId, order: { userId } },
   });
   if (!owns) return { success: false, error: "Pesanan tidak ditemukan untuk akun ini." };
+  const duplicateLink = await prisma.weddingBudgetItem.findFirst({
+    where: { userId, linkedOrderItemId: orderItemId, id: { not: id } },
+    select: { id: true },
+  });
+  if (duplicateLink) return { success: false, error: "Pesanan sudah ditautkan ke pos anggaran lain." };
   const proofCount = await prisma.budgetPaymentProof.count({ where: { budgetItemId: id, userId } });
   if (proofCount > 0) return { success: false, error: "Hapus bukti pembayaran sebelum menautkan pos." };
 
-  const res = await prisma.weddingBudgetItem.updateMany({
-    where: { id, userId },
-    data: {
-      linkedOrderItemId: orderItemId,
-      linkMode,
-      isExternal: false,
-      ...(linkMode === "AUTO" ? { estimatedAmount: 0, paidAmount: 0 } : {}),
-    },
-  });
+  let res: { count: number };
+  try {
+    res = await prisma.weddingBudgetItem.updateMany({
+      where: { id, userId },
+      data: {
+        linkedOrderItemId: orderItemId,
+        linkMode,
+        isExternal: false,
+        ...(linkMode === "AUTO" ? { estimatedAmount: 0, paidAmount: 0 } : {}),
+      },
+    });
+  } catch (error) {
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "P2002") {
+      return { success: false, error: "Pesanan sudah ditautkan ke pos anggaran lain." };
+    }
+    throw error;
+  }
   if (res.count === 0) return { success: false, error: "Pos anggaran tidak ditemukan." };
   revalidatePlanner();
   return { success: true, message: "Pos ditautkan ke pesanan HariKita." };

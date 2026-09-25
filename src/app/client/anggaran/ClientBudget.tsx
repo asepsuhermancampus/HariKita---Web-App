@@ -16,6 +16,7 @@ interface BudgetItem {
   estimatedAmount: number; paidAmount: number; status: string; note: string | null;
   isExternal: boolean; linkMode: string;
   linkedOrderItemId: string | null; linkedOrderLabel: string | null;
+  isReadOnly: boolean;
   proofs: { id: string; fileUrl: string; fileName: string | null; amount: number | null }[];
 }
 
@@ -92,7 +93,9 @@ export function ClientBudget({
               {rp(Math.max(0, b.estimatedAmount - b.paidAmount))}
             </span>,
             <DashBadge key="st" tone={statusTone(b.status)}>{b.status}</DashBadge>,
-            b.linkedOrderItemId ? (
+            b.isReadOnly ? (
+              <span key="a" className="font-manrope text-[10px] text-hk-taupe">Otomatis</span>
+            ) : b.linkedOrderItemId ? (
               <button
                 key="a"
                 onClick={() => run(() => unlinkBudgetItem(b.id), "Gagal melepas tautan pesanan.")}

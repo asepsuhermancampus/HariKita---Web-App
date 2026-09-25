@@ -26,6 +26,7 @@ export async function setSessionCookie(data: SessionData): Promise<void> {
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: COOKIE_MAX_AGE,
   });
@@ -84,6 +85,7 @@ export async function setOtpCookie(otpId: string): Promise<void> {
   cookieStore.set(OTP_COOKIE_NAME, otpId, {
     httpOnly: true,
     sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: OTP_COOKIE_MAX_AGE,
   });

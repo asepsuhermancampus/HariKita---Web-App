@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { derivePaymentStatus } from "../src/server/queries/orders";
+import { safeCallbackPath } from "../src/lib/auth-utils";
 
 test("Vercel build deploys pending Prisma migrations before Next.js build", () => {
   const config = JSON.parse(
@@ -58,4 +59,14 @@ test("Vercel preview builds cannot migrate the production database", () => {
   assert.match(script, /db:migrate:deploy/);
   assert.match(script, /DIRECT_URL/);
   assert.match(script, /DATABASE_URL/);
+});
+
+test("login callback accepts local paths and rejects protocol-relative redirects", () => {
+  assert.equal(safeCallbackPath("/client/perencanaan"), "/client/perencanaan");
+  assert.equal(safeCallbackPath("//evil.example"), null);
+  assert.equal(safeCallbackPath("/\\evil.example"), null);
+  assert.equal(safeCallbackPath("/%5cevil.example"), null);
+  assert.equal(safeCallbackPath("/%2f%2fevil.example"), null);
+  assert.equal(safeCallbackPath("/%255cevil.example"), null);
+  assert.equal(safeCallbackPath("https://evil.example"), null);
 });

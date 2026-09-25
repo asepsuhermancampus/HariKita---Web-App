@@ -25,6 +25,7 @@ import {
   type OtpPurpose,
 } from "@/server/services/otp-service";
 import { sendOtpEmail, sendPinChangedEmail } from "@/server/services/email-service";
+import { safeCallbackPath } from "@/lib/auth-utils";
 
 /**
  * Login action — verifikasi nomor HP + PIN, set session cookie.
@@ -59,7 +60,7 @@ export async function loginAction(
     if (!user || !user.pin) {
       return {
         success: false,
-        error: "Nomor HP tidak terdaftar atau belum memiliki PIN.",
+        error: "Nomor HP atau PIN tidak valid.",
       };
     }
 
@@ -76,7 +77,7 @@ export async function loginAction(
     // Verifikasi PIN dengan bcrypt
     const isPinValid = await bcrypt.compare(pin, user.pin);
     if (!isPinValid) {
-      return { success: false, error: "PIN salah. Silakan coba lagi." };
+      return { success: false, error: "Nomor HP atau PIN tidak valid." };
     }
 
     // Set session cookie
@@ -91,9 +92,7 @@ export async function loginAction(
     // Tentukan redirect destination
     const defaultDashboard = getDashboardPath(user.role);
     const redirectTo =
-      callbackUrl && callbackUrl.startsWith("/")
-        ? callbackUrl
-        : defaultDashboard;
+      safeCallbackPath(callbackUrl) ?? defaultDashboard;
 
     return { success: true, redirectTo };
   } catch (error) {

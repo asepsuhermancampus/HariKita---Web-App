@@ -780,7 +780,7 @@ model WeddingBudgetItem {
   note              String?
   isExternal        Boolean   @default(true)
   linkMode          String    @default("MANUAL")
-  linkedOrderItemId String?
+  linkedOrderItemId String? @unique
   linkedOrderItem   OrderItem? @relation(fields: [linkedOrderItemId], references: [id], onDelete: SetNull)
   sortOrder         Int       @default(0)
   createdAt         DateTime  @default(now())
@@ -789,7 +789,6 @@ model WeddingBudgetItem {
   proofs            BudgetPaymentProof[]
 
   @@index([userId, sortOrder])
-  @@index([linkedOrderItemId])
 }
 
 model BudgetPaymentProof {
