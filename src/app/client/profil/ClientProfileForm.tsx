@@ -87,16 +87,21 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
   const completeness = calculateCompleteness();
 
   const selectOwnerRole = (role: "GROOM" | "BRIDE") => {
-    setFormData((current) => ({
-      ...current,
-      accountOwnerRole: role,
-      groomName:
-        current.groomName ||
-        (role === "GROOM" ? legacyOwnerName : legacyPartnerName),
-      brideName:
-        current.brideName ||
-        (role === "BRIDE" ? legacyOwnerName : legacyPartnerName),
-    }));
+    setFormData((current) => {
+      if (current.accountOwnerRole) {
+        return { ...current, accountOwnerRole: role };
+      }
+      return {
+        ...current,
+        accountOwnerRole: role,
+        groomName:
+          current.groomName ||
+          (role === "GROOM" ? legacyOwnerName : legacyPartnerName),
+        brideName:
+          current.brideName ||
+          (role === "BRIDE" ? legacyOwnerName : legacyPartnerName),
+      };
+    });
     setFieldErrors((current) => {
       const next = { ...current };
       delete next.accountOwnerRole;
@@ -258,7 +263,13 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
 
         <div className="space-y-3">
           <span className="block text-xs font-bold text-hk-charcoal">Posisi pemilik akun</span>
-          <div role="group" aria-label="Posisi pemilik akun" className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <div
+            role="group"
+            aria-label="Posisi pemilik akun"
+            aria-invalid={Boolean(fieldErrors.accountOwnerRole)}
+            aria-describedby={fieldErrors.accountOwnerRole ? "cpf-owner-role-error" : undefined}
+            className="grid grid-cols-1 gap-2 sm:grid-cols-2"
+          >
             {(["GROOM", "BRIDE"] as const).map((role) => (
               <button
                 key={role}
@@ -277,7 +288,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
             ))}
           </div>
           {fieldErrors.accountOwnerRole && (
-            <p role="alert" className="text-[11px] text-red-600">{fieldErrors.accountOwnerRole[0]}</p>
+            <p id="cpf-owner-role-error" role="alert" className="text-[11px] text-red-600">{fieldErrors.accountOwnerRole[0]}</p>
           )}
           {!formData.accountOwnerRole && (
             <div className="rounded-xl border border-hk-champagne/50 bg-hk-soft-beige/30 p-3 text-[11px] text-hk-charcoal/75">

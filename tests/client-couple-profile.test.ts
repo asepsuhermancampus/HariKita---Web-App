@@ -24,6 +24,46 @@ test("profile form renders one canonical two-person section", () => {
   assert.match(source, /md:grid-cols-2/);
 });
 
+test("legacy banner keeps account name left until owner role exists", () => {
+  const source = read("src/app/client/profil/page.tsx");
+  assert.match(source, /if \(!profile\.accountOwnerRole\)/);
+  assert.match(source, /leftName = profile\.name/);
+  assert.match(source, /rightName = profile\.partnerName \|\| "Pasangan"/);
+});
+
+test("owner role migration runs only on the first role selection", () => {
+  const source = read("src/app/client/profil/ClientProfileForm.tsx");
+  assert.match(source, /if \(current\.accountOwnerRole\)/);
+  assert.match(source, /return \{ \.\.\.current, accountOwnerRole: role \}/);
+});
+
+test("successful save reads every returned form field and coordinates back into state", () => {
+  const source = read("src/app/client/profil/ClientProfileForm.tsx");
+  for (const field of [
+    "accountOwnerRole", "groomName", "brideName", "coupleDisplayName",
+    "email", "eventDate", "eventLocation", "district", "themePreference",
+    "notes", "rt", "rw", "dusun", "desa", "kecamatan", "postalCode",
+  ]) {
+    assert.match(source, new RegExp(`${field}: result\\.data\\?\\.${field}`));
+  }
+  assert.match(source, /setCoords\(/);
+  assert.match(source, /result\.data\.latitude/);
+  assert.match(source, /result\.data\.longitude/);
+});
+
+test("identity UI preserves mobile order, error semantics, and overflow safety", () => {
+  const form = read("src/app/client/profil/ClientProfileForm.tsx");
+  const page = read("src/app/client/profil/page.tsx");
+  assert.ok(form.indexOf('name="groomName"') < form.indexOf('name="brideName"'));
+  assert.match(form, /grid grid-cols-1 gap-4 md:grid-cols-2/);
+  assert.match(form, /role="group"[^>]*aria-invalid=/);
+  assert.match(form, /aria-describedby=\{fieldErrors\.accountOwnerRole \? "cpf-owner-role-error"/);
+  assert.match(form, /id="cpf-owner-role-error" role="alert"/);
+  assert.match(page, /flex flex-wrap[^"\n]*min-w-0/);
+  assert.match(page, /min-w-0 break-words/);
+  assert.match(page, /shrink-0/);
+});
+
 test("both Prisma schemas expose canonical couple profile fields", () => {
   for (const file of ["prisma/schema.prisma", "prisma/schema.sqlite.prisma"]) {
     const schema = read(file);
