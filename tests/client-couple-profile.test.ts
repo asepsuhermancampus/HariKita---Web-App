@@ -5,6 +5,7 @@ import path from "node:path";
 import {
   mapCoupleProfileOwner,
   resolveCoupleDisplayName,
+  transitionCoupleOwnerRole,
 } from "../src/lib/client-couple-profile";
 import { validateClientProfileInput } from "../src/lib/validations/client-profile";
 import { createUpdateClientProfileAction } from "../src/server/actions/client-profile-core";
@@ -31,10 +32,46 @@ test("legacy banner keeps account name left until owner role exists", () => {
   assert.match(source, /rightName = profile\.partnerName \|\| "Pasangan"/);
 });
 
-test("owner role migration runs only on the first role selection", () => {
-  const source = read("src/app/client/profil/ClientProfileForm.tsx");
-  assert.match(source, /if \(current\.accountOwnerRole\)/);
-  assert.match(source, /return \{ \.\.\.current, accountOwnerRole: role \}/);
+for (const [role, groomName, brideName] of [
+  ["GROOM", "Bima", "Citra"],
+  ["BRIDE", "Citra", "Bima"],
+] as const) {
+  test(`first ${role} owner selection maps legacy names into canonical positions`, () => {
+    const result = transitionCoupleOwnerRole(
+      { accountOwnerRole: "", groomName: "", brideName: "", email: "kept@example.com" },
+      role,
+      "Bima",
+      "Citra"
+    );
+
+    assert.deepEqual(result, {
+      accountOwnerRole: role,
+      groomName,
+      brideName,
+      email: "kept@example.com",
+    });
+  });
+}
+
+test("switching an existing owner role preserves both canonical names", () => {
+  const result = transitionCoupleOwnerRole(
+    {
+      accountOwnerRole: "GROOM",
+      groomName: "Bima Edited",
+      brideName: "Citra Edited",
+      email: "kept@example.com",
+    },
+    "BRIDE",
+    "Legacy Owner",
+    "Legacy Partner"
+  );
+
+  assert.deepEqual(result, {
+    accountOwnerRole: "BRIDE",
+    groomName: "Bima Edited",
+    brideName: "Citra Edited",
+    email: "kept@example.com",
+  });
 });
 
 test("successful save reads every returned form field and coordinates back into state", () => {

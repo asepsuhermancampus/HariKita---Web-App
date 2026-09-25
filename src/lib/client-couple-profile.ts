@@ -1,5 +1,32 @@
 export type AccountOwnerRole = "GROOM" | "BRIDE";
 
+export function transitionCoupleOwnerRole<
+  T extends {
+    accountOwnerRole: AccountOwnerRole | "";
+    groomName: string;
+    brideName: string;
+  },
+>(
+  current: T,
+  role: AccountOwnerRole,
+  legacyOwnerName: string,
+  legacyPartnerName: string
+): T {
+  if (current.accountOwnerRole) {
+    return { ...current, accountOwnerRole: role };
+  }
+  return {
+    ...current,
+    accountOwnerRole: role,
+    groomName:
+      current.groomName ||
+      (role === "GROOM" ? legacyOwnerName : legacyPartnerName),
+    brideName:
+      current.brideName ||
+      (role === "BRIDE" ? legacyOwnerName : legacyPartnerName),
+  };
+}
+
 export function mapCoupleProfileOwner(input: {
   accountOwnerRole: AccountOwnerRole;
   groomName: string;

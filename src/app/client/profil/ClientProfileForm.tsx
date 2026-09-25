@@ -23,6 +23,10 @@ import {
 } from "@/lib/validations/client-profile";
 import { DatePicker } from "@/components/harikita/ui";
 import { lookupPostalCode } from "@/lib/geo/postal-codes";
+import {
+  transitionCoupleOwnerRole,
+  type AccountOwnerRole,
+} from "@/lib/client-couple-profile";
 
 const LocationPickerMap = dynamic(
   () => import("@/components/maps/LocationPickerMap").then((m) => m.LocationPickerMap),
@@ -37,7 +41,7 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
   const legacyOwnerName = initialData.name;
   const legacyPartnerName = initialData.partnerName ?? "";
   const [formData, setFormData] = useState({
-    accountOwnerRole: initialData.accountOwnerRole ?? "",
+    accountOwnerRole: (initialData.accountOwnerRole ?? "") as AccountOwnerRole | "",
     groomName: initialData.groomName ?? "",
     brideName: initialData.brideName ?? "",
     coupleDisplayName: initialData.coupleDisplayName ?? "",
@@ -87,21 +91,14 @@ export function ClientProfileForm({ initialData }: ClientProfileFormProps) {
   const completeness = calculateCompleteness();
 
   const selectOwnerRole = (role: "GROOM" | "BRIDE") => {
-    setFormData((current) => {
-      if (current.accountOwnerRole) {
-        return { ...current, accountOwnerRole: role };
-      }
-      return {
-        ...current,
-        accountOwnerRole: role,
-        groomName:
-          current.groomName ||
-          (role === "GROOM" ? legacyOwnerName : legacyPartnerName),
-        brideName:
-          current.brideName ||
-          (role === "BRIDE" ? legacyOwnerName : legacyPartnerName),
-      };
-    });
+    setFormData((current) =>
+      transitionCoupleOwnerRole(
+        current,
+        role,
+        legacyOwnerName,
+        legacyPartnerName
+      )
+    );
     setFieldErrors((current) => {
       const next = { ...current };
       delete next.accountOwnerRole;
