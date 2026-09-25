@@ -9,9 +9,17 @@ import {
 } from "../src/lib/client-couple-profile";
 import { validateClientProfileInput } from "../src/lib/validations/client-profile";
 import { createUpdateClientProfileAction } from "../src/server/actions/client-profile-core";
+import { getDashboardPath } from "../src/lib/session";
 
 const read = (file: string) =>
   readFileSync(path.join(process.cwd(), file), "utf8");
+
+test("client login defaults to the Ringkasan route", () => {
+  assert.equal(getDashboardPath("CLIENT"), "/client");
+  assert.equal(getDashboardPath("VENDOR"), "/dashboard/vendor/profil");
+  assert.equal(getDashboardPath("BA"), "/dashboard/ba");
+  assert.equal(getDashboardPath("ADMIN"), "/admin");
+});
 
 test("profile form renders one canonical two-person section", () => {
   const source = read("src/app/client/profil/ClientProfileForm.tsx");
