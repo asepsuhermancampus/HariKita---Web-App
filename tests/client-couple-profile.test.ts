@@ -90,6 +90,48 @@ test("couple profile validator rejects invalid role and long display name", () =
   assert.ok(result.errors?.coupleDisplayName);
 });
 
+for (const { field, value } of [
+  { field: "groomName", value: "x" },
+  { field: "groomName", value: "x".repeat(101) },
+  { field: "brideName", value: "x" },
+  { field: "brideName", value: "x".repeat(101) },
+  { field: "coupleDisplayName", value: "x" },
+] as const) {
+  test(`couple profile validator rejects ${field} length ${value.length}`, () => {
+    const result = validateClientProfileInput({
+      ...validProfile,
+      [field]: value,
+    });
+
+    assert.equal(result.success, false);
+    assert.ok(result.errors?.[field]);
+  });
+}
+
+test("couple profile validator accepts exact identity length boundaries", () => {
+  for (const input of [
+    {
+      ...validProfile,
+      groomName: "ab",
+      brideName: "cd",
+      coupleDisplayName: "ef",
+    },
+    {
+      ...validProfile,
+      groomName: "g".repeat(100),
+      brideName: "b".repeat(100),
+      coupleDisplayName: "d".repeat(40),
+    },
+  ]) {
+    const result = validateClientProfileInput(input);
+
+    assert.equal(result.success, true);
+    assert.equal(result.data?.groomName, input.groomName);
+    assert.equal(result.data?.brideName, input.brideName);
+    assert.equal(result.data?.coupleDisplayName, input.coupleDisplayName);
+  }
+});
+
 test("couple profile validator preserves non-identity validation rules", () => {
   const result = validateClientProfileInput({
     ...validProfile,

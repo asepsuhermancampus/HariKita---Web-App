@@ -126,3 +126,91 @@ Exit code: `0`.
 
 - `npm run typecheck` cannot pass until the next integration task updates `src/server/actions/client-profile.ts` to consume canonical validator output and derive `name`/`partnerName` via `mapCoupleProfileOwner()`. Editing that server action here would violate the explicit pure-domain-only scope and overlap the documented Task 2 to Task 3 boundary.
 - The full runtime test suite passes because no test currently typechecks the stale server-action destructuring contract.
+
+## Review Fix Round 1/5
+
+Added table-driven rejection coverage for `groomName` lengths 1 and 101, `brideName` lengths 1 and 101, and `coupleDisplayName` length 1. Added acceptance coverage for exact name boundaries 2 and 100 plus display-name boundaries 2 and 40.
+
+### TDD RED
+
+The production validation was temporarily mutated from `< 2`/`> 100` and `< 2`/`> 40` to `< 1`/`> 101` and `< 1`/`> 41`. This mutation represents the off-by-one regressions the new tests must catch.
+
+Command:
+
+```powershell
+npx tsx --test tests/client-couple-profile.test.ts
+```
+
+Exact output summary:
+
+```text
+tests 13
+suites 0
+pass 7
+fail 6
+cancelled 0
+skipped 0
+todo 0
+```
+
+Expected failures:
+
+```text
+couple profile validator rejects invalid role and long display name
+couple profile validator rejects groomName length 1
+couple profile validator rejects groomName length 101
+couple profile validator rejects brideName length 1
+couple profile validator rejects brideName length 101
+couple profile validator rejects coupleDisplayName length 1
+```
+
+### TDD GREEN
+
+Restored the required 2-100 name and 2-40 display-name limits.
+
+Command:
+
+```powershell
+npx tsx --test tests/client-couple-profile.test.ts
+```
+
+Exact output summary:
+
+```text
+tests 13
+suites 0
+pass 13
+fail 0
+cancelled 0
+skipped 0
+todo 0
+```
+
+### Full Suite
+
+Command:
+
+```powershell
+npm test
+```
+
+Exact output summary:
+
+```text
+tests 339
+suites 0
+pass 339
+fail 0
+cancelled 0
+skipped 0
+todo 0
+```
+
+### Fix Self-Review
+
+- Every requested rejection length has a field-specific assertion.
+- Exact lower and upper accepted boundaries assert success and returned values.
+- Expectations use literal lengths independent from validator constants.
+- Temporary mutation was fully reverted; production validator diff remains unchanged.
+- Legacy validator fields remain removed per ruling.
+- Accepted Task 2 to Task 3 typecheck seam remains unchanged.
