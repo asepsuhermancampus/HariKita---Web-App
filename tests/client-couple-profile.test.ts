@@ -7,6 +7,7 @@ import {
   resolveCoupleDisplayName,
 } from "../src/lib/client-couple-profile";
 import { validateClientProfileInput } from "../src/lib/validations/client-profile";
+import { createUpdateClientProfileAction } from "../src/server/actions/client-profile-core";
 
 const read = (file: string) =>
   readFileSync(path.join(process.cwd(), file), "utf8");
@@ -22,18 +23,171 @@ test("both Prisma schemas expose canonical couple profile fields", () => {
   }
 });
 
-test("client profile action reads and writes canonical couple fields", () => {
-  const source = read("src/server/actions/client-profile.ts");
-  for (const field of [
-    "accountOwnerRole",
-    "groomName",
-    "brideName",
-    "coupleDisplayName",
-  ]) {
-    assert.match(source, new RegExp(field));
+const actionState = {
+  transactionOperations: [] as unknown[],
+  userUpdates: [] as unknown[],
+  profileUpserts: [] as unknown[],
+  findUniqueCalls: [] as unknown[],
+  revalidatedPaths: [] as unknown[][],
+};
+
+const profileReadback = {
+  id: "session-client-id",
+  name: "Siti Nur Aisyah",
+  phone: "081234567890",
+  email: "client@example.com",
+  partnerName: "Muhammad Rizky Pratama",
+  accountOwnerRole: "BRIDE" as const,
+  groomName: "Muhammad Rizky Pratama",
+  brideName: "Siti Nur Aisyah",
+  coupleDisplayName: "Rizky & Aisyah",
+  eventDate: "2027-06-15",
+  eventLocation: "Gedung Setda Kebumen",
+  district: "Kebumen",
+  themePreference: "Jawa Modern Minimalis",
+  notes: "Akad pagi",
+  rt: "01",
+  rw: "02",
+  dusun: "Krajan",
+  desa: "Kutosari",
+  kecamatan: "Kebumen",
+  kabupaten: "Kebumen",
+  postalCode: "54317",
+  latitude: -7.668,
+  longitude: 109.652,
+};
+
+const createAction = (role: string) =>
+  createUpdateClientProfileAction({
+    getSession: async () => ({ userId: "session-client-id", role }),
+    userUpdate: (input) => {
+      actionState.userUpdates.push(input);
+      return { kind: "user.update", input };
+    },
+    clientProfileUpsert: (input) => {
+      actionState.profileUpserts.push(input);
+      return { kind: "clientProfile.upsert", input };
+    },
+    transaction: async (operations) => {
+      actionState.transactionOperations = operations;
+    },
+    getClientProfile: async () => {
+      actionState.findUniqueCalls.push({ userId: "session-client-id" });
+      return profileReadback;
+    },
+    revalidatePath: (...args) => {
+      actionState.revalidatedPaths.push(args);
+    },
+  });
+
+const profileForm = (accountOwnerRole: "GROOM" | "BRIDE") => {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries({
+    accountOwnerRole,
+    groomName: "Muhammad Rizky Pratama",
+    brideName: "Siti Nur Aisyah",
+    coupleDisplayName: "Rizky & Aisyah",
+    email: "client@example.com",
+    eventDate: "2027-06-15",
+    eventLocation: "Gedung Setda Kebumen",
+    district: "Kebumen",
+    themePreference: "Jawa Modern Minimalis",
+    notes: "Akad pagi",
+    rt: "01",
+    rw: "02",
+    dusun: "Krajan",
+    desa: "Kutosari",
+    kecamatan: "Kebumen",
+    kabupaten: "Kebumen",
+    postalCode: "54317",
+    latitude: "-7.668",
+    longitude: "109.652",
+  })) {
+    formData.set(key, value);
   }
-  assert.match(source, /mapCoupleProfileOwner/);
-  assert.match(source, /session\.role !== "CLIENT"/);
+  return formData;
+};
+
+const resetActionState = () => {
+  actionState.transactionOperations = [];
+  actionState.userUpdates = [];
+  actionState.profileUpserts = [];
+  actionState.findUniqueCalls = [];
+  actionState.revalidatedPaths = [];
+};
+
+for (const [accountOwnerRole, ownerName, partnerName] of [
+  ["GROOM", "Muhammad Rizky Pratama", "Siti Nur Aisyah"],
+  ["BRIDE", "Siti Nur Aisyah", "Muhammad Rizky Pratama"],
+] as const) {
+  test(`client profile action atomically persists ${accountOwnerRole} ownership and returns fresh data`, async () => {
+    resetActionState();
+    const updateClientProfileAction = createAction("CLIENT");
+
+    const result = await updateClientProfileAction(
+      profileForm(accountOwnerRole)
+    );
+
+    assert.equal(result.success, true);
+    assert.equal(result.data?.coupleDisplayName, "Rizky & Aisyah");
+    assert.deepEqual(actionState.transactionOperations, [
+      { kind: "user.update", input: actionState.userUpdates[0] },
+      { kind: "clientProfile.upsert", input: actionState.profileUpserts[0] },
+    ]);
+    assert.deepEqual(actionState.userUpdates[0], {
+      where: { id: "session-client-id" },
+      data: { name: ownerName, email: "client@example.com" },
+    });
+    const expectedProfile = {
+      accountOwnerRole,
+      groomName: "Muhammad Rizky Pratama",
+      brideName: "Siti Nur Aisyah",
+      coupleDisplayName: "Rizky & Aisyah",
+      partnerName,
+      eventDate: new Date("2027-06-15"),
+      eventLocation: "Gedung Setda Kebumen",
+      district: "Kebumen",
+      themePreference: "Jawa Modern Minimalis",
+      notes: "Akad pagi",
+      rt: "01",
+      rw: "02",
+      dusun: "Krajan",
+      desa: "Kutosari",
+      kecamatan: "Kebumen",
+      kabupaten: "Kebumen",
+      postalCode: "54317",
+      latitude: -7.668,
+      longitude: 109.652,
+    };
+    assert.deepEqual(actionState.profileUpserts[0], {
+      where: { userId: "session-client-id" },
+      create: { userId: "session-client-id", ...expectedProfile },
+      update: expectedProfile,
+    });
+    assert.deepEqual(actionState.findUniqueCalls, [
+      { userId: "session-client-id" },
+    ]);
+    assert.deepEqual(actionState.revalidatedPaths, [
+      ["/client", "layout"],
+      ["/client"],
+      ["/client/profil"],
+    ]);
+  });
+}
+
+test("client profile action rejects non-CLIENT sessions before persistence", async () => {
+  resetActionState();
+  const updateClientProfileAction = createAction("VENDOR");
+
+  const result = await updateClientProfileAction(profileForm("GROOM"));
+
+  assert.equal(result.success, false);
+  assert.equal(result.error, "Sesi klien tidak valid. Silakan masuk kembali.");
+  assert.deepEqual(actionState.transactionOperations, []);
+  assert.deepEqual(actionState.userUpdates, []);
+  assert.deepEqual(actionState.profileUpserts, []);
+  assert.deepEqual(actionState.findUniqueCalls, []);
+  assert.deepEqual(actionState.revalidatedPaths, []);
 });
 
 test("GROOM owner maps groom to User.name and bride to legacy partnerName", () => {
