@@ -320,6 +320,20 @@ test("sidebar label prioritizes explicit display then canonical names then legac
   assert.equal(resolveCoupleDisplayName({ userName: "Bima" }), "Bima");
 });
 
+test("client layout resolves sidebar label from database profile", () => {
+  const source = read("src/app/client/layout.tsx");
+  assert.match(source, /prisma\.user\.findUnique/);
+  assert.match(source, /resolveCoupleDisplayName/);
+  assert.doesNotMatch(source, /userName=\{session\?\.name\}/);
+});
+
+test("planner overview reads canonical couple fields", () => {
+  const source = read("src/server/queries/wedding-planner.ts");
+  assert.match(source, /groomName/);
+  assert.match(source, /brideName/);
+  assert.match(source, /coupleDisplayName/);
+});
+
 const validProfile = {
   accountOwnerRole: "BRIDE",
   groomName: "Muhammad Rizky Pratama",
