@@ -27,6 +27,11 @@ model User {
   pinChangeLogs     PinChangeLog[]
   orders            Order[]
   heldSlots         VendorAvailability[] @relation("UserAvailabilityHolds")
+  weddingTasks     WeddingTask[]
+  kuaRequirements  KuaRequirement[]
+  budgetItems      WeddingBudgetItem[]
+  budgetProofs     BudgetPaymentProof[]
+  emergencyItems   WeddingEmergencyItem[]
   createdAt         DateTime             @default(now())
   updatedAt         DateTime             @updatedAt
 }
@@ -280,6 +285,7 @@ model OrderItem {
   availability        VendorAvailability?     // Relasi 1-to-1 ke slot ketersediaan
   disputes            Dispute[]               // Sengketa spesifik pada item ini
   statusHistories     OrderItemStatusHistory[]
+  budgetLinks         WeddingBudgetItem[]
   ambassadorCommissions AmbassadorCommission[]
 
   createdAt           DateTime                @default(now())
@@ -714,4 +720,105 @@ model PlatformFeeComponent {
   updatedAt DateTime        @updatedAt
 
   @@index([settingId, sortOrder])
+}
+
+model WeddingTask {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stage     Int       @default(0)
+  taskText  String
+  pic       String?
+  priority  String    @default("Sedang")
+  note      String?
+  isDone    Boolean   @default(false)
+  doneAt    DateTime?
+  sortOrder Int       @default(0)
+  isCustom  Boolean   @default(false)
+  seedKey   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId, stage, sortOrder])
+  @@unique([userId, seedKey])
+}
+
+model KuaRequirement {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    String
+  docName     String
+  party       String?
+  docFormat   String?
+  institution String?
+  note        String?
+  isRequired  Boolean   @default(true)
+  isActive    Boolean   @default(false)
+  isDone      Boolean   @default(false)
+  doneAt      DateTime?
+  sortOrder   Int       @default(0)
+  isCustom    Boolean   @default(false)
+  seedKey     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId, category, sortOrder])
+  @@unique([userId, seedKey])
+}
+
+model WeddingBudgetItem {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category          String
+  itemName          String
+  pic               String?
+  estimatedAmount   Int       @default(0)
+  paidAmount        Int       @default(0)
+  status            String    @default("BELUM")
+  note              String?
+  isExternal        Boolean   @default(true)
+  linkMode          String    @default("MANUAL")
+  linkedOrderItemId String?
+  linkedOrderItem   OrderItem? @relation(fields: [linkedOrderItemId], references: [id], onDelete: SetNull)
+  sortOrder         Int       @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  proofs            BudgetPaymentProof[]
+
+  @@index([userId, sortOrder])
+  @@index([linkedOrderItemId])
+}
+
+model BudgetPaymentProof {
+  id           String            @id @default(cuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  budgetItemId String
+  budgetItem   WeddingBudgetItem @relation(fields: [budgetItemId], references: [id], onDelete: Cascade)
+  fileUrl      String
+  fileName     String?
+  amount       Int?
+  paidAt       DateTime?
+  note         String?
+  createdAt    DateTime          @default(now())
+
+  @@index([budgetItemId, createdAt])
+}
+
+model WeddingEmergencyItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemText  String
+  isPacked  Boolean  @default(false)
+  sortOrder Int      @default(0)
+  seedKey   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, sortOrder])
+  @@unique([userId, seedKey])
 }
