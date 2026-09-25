@@ -44,6 +44,10 @@ model ClientProfile {
   userId          String    @unique
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   partnerName     String?   // Nama mempelai pasangan (contoh: "Citra Kirana")
+  accountOwnerRole  String?
+  groomName         String?
+  brideName         String?
+  coupleDisplayName String?
   eventDate       DateTime? // Tanggal hari H acara
   eventLocation   String?   // Venue / Gedung / Alamat di Kebumen
   district        String?   @default("Kebumen") // Kecamatan di Kebumen (Kebumen, Gombong, Ayah, dll)
