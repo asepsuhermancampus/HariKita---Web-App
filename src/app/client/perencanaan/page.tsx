@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function PerencanaanPage() {
   const session = await getSession();
-  if (!session) redirect("/auth/login?callbackUrl=/client/perencanaan");
+  if (!session || session.role !== "CLIENT") redirect("/auth/login?callbackUrl=/client/perencanaan");
 
   await ensureWeddingPlannerSeeded(session.userId);
   const [tasks, readiness] = await Promise.all([getWeddingTasks(), getWeddingReadiness()]);

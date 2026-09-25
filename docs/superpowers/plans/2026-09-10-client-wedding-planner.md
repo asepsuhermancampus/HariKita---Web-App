@@ -1484,12 +1484,16 @@ export async function POST(req: Request) {
 }
 ```
 
-- [ ] **Step 2: Buat folder gitkeep**
+- [ ] **Step 2: Buat folder (tanpa commit gitkeep)**
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "public/uploads/ex-budget" | Out-Null
-Set-Content -Path "public/uploads/ex-budget/.gitkeep" -Value ""
 ```
+
+**Catatan (ruling Task 6):** `.gitignore` baris 63 sengaja mengabaikan `public/uploads/`
+("jangan commit file user"). Jadi `.gitkeep` TIDAK di-commit dan `.gitignore` TIDAK diubah.
+Route memakai `mkdir(recursive:true)` sehingga folder dibuat ulang saat runtime. Step commit
+hanya menyertakan file route.
 
 - [ ] **Step 3: Typecheck**
 
@@ -1499,7 +1503,7 @@ Expected: tidak ada error pada route ini.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add src/app/api/ex-budget-proof/route.ts public/uploads/ex-budget/.gitkeep
+git add src/app/api/ex-budget-proof/route.ts
 git commit -m "feat(planner): add ex-budget-proof upload endpoint"
 ```
 

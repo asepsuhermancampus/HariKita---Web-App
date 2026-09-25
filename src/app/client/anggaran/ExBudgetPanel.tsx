@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Upload, Trash2, FileText } from "lucide-react";
 import { DashCard } from "@/components/dashboard";
-import { addBudgetProof, deleteBudgetProof } from "@/server/actions/wedding-planner";
 
 interface BudgetItem {
   id: string; itemName: string; isExternal: boolean;
@@ -11,10 +10,9 @@ interface BudgetItem {
 }
 
 export function ExBudgetPanel({
-  items, startTransition, isPending,
+  items, isPending,
 }: {
   items: BudgetItem[];
-  startTransition: (cb: () => void) => void;
   isPending: boolean;
 }) {
   const externalItems = items.filter((i) => i.isExternal);
@@ -24,26 +22,41 @@ export function ExBudgetPanel({
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (!file || !selectedId) return;
+    const effectiveSelectedId = externalItems.some((item) => item.id === selectedId)
+      ? selectedId
+      : externalItems[0]?.id;
+    if (!file || !effectiveSelectedId) return;
     setUploading(true);
     setError(null);
     try {
       const fd = new FormData();
       fd.append("file", file);
+      fd.append("budgetItemId", effectiveSelectedId);
       const res = await fetch("/api/ex-budget-proof", { method: "POST", body: fd });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Gagal mengunggah.");
-      const proofFd = new FormData();
-      proofFd.append("budgetItemId", selectedId);
-      proofFd.append("fileUrl", json.url);
-      proofFd.append("fileName", json.fileName ?? file.name);
-      startTransition(() => void addBudgetProof(proofFd));
+      window.location.reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mengunggah.");
     } finally {
       setUploading(false);
       e.target.value = "";
     }
+  }
+
+  async function handleDelete(proofId: string) {
+    setError(null);
+    const res = await fetch("/api/ex-budget-proof", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ proofId }),
+    });
+    const json = await res.json();
+    if (!res.ok) {
+      setError(json.error ?? "Gagal menghapus bukti.");
+      return;
+    }
+    window.location.reload();
   }
 
   if (externalItems.length === 0)
@@ -84,7 +97,7 @@ export function ExBudgetPanel({
             />
           </label>
         </div>
-        {error && <p className="font-manrope text-xs text-red-600">{error}</p>}
+        {error && <p role="alert" className="font-manrope text-xs text-red-600">{error}</p>}
 
         <ul className="divide-y divide-hk-soft-beige">
           {selected.proofs.length === 0 && (
@@ -96,16 +109,16 @@ export function ExBudgetPanel({
                 href={p.fileUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 font-manrope text-xs text-hk-charcoal hover:text-hk-taupe"
+                className="flex min-w-0 items-center gap-2 break-all font-manrope text-xs text-hk-charcoal hover:text-hk-taupe"
               >
                 <FileText className="h-4 w-4 text-hk-taupe" />
                 {p.fileName ?? "Lihat bukti"}
                 {p.amount ? ` • Rp ${p.amount.toLocaleString("id-ID")}` : ""}
               </a>
               <button
-                onClick={() => startTransition(() => void deleteBudgetProof(p.id))}
+                onClick={() => handleDelete(p.id)}
                 disabled={isPending}
-                className="text-red-600 hover:text-red-700"
+                className="inline-flex h-11 w-11 items-center justify-center text-red-600 hover:text-red-700"
                 aria-label="Hapus bukti"
               >
                 <Trash2 className="h-4 w-4" />

@@ -4,6 +4,7 @@ import React, { useMemo, useState, useTransition } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { DashCard, DashTable, DashStatCard, type DashColumn } from "@/components/dashboard";
 import { toggleKuaDone, toggleKuaActive, addCustomKua, deleteKua } from "@/server/actions/wedding-planner";
+import type { PlannerActionResult } from "@/server/actions/wedding-planner";
 
 interface Kua {
   id: string; category: string; docName: string; party: string | null;
@@ -13,6 +14,18 @@ interface Kua {
 
 export function ClientKua({ requirements, flow }: { requirements: Kua[]; flow: { n: string; d: string }[] }) {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  const run = (fn: () => Promise<PlannerActionResult>, fallback: string) => {
+    return new Promise<PlannerActionResult>((resolve) => {
+      startTransition(async () => {
+        const res = await fn();
+        const details = Object.values(res.fieldErrors ?? {}).flat().join(" ");
+        setError(res.success ? null : [res.error ?? fallback, details].filter(Boolean).join(" "));
+        resolve(res);
+      });
+    });
+  };
 
   const required = useMemo(() => requirements.filter((r) => r.isRequired), [requirements]);
   const optional = useMemo(() => requirements.filter((r) => !r.isRequired), [requirements]);
@@ -39,6 +52,11 @@ export function ClientKua({ requirements, flow }: { requirements: Kua[]; flow: {
             </div>
           ))}
         </div>
+        {error && (
+          <p role="alert" className="mt-3 font-manrope text-xs text-red-600">
+            {error}
+          </p>
+        )}
       </DashCard>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -51,15 +69,17 @@ export function ClientKua({ requirements, flow }: { requirements: Kua[]; flow: {
           columns={reqColumns}
           rows={required}
           renderRow={(k) => [
+            <label key="d" className="inline-flex h-11 w-11 cursor-pointer items-center justify-center">
             <input
-              key="d"
               type="checkbox"
               checked={k.isDone}
               disabled={isPending}
-              onChange={(e) => startTransition(() => void toggleKuaDone(k.id, e.target.checked))}
+              onChange={(e) =>
+                run(() => toggleKuaDone(k.id, e.target.checked), "Gagal menyimpan perubahan.")
+              }
               className="h-5 w-5 cursor-pointer rounded border-hk-champagne text-hk-taupe"
               aria-label={`Tandai ${k.docName}`}
-            />,
+            /></label>,
             <span key="c" className="font-manrope text-xs text-hk-taupe">{k.category}</span>,
             <span key="n" className={k.isDone ? "text-sm text-hk-charcoal/50 line-through" : "text-sm font-medium text-hk-charcoal"}>
               {k.docName}
@@ -72,11 +92,12 @@ export function ClientKua({ requirements, flow }: { requirements: Kua[]; flow: {
 
       <DashCard
         title="Berkas Tambahan / Khusus (Opsional)"
-        action={<AddKuaButton onAdd={(fd) => startTransition(() => void addCustomKua(fd))} />}
+        action={<AddKuaButton onAdd={(fd) => run(() => addCustomKua(fd), "Gagal menambah berkas.")} />}
       >
         <DashTable
           columns={[
             { key: "active", header: "Gunakan", className: "w-16 text-center" },
+            { key: "done", header: "Selesai", className: "w-16 text-center" },
             { key: "doc", header: "Nama Berkas" },
             { key: "inst", header: "Instansi", className: "hidden sm:table-cell" },
             { key: "act", header: "", className: "w-12" },
@@ -84,15 +105,27 @@ export function ClientKua({ requirements, flow }: { requirements: Kua[]; flow: {
           rows={optional}
           empty={<div className="py-6 text-center font-manrope text-sm text-hk-taupe">Belum ada berkas opsional.</div>}
           renderRow={(k) => [
+            <label key="a" className="inline-flex h-11 w-11 cursor-pointer items-center justify-center">
             <input
-              key="a"
               type="checkbox"
               checked={k.isActive}
               disabled={isPending}
-              onChange={(e) => startTransition(() => void toggleKuaActive(k.id, e.target.checked))}
+              onChange={(e) =>
+                run(() => toggleKuaActive(k.id, e.target.checked), "Gagal menyimpan perubahan.")
+              }
               className="h-5 w-5 cursor-pointer rounded border-hk-champagne text-hk-taupe"
               aria-label={`Aktifkan ${k.docName}`}
-            />,
+            /></label>,
+            <label key="d" className="inline-flex h-11 w-11 cursor-pointer items-center justify-center">
+              <input
+                type="checkbox"
+                checked={k.isDone}
+                disabled={isPending || !k.isActive}
+                onChange={(e) => run(() => toggleKuaDone(k.id, e.target.checked), "Gagal menyimpan perubahan.")}
+                className="h-5 w-5 cursor-pointer rounded border-hk-champagne text-hk-taupe"
+                aria-label={`Tandai selesai ${k.docName}`}
+              />
+            </label>,
             <span key="n" className="text-sm font-medium text-hk-charcoal">
               {k.docName}
               {k.note && <span className="block text-[11px] text-hk-taupe">{k.note}</span>}
@@ -101,9 +134,9 @@ export function ClientKua({ requirements, flow }: { requirements: Kua[]; flow: {
             k.isCustom ? (
               <button
                 key="x"
-                onClick={() => startTransition(() => void deleteKua(k.id))}
+                onClick={() => run(() => deleteKua(k.id), "Gagal menghapus berkas.")}
                 disabled={isPending}
-                className="text-red-600 hover:text-red-700"
+                className="inline-flex h-11 w-11 items-center justify-center text-red-600 hover:text-red-700"
                 aria-label="Hapus berkas"
               >
                 <Trash2 className="h-4 w-4" />
@@ -118,8 +151,9 @@ export function ClientKua({ requirements, flow }: { requirements: Kua[]; flow: {
   );
 }
 
-function AddKuaButton({ onAdd }: { onAdd: (fd: FormData) => void }) {
+function AddKuaButton({ onAdd }: { onAdd: (fd: FormData) => Promise<PlannerActionResult> }) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   if (!open)
     return (
       <button
@@ -131,17 +165,19 @@ function AddKuaButton({ onAdd }: { onAdd: (fd: FormData) => void }) {
     );
   return (
     <form
-      action={(fd) => {
-        onAdd(fd);
-        setOpen(false);
+      action={async (fd) => {
+        const res = await onAdd(fd);
+        setError(res.success ? null : [res.error, ...Object.values(res.fieldErrors ?? {}).flat()].filter(Boolean).join(" "));
+        if (res.success) setOpen(false);
       }}
       className="flex flex-wrap items-center gap-2"
     >
-      <input name="docName" required placeholder="Nama berkas" className="rounded-xl border border-hk-champagne/60 px-3 py-2 text-xs" />
-      <input name="institution" placeholder="Instansi" className="rounded-xl border border-hk-champagne/60 px-3 py-2 text-xs" />
-      <input name="note" placeholder="Catatan" className="rounded-xl border border-hk-champagne/60 px-3 py-2 text-xs" />
+      <input aria-label="Nama berkas" name="docName" required placeholder="Nama berkas" className="rounded-xl border border-hk-champagne/60 px-3 py-2 text-xs" />
+      <input aria-label="Instansi" name="institution" placeholder="Instansi" className="rounded-xl border border-hk-champagne/60 px-3 py-2 text-xs" />
+      <input aria-label="Catatan berkas" name="note" placeholder="Catatan" className="rounded-xl border border-hk-champagne/60 px-3 py-2 text-xs" />
+      {error && <p role="alert" className="w-full font-manrope text-xs text-red-600">{error}</p>}
       <button type="submit" className="min-h-11 rounded-full bg-hk-charcoal px-4 text-xs font-semibold text-white">Simpan</button>
-      <button type="button" onClick={() => setOpen(false)} className="min-h-11 font-manrope text-xs text-hk-taupe">Batal</button>
+      <button type="button" onClick={() => setOpen(false)} className="min-h-11 min-w-11 px-3 font-manrope text-xs text-hk-taupe">Batal</button>
     </form>
   );
 }

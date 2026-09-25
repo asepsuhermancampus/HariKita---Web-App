@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { toWibDateString, diffCalendarDaysWIB } from "@/lib/date-utils";
+import { ensureWeddingPlannerSeeded } from "@/server/services/wedding-planner-seed";
 
 export interface ReadinessDTO {
   timeline: { done: number; total: number; pct: number };
@@ -11,7 +12,53 @@ export interface ReadinessDTO {
 
 function pct(done: number, total: number): number {
   if (total <= 0) return 0;
-  return Math.round((done / total) * 100);
+  return Math.max(0, Math.min(100, Math.round((done / total) * 100)));
+}
+
+interface ResolvableBudgetItem {
+  linkMode: string;
+  estimatedAmount: number;
+  paidAmount: number;
+  status?: string;
+  linkedOrderItem: {
+    subtotal: number;
+    status?: string;
+    order: {
+      totalAmount: number;
+      installments: { amount: number; status: string }[];
+      refunds?: { amount: number; status: string }[];
+    };
+  } | null;
+}
+
+export function resolveBudgetAmounts(item: ResolvableBudgetItem) {
+  if (item.linkMode !== "AUTO" || !item.linkedOrderItem) {
+    return {
+      estimatedAmount: item.estimatedAmount,
+      paidAmount: item.paidAmount,
+      status: item.status ?? (item.paidAmount >= item.estimatedAmount && item.estimatedAmount > 0 ? "LUNAS" : item.paidAmount > 0 ? "DP" : "BELUM"),
+    };
+  }
+  if (["REJECTED", "CANCELLED"].includes(item.linkedOrderItem.status ?? "")) {
+    return { estimatedAmount: 0, paidAmount: 0, status: "BELUM" };
+  }
+  const estimatedAmount = item.linkedOrderItem.subtotal;
+  const order = item.linkedOrderItem.order;
+  const grossPaid = order.installments
+    .filter((installment) => installment.status === "PAID")
+    .reduce((sum, installment) => sum + installment.amount, 0);
+  const refunded = (order.refunds ?? [])
+    .filter((refund) => refund.status === "PAID")
+    .reduce((sum, refund) => sum + refund.amount, 0);
+  const orderPaid = Math.max(0, grossPaid - refunded);
+  const paidAmount = order.totalAmount > 0
+    ? Math.min(estimatedAmount, Math.round((orderPaid * estimatedAmount) / order.totalAmount))
+    : 0;
+  return {
+    estimatedAmount,
+    paidAmount,
+    status: paidAmount >= estimatedAmount && estimatedAmount > 0 ? "LUNAS" : paidAmount > 0 ? "DP" : "BELUM",
+  };
 }
 
 /** Fungsi murni (mudah diuji tanpa DB). */
@@ -45,7 +92,7 @@ export function computeReadiness(input: {
 
 async function currentUserId(): Promise<string | null> {
   const session = await getSession();
-  return session?.userId ?? null;
+  return session?.role === "CLIENT" ? session.userId : null;
 }
 
 export interface WeddingTaskDTO {
@@ -100,12 +147,17 @@ export async function getBudgetItems(): Promise<BudgetItemDTO[]> {
   if (!userId) return [];
   const rows = await prisma.weddingBudgetItem.findMany({
     where: { userId },
-    include: { linkedOrderItem: true, proofs: { orderBy: { createdAt: "desc" } } },
+    include: {
+      linkedOrderItem: { include: { order: { include: { installments: true, refunds: true } } } },
+      proofs: { where: { userId }, orderBy: { createdAt: "desc" } },
+    },
     orderBy: [{ sortOrder: "asc" }],
   });
-  return rows.map((b) => ({
+  return rows.map((b) => {
+    const amounts = resolveBudgetAmounts(b);
+    return {
     id: b.id, category: b.category, itemName: b.itemName, pic: b.pic,
-    estimatedAmount: b.estimatedAmount, paidAmount: b.paidAmount, status: b.status,
+    estimatedAmount: amounts.estimatedAmount, paidAmount: amounts.paidAmount, status: amounts.status,
     note: b.note, isExternal: b.isExternal, linkMode: b.linkMode,
     linkedOrderItemId: b.linkedOrderItemId,
     linkedOrderLabel:
@@ -113,11 +165,12 @@ export async function getBudgetItems(): Promise<BudgetItemDTO[]> {
     proofs: b.proofs.map((p) => ({
       id: p.id, fileUrl: p.fileUrl, fileName: p.fileName, amount: p.amount,
     })),
-  }));
+    };
+  });
 }
 
 export interface EmergencyDTO {
-  id: string; itemText: string; isPacked: boolean;
+  id: string; itemText: string; isPacked: boolean; isCustom: boolean;
 }
 
 export async function getEmergencyItems(): Promise<EmergencyDTO[]> {
@@ -127,7 +180,12 @@ export async function getEmergencyItems(): Promise<EmergencyDTO[]> {
     where: { userId },
     orderBy: [{ sortOrder: "asc" }],
   });
-  return rows.map((e) => ({ id: e.id, itemText: e.itemText, isPacked: e.isPacked }));
+  return rows.map((e) => ({
+    id: e.id,
+    itemText: e.itemText,
+    isPacked: e.isPacked,
+    isCustom: e.seedKey === null,
+  }));
 }
 
 export async function getWeddingReadiness(): Promise<ReadinessDTO> {
@@ -138,22 +196,33 @@ export async function getWeddingReadiness(): Promise<ReadinessDTO> {
       budgetEstimated: 0, budgetPaid: 0,
     });
   }
-  const [timelineTotal, timelineDone, kuaTotal, kuaDone, budgetAgg] = await Promise.all([
+  const [timelineTotal, timelineDone, kuaTotal, kuaDone, budgetItems] = await Promise.all([
     prisma.weddingTask.count({ where: { userId } }),
     prisma.weddingTask.count({ where: { userId, isDone: true } }),
     prisma.kuaRequirement.count({
       where: { userId, OR: [{ isRequired: true }, { isActive: true }] },
     }),
-    prisma.kuaRequirement.count({ where: { userId, isDone: true } }),
-    prisma.weddingBudgetItem.aggregate({
+    prisma.kuaRequirement.count({
+      where: { userId, isDone: true, OR: [{ isRequired: true }, { isActive: true }] },
+    }),
+    prisma.weddingBudgetItem.findMany({
       where: { userId },
-      _sum: { estimatedAmount: true, paidAmount: true },
+      include: { linkedOrderItem: { include: { order: { include: { installments: true, refunds: true } } } } },
     }),
   ]);
+  const budget = budgetItems.reduce(
+    (total, item) => {
+      const amounts = resolveBudgetAmounts(item);
+      total.estimated += amounts.estimatedAmount;
+      total.paid += amounts.paidAmount;
+      return total;
+    },
+    { estimated: 0, paid: 0 }
+  );
   return computeReadiness({
     timelineDone, timelineTotal, kuaDone, kuaTotal,
-    budgetEstimated: budgetAgg._sum.estimatedAmount ?? 0,
-    budgetPaid: budgetAgg._sum.paidAmount ?? 0,
+    budgetEstimated: budget.estimated,
+    budgetPaid: budget.paid,
   });
 }
 
@@ -175,6 +244,8 @@ export async function getClientPlannerOverview(): Promise<PlannerOverview> {
     partnerName: null, nextSession: null,
   };
   if (!userId) return empty;
+  await ensureWeddingPlannerSeeded(userId);
+  const seededReadiness = await getWeddingReadiness();
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -187,12 +258,16 @@ export async function getClientPlannerOverview(): Promise<PlannerOverview> {
   const daysUntilEvent = eventDate ? diffCalendarDaysWIB(eventDate, today) : null;
 
   const next = await prisma.physicalSession.findFirst({
-    where: { order: { userId } },
+    where: {
+      order: { userId },
+      scheduledDate: { gte: new Date() },
+      status: { in: ["SCHEDULED", "RESCHEDULED"] },
+    },
     orderBy: { scheduledDate: "asc" },
   });
 
   return {
-    readiness,
+    readiness: seededReadiness,
     daysUntilEvent,
     eventDate,
     coupleName: user?.name ?? "Calon Pengantin",

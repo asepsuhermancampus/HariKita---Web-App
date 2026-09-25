@@ -738,10 +738,12 @@ model WeddingTask {
   doneAt    DateTime?
   sortOrder Int       @default(0)
   isCustom  Boolean   @default(false)
+  seedKey   String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
   @@index([userId, stage, sortOrder])
+  @@unique([userId, seedKey])
 }
 
 model KuaRequirement {
@@ -760,10 +762,12 @@ model KuaRequirement {
   doneAt      DateTime?
   sortOrder   Int       @default(0)
   isCustom    Boolean   @default(false)
+  seedKey     String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
   @@index([userId, category, sortOrder])
+  @@unique([userId, seedKey])
 }
 
 model WeddingBudgetItem {
@@ -814,8 +818,10 @@ model WeddingEmergencyItem {
   itemText  String
   isPacked  Boolean  @default(false)
   sortOrder Int      @default(0)
+  seedKey   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId, sortOrder])
+  @@unique([userId, seedKey])
 }

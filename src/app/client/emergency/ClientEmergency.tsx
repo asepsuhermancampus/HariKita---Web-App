@@ -8,10 +8,17 @@ import { toggleEmergencyItem, addEmergencyItem, deleteEmergencyItem } from "@/se
 export function ClientEmergency({
   items,
 }: {
-  items: { id: string; itemText: string; isPacked: boolean }[];
+  items: { id: string; itemText: string; isPacked: boolean; isCustom: boolean }[];
 }) {
   const [isPending, startTransition] = useTransition();
   const [newItem, setNewItem] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const run = (fn: () => Promise<{ success: boolean; error?: string }>, fallback: string) =>
+    startTransition(async () => {
+      const res = await fn();
+      setError(res.success ? null : res.error ?? fallback);
+    });
 
   const packed = items.filter((i) => i.isPacked).length;
 
@@ -21,37 +28,44 @@ export function ClientEmergency({
         <ul className="space-y-2">
           {items.map((it) => (
             <li key={it.id} className="flex items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-hk-ivory">
+              <label className="inline-flex h-11 w-11 cursor-pointer items-center justify-center">
               <input
                 type="checkbox"
                 checked={it.isPacked}
                 disabled={isPending}
-                onChange={(e) => startTransition(() => void toggleEmergencyItem(it.id, e.target.checked))}
+                onChange={(e) =>
+                  run(() => toggleEmergencyItem(it.id, e.target.checked), "Gagal menyimpan perubahan.")
+                }
                 className="h-5 w-5 cursor-pointer rounded border-hk-champagne text-hk-taupe"
                 aria-label={`Tandai ${it.itemText}`}
-              />
+              /></label>
               <span className={it.isPacked ? "text-sm text-hk-charcoal/50 line-through" : "font-manrope text-sm text-hk-charcoal"}>
                 {it.itemText}
               </span>
-              <button
-                onClick={() => startTransition(() => void deleteEmergencyItem(it.id))}
+              {it.isCustom && <button
+                onClick={() => run(() => deleteEmergencyItem(it.id), "Gagal menghapus item.")}
                 disabled={isPending}
-                className="ml-auto text-red-600 hover:text-red-700"
+                className="ml-auto inline-flex h-11 w-11 items-center justify-center text-red-600 hover:text-red-700"
                 aria-label="Hapus item"
               >
                 <Trash2 className="h-4 w-4" />
-              </button>
+              </button>}
             </li>
           ))}
         </ul>
 
         <form
           action={(fd) => {
-            startTransition(() => void addEmergencyItem(fd));
-            setNewItem("");
+            startTransition(async () => {
+              const res = await addEmergencyItem(fd);
+              setError(res.success ? null : res.error ?? "Gagal menambah item.");
+              if (res.success) setNewItem("");
+            });
           }}
           className="mt-4 flex items-center gap-2"
         >
           <input
+            aria-label="Nama item emergency kit"
             name="itemText"
             value={newItem}
             onChange={(e) => setNewItem(e.target.value)}
@@ -66,6 +80,11 @@ export function ClientEmergency({
             <Plus className="h-3.5 w-3.5 text-hk-champagne" /> Tambah
           </button>
         </form>
+        {error && (
+          <p role="alert" className="mt-2 font-manrope text-xs text-red-600">
+            {error}
+          </p>
+        )}
       </DashCard>
 
       <div className="flex flex-col gap-4">

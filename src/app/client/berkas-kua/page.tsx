@@ -21,7 +21,7 @@ const FLOW = [
 
 export default async function BerkasKuaPage() {
   const session = await getSession();
-  if (!session) redirect("/auth/login?callbackUrl=/client/berkas-kua");
+  if (!session || session.role !== "CLIENT") redirect("/auth/login?callbackUrl=/client/berkas-kua");
 
   await ensureWeddingPlannerSeeded(session.userId);
   const requirements = await getKuaRequirements();

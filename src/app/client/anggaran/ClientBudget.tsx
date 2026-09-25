@@ -9,6 +9,7 @@ import {
   deleteBudgetItem,
   unlinkBudgetItem,
 } from "@/server/actions/wedding-planner";
+import type { PlannerActionResult } from "@/server/actions/wedding-planner";
 
 interface BudgetItem {
   id: string; category: string; itemName: string; pic: string | null;
@@ -28,6 +29,15 @@ export function ClientBudget({
   items: BudgetItem[];
 }) {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  const run = (fn: () => Promise<PlannerActionResult>, fallback: string) =>
+    new Promise<PlannerActionResult>((resolve) => startTransition(async () => {
+      const res = await fn();
+      const details = Object.values(res.fieldErrors ?? {}).flat().join(" ");
+      setError(res.success ? null : [res.error ?? fallback, details].filter(Boolean).join(" "));
+      resolve(res);
+    }));
 
   const totals = useMemo(() => {
     const estimated = items.reduce((a, b) => a + b.estimatedAmount, 0);
@@ -52,6 +62,11 @@ export function ClientBudget({
         <DashStatCard label="Sudah Terbayar" value={rp(totals.paid)} />
         <DashStatCard label="Sisa Kewajiban" value={rp(totals.remaining)} />
       </div>
+      {error && (
+        <p role="alert" className="font-manrope text-xs text-red-600">
+          {error}
+        </p>
+      )}
 
       <DashCard title="Rincian Pos Anggaran">
         <DashTable
@@ -80,9 +95,9 @@ export function ClientBudget({
             b.linkedOrderItemId ? (
               <button
                 key="a"
-                onClick={() => startTransition(() => void unlinkBudgetItem(b.id))}
+                onClick={() => run(() => unlinkBudgetItem(b.id), "Gagal melepas tautan pesanan.")}
                 disabled={isPending}
-                className="text-hk-taupe hover:text-hk-charcoal"
+                className="inline-flex h-11 w-11 items-center justify-center text-hk-taupe hover:text-hk-charcoal"
                 aria-label="Lepas tautan pesanan"
               >
                 <Link2Off className="h-4 w-4" />
@@ -90,9 +105,9 @@ export function ClientBudget({
             ) : (
               <button
                 key="a"
-                onClick={() => startTransition(() => void deleteBudgetItem(b.id))}
+                onClick={() => run(() => deleteBudgetItem(b.id), "Gagal menghapus pos.")}
                 disabled={isPending}
-                className="text-red-600 hover:text-red-700"
+                className="inline-flex h-11 w-11 items-center justify-center text-red-600 hover:text-red-700"
                 aria-label="Hapus pos"
               >
                 <Trash2 className="h-4 w-4" />
@@ -102,10 +117,10 @@ export function ClientBudget({
         />
       </DashCard>
 
-      <ExBudgetPanel items={items} startTransition={startTransition} isPending={isPending} />
+      <ExBudgetPanel items={items} isPending={isPending} />
 
       <AddBudgetForm
-        onAdd={(fd) => startTransition(() => void addBudgetItem(fd))}
+        onAdd={(fd) => run(() => addBudgetItem(fd), "Gagal menambah pos anggaran.")}
         pending={isPending}
       />
     </div>
@@ -116,11 +131,11 @@ function AddBudgetForm({
   onAdd,
   pending,
 }: {
-  onAdd: (fd: FormData) => void;
+  onAdd: (fd: FormData) => Promise<PlannerActionResult>;
   pending: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const [external, setExternal] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   if (!open)
     return (
       <button
@@ -135,29 +150,33 @@ function AddBudgetForm({
     <DashCard
       title="Tambah Pos Anggaran"
       action={
-        <button onClick={() => setOpen(false)} className="font-manrope text-xs text-hk-taupe">
+        <button onClick={() => setOpen(false)} className="min-h-11 px-3 font-manrope text-xs text-hk-taupe">
           Tutup
         </button>
       }
     >
-      <form action={onAdd} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <input name="category" required placeholder="Kategori (mis. Mahar)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
-        <input name="itemName" required placeholder="Nama item / layanan" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
-        <input name="estimatedAmount" type="number" min={0} required placeholder="Estimasi (Rp)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
-        <input name="paidAmount" type="number" min={0} defaultValue={0} placeholder="Terbayar (Rp)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
-        <input name="pic" placeholder="PIC / Vendor (opsional)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
-        <select name="status" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" defaultValue="BELUM">
+      <form action={async (fd) => {
+        const res = await onAdd(fd);
+        setError(res.success ? null : [res.error, ...Object.values(res.fieldErrors ?? {}).flat()].filter(Boolean).join(" "));
+        if (res.success) setOpen(false);
+      }} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <input aria-label="Kategori anggaran" name="category" required placeholder="Kategori (mis. Mahar)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
+        <input aria-label="Nama item atau layanan" name="itemName" required placeholder="Nama item / layanan" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
+        <input aria-label="Estimasi rupiah" name="estimatedAmount" type="number" min={0} required placeholder="Estimasi (Rp)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
+        <input aria-label="Terbayar rupiah" name="paidAmount" type="number" min={0} defaultValue={0} placeholder="Terbayar (Rp)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
+        <input aria-label="PIC atau vendor" name="pic" placeholder="PIC / Vendor (opsional)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
+        <select aria-label="Status pembayaran" name="status" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" defaultValue="BELUM">
           <option value="BELUM">Belum Bayar</option>
           <option value="DP">DP (Sebagian)</option>
           <option value="LUNAS">Lunas</option>
           <option value="SIAPKAN">Siapkan Tunai</option>
         </select>
-        <label className="flex items-center gap-2 font-manrope text-xs text-hk-charcoal sm:col-span-2">
-          <input type="checkbox" checked={external} onChange={(e) => setExternal(e.target.checked)} className="h-4 w-4" />
-          Pos ini DI LUAR layanan HariKita (ex-) - dapat diunggah bukti pembayaran
-        </label>
-        <input type="hidden" name="isExternal" value={String(external)} />
+        <p className="font-manrope text-xs text-hk-charcoal sm:col-span-2">
+          Pos manual ditandai ex- dan dapat dilengkapi bukti pembayaran.
+        </p>
+        <input type="hidden" name="isExternal" value="true" />
         <input type="hidden" name="linkMode" value="MANUAL" />
+        {error && <p role="alert" className="font-manrope text-xs text-red-600 sm:col-span-2">{error}</p>}
         <button type="submit" disabled={pending} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-hk-charcoal px-5 text-xs font-semibold text-white sm:col-span-2">
           Simpan Pos Anggaran
         </button>

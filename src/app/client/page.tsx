@@ -23,6 +23,9 @@ export default async function ClientPortalPage() {
     ? `${overview.coupleName} & ${overview.partnerName}`
     : overview.coupleName;
   const r = overview.readiness;
+  const activeOrders = orders.filter(
+    (order) => !["CANCELLED", "EXPIRED", "COMPLETED"].includes(order.status)
+  );
 
   return (
     <div className="flex flex-col gap-8">
@@ -116,12 +119,12 @@ export default async function ClientPortalPage() {
           </Link>
         </DashCard>
 
-        <DashCard title={`Pesanan Aktif (${orders.length})`}>
-          {orders.length === 0 ? (
+        <DashCard title={`Pesanan Aktif (${activeOrders.length})`}>
+          {activeOrders.length === 0 ? (
             <p className="font-manrope text-sm text-hk-taupe">Belum ada pesanan. Racik paket di Builder.</p>
           ) : (
             <ul className="space-y-3">
-              {orders.slice(0, 3).map((o) => (
+              {activeOrders.slice(0, 3).map((o) => (
                 <li key={o.id} className="flex items-center justify-between gap-3 border-b border-hk-soft-beige/60 pb-3 last:border-0">
                   <div className="min-w-0">
                     <div className="truncate font-manrope text-sm font-semibold text-hk-charcoal">{o.bookingId}</div>

@@ -35,12 +35,13 @@ export const KUA_CATEGORIES = [
 ] as const;
 
 function toInt(v: unknown): number | null {
-  if (typeof v === "number" && Number.isFinite(v)) return Math.trunc(v);
-  if (typeof v === "string" && v.trim() !== "") {
-    const n = Number(v);
-    return Number.isFinite(n) ? Math.trunc(n) : null;
-  }
-  return null;
+  const n =
+    typeof v === "number"
+      ? v
+      : typeof v === "string" && /^\d+$/.test(v.trim())
+        ? Number(v.trim())
+        : Number.NaN;
+  return Number.isSafeInteger(n) && n >= 0 && n <= 2_147_483_647 ? n : null;
 }
 
 export interface BudgetItemInput {
@@ -71,10 +72,10 @@ export function validateBudgetItemInput(
   else if (itemName.length > 150) errors.itemName = ["Nama item maksimal 150 karakter."];
 
   const est = toInt(raw.estimatedAmount);
-  if (est === null || est < 0) errors.estimatedAmount = ["Estimasi harus angka >= 0."];
+  if (est === null) errors.estimatedAmount = ["Estimasi harus bilangan bulat rupiah yang valid."];
 
   const paid = toInt(raw.paidAmount);
-  if (paid === null || paid < 0) errors.paidAmount = ["Terbayar harus angka >= 0."];
+  if (paid === null) errors.paidAmount = ["Terbayar harus bilangan bulat rupiah yang valid."];
 
   const status =
     typeof raw.status === "string" && (BUDGET_STATUS as readonly string[]).includes(raw.status)
@@ -175,14 +176,20 @@ export interface ProofInput {
   note?: string;
 }
 
-export function validateProofInput(raw: Record<string, unknown>): ValidationResult<ProofInput> {
+export function validateProofInput(
+  raw: Record<string, unknown>,
+  userId?: string
+): ValidationResult<ProofInput> {
   const errors: Record<string, string[]> = {};
   const fileUrl = typeof raw.fileUrl === "string" ? raw.fileUrl.trim() : "";
-  if (!fileUrl) errors.fileUrl = ["File bukti wajib diunggah."];
+  const expectedPrefix = userId ? `/uploads/ex-budget/${userId}/proof-` : "/uploads/ex-budget/";
+  if (!fileUrl || !fileUrl.startsWith(expectedPrefix) || fileUrl.includes("..")) {
+    errors.fileUrl = ["File bukti tidak valid."];
+  }
 
   const amount = raw.amount === undefined || raw.amount === "" ? undefined : toInt(raw.amount);
-  if (amount !== undefined && (amount === null || amount < 0))
-    errors.amount = ["Nominal harus angka >= 0."];
+  if (amount !== undefined && amount === null)
+    errors.amount = ["Nominal harus bilangan bulat rupiah yang valid."];
 
   if (Object.keys(errors).length > 0) return { success: false, errors };
 

@@ -8,7 +8,7 @@ import {
   BUDGET_CATEGORIES,
 } from "../src/lib/validations/wedding-planner";
 import { DEFAULT_TASKS, DEFAULT_KUA, DEFAULT_EMERGENCY } from "../src/server/services/wedding-planner-seed";
-import { computeReadiness } from "../src/server/queries/wedding-planner";
+import { computeReadiness, resolveBudgetAmounts } from "../src/server/queries/wedding-planner";
 
 test("validateBudgetItemInput accepts a valid item and coerces amounts to Int", () => {
   const res = validateBudgetItemInput({
@@ -93,4 +93,109 @@ test("computeReadiness handles divide-by-zero safely", () => {
   });
   assert.equal(r.overallPct, 0);
   assert.equal(r.budget.pctRealized, 0);
+});
+
+test("money validators reject fractions, exponent notation, and PostgreSQL Int overflow", () => {
+  for (const estimatedAmount of ["1.5", "1e3", "2147483648"]) {
+    const result = validateBudgetItemInput({
+      category: "Mahar",
+      itemName: "Logam mulia",
+      estimatedAmount,
+      paidAmount: "0",
+    });
+    assert.equal(result.success, false);
+    assert.ok(result.errors?.estimatedAmount);
+  }
+});
+
+test("proof URL must belong to the authenticated user's upload directory", () => {
+  assert.equal(
+    validateProofInput(
+      { fileUrl: "/uploads/ex-budget/user-a/proof-a.pdf" },
+      "user-a"
+    ).success,
+    true
+  );
+  assert.equal(
+    validateProofInput(
+      { fileUrl: "/uploads/ex-budget/user-b/proof-a.pdf" },
+      "user-a"
+    ).success,
+    false
+  );
+  assert.equal(validateProofInput({ fileUrl: "https://evil.example/a.pdf" }, "user-a").success, false);
+});
+
+test("computeReadiness clamps every percentage to 0..100", () => {
+  const result = computeReadiness({
+    timelineDone: 2,
+    timelineTotal: 1,
+    kuaDone: 3,
+    kuaTotal: 1,
+    budgetEstimated: 100,
+    budgetPaid: 200,
+  });
+  assert.equal(result.timeline.pct, 100);
+  assert.equal(result.kua.pct, 100);
+  assert.equal(result.overallPct, 100);
+});
+
+test("AUTO budget resolves order item subtotal and proportional paid amount", () => {
+  assert.deepEqual(
+    resolveBudgetAmounts({
+      linkMode: "AUTO",
+      estimatedAmount: 0,
+      paidAmount: 0,
+      linkedOrderItem: {
+        subtotal: 400_000,
+        order: {
+          totalAmount: 1_000_000,
+          installments: [
+            { amount: 300_000, status: "PAID" },
+            { amount: 700_000, status: "PENDING" },
+          ],
+        },
+      },
+    }),
+    { estimatedAmount: 400_000, paidAmount: 120_000, status: "DP" }
+  );
+});
+
+test("AUTO budget subtracts paid refunds and excludes cancelled items", () => {
+  const order = {
+    totalAmount: 1_000_000,
+    installments: [{ amount: 500_000, status: "PAID" }],
+    refunds: [{ amount: 100_000, status: "PAID" }],
+  };
+  assert.deepEqual(
+    resolveBudgetAmounts({
+      linkMode: "AUTO",
+      estimatedAmount: 0,
+      paidAmount: 0,
+      linkedOrderItem: { subtotal: 250_000, status: "ACCEPTED", order },
+    }),
+    { estimatedAmount: 250_000, paidAmount: 100_000, status: "DP" }
+  );
+  assert.deepEqual(
+    resolveBudgetAmounts({
+      linkMode: "AUTO",
+      estimatedAmount: 0,
+      paidAmount: 0,
+      linkedOrderItem: { subtotal: 250_000, status: "CANCELLED", order },
+    }),
+    { estimatedAmount: 0, paidAmount: 0, status: "BELUM" }
+  );
+});
+
+test("MANUAL budget preserves the user's explicit status", () => {
+  assert.deepEqual(
+    resolveBudgetAmounts({
+      linkMode: "MANUAL",
+      estimatedAmount: 500_000,
+      paidAmount: 0,
+      status: "SIAPKAN",
+      linkedOrderItem: null,
+    }),
+    { estimatedAmount: 500_000, paidAmount: 0, status: "SIAPKAN" }
+  );
 });

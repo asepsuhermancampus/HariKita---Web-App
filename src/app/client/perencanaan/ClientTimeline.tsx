@@ -9,6 +9,7 @@ import {
   addPlannerTask,
   resetTimelineToDefault,
 } from "@/server/actions/wedding-planner";
+import type { PlannerActionResult } from "@/server/actions/wedding-planner";
 
 interface Task {
   id: string; stage: number; taskText: string; pic: string | null;
@@ -23,6 +24,7 @@ export const STAGE_LABEL: Record<number, string> = {
 export function ClientTimeline({ tasks, timelinePct }: { tasks: Task[]; timelinePct: number }) {
   const [filterStage, setFilterStage] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
   const filtered = useMemo(
     () => (filterStage === 0 ? tasks : tasks.filter((t) => t.stage === filterStage)),
@@ -40,14 +42,29 @@ export function ClientTimeline({ tasks, timelinePct }: { tasks: Task[]; timeline
   ];
 
   const onToggle = (id: string, isDone: boolean) =>
-    startTransition(() => {
-      void togglePlannerTask(id, isDone);
+    startTransition(async () => {
+      const res = await togglePlannerTask(id, isDone);
+      setError(res.success ? null : res.error ?? "Gagal menyimpan perubahan.");
     });
 
-  const onDelete = (id: string) => startTransition(() => void deletePlannerTask(id));
+  const onDelete = (id: string) =>
+    startTransition(async () => {
+      const res = await deletePlannerTask(id);
+      setError(res.success ? null : res.error ?? "Gagal menghapus tugas.");
+    });
+
   const onReset = () => {
-    if (confirm("Kembalikan timeline ke pengaturan awal?"))
-      startTransition(() => void resetTimelineToDefault());
+    if (!confirm("Kembalikan timeline ke pengaturan awal?")) return;
+    startTransition(async () => {
+      const res = await resetTimelineToDefault();
+      setError(res.success ? null : res.error ?? "Gagal mengatur ulang timeline.");
+    });
+  };
+
+  const onAdd = async (fd: FormData) => {
+    const res = await addPlannerTask(fd);
+    setError(res.success ? null : res.error ?? "Gagal menambah tugas.");
+    return res;
   };
 
   return (
@@ -84,6 +101,11 @@ export function ClientTimeline({ tasks, timelinePct }: { tasks: Task[]; timeline
             <RotateCcw className="mr-1 inline h-3.5 w-3.5" /> Reset
           </button>
         </div>
+        {error && (
+          <p role="alert" className="mt-3 font-manrope text-xs text-red-600">
+            {error}
+          </p>
+        )}
       </DashCard>
 
       <DashCard>
@@ -92,15 +114,16 @@ export function ClientTimeline({ tasks, timelinePct }: { tasks: Task[]; timeline
           rows={filtered}
           empty={<div className="py-8 text-center font-manrope text-sm text-hk-taupe">Belum ada tugas.</div>}
           renderRow={(t) => [
-            <input
-              key="d"
-              type="checkbox"
-              checked={t.isDone}
-              disabled={isPending}
-              onChange={(e) => onToggle(t.id, e.target.checked)}
-              className="h-5 w-5 cursor-pointer rounded border-hk-champagne text-hk-taupe"
-              aria-label={`Tandai ${t.taskText}`}
-            />,
+            <label key="d" className="inline-flex h-11 w-11 cursor-pointer items-center justify-center">
+              <input
+                type="checkbox"
+                checked={t.isDone}
+                disabled={isPending}
+                onChange={(e) => onToggle(t.id, e.target.checked)}
+                className="h-5 w-5 cursor-pointer rounded border-hk-champagne text-hk-taupe"
+                aria-label={`Tandai ${t.taskText}`}
+              />
+            </label>,
             <span key="s" className="font-manrope text-xs font-semibold text-hk-taupe">
               {t.stage === 0 ? "Custom" : `Tahap ${t.stage}: ${STAGE_LABEL[t.stage] ?? ""}`}
             </span>,
@@ -110,26 +133,28 @@ export function ClientTimeline({ tasks, timelinePct }: { tasks: Task[]; timeline
             </span>,
             <span key="p" className="font-manrope text-xs text-hk-charcoal/70">{t.pic ?? "-"}</span>,
             <DashBadge key="pr" tone={t.priority === "Tinggi" ? "error" : "neutral"}>{t.priority}</DashBadge>,
-            <button
+            t.isCustom ? <button
               key="a"
               onClick={() => onDelete(t.id)}
               disabled={isPending}
               aria-label="Hapus tugas"
-              className="text-red-600 hover:text-red-700"
+              className="inline-flex h-11 w-11 items-center justify-center text-red-600 hover:text-red-700"
             >
               <Trash2 className="h-4 w-4" />
-            </button>,
+            </button> : <span key="a" />,
           ]}
         />
       </DashCard>
 
-      <AddTaskForm onAdd={(fd) => startTransition(() => void addPlannerTask(fd))} pending={isPending} />
+      <AddTaskForm onAdd={onAdd} pending={isPending} />
     </div>
   );
 }
 
-function AddTaskForm({ onAdd, pending }: { onAdd: (fd: FormData) => void; pending: boolean }) {
+function AddTaskForm({ onAdd, pending }: { onAdd: (fd: FormData) => Promise<PlannerActionResult>; pending: boolean }) {
   const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   if (!open)
     return (
       <button
@@ -144,25 +169,32 @@ function AddTaskForm({ onAdd, pending }: { onAdd: (fd: FormData) => void; pendin
     <DashCard
       title="Tambah Tugas Sendiri"
       action={
-        <button onClick={() => setOpen(false)} className="font-manrope text-xs text-hk-taupe">
+        <button onClick={() => setOpen(false)} className="min-h-11 px-3 font-manrope text-xs text-hk-taupe">
           Tutup
         </button>
       }
     >
-      <form action={onAdd} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <input name="taskText" required placeholder="Nama tugas" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
-        <select name="stage" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" defaultValue={1}>
+      <form action={async (fd) => {
+        setSubmitting(true);
+        const res = await onAdd(fd);
+        setSubmitting(false);
+        setFormError(res.success ? null : [res.error, ...Object.values(res.fieldErrors ?? {}).flat()].filter(Boolean).join(" "));
+        if (res.success) setOpen(false);
+      }} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <input aria-label="Nama tugas" name="taskText" required placeholder="Nama tugas" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
+        <select aria-label="Tahap persiapan" name="stage" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" defaultValue={1}>
           {[1, 2, 3, 4, 5, 6, 7].map((s) => (
             <option key={s} value={s}>Tahap {s}: {STAGE_LABEL[s]}</option>
           ))}
         </select>
-        <input name="pic" placeholder="PIC (opsional)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
-        <select name="priority" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" defaultValue="Sedang">
+        <input aria-label="PIC" name="pic" placeholder="PIC (opsional)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" />
+        <select aria-label="Prioritas" name="priority" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm" defaultValue="Sedang">
           <option value="Sedang">Sedang</option>
           <option value="Tinggi">Tinggi</option>
         </select>
-        <input name="note" placeholder="Catatan (opsional)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm sm:col-span-2" />
-        <button type="submit" disabled={pending} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-hk-charcoal px-5 text-xs font-semibold text-white sm:col-span-2">
+        <input aria-label="Catatan" name="note" placeholder="Catatan (opsional)" className="rounded-xl border border-hk-champagne/60 px-3 py-2.5 text-sm sm:col-span-2" />
+        {formError && <p role="alert" className="font-manrope text-xs text-red-600 sm:col-span-2">{formError}</p>}
+        <button type="submit" disabled={pending || submitting} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-hk-charcoal px-5 text-xs font-semibold text-white sm:col-span-2">
           <Check className="h-3.5 w-3.5 text-hk-champagne" /> Simpan Tugas
         </button>
       </form>

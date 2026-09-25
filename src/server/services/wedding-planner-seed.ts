@@ -96,62 +96,62 @@ export const DEFAULT_EMERGENCY: SeedEmergency[] = [
   { itemText: "Koper Baju Ganti Santai" },
 ];
 
-/** Seed default sekali jalan (idempotent per-kategori) untuk planner user. */
+/** Rekonsiliasi default berdasarkan key stabil; aman dipanggil ulang atau paralel. */
 export async function ensureWeddingPlannerSeeded(userId: string): Promise<void> {
-  const [taskCount, kuaCount, emergencyCount] = await Promise.all([
-    prisma.weddingTask.count({ where: { userId } }),
-    prisma.kuaRequirement.count({ where: { userId } }),
-    prisma.weddingEmergencyItem.count({ where: { userId } }),
-  ]);
-
-  const ops: Promise<unknown>[] = [];
-
-  if (taskCount === 0) {
-    ops.push(
-      prisma.weddingTask.createMany({
-        data: DEFAULT_TASKS.map((t, i) => ({
-          userId,
-          stage: t.stage,
-          taskText: t.taskText,
-          pic: t.pic,
-          priority: t.priority,
-          note: t.note,
-          sortOrder: i,
-        })),
-      })
-    );
-  }
-
-  if (kuaCount === 0) {
-    ops.push(
-      prisma.kuaRequirement.createMany({
-        data: DEFAULT_KUA.map((k, i) => ({
-          userId,
-          category: k.category,
-          docName: k.docName,
-          party: k.party,
-          docFormat: k.docFormat,
-          institution: k.institution,
-          note: k.note,
-          isRequired: k.isRequired,
-          isActive: k.isRequired,
-          sortOrder: i,
-        })),
-      })
-    );
-  }
-
-  if (emergencyCount === 0) {
-    ops.push(
-      prisma.weddingEmergencyItem.createMany({
-        data: DEFAULT_EMERGENCY.map((e, i) => ({
-          userId,
-          itemText: e.itemText,
-          sortOrder: i,
-        })),
-      })
-    );
-  }
-
-  if (ops.length > 0) await Promise.all(ops);
+  await prisma.$transaction(async (tx) => {
+    await Promise.all([
+      ...DEFAULT_TASKS.map((task, index) =>
+        tx.weddingTask.updateMany({
+          where: { userId, taskText: task.taskText, isCustom: false, seedKey: null },
+          data: { seedKey: `task-${index}` },
+        })
+      ),
+      ...DEFAULT_KUA.map((item, index) =>
+        tx.kuaRequirement.updateMany({
+          where: {
+            userId,
+            docName: item.docName,
+            party: item.party,
+            isCustom: false,
+            seedKey: null,
+          },
+          data: { seedKey: `kua-${index}` },
+        })
+      ),
+      ...DEFAULT_EMERGENCY.map((item, index) =>
+        tx.weddingEmergencyItem.updateMany({
+          where: { userId, itemText: item.itemText, seedKey: null },
+          data: { seedKey: `emergency-${index}` },
+        })
+      ),
+    ]);
+    await tx.weddingTask.createMany({
+      data: DEFAULT_TASKS.map((task, index) => ({
+        userId,
+        ...task,
+        sortOrder: index,
+        seedKey: `task-${index}`,
+      })),
+      skipDuplicates: true,
+    });
+    await tx.kuaRequirement.createMany({
+      data: DEFAULT_KUA.map((item, index) => ({
+        userId,
+        ...item,
+        isActive: item.isRequired,
+        sortOrder: index,
+        seedKey: `kua-${index}`,
+      })),
+      skipDuplicates: true,
+    });
+    await tx.weddingEmergencyItem.createMany({
+      data: DEFAULT_EMERGENCY.map((item, index) => ({
+        userId,
+        ...item,
+        sortOrder: index,
+        seedKey: `emergency-${index}`,
+      })),
+      skipDuplicates: true,
+    });
+  });
 }
