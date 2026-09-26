@@ -6,7 +6,7 @@ export type StudioOverflowPolicy = 'contained' | 'visible';
 export type StudioAnimationPreset = 'none' | 'entrance' | 'float' | 'sway' | 'pulse' | 'drift' | 'reveal' | 'exit';
 
 export interface StudioTransform { x: number; y: number; width: number; height: number; rotation: number; flipX: boolean; flipY: boolean; }
-export interface StudioAnimation { preset: StudioAnimationPreset; delayMs: number; durationMs: number; }
+export interface StudioAnimation { preset: StudioAnimationPreset; delayMs: number; durationMs: number; intensity?: number; direction?: 'left' | 'right' | 'up' | 'down'; repeat?: number; trigger?: 'mount' | 'visible'; }
 export interface StudioAppearance { opacity: number; overflow: StudioOverflowPolicy; }
 export interface StudioAccessibility { label: string; description?: string; }
 export interface StudioNodeBase { id: string; name?: string; layer: StudioLayer; visible: boolean; locked: boolean; transform: StudioTransform; desktopTransform?: StudioTransform; appearance: StudioAppearance; animation: StudioAnimation; accessibility: StudioAccessibility; }

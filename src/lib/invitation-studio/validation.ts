@@ -69,7 +69,9 @@ export function validateStudioDocument(input: unknown): ValidationResult<Invitat
       if (!oneOf(node.layer, layers) || typeof node.visible !== 'boolean' || typeof node.locked !== 'boolean') reject('invalid node flags/layer');
       if (!transform(node.transform) || (node.desktopTransform !== undefined && !transform(node.desktopTransform))) reject('invalid transform');
       const a = node.animation;
-      if (!record(a) || !keys(a, ['preset', 'delayMs', 'durationMs']) || !oneOf(a.preset, presets) || !number(a.delayMs, 0, STUDIO_LIMITS.delayMs) || !number(a.durationMs, 0, STUDIO_LIMITS.durationMs)) reject('invalid animation');
+      if (!record(a) || !keys(a, ['preset', 'delayMs', 'durationMs', 'intensity', 'direction', 'repeat', 'trigger']) || !oneOf(a.preset, presets) || !number(a.delayMs, 0, STUDIO_LIMITS.delayMs) || !number(a.durationMs, 0, STUDIO_LIMITS.durationMs) ||
+        (a.intensity !== undefined && !number(a.intensity, 0, 20)) || (a.direction !== undefined && !oneOf(a.direction, ['left', 'right', 'up', 'down'])) ||
+        (a.repeat !== undefined && (!number(a.repeat, 0, 20) || !Number.isInteger(a.repeat))) || (a.trigger !== undefined && !oneOf(a.trigger, ['mount', 'visible']))) reject('invalid animation');
       const p = node.appearance;
       if (!record(p) || !keys(p, ['opacity', 'overflow']) || !number(p.opacity, 0, 100) || !overflow(p.overflow)) reject('invalid appearance');
       const access = node.accessibility;

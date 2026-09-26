@@ -15,6 +15,7 @@ import { SectionNavigator } from './SectionNavigator';
 import { AssetCatalog } from './AssetCatalog';
 import { LayerTree } from './LayerTree';
 import { PropertiesInspector } from './PropertiesInspector';
+import { ResponsiveStudioCanvas } from './ResponsiveStudioCanvas';
 
 export function StudioShell({ draft, version }: { draft: { id: string; name: string; status: string }; version: { versionNumber: number; documentJson: string } }) {
   const [document, setDocument] = useState<InvitationStudioDocument>(() => JSON.parse(version.documentJson));
@@ -72,7 +73,7 @@ export function StudioShell({ draft, version }: { draft: { id: string; name: str
         </header>
         <section className="grid min-w-0 min-h-[620px] gap-5 xl:grid-cols-[220px_minmax(0,1fr)_260px]">
           <aside className="min-w-0 space-y-6 rounded-2xl border border-hk-soft-beige bg-white p-4"><SectionNavigator document={document} active={active} onSelect={id => { setActive(id); setSelection(null); }} onEdit={edit} disabled={isPending || !editable} /><AssetCatalog disabled={isPending || !editable} onAdd={asset => edit({ type: 'add', section: active, node: createStudioNode(asset, crypto.randomUUID(), active) })} /></aside>
-          <div className="flex items-center justify-center overflow-hidden rounded-2xl border border-hk-soft-beige bg-[#eee8e0] p-5"><div className="flex h-[560px] w-full max-w-[360px] items-center justify-center rounded-[2rem] border-8 border-hk-charcoal/10 bg-white text-center shadow-xl"><div><p className="font-editorial text-3xl">Canvas Preview</p><p className="mt-2 text-xs text-hk-taupe">Pilih section atau asset untuk mulai menyusun desain.</p></div></div></div>
+          <ResponsiveStudioCanvas document={document} active={active} selection={selection} device={device} onDevice={setDevice} onSelect={setSelection} onEdit={edit} disabled={isPending || !editable} />
           <aside className="min-w-0 space-y-6 rounded-2xl border border-hk-soft-beige bg-white p-4"><LayerTree section={section} selection={selection} onSelect={setSelection} onEdit={edit} disabled={isPending || !editable} /><PropertiesInspector section={section} node={selectedStudioNode(document, active, selection)} device={device} onDevice={setDevice} onEdit={edit} disabled={isPending || !editable} /></aside>
         </section>
       </div>
