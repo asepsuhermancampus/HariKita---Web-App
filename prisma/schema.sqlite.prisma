@@ -35,6 +35,9 @@ model User {
   budgetItems      WeddingBudgetItem[]
   budgetProofs     BudgetPaymentProof[]
   emergencyItems   WeddingEmergencyItem[]
+  invitationStudioDrafts  InvitationStudioDraft[]
+  invitationStudioVersions InvitationStudioVersion[]
+  invitationStudioPublishes InvitationStudioPublish[]
   createdAt         DateTime             @default(now())
   updatedAt         DateTime             @updatedAt
 }
@@ -537,6 +540,55 @@ model DigitalInvitation {
   rsvps         RsvpWish[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+}
+
+model InvitationStudioDraft {
+  id          String  @id @default(cuid())
+  ownerId     String
+  owner       User    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name        String
+  status      String  @default("DRAFT")
+  archivedAt  DateTime?
+  versions    InvitationStudioVersion[]
+  publishes   InvitationStudioPublish[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([ownerId, name])
+  @@index([ownerId, status, updatedAt])
+}
+
+model InvitationStudioVersion {
+  id          String  @id @default(cuid())
+  draftId     String
+  draft       InvitationStudioDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User    @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  versionNumber Int
+  schemaVersion Int
+  documentJson String
+  changeSummary String?
+  createdAt   DateTime @default(now())
+  publishes   InvitationStudioPublish[]
+
+  @@unique([draftId, versionNumber])
+  @@index([draftId, createdAt])
+}
+
+model InvitationStudioPublish {
+  id          String  @id @default(cuid())
+  draftId     String
+  draft       InvitationStudioDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  sourceVersionId String @unique
+  sourceVersion InvitationStudioVersion @relation(fields: [sourceVersionId], references: [id], onDelete: Restrict)
+  publisherId String
+  publisher   User    @relation(fields: [publisherId], references: [id], onDelete: Restrict)
+  schemaVersion Int
+  snapshotJson String
+  publishedAt DateTime @default(now())
+  unpublishedAt DateTime?
+
+  @@index([draftId, publishedAt])
 }
 
 model RsvpWish {

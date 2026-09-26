@@ -8,6 +8,7 @@ import {
 } from '../src/lib/invitation-studio/sections';
 import { filterStudioAssets, findStudioAsset, listStudioAssets } from '../src/lib/invitation-studio/assets';
 import { validateStudioDocument, validateStudioTransition } from '../src/lib/invitation-studio/validation';
+import { readFileSync } from 'node:fs';
 
 test('registers the canonical sixteen sections with fixed cover and closing', () => {
   assert.equal(STUDIO_SECTIONS.length, 16);
@@ -83,4 +84,18 @@ test('document validation accepts a blank document and checks transitions', () =
   assert.equal(validateStudioTransition('draft', 'in_review', 'SUPER_ADMIN', document).success, true);
   assert.equal(validateStudioTransition('in_review', 'approved', 'ADMIN', document).success, false);
   assert.equal(validateStudioTransition('draft', 'published', 'SUPER_ADMIN', document).success, false);
+});
+
+test('studio persistence is isolated and supports unlimited draft/version snapshots', () => {
+  const sqliteSchema = readFileSync('prisma/schema.sqlite.prisma', 'utf8');
+  const migration = readFileSync('prisma/migrations/20260926120000_invitation_studio_persistence/migration.sql', 'utf8');
+  for (const model of ['InvitationStudioDraft', 'InvitationStudioVersion', 'InvitationStudioPublish']) {
+    assert.match(sqliteSchema, new RegExp(`model ${model} \\{`));
+    assert.match(migration, new RegExp(`CREATE TABLE "${model}"`));
+  }
+  assert.match(sqliteSchema, /model DigitalInvitation/);
+  assert.match(migration, /InvitationStudioDraft_ownerId_name_key/);
+  assert.match(migration, /InvitationStudioVersion_draftId_versionNumber_key/);
+  assert.match(migration, /InvitationStudioPublish_sourceVersionId_key/);
+  assert.match(sqliteSchema, /snapshotJson String/);
 });
