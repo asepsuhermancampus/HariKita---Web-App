@@ -26,6 +26,22 @@ export default async function ClientProfilePage() {
     redirect("/auth/login?callbackUrl=/client/profil");
   }
 
+  let leftName: string;
+  let rightName: string;
+  if (!profile.accountOwnerRole) {
+    leftName = profile.name;
+    rightName = profile.partnerName || "Pasangan";
+  } else {
+    leftName =
+      profile.groomName ||
+      (profile.accountOwnerRole === "GROOM" ? profile.name : profile.partnerName) ||
+      "Mempelai Pria";
+    rightName =
+      profile.brideName ||
+      (profile.accountOwnerRole === "BRIDE" ? profile.name : profile.partnerName) ||
+      "Mempelai Wanita";
+  }
+
   // Hitung sisa hari menuju hari H jika tanggal acara sudah diisi
   let daysUntilEvent: number | null = null;
   if (profile.eventDate) {
@@ -40,7 +56,7 @@ export default async function ClientProfilePage() {
   return (
     <div className="flex flex-col gap-8">
       <DashPageHeader
-        title={`Data Diri: ${profile.name}${profile.partnerName ? ` & ${profile.partnerName}` : ""}`}
+        title={`Data Diri: ${profile.coupleDisplayName || `${leftName} & ${rightName}`}`}
         description="Data ini digunakan untuk kontrak digital SLA, sinkronisasi jadwal fitting, dan penentuan logistik vendor se-Kebumen."
         action={
           <Link
@@ -60,7 +76,7 @@ export default async function ClientProfilePage() {
         <div className="absolute right-8 bottom-8 w-24 h-24 rounded-full border border-hk-champagne/25 pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2.5">
+          <div className="min-w-0 space-y-2.5">
             <div className="flex items-center gap-2">
               <span className="text-xs uppercase font-bold tracking-wider text-hk-taupe font-manrope">
                 Pasangan Bahagia HariKita
@@ -69,10 +85,10 @@ export default async function ClientProfilePage() {
                 Pilot Kebumen
               </span>
             </div>
-            <h2 className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal flex items-center gap-2.5">
-              <span>{profile.name}</span>
-              <Heart className="w-5 h-5 text-hk-taupe fill-hk-taupe/30" />
-              <span>{profile.partnerName || "Mempelai Pasangan"}</span>
+            <h2 className="font-editorial text-3xl sm:text-4xl font-normal text-hk-charcoal flex flex-wrap min-w-0 items-center gap-2.5">
+              <span className="min-w-0 break-words">{leftName}</span>
+              <Heart className="w-5 h-5 shrink-0 text-hk-taupe fill-hk-taupe/30" />
+              <span className="min-w-0 break-words">{rightName}</span>
             </h2>
 
             <div className="flex flex-wrap items-center gap-4 text-xs font-manrope text-hk-charcoal/80 pt-1">

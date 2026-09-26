@@ -1,40 +1,17 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import { validateClientProfileInput } from "@/lib/validations/client-profile";
 import { toWibDateString } from "@/lib/date-utils";
+import type { AccountOwnerRole } from "@/lib/client-couple-profile";
+import {
+  createUpdateClientProfileAction,
+  type ClientProfileData,
+} from "./client-profile-core";
 
-export interface ClientProfileData {
-  id: string;
-  name: string;
-  phone: string;
-  email: string | null;
-  partnerName: string | null;
-  eventDate: string | null;
-  eventLocation: string | null;
-  district: string | null;
-  themePreference: string | null;
-  notes: string | null;
-  rt: string | null;
-  rw: string | null;
-  dusun: string | null;
-  desa: string | null;
-  kecamatan: string | null;
-  kabupaten: string | null;
-  postalCode: string | null;
-  latitude: number | null;
-  longitude: number | null;
-}
-
-export interface ProfileActionResult {
-  success: boolean;
-  message?: string;
-  fieldErrors?: Record<string, string[]>;
-  error?: string;
-  data?: ClientProfileData;
-}
+export type { ClientProfileData, ProfileActionResult } from "./client-profile-core";
 
 /**
  * Mengambil data profil klien yang sedang login dari database.
@@ -56,6 +33,14 @@ export async function getClientProfile(): Promise<ClientProfileData | null> {
     phone: user.phone,
     email: user.email,
     partnerName: user.clientProfile?.partnerName ?? null,
+    accountOwnerRole:
+      user.clientProfile?.accountOwnerRole === "GROOM" ||
+      user.clientProfile?.accountOwnerRole === "BRIDE"
+        ? user.clientProfile.accountOwnerRole
+        : null,
+    groomName: user.clientProfile?.groomName ?? null,
+    brideName: user.clientProfile?.brideName ?? null,
+    coupleDisplayName: user.clientProfile?.coupleDisplayName ?? null,
     eventDate: user.clientProfile?.eventDate
       ? toWibDateString(user.clientProfile.eventDate)
       : null,
@@ -78,122 +63,20 @@ export async function getClientProfile(): Promise<ClientProfileData | null> {
 /**
  * Server Action: Memperbarui data profil klien (Anti-IDOR: userId diambil dari session server).
  */
-export async function updateClientProfileAction(
-  formData: FormData
-): Promise<ProfileActionResult> {
-  const session = await getSession();
-  if (!session) {
-    return {
-      success: false,
-      error: "Sesi Anda telah berakhir. Silakan masuk kembali.",
-    };
-  }
+const updateClientProfile = createUpdateClientProfileAction({
+  getSession,
+  userUpdate: (input) =>
+    prisma.user.update(input as unknown as Prisma.UserUpdateArgs),
+  clientProfileUpsert: (input) =>
+    prisma.clientProfile.upsert(
+      input as unknown as Prisma.ClientProfileUpsertArgs
+    ),
+  transaction: (operations) =>
+    prisma.$transaction(operations as Prisma.PrismaPromise<unknown>[]),
+  getClientProfile,
+  revalidatePath,
+});
 
-  // Siapkan data mentah dari FormData
-  const rawData = {
-    name: formData.get("name"),
-    email: formData.get("email") || "",
-    partnerName: formData.get("partnerName") || "",
-    eventDate: formData.get("eventDate") || "",
-    eventLocation: formData.get("eventLocation") || "",
-    district: formData.get("district") || "",
-    themePreference: formData.get("themePreference") || "",
-    notes: formData.get("notes") || "",
-  };
-
-  // Validasi input data diri
-  const validation = validateClientProfileInput(rawData);
-  if (!validation.success || !validation.data) {
-    return {
-      success: false,
-      error: "Terdapat data yang belum sesuai. Mohon periksa kembali formulir.",
-      fieldErrors: validation.errors,
-    };
-  }
-
-  const {
-    name,
-    email,
-    partnerName,
-    eventDate,
-    eventLocation,
-    district,
-    themePreference,
-    notes,
-  } = validation.data;
-
-  // Field alamat/koordinat (opsional; dibaca langsung dari form)
-  const s = (k: string) => {
-    const v = formData.get(k);
-    return typeof v === "string" && v.trim() !== "" ? v.trim() : null;
-  };
-  const n = (k: string) => {
-    const v = formData.get(k);
-    if (typeof v !== "string" || v.trim() === "") return null;
-    const num = Number(v);
-    return Number.isFinite(num) ? num : null;
-  };
-  const geo = {
-    rt: s("rt"),
-    rw: s("rw"),
-    dusun: s("dusun"),
-    desa: s("desa"),
-    kecamatan: s("kecamatan"),
-    kabupaten: s("kabupaten") ?? "Kebumen",
-    postalCode: s("postalCode"),
-    latitude: n("latitude"),
-    longitude: n("longitude"),
-  };
-
-  try {
-    const parsedDate = eventDate ? new Date(eventDate) : null;
-
-    // Mutasi database: Update User dan Upsert ClientProfile
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: session.userId },
-        data: {
-          name,
-          email: email || null,
-        },
-      }),
-      prisma.clientProfile.upsert({
-        where: { userId: session.userId },
-        create: {
-          userId: session.userId,
-          partnerName: partnerName || null,
-          eventDate: parsedDate,
-          eventLocation: eventLocation || null,
-          district: district || "Kebumen",
-          themePreference: themePreference || null,
-          notes: notes || null,
-          ...geo,
-        },
-        update: {
-          partnerName: partnerName || null,
-          eventDate: parsedDate,
-          eventLocation: eventLocation || null,
-          district: district || "Kebumen",
-          themePreference: themePreference || null,
-          notes: notes || null,
-          ...geo,
-        },
-      }),
-    ]);
-
-    // Revalidasi cache halaman client
-    revalidatePath("/client/profil");
-    revalidatePath("/client");
-
-    return {
-      success: true,
-      message: "Data profil berhasil disimpan dan diperbarui!",
-    };
-  } catch (err: unknown) {
-    console.error("[updateClientProfileAction] Error:", err);
-    return {
-      success: false,
-      error: "Gagal menyimpan data profil. Silakan coba lagi nanti.",
-    };
-  }
+export async function updateClientProfileAction(formData: FormData) {
+  return updateClientProfile(formData);
 }

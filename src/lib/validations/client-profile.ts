@@ -1,3 +1,5 @@
+import type { AccountOwnerRole } from "../client-couple-profile";
+
 export const PhoneRegex = /^(\+62|62|0)8[1-9][0-9]{7,11}$/;
 export const EmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -40,9 +42,11 @@ export const EVENT_THEMES = [
 ] as const;
 
 export interface UpdateClientProfileInput {
-  name: string;
+  accountOwnerRole: AccountOwnerRole;
+  groomName: string;
+  brideName: string;
+  coupleDisplayName: string;
   email?: string;
-  partnerName?: string;
   eventDate?: string;
   eventLocation?: string;
   district?: string;
@@ -61,22 +65,39 @@ export function validateClientProfileInput(
 ): ValidationResult<UpdateClientProfileInput> {
   const errors: Record<string, string[]> = {};
 
-  const name = typeof raw.name === "string" ? raw.name.trim() : "";
-  if (!name || name.length < 2) {
-    errors.name = ["Nama lengkap minimal 2 karakter."];
-  } else if (name.length > 100) {
-    errors.name = ["Nama lengkap maksimal 100 karakter."];
+  const accountOwnerRole =
+    raw.accountOwnerRole === "GROOM" || raw.accountOwnerRole === "BRIDE"
+      ? raw.accountOwnerRole
+      : null;
+  if (!accountOwnerRole) {
+    errors.accountOwnerRole = ["Pilih peran pemilik akun."];
+  }
+
+  const groomName =
+    typeof raw.groomName === "string" ? raw.groomName.trim() : "";
+  if (groomName.length < 2 || groomName.length > 100) {
+    errors.groomName = ["Nama mempelai pria harus 2-100 karakter."];
+  }
+
+  const brideName =
+    typeof raw.brideName === "string" ? raw.brideName.trim() : "";
+  if (brideName.length < 2 || brideName.length > 100) {
+    errors.brideName = ["Nama mempelai wanita harus 2-100 karakter."];
+  }
+
+  const coupleDisplayName =
+    typeof raw.coupleDisplayName === "string"
+      ? raw.coupleDisplayName.trim()
+      : "";
+  if (coupleDisplayName.length < 2 || coupleDisplayName.length > 40) {
+    errors.coupleDisplayName = [
+      "Nama tampilan pasangan harus 2-40 karakter.",
+    ];
   }
 
   const email = typeof raw.email === "string" ? raw.email.trim() : "";
   if (email && !EmailRegex.test(email)) {
     errors.email = ["Format email tidak valid (contoh: pengantin@gmail.com)."];
-  }
-
-  const partnerName =
-    typeof raw.partnerName === "string" ? raw.partnerName.trim() : "";
-  if (partnerName && partnerName.length > 100) {
-    errors.partnerName = ["Nama pasangan maksimal 100 karakter."];
   }
 
   const eventDate =
@@ -111,9 +132,11 @@ export function validateClientProfileInput(
   return {
     success: true,
     data: {
-      name,
+      accountOwnerRole: accountOwnerRole as AccountOwnerRole,
+      groomName,
+      brideName,
+      coupleDisplayName,
       email: email || undefined,
-      partnerName: partnerName || undefined,
       eventDate: eventDate || undefined,
       eventLocation: eventLocation || undefined,
       district: district || undefined,

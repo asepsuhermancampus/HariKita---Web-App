@@ -85,10 +85,11 @@ Email penerima: `asepsuherman.workmail@gmail.com` (satu-satunya yang aktif di mo
 
 ## 4. Peta & Alamat Client
 
-1. Login `081900000099` → `/client/profil`
-2. Lihat bagian **"Alamat Lengkap & Titik Lokasi Acara"**
-3. Isi alamat + klik peta → Simpan
-4. Nama pasangan juga bisa diisi
+1. Login `081900000099` → `/client`
+2. Buka `/client/profil`
+3. Lihat bagian **"Alamat Lengkap & Titik Lokasi Acara"**
+4. Isi alamat + klik peta → Simpan
+5. Nama pasangan juga bisa diisi
 
 ## 5. Estimasi Jarak (OSRM)
 

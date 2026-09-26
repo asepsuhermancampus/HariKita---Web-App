@@ -304,7 +304,21 @@ export async function getClientPlannerOverview(): Promise<PlannerOverview> {
   const seededReadiness = await getWeddingReadiness();
 
   const [user, nearestOrder] = await Promise.all([
-    prisma.user.findUnique({ where: { id: userId }, include: { clientProfile: true } }),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        name: true,
+        clientProfile: {
+          select: {
+            eventDate: true,
+            partnerName: true,
+            groomName: true,
+            brideName: true,
+            coupleDisplayName: true,
+          },
+        },
+      },
+    }),
     prisma.order.findFirst({
       where: {
         userId,
@@ -321,6 +335,9 @@ export async function getClientPlannerOverview(): Promise<PlannerOverview> {
   const eventDate = selectPlannerEventDate(profileDate, orderDate);
   const today = toWibDateString(new Date());
   const daysUntilEvent = eventDate ? diffCalendarDaysWIB(eventDate, today) : null;
+  const groomName = user?.clientProfile?.groomName?.trim();
+  const brideName = user?.clientProfile?.brideName?.trim();
+  const hasCanonicalNames = Boolean(groomName && brideName);
 
   const next = await prisma.physicalSession.findFirst({
     where: {
@@ -335,8 +352,8 @@ export async function getClientPlannerOverview(): Promise<PlannerOverview> {
     readiness: seededReadiness,
     daysUntilEvent,
     eventDate,
-    coupleName: user?.name ?? "Calon Pengantin",
-    partnerName: user?.clientProfile?.partnerName ?? null,
+    coupleName: hasCanonicalNames ? groomName! : user?.name ?? "Calon Pengantin",
+    partnerName: hasCanonicalNames ? brideName! : user?.clientProfile?.partnerName ?? null,
     nextSession: next
       ? {
           title: next.notes || next.type,

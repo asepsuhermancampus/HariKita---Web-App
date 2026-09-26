@@ -53,7 +53,7 @@ export function getDashboardPath(role: string): string {
       return "/dashboard/ba";
     case "CLIENT":
     default:
-      return "/client/profil";
+      return "/client";
   }
 }
 
