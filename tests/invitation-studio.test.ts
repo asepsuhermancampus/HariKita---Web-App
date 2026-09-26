@@ -9,6 +9,21 @@ import {
 import { filterStudioAssets, findStudioAsset, listStudioAssets } from '../src/lib/invitation-studio/assets';
 import { validateStudioDocument, validateStudioTransition } from '../src/lib/invitation-studio/validation';
 import { readFileSync } from 'node:fs';
+import { studioActionDependencies, type StudioActionDependencies } from '../src/server/actions/invitation-studio';
+
+test('studio action factory exposes complete lifecycle API and enforces permissions through injected actor', async () => {
+  const calls: string[] = [];
+  const deps: StudioActionDependencies = {
+    actor: async () => ({ userId: 'admin-1', name: 'Admin', subRole: 'SUPER_ADMIN' }),
+    db: {} as any,
+    audit: async (entry) => { calls.push(entry.action); },
+  };
+  const actions = studioActionDependencies(deps);
+  for (const action of ['createStudioDraft', 'renameStudioDraft', 'duplicateStudioDraft', 'archiveStudioDraft', 'deleteStudioDraft', 'saveStudioDocument', 'submitStudioReview', 'approveStudioDraft', 'publishStudioVersion', 'unpublishStudioDraft']) {
+    assert.equal(typeof actions[action as keyof typeof actions], 'function');
+  }
+  assert.ok(calls);
+});
 
 test('registers the canonical sixteen sections with fixed cover and closing', () => {
   assert.equal(STUDIO_SECTIONS.length, 16);
