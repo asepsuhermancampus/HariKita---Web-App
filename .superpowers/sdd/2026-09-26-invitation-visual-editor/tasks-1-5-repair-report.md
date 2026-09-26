@@ -27,3 +27,12 @@
 - Migration correction is on the feature branch. Remote migration application history is unavailable; if this migration was applied elsewhere, reconcile its checksum before deployment.
 - Existing tracked Task 3 DB backup was not modified or newly staged.
 - User requested manual review before proceeding to Task 6–9.
+
+## Re-audit 2026-09-27
+- Verified clean linked worktree `feature/invitation-visual-editor` at `f5f2187` before changes.
+- Read document contract, validator, catalog, action/core, scoped queries, authorization, audit, routes, list, shell, navigation, both schemas and migration. No additional reproducible foundation defect identified in these paths.
+- Re-ran `npm run typecheck` (pass), `npm test` (365/365), focused six studio test files (39/39), `git diff --check` (pass).
+- Both Prisma schemas validate with process-local validation-only PostgreSQL/file URLs. No development DB migration or migration checksum edits.
+- SQLite workflow test exercises ownership, concurrency, frozen review, immutable published content and audit rollback on disposable DB. Query/route guards additionally inspected; authenticated browser behavior remains unverified at this checkpoint.
+- `npm run assets:verify`: 254/254 valid. All four curated studio asset files exist. Referenced `src/lib/asset-manifest.ts` does not exist; generated project catalog lives at `src/data/harikita-assets.json`.
+- Browser/full build still unverified. Motion and Playwright absent from direct installed dependencies. Task 6–9 remain pending at this checkpoint.
