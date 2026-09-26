@@ -14,8 +14,10 @@ export function canReorderSection(id: StudioSectionId): boolean { return id !== 
 
 export function normalizeSectionOrder(order: readonly string[]): StudioSectionId[] {
   const ids = new Set<StudioSectionId>();
-  for (const id of order) if (STUDIO_SECTIONS.some((section) => section.id === id)) ids.add(id as StudioSectionId);
-  return STUDIO_SECTIONS.map((section) => section.id).filter((id) => id === 'cover' || id === 'closing' || ids.has(id));
+  for (const id of [...order, ...STUDIO_SECTIONS.map((section) => section.id)]) {
+    if (id !== 'cover' && id !== 'closing' && STUDIO_SECTIONS.some((section) => section.id === id)) ids.add(id as StudioSectionId);
+  }
+  return ['cover', ...ids, 'closing'];
 }
 
 export function createBlankStudioDocument(): InvitationStudioDocument {

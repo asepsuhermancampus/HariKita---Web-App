@@ -3,9 +3,9 @@ CREATE TABLE "InvitationStudioDraft" (
   "ownerId" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "status" TEXT NOT NULL DEFAULT 'DRAFT',
-  "archivedAt" DATETIME,
-  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updatedAt" DATETIME NOT NULL,
+  "archivedAt" TIMESTAMP(3),
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
   CONSTRAINT "InvitationStudioDraft_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE TABLE "InvitationStudioVersion" (
@@ -16,7 +16,7 @@ CREATE TABLE "InvitationStudioVersion" (
   "schemaVersion" INTEGER NOT NULL,
   "documentJson" TEXT NOT NULL,
   "changeSummary" TEXT,
-  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "InvitationStudioVersion_draftId_fkey" FOREIGN KEY ("draftId") REFERENCES "InvitationStudioDraft" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "InvitationStudioVersion_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -27,8 +27,8 @@ CREATE TABLE "InvitationStudioPublish" (
   "publisherId" TEXT NOT NULL,
   "schemaVersion" INTEGER NOT NULL,
   "snapshotJson" TEXT NOT NULL,
-  "publishedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "unpublishedAt" DATETIME,
+  "publishedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "unpublishedAt" TIMESTAMP(3),
   CONSTRAINT "InvitationStudioPublish_draftId_fkey" FOREIGN KEY ("draftId") REFERENCES "InvitationStudioDraft" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "InvitationStudioPublish_sourceVersionId_fkey" FOREIGN KEY ("sourceVersionId") REFERENCES "InvitationStudioVersion" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "InvitationStudioPublish_publisherId_fkey" FOREIGN KEY ("publisherId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE

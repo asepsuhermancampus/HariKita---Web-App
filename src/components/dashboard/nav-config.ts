@@ -89,6 +89,10 @@ export const VENDOR_NAV: NavGroup[] = [
   },
 ];
 
+export function getAdminNav(subRole: string | null): NavGroup[] {
+  return ADMIN_NAV.map(group => ({ ...group, items: group.items.filter(item => item.href !== '/admin/undangan-studio' || subRole === 'SUPER_ADMIN') }));
+}
+
 export const BA_NAV: NavGroup[] = [
   {
     group: "Kemitraan",

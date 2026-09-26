@@ -9,7 +9,7 @@ import {
 import { filterStudioAssets, findStudioAsset, listStudioAssets } from '../src/lib/invitation-studio/assets';
 import { validateStudioDocument, validateStudioTransition } from '../src/lib/invitation-studio/validation';
 import { readFileSync } from 'node:fs';
-import { studioActionDependencies, type StudioActionDependencies } from '../src/server/actions/invitation-studio';
+import { studioActionDependencies, type StudioActionDependencies } from '../src/server/actions/invitation-studio-core';
 
 test('studio action factory exposes complete lifecycle API and enforces permissions through injected actor', async () => {
   const calls: string[] = [];
@@ -49,7 +49,9 @@ test('blank documents use mobile base with optional desktop overrides', () => {
 
 test('normalizes section order while preserving fixed boundaries', () => {
   const order = normalizeSectionOrder(['gallery', 'cover', 'closing', 'hero', 'gallery', 'unknown']);
-  assert.deepEqual(order, ['cover', 'hero', 'gallery', 'closing']);
+  assert.deepEqual(order.slice(0, 3), ['cover', 'gallery', 'hero']);
+  assert.equal(order.at(-1), 'closing');
+  assert.equal(order.length, 16);
 });
 
 test('document contract represents transforms, layers, nodes, animation, and lifecycle values', () => {
@@ -90,7 +92,7 @@ test('document validation rejects malformed structure and unsafe node data', () 
   document.sections[1].nodes.push({ ...document.sections[0].nodes[0], id: 'duplicate', transform: { ...document.sections[0].nodes[0].transform, x: 101 } });
   const result = validateStudioDocument(document);
   assert.equal(result.success, false);
-  if (!result.success) assert.ok(result.errors.some((error) => error.includes('duplicate')));
+   if (!result.success) assert.ok(result.errors.some((error) => error.includes('duplicate node id')));
 });
 
 test('document validation accepts a blank document and checks transitions', () => {

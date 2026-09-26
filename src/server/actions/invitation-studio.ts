@@ -1,35 +1,30 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import { requireAdminCapability } from "@/server/auth/admin-guard";
-import { recordAdminAudit } from "@/server/services/admin-audit-service";
-import { runAction } from "./_shared";
-import { studioActionDependencies } from "./invitation-studio-core";
-export { studioActionDependencies } from "./invitation-studio-core";
-export type { StudioActionDependencies } from "./invitation-studio-core";
+import { prisma } from '@/lib/prisma';
+import { requireAdminCapability } from '@/server/auth/admin-guard';
+import { recordAdminAudit } from '@/server/services/admin-audit-service';
+import { revalidate } from './_shared';
+import { studioActionDependencies } from './invitation-studio-core';
+import type { StudioMutationToken } from '@/lib/invitation-studio/contracts';
+import type { ActionResult } from './_shared';
 
-async function actions() {
-  return studioActionDependencies({
-    actor: () => requireAdminCapability("VIEW_ADMIN"),
-    db: prisma as never,
-    audit: async (entry, tx) => recordAdminAudit({
-      actor: entry.actor,
-      capability: "VIEW_ADMIN",
-      action: entry.action,
-      targetType: "InvitationStudioDraft",
-      targetId: entry.targetId,
-      metadata: entry.metadata,
-    }, tx as never),
-  });
+function actions() {
+  return studioActionDependencies({ actor: () => requireAdminCapability('MANAGE_ADMIN'), db: prisma,
+    audit: (entry, tx) => recordAdminAudit({ ...entry, capability: 'MANAGE_ADMIN', targetType: 'InvitationStudioDraft' }, tx) });
 }
-
-export async function createStudioDraft(input: { name: string }) { return runAction(async () => (await actions()).createStudioDraft(input)); }
-export async function renameStudioDraft(input: { draftId: string; name: string }) { return runAction(async () => (await actions()).renameStudioDraft(input)); }
-export async function duplicateStudioDraft(input: { draftId: string; name: string }) { return runAction(async () => (await actions()).duplicateStudioDraft(input)); }
-export async function archiveStudioDraft(input: { draftId: string }) { return runAction(async () => (await actions()).archiveStudioDraft(input)); }
-export async function deleteStudioDraft(input: { draftId: string; confirmation: string }) { return runAction(async () => (await actions()).deleteStudioDraft(input)); }
-export async function saveStudioDocument(input: { draftId: string; expectedVersion: number; document: unknown }) { return runAction(async () => (await actions()).saveStudioDocument(input)); }
-export async function submitStudioReview(input: { draftId: string }) { return runAction(async () => (await actions()).submitStudioReview(input)); }
-export async function approveStudioDraft(input: { draftId: string }) { return runAction(async () => (await actions()).approveStudioDraft(input)); }
-export async function publishStudioVersion(input: { draftId: string }) { return runAction(async () => (await actions()).publishStudioVersion(input)); }
-export async function unpublishStudioDraft(input: { draftId: string }) { return runAction(async () => (await actions()).unpublishStudioDraft(input)); }
+async function finish<T>(result: Promise<ActionResult<T>>, draftId?: string): Promise<ActionResult<T>> {
+  const value = await result;
+  if (value.success) revalidate(['/admin/undangan-studio', ...(draftId ? [`/admin/undangan-studio/${draftId}`] : [])]);
+  return value;
+}
+export async function createStudioDraft(input: { name: string }) { return finish(actions().createStudioDraft(input)); }
+export async function renameStudioDraft(input: StudioMutationToken & { name: string }) { return finish(actions().renameStudioDraft(input), input?.draftId); }
+export async function duplicateStudioDraft(input: StudioMutationToken & { name: string }) { return finish(actions().duplicateStudioDraft(input)); }
+export async function archiveStudioDraft(input: StudioMutationToken) { return finish(actions().archiveStudioDraft(input), input?.draftId); }
+export async function deleteStudioDraft(input: StudioMutationToken & { confirmation: string }) { return finish(actions().deleteStudioDraft(input), input?.draftId); }
+export async function saveStudioDocument(input: StudioMutationToken & { document: unknown }) { return finish(actions().saveStudioDocument(input), input?.draftId); }
+export async function submitStudioReview(input: StudioMutationToken) { return finish(actions().submitStudioReview(input), input?.draftId); }
+export async function approveStudioDraft(input: StudioMutationToken) { return finish(actions().approveStudioDraft(input), input?.draftId); }
+export async function publishStudioVersion(input: StudioMutationToken) { return finish(actions().publishStudioVersion(input), input?.draftId); }
+export async function unpublishStudioDraft(input: StudioMutationToken) { return finish(actions().unpublishStudioDraft(input), input?.draftId); }
+export async function returnStudioDraft(input: StudioMutationToken) { return finish(actions().returnStudioDraft(input), input?.draftId); }

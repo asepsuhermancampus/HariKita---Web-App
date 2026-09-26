@@ -1,65 +1,91 @@
 import { STUDIO_SECTIONS } from './sections';
 import { findStudioAsset } from './assets';
-import type { InvitationStudioDocument, StudioNode, StudioStatus } from './types';
+import type { InvitationStudioDocument, StudioStatus } from './types';
 
 export type ValidationResult<T> = { success: true; data: T } | { success: false; errors: string[] };
-const presets = new Set(['none', 'entrance', 'float', 'sway', 'pulse', 'drift', 'reveal', 'exit']);
-const kinds = new Set(['svg', 'png', 'image', 'text', 'component']);
-const layers = new Set(['background', 'behind-content', 'content', 'front-decoration', 'component']);
-const statuses: StudioStatus[] = ['draft', 'in_review', 'approved', 'published', 'archived'];
+export const STUDIO_LIMITS = { bytes: 512_000, nodes: 256, name: 100, text: 4000, durationMs: 60_000, delayMs: 60_000 } as const;
+const presets = ['none', 'entrance', 'float', 'sway', 'pulse', 'drift', 'reveal', 'exit'];
+const layers = ['background', 'behind-content', 'content', 'front-decoration', 'component'];
+const ids = STUDIO_SECTIONS.map(s => s.id as string);
+const record = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v) && (Object.getPrototypeOf(v) === Object.prototype || Object.getPrototypeOf(v) === null);
+const number = (v: unknown, min: number, max: number) => typeof v === 'number' && Number.isFinite(v) && v >= min && v <= max;
+const text = (v: unknown, max: number, nonempty = false) => typeof v === 'string' && v.length <= max && (!nonempty || !!v.trim());
+const oneOf = (v: unknown, values: readonly string[]) => typeof v === 'string' && values.includes(v);
+const keys = (v: Record<string, unknown>, allowed: string[]) => Object.keys(v).every(k => allowed.includes(k));
+const overflow = (v: unknown) => oneOf(v, ['contained', 'visible']);
 
-function nodeErrors(node: unknown, seen: Set<string>): string[] {
-  const errors: string[] = [];
-  if (!node || typeof node !== 'object') return ['node must be an object'];
-  const value = node as Partial<StudioNode>;
-  if (!value.id || typeof value.id !== 'string') errors.push('node id required');
-  else if (seen.has(value.id)) errors.push(`duplicate node id: ${value.id}`); else seen.add(value.id);
-  if (!kinds.has(value.kind as string)) errors.push(`invalid node kind: ${value.id}`);
-  if (!layers.has(value.layer as string)) errors.push(`invalid layer: ${value.id}`);
-  const transform = value.transform;
-  if (!transform || [transform.x, transform.y, transform.width, transform.height, transform.rotation].some((n) => typeof n !== 'number' || !Number.isFinite(n))) errors.push(`invalid transform: ${value.id}`);
-  else if (transform.x < 0 || transform.x > 100 || transform.y < 0 || transform.y > 100 || transform.width <= 0 || transform.width > 100 || transform.height <= 0 || transform.height > 100 || transform.rotation < -360 || transform.rotation > 360) errors.push(`transform out of bounds: ${value.id}`);
-  if (!value.animation || !presets.has(value.animation.preset) || value.animation.delayMs < 0 || value.animation.durationMs < 0) errors.push(`invalid animation: ${value.id}`);
-  if (!value.appearance || value.appearance.opacity < 0 || value.appearance.opacity > 100 || !['contained', 'visible'].includes(value.appearance.overflow)) errors.push(`invalid appearance: ${value.id}`);
-  if (!value.accessibility || typeof value.accessibility.label !== 'string') errors.push(`accessibility label required: ${value.id}`);
-  if (value.kind === 'svg' || value.kind === 'png' || value.kind === 'image') {
-    const src = value.config && typeof value.config.src === 'string' ? value.config.src : '';
-    if (!findStudioAsset(src)) errors.push(`unregistered asset: ${value.id}`);
-  }
-  if (value.kind === 'component' && (!value.config || typeof value.config.component !== 'string')) errors.push(`component config required: ${value.id}`);
-  return errors;
+function transform(v: unknown): boolean {
+  return record(v) && keys(v, ['x', 'y', 'width', 'height', 'rotation', 'flipX', 'flipY']) &&
+    number(v.x, 0, 100) && number(v.y, 0, 100) && number(v.width, 0.1, 100) && number(v.height, 0.1, 100) &&
+    number(v.rotation, -360, 360) && typeof v.flipX === 'boolean' && typeof v.flipY === 'boolean';
+}
+
+function config(kind: unknown, v: unknown): boolean {
+  if (!record(v)) return false;
+  if (kind === 'text') return keys(v, ['text', 'color', 'fontSize', 'align']) && text(v.text, STUDIO_LIMITS.text) &&
+    (v.color === undefined || (typeof v.color === 'string' && /^#[\da-f]{6}$/i.test(v.color))) &&
+    (v.fontSize === undefined || number(v.fontSize, 8, 160)) && (v.align === undefined || oneOf(v.align, ['left', 'center', 'right']));
+  if (kind === 'component') return keys(v, ['component', 'variant', 'title']) && oneOf(v.component, ids) && v.variant === 'default' && text(v.title, 200);
+  if (!oneOf(kind, ['svg', 'png', 'image']) || !keys(v, ['src', 'fit']) || typeof v.src !== 'string') return false;
+  const asset = findStudioAsset(v.src);
+  return !!asset && (kind === 'image' || asset.kind === kind) && (v.fit === undefined || oneOf(v.fit, ['contain', 'cover']));
 }
 
 export function validateStudioDocument(input: unknown): ValidationResult<InvitationStudioDocument> {
   const errors: string[] = [];
-  if (!input || typeof input !== 'object') return { success: false, errors: ['document must be an object'] };
-  const document = input as Partial<InvitationStudioDocument>;
-  if (document.schemaVersion !== 1) errors.push('schemaVersion must be 1');
-  if (!document.metadata || typeof document.metadata.name !== 'string' || !document.metadata.name.trim()) errors.push('metadata.name required');
-  const expected = STUDIO_SECTIONS.map((section) => section.id);
-  if (!Array.isArray(document.sectionOrder) || document.sectionOrder.length !== expected.length || new Set(document.sectionOrder).size !== expected.length || expected.some((id) => !document.sectionOrder?.includes(id))) errors.push('sectionOrder must contain all unique sections');
-  if (!Array.isArray(document.sections)) errors.push('sections required');
-  else {
-    const ids = new Set<string>();
-    for (const section of document.sections) {
-      if (!section || typeof section !== 'object') { errors.push('invalid section'); continue; }
-      const item = section as any;
-      if (ids.has(item.id)) errors.push(`duplicate section id: ${item.id}`); ids.add(item.id);
-      if (!expected.includes(item.id)) errors.push(`unknown section: ${item.id}`);
-      if (!item.layout || item.layout.mobile !== 'base' || (item.layout.desktop !== undefined && item.layout.desktop !== 'override')) errors.push(`invalid layout: ${item.id}`);
-      if (!Array.isArray(item.nodes)) errors.push(`nodes required: ${item.id}`); else for (const node of item.nodes) errors.push(...nodeErrors(node, new Set()));
+  const reject = (message: string) => errors.push(message);
+  if (!record(input)) return { success: false, errors: ['document must be an object'] };
+  try {
+    if (new TextEncoder().encode(JSON.stringify(input)).length > STUDIO_LIMITS.bytes) return { success: false, errors: ['document too large'] };
+  } catch { return { success: false, errors: ['document must be serializable JSON'] }; }
+  if (!keys(input, ['schemaVersion', 'metadata', 'sectionOrder', 'sections', 'fixtureProfile'])) reject('unknown document field');
+  if (input.schemaVersion !== 1) reject('schemaVersion must be 1');
+  if (!record(input.metadata) || !keys(input.metadata, ['name']) || !text(input.metadata.name, 100, true)) reject('metadata.name required, maximum 100 characters');
+  if (input.fixtureProfile !== 'neutral') reject('fixtureProfile must be neutral');
+  const order = input.sectionOrder;
+  if (!Array.isArray(order) || order.length !== 16 || new Set(order).size !== 16 || !order.every(id => ids.includes(id)) || order[0] !== 'cover' || order[15] !== 'closing') reject('sectionOrder must contain all unique sections with fixed cover/closing');
+  if (!Array.isArray(input.sections) || input.sections.length !== 16) reject('all sixteen sections required');
+  const sections = Array.isArray(input.sections) ? input.sections : [];
+  const seenSections = new Set<string>();
+  const seenNodes = new Set<string>();
+  let count = 0;
+  for (const section of sections) {
+    if (!record(section)) { reject('invalid section'); continue; }
+    if (!keys(section, ['id', 'sectionType', 'enabled', 'layout', 'overflowPolicy', 'nodes'])) reject('unknown section field');
+    if (typeof section.id !== 'string' || !ids.includes(section.id) || seenSections.has(section.id)) reject('unknown or duplicate section id');
+    else seenSections.add(section.id);
+    if (section.sectionType !== section.id || typeof section.enabled !== 'boolean' || !overflow(section.overflowPolicy)) reject('invalid section configuration');
+    if (['cover', 'closing'].includes(String(section.id)) && section.enabled !== true) reject('cover/closing section is mandatory');
+    if (!record(section.layout) || !keys(section.layout, ['mobile', 'desktop']) || section.layout.mobile !== 'base' || (section.layout.desktop !== undefined && section.layout.desktop !== 'override')) reject('invalid section layout');
+    if (!Array.isArray(section.nodes)) { reject('nodes required'); continue; }
+    count += section.nodes.length;
+    if (count > STUDIO_LIMITS.nodes) { reject('too many nodes'); break; }
+    for (const node of section.nodes) {
+      if (!record(node)) { reject('invalid node'); continue; }
+      if (!keys(node, ['id', 'name', 'kind', 'layer', 'visible', 'locked', 'transform', 'desktopTransform', 'appearance', 'animation', 'accessibility', 'config'])) reject('unknown node field');
+      if (typeof node.id !== 'string' || !/^[\w-]{1,100}$/.test(node.id)) reject('invalid node id');
+      else if (seenNodes.has(node.id)) reject(`duplicate node id: ${node.id}`); else seenNodes.add(node.id);
+      if (node.name !== undefined && !text(node.name, 100, true)) reject('invalid node name');
+      if (!oneOf(node.layer, layers) || typeof node.visible !== 'boolean' || typeof node.locked !== 'boolean') reject('invalid node flags/layer');
+      if (!transform(node.transform) || (node.desktopTransform !== undefined && !transform(node.desktopTransform))) reject('invalid transform');
+      const a = node.animation;
+      if (!record(a) || !keys(a, ['preset', 'delayMs', 'durationMs']) || !oneOf(a.preset, presets) || !number(a.delayMs, 0, STUDIO_LIMITS.delayMs) || !number(a.durationMs, 0, STUDIO_LIMITS.durationMs)) reject('invalid animation');
+      const p = node.appearance;
+      if (!record(p) || !keys(p, ['opacity', 'overflow']) || !number(p.opacity, 0, 100) || !overflow(p.overflow)) reject('invalid appearance');
+      const access = node.accessibility;
+      if (!record(access) || !keys(access, ['label', 'description']) || !text(access.label, 200) || (access.description !== undefined && !text(access.description, 1000))) reject('invalid accessibility');
+      if (!config(node.kind, node.config)) reject('invalid node kind/config or unregistered asset');
     }
-    for (const required of ['cover', 'closing']) if (!document.sections.some((section: any) => section.id === required && section.enabled === true)) errors.push(`${required} section is mandatory`);
   }
-  if (document.fixtureProfile !== 'neutral') errors.push('fixtureProfile must be neutral');
-  return errors.length ? { success: false, errors } : { success: true, data: input as InvitationStudioDocument };
+  if (seenSections.size !== 16) reject('all sixteen unique sections required');
+  return errors.length ? { success: false, errors } : { success: true, data: structuredClone(input) as unknown as InvitationStudioDocument };
 }
 
 export function validateStudioTransition(from: StudioStatus, to: StudioStatus, actor: string, document: unknown): ValidationResult<InvitationStudioDocument> {
+  if (actor !== 'SUPER_ADMIN') return { success: false, errors: ['SuperAdmin required'] };
   const valid = validateStudioDocument(document);
   if (!valid.success) return valid;
-  if (actor !== 'SUPER_ADMIN') return { success: false, errors: ['SuperAdmin required'] };
-  const allowed: Record<StudioStatus, StudioStatus[]> = { draft: ['in_review', 'archived'], in_review: ['approved', 'draft'], approved: ['published', 'draft'], published: ['archived', 'draft'], archived: ['draft'] };
-  if (!statuses.includes(to) || !allowed[from]?.includes(to)) return { success: false, errors: [`invalid transition: ${from} to ${to}`] };
+  const allowed: Record<StudioStatus, StudioStatus[]> = { draft: ['in_review', 'archived'], in_review: ['approved', 'draft', 'archived'], approved: ['published', 'draft', 'archived'], published: ['archived', 'draft'], archived: ['draft'] };
+  if (!allowed[from]?.includes(to)) return { success: false, errors: [`invalid transition: ${from} to ${to}`] };
   return valid;
 }
