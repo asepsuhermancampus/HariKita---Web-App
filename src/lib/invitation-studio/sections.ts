@@ -1,11 +1,14 @@
 import type { InvitationStudioDocument, StudioSection, StudioSectionId } from './types';
 
-export const STUDIO_SECTIONS: ReadonlyArray<{ id: StudioSectionId; label: string; mandatory: boolean }> = [
+const RAW_STUDIO_SECTIONS: ReadonlyArray<[StudioSectionId, string, boolean]> = [
   ['cover', 'Cover', true], ['hero', 'Hero', false], ['couple', 'Couple Profile', false], ['events', 'Events', false],
   ['countdown', 'Countdown', false], ['story', 'Love Story', false], ['gallery', 'Gallery', false], ['map', 'Map', false],
   ['rsvp', 'RSVP', false], ['guestbook', 'Guestbook', false], ['gifts', 'Gifts', false], ['rundown', 'Rundown', false],
   ['dress-code', 'Dress Code', false], ['entourage', 'Entourage', false], ['quote-prayer', 'Quote/Prayer', false], ['closing', 'Closing', true],
-].map(([id, label, mandatory]) => ({ id: id as StudioSectionId, label, mandatory }));
+];
+
+export const STUDIO_SECTIONS: ReadonlyArray<{ id: StudioSectionId; label: string; mandatory: boolean }> =
+  RAW_STUDIO_SECTIONS.map(([id, label, mandatory]) => ({ id, label, mandatory }));
 
 export function canReorderSection(id: StudioSectionId): boolean { return id !== 'cover' && id !== 'closing'; }
 
