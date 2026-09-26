@@ -26,7 +26,8 @@ export type NavIconName =
   | "coins"
   | "receipt"
   | "calendarClock"
-  | "mail";
+  | "mail"
+  | "layout";
 
 export interface NavItem {
   label: string;
@@ -58,7 +59,10 @@ export const ADMIN_NAV: NavGroup[] = [
   },
   {
     group: "Konfigurasi",
-    items: [{ label: "Pengaturan Platform", href: "/admin/pengaturan", icon: "settings" }],
+      items: [
+        { label: "Pengaturan Platform", href: "/admin/pengaturan", icon: "settings" },
+        { label: "Studio Undangan", href: "/admin/undangan-studio", icon: "layout" },
+      ],
   },
 ];
 

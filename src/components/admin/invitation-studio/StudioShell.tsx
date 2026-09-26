@@ -19,7 +19,7 @@ export function StudioShell({ draft, version }: { draft: { id: string; name: str
       ? () => run(() => approveStudioDraft({ draftId: draft.id }))
       : draft.status === "APPROVED" ? () => run(() => publishStudioVersion({ draftId: draft.id })) : undefined;
   return (
-    <main className="min-h-screen bg-hk-ivory px-4 py-6 text-hk-charcoal sm:px-6 lg:px-8">
+    <main className="min-h-screen overflow-x-hidden bg-hk-ivory px-4 py-6 text-hk-charcoal sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1600px] space-y-5">
         <header className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-hk-soft-beige bg-white p-4 shadow-sm">
           <div className="flex min-w-0 items-center gap-3">
@@ -30,7 +30,7 @@ export function StudioShell({ draft, version }: { draft: { id: string; name: str
             <DashButton variant="ghost" size="sm" disabled><Undo2 className="h-4 w-4" /> Undo</DashButton>
             <DashButton variant="ghost" size="sm" disabled><Redo2 className="h-4 w-4" /> Redo</DashButton>
             <DashButton variant="secondary" size="sm" disabled={isPending}><Eye className="h-4 w-4" /> Preview</DashButton>
-            <DashButton size="sm" disabled={isPending || !workflow} onClick={workflow}><Save className="h-4 w-4" /> {draft.status === "DRAFT" ? "Ajukan Review" : draft.status === "IN_REVIEW" ? "Setujui" : "Publish"}</DashButton>
+            <DashButton size="sm" disabled={isPending || !workflow} onClick={workflow}><Save className="h-4 w-4" /> {draft.status === "DRAFT" ? "Simpan & Ajukan Review" : draft.status === "IN_REVIEW" ? "Setujui" : "Publish"}</DashButton>
           </div>
         </header>
         <section className="grid min-h-[620px] gap-5 lg:grid-cols-[240px_minmax(360px,1fr)_280px]">
