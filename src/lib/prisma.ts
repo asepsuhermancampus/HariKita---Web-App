@@ -27,6 +27,18 @@ function isSqliteUrl(url: string): boolean {
   return url.startsWith("file:");
 }
 
+function normalizeSqliteUrl(url: string): string {
+  if (!url) return "file:./dev.db";
+  // Prisma SQLite schema berada di folder prisma/, sehingga path relatif
+  // 'file:./prisma/dev.db' akan dicari di 'prisma/prisma/dev.db' yang salah.
+  // Normalisasi ke 'file:./dev.db' agar merujuk ke 'prisma/dev.db'.
+  if (url === "file:./prisma/dev.db") return "file:./dev.db";
+  if (url.startsWith("file:./prisma/")) {
+    return `file:./${url.slice("file:./prisma/".length)}`;
+  }
+  return url;
+}
+
 function normalizeDatasourceUrl(url: string): string {
   if (!url) return url;
   // Jika memakai Neon pooler (PgBouncer transaction mode), wajib append pgbouncer=true
@@ -44,9 +56,11 @@ function createPrismaClient(): PrismaClient {
     // Dev lokal: gunakan client SQLite yang di-generate terpisah.
     // require() dinamis agar tidak dibundel ke build produksi.
     try {
+      const sqliteUrl = normalizeSqliteUrl(url);
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { PrismaClient: SqlitePrismaClient } = require("../../generated/sqlite-client");
       return new SqlitePrismaClient({
+        datasourceUrl: sqliteUrl,
         log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
       }) as unknown as PrismaClient;
     } catch (err) {

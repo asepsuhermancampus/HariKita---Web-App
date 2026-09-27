@@ -26,7 +26,8 @@ export type NavIconName =
   | "coins"
   | "receipt"
   | "calendarClock"
-  | "mail";
+  | "mail"
+  | "layout";
 
 export interface NavItem {
   label: string;
@@ -58,7 +59,10 @@ export const ADMIN_NAV: NavGroup[] = [
   },
   {
     group: "Konfigurasi",
-    items: [{ label: "Pengaturan Platform", href: "/admin/pengaturan", icon: "settings" }],
+      items: [
+        { label: "Pengaturan Platform", href: "/admin/pengaturan", icon: "settings" },
+        { label: "Studio Undangan", href: "/admin/undangan-studio", icon: "layout" },
+      ],
   },
 ];
 
@@ -84,6 +88,10 @@ export const VENDOR_NAV: NavGroup[] = [
     items: [{ label: "Data Diri & Profil", href: "/dashboard/vendor/profil", icon: "user" }],
   },
 ];
+
+export function getAdminNav(subRole: string | null): NavGroup[] {
+  return ADMIN_NAV.map(group => ({ ...group, items: group.items.filter(item => item.href !== '/admin/undangan-studio' || subRole === 'SUPER_ADMIN') }));
+}
 
 export const BA_NAV: NavGroup[] = [
   {

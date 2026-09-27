@@ -96,6 +96,7 @@ export const SETTINGS_ERROR_CODES = [
 ] as const;
 
 export type SettingsErrorCode = (typeof SETTINGS_ERROR_CODES)[number];
+export type StudioErrorCode = 'INVALID_STUDIO_INPUT' | 'STUDIO_NOT_FOUND' | 'STUDIO_CONFLICT' | 'INVALID_STUDIO_TRANSITION' | 'STUDIO_NAME_TAKEN';
 
 // ── 10. CONSOLIDATED APPLICATION ERROR UNION ───────────────────────────────
 export type AppDomainErrorCode =
@@ -106,4 +107,5 @@ export type AppDomainErrorCode =
   | AmbassadorErrorCode
   | OtpErrorCode
   | AdminErrorCode
-  | SettingsErrorCode;
+  | SettingsErrorCode
+  | StudioErrorCode;

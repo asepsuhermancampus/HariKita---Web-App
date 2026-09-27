@@ -25,6 +25,7 @@ import {
   ReceiptText,
   CalendarClock,
   Mail,
+  Layout,
   type LucideIcon,
 } from "lucide-react";
 import type { NavGroup, NavIconName } from "./nav-config";
@@ -50,6 +51,7 @@ const ICONS: Record<NavIconName, LucideIcon> = {
   receipt: ReceiptText,
   calendarClock: CalendarClock,
   mail: Mail,
+  layout: Layout,
 };
 
 export function DashboardSidebarNav({

@@ -21,6 +21,7 @@ import type {
   OtpErrorCode,
   PaymentErrorCode,
   SettingsErrorCode,
+  StudioErrorCode,
 } from "@/types/errors";
 
 export type AnyDomainErrorCode =
@@ -31,7 +32,8 @@ export type AnyDomainErrorCode =
   | AmbassadorErrorCode
   | OtpErrorCode
   | AdminErrorCode
-  | SettingsErrorCode;
+  | SettingsErrorCode
+  | StudioErrorCode;
 
 /**
  * Error domain yang merepresentasikan penolakan business-rule yang bersifat
