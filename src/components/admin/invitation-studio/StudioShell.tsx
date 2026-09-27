@@ -16,6 +16,7 @@ import { AssetCatalog } from './AssetCatalog';
 import { LayerTree } from './LayerTree';
 import { PropertiesInspector } from './PropertiesInspector';
 import { ResponsiveStudioCanvas } from './ResponsiveStudioCanvas';
+import { StudioPreview } from './StudioPreview';
 
 export function StudioShell({ draft, version }: { draft: { id: string; name: string; status: string }; version: { versionNumber: number; documentJson: string } }) {
   const [document, setDocument] = useState<InvitationStudioDocument>(() => JSON.parse(version.documentJson));
@@ -26,6 +27,7 @@ export function StudioShell({ draft, version }: { draft: { id: string; name: str
   const [active, setActive] = useState<StudioSectionId>('cover');
   const [selection, setSelection] = useState<string | null>(null);
   const [device, setDevice] = useState<StudioDevice>('mobile');
+  const [preview, setPreview] = useState(false);
   const section = document.sections.find(s => s.id === active)!;
   const edit = (operation: StudioEdit) => {
     if (busy.current || !editable) return;
@@ -64,7 +66,7 @@ export function StudioShell({ draft, version }: { draft: { id: string; name: str
           <div className="flex flex-wrap gap-2">
             <DashButton variant="ghost" size="sm" disabled><Undo2 className="h-4 w-4" /> Undo</DashButton>
             <DashButton variant="ghost" size="sm" disabled><Redo2 className="h-4 w-4" /> Redo</DashButton>
-            <DashButton variant="secondary" size="sm" disabled><Eye className="h-4 w-4" /> Preview</DashButton>
+            <DashButton variant="secondary" size="sm" onClick={() => setPreview(true)}><Eye className="h-4 w-4" /> Preview</DashButton>
             <DashButton className="min-h-11" disabled={isPending || !editable} onClick={() => run(() => saveStudioDocument({ ...studioToken(state), document }))}>Simpan / Coba lagi</DashButton>
             <DashButton className="min-h-11" disabled={isPending || !workflow} onClick={workflow}><Save className="h-4 w-4" /> {state.status === "DRAFT" ? "Simpan & Ajukan Review" : state.status === "IN_REVIEW" ? "Setujui" : "Publish"}</DashButton>
             {state.status !== 'DRAFT' && <DashButton className="min-h-11" disabled={isPending || dirty} onClick={() => run(() => returnStudioDraft(studioToken(state)))}>Kembali ke Draft</DashButton>}
@@ -77,6 +79,7 @@ export function StudioShell({ draft, version }: { draft: { id: string; name: str
           <aside className="min-w-0 space-y-6 rounded-2xl border border-hk-soft-beige bg-white p-4"><LayerTree section={section} selection={selection} onSelect={setSelection} onEdit={edit} disabled={isPending || !editable} /><PropertiesInspector section={section} node={selectedStudioNode(document, active, selection)} device={device} onDevice={setDevice} onEdit={edit} disabled={isPending || !editable} /></aside>
         </section>
       </div>
+      {preview && <StudioPreview document={document} onClose={() => setPreview(false)} />}
     </main>
   );
 }
