@@ -340,6 +340,7 @@ export function StudioShell({
             device={device} 
             onDevice={setDevice} 
             onSelect={setSelection} 
+            onActiveSectionChange={setActive}
             onEdit={edit} 
             disabled={isPending || !editable} 
           />

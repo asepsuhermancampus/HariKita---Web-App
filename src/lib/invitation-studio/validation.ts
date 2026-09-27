@@ -16,7 +16,7 @@ const overflow = (v: unknown) => oneOf(v, ['contained', 'visible']);
 
 function transform(v: unknown): boolean {
   return record(v) && keys(v, ['x', 'y', 'width', 'height', 'rotation', 'flipX', 'flipY']) &&
-    number(v.x, 0, 100) && number(v.y, 0, 100) && number(v.width, 0.1, 100) && number(v.height, 0.1, 100) &&
+    number(v.x, -50, 100) && number(v.y, -100, 150) && number(v.width, 0.1, 100) && number(v.height, 0.1, 100) &&
     number(v.rotation, -360, 360) && typeof v.flipX === 'boolean' && typeof v.flipY === 'boolean';
 }
 

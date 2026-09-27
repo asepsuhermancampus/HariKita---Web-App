@@ -27,8 +27,8 @@ export function gestureTransform(
     case 'resize-se':
       return clampTransform({
         ...start,
-        width: Math.max(2, start.width + px),
-        height: Math.max(2, start.height + py),
+        width: Math.max(0.1, start.width + px),
+        height: Math.max(0.1, start.height + py),
       });
 
     // NW corner: move origin + shrink opposite
@@ -37,8 +37,8 @@ export function gestureTransform(
         ...start,
         x: start.x + px,
         y: start.y + py,
-        width: Math.max(2, start.width - px),
-        height: Math.max(2, start.height - py),
+        width: Math.max(0.1, start.width - px),
+        height: Math.max(0.1, start.height - py),
       });
 
     // NE corner: grow right, move top
@@ -46,8 +46,8 @@ export function gestureTransform(
       return clampTransform({
         ...start,
         y: start.y + py,
-        width: Math.max(2, start.width + px),
-        height: Math.max(2, start.height - py),
+        width: Math.max(0.1, start.width + px),
+        height: Math.max(0.1, start.height - py),
       });
 
     // SW corner: move left, grow down
@@ -55,8 +55,8 @@ export function gestureTransform(
       return clampTransform({
         ...start,
         x: start.x + px,
-        width: Math.max(2, start.width - px),
-        height: Math.max(2, start.height + py),
+        width: Math.max(0.1, start.width - px),
+        height: Math.max(0.1, start.height + py),
       });
 
     case 'rotate':

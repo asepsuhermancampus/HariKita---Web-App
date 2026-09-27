@@ -52,7 +52,7 @@ export function StudioSceneRenderer({
             data-studio-section={id}
             style={{
               position: 'relative',
-              isolation: 'isolate',
+              isolation: editor ? undefined : 'isolate',
               height: 640,
               overflow,
               // Subtle dashed divider in editor so section boundaries are visible

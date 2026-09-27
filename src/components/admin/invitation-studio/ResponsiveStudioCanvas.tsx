@@ -18,6 +18,7 @@ import {
 
 type GestureState = {
   id: string;
+  sectionId: StudioSectionId;
   pointer: number;
   x: number;
   y: number;
@@ -26,10 +27,7 @@ type GestureState = {
   start: StudioTransform;
   mode: StudioGesture;
   last: StudioTransform;
-  /** effectiveZoom at gesture start, used to convert bleedTop px → canvas-space */
   zoom: number;
-  /** bleedTop in px at gesture start (only active mode) */
-  bleedTopPx: number;
 };
 
 // Corner resize handle positions
@@ -47,6 +45,7 @@ export function ResponsiveStudioCanvas({
   device,
   onDevice,
   onSelect,
+  onActiveSectionChange,
   onEdit,
   disabled,
 }: {
@@ -56,6 +55,7 @@ export function ResponsiveStudioCanvas({
   device: StudioDevice;
   onDevice: (device: StudioDevice) => void;
   onSelect: (id: string | null) => void;
+  onActiveSectionChange?: (section: StudioSectionId) => void;
   onEdit: (edit: StudioEdit) => void;
   disabled: boolean;
 }) {
@@ -114,10 +114,11 @@ export function ResponsiveStudioCanvas({
 
   const effectiveZoom = zoomMode === 'fit' ? fitScale : zoomMode;
 
-  // Ghost bleed: in 'active' mode, show 30% of adjacent sections for context
-  const BLEED_PX = SECTION_HEIGHT * 0.3; // 192px
-  const bleedTop = viewMode === 'active' && prevEnabledSection ? BLEED_PX : 0;
-  const bleedBottom = viewMode === 'active' && nextEnabledSection ? BLEED_PX : 0;
+  // Ghost bleed: in 'active' mode, provide generous context and bleed margin
+  const BLEED_PX = Math.round(SECTION_HEIGHT * 0.35); // ~224px
+  // In active mode, provide breathing room so cross-section bleed can be seen & edited comfortably
+  const bleedTop = viewMode === 'active' ? (prevEnabledSection ? BLEED_PX : 120) : 0;
+  const bleedBottom = viewMode === 'active' ? (nextEnabledSection ? BLEED_PX : 120) : 0;
   // Wrapper height includes bleed so ghost sections are in scroll area
   const wrapperHeight = Math.round((SECTION_HEIGHT + bleedTop + bleedBottom) * effectiveZoom);
   const wrapperWidth = Math.round(baseWidth * effectiveZoom);
@@ -130,30 +131,31 @@ export function ResponsiveStudioCanvas({
 
   // ── Gesture handlers ────────────────────────────────────────────────────
   const startGesture = useCallback(
-    (event: React.PointerEvent<HTMLElement>, id: string, mode: StudioGesture) => {
+    (
+      event: React.PointerEvent<HTMLElement>,
+      id: string,
+      mode: StudioGesture,
+      targetSectionId: StudioSectionId = active
+    ) => {
       if (disabled || event.button !== 0) return;
-      const target = section.nodes.find((n) => n.id === id)!;
+      const targetSec = document.sections.find((s) => s.id === targetSectionId) ?? section;
+      const target = targetSec.nodes.find((n) => n.id === id);
+      if (!target) return;
+
+      if (targetSectionId !== active) {
+        onActiveSectionChange?.(targetSectionId);
+      }
       onSelect(id);
       if (target.locked) return;
       event.preventDefault();
       event.stopPropagation();
-      const rect = frame.current!.getBoundingClientRect();
       const t = resolveTransform(target, device);
       event.currentTarget.setPointerCapture(event.pointerId);
-      //
-      // gestureHeight MUST equal SECTION_HEIGHT * zoom for correct % mapping:
-      //   py = (dy / gestureHeight) * 100  →  should give % of one 640px section
-      //
-      // In 'active' mode, rect.height = (bleedTop + SECTION_HEIGHT + bleedBottom) * zoom
-      //   which is LARGER than SECTION_HEIGHT*zoom, so dragging feels sluggish.
-      //   Fix: always use SECTION_HEIGHT * effectiveZoom.
-      //
-      // In 'all' mode, rect.height = totalHeight * zoom.
-      //   We still want % of a single section, so use SECTION_HEIGHT * zoom.
-      //
+
       const gestureHeight = Math.max(1, SECTION_HEIGHT * effectiveZoom);
       gesture.current = {
         id,
+        sectionId: targetSectionId,
         pointer: event.pointerId,
         x: event.clientX,
         y: event.clientY,
@@ -163,10 +165,9 @@ export function ResponsiveStudioCanvas({
         mode,
         last: t,
         zoom: effectiveZoom,
-        bleedTopPx: viewMode === 'active' ? bleedTop * effectiveZoom : 0,
       };
     },
-    [disabled, section, onSelect, device, viewMode, SECTION_HEIGHT, totalHeight, effectiveZoom, baseWidth, bleedTop]
+    [disabled, section, document.sections, onSelect, onActiveSectionChange, active, device, effectiveZoom, baseWidth, SECTION_HEIGHT]
   );
 
   const onPointerMove = useCallback((event: React.PointerEvent) => {
@@ -175,22 +176,17 @@ export function ResponsiveStudioCanvas({
     const t = gestureTransform(g.start, g.mode, event.clientX - g.x, event.clientY - g.y, g.width, g.height);
     g.last = t;
 
-    // In 'all' mode: overlay top/height must be expressed as % of totalHeight canvas.
-    // In 'active' mode: overlay top is % of the FRAME div which includes bleedTop+section+bleedBottom,
-    //   so we must convert section-relative % → frame-relative %.
-    const sectionIdx = enabledSections.findIndex((s) => s.id === active);
+    // In 'all' mode: overlay top/height is % of totalHeight canvas.
+    // In 'active' mode: overlay top/height is % of the 640px frame (1:1 with section-relative %).
+    const sectionIdx = enabledSections.findIndex((s) => s.id === g.sectionId);
     let overlayTop: string;
     let overlayH: string;
     if (viewMode === 'all') {
       overlayTop = ((sectionIdx * SECTION_HEIGHT + (t.y / 100) * SECTION_HEIGHT) / totalHeight) * 100 + '%';
       overlayH = ((t.height / 100) * SECTION_HEIGHT / totalHeight) * 100 + '%';
     } else {
-      // Frame height in unscaled px = bleedTop + SECTION_HEIGHT + bleedBottom
-      const frameHeightPx = bleedTop + SECTION_HEIGHT + bleedBottom;
-      // Section starts at bleedTop within frame. Convert section-% → frame-%.
-      const topPx = bleedTop + (t.y / 100) * SECTION_HEIGHT;
-      overlayTop = (topPx / frameHeightPx) * 100 + '%';
-      overlayH = ((t.height / 100) * SECTION_HEIGHT / frameHeightPx) * 100 + '%';
+      overlayTop = t.y + '%';
+      overlayH = t.height + '%';
     }
 
     // 1. Update interactive overlay box via DOM (no React re-render)
@@ -204,8 +200,6 @@ export function ResponsiveStudioCanvas({
     }
 
     // 2. Update actual rendered asset image via DOM so it follows the box live.
-    // The nodeEl lives inside a <section> tag which is at y=0 in the rendered StudioSceneRenderer.
-    // Its position is section-relative %, so we use t.x / t.y directly.
     const nodeEl = frame.current?.querySelector<HTMLElement>('[data-studio-node="' + g.id + '"]');
     if (nodeEl) {
       nodeEl.style.left = t.x + '%';
@@ -214,7 +208,7 @@ export function ResponsiveStudioCanvas({
       nodeEl.style.height = t.height + '%';
       nodeEl.style.transform = 'rotate(' + t.rotation + 'deg) scale(' + (g.start.flipX ? -1 : 1) + ',' + (g.start.flipY ? -1 : 1) + ')';
     }
-  }, [active, enabledSections, viewMode, totalHeight, SECTION_HEIGHT, bleedTop, bleedBottom]);
+  }, [enabledSections, viewMode, totalHeight, SECTION_HEIGHT]);
 
   const finishGesture = useCallback(
     (cancel = false) => {
@@ -222,11 +216,11 @@ export function ResponsiveStudioCanvas({
       gesture.current = null;
       if (g && !cancel && JSON.stringify(g.start) !== JSON.stringify(g.last)) {
         // Commit once on drop — single React re-render syncs everything
-        onEdit({ type: 'transform', section: active, id: g.id, device, patch: g.last });
+        onEdit({ type: 'transform', section: g.sectionId, id: g.id, device, patch: g.last });
       } else if (g && cancel) {
         // Restore overlay box to original position via DOM
         const overlayEl = nodeOverlayRefs.current.get(g.id);
-        const sectionIdx = enabledSections.findIndex((s) => s.id === active);
+        const sectionIdx = enabledSections.findIndex((s) => s.id === g.sectionId);
         if (overlayEl) {
           const t = g.start;
           let overlayTop: string;
@@ -235,10 +229,8 @@ export function ResponsiveStudioCanvas({
             overlayTop = ((sectionIdx * SECTION_HEIGHT + (t.y / 100) * SECTION_HEIGHT) / totalHeight) * 100 + '%';
             overlayH = ((t.height / 100) * SECTION_HEIGHT / totalHeight) * 100 + '%';
           } else {
-            const frameHeightPx = bleedTop + SECTION_HEIGHT + bleedBottom;
-            const topPx = bleedTop + (t.y / 100) * SECTION_HEIGHT;
-            overlayTop = (topPx / frameHeightPx) * 100 + '%';
-            overlayH = ((t.height / 100) * SECTION_HEIGHT / frameHeightPx) * 100 + '%';
+            overlayTop = t.y + '%';
+            overlayH = t.height + '%';
           }
           overlayEl.style.left = t.x + '%';
           overlayEl.style.top = overlayTop;
@@ -258,7 +250,7 @@ export function ResponsiveStudioCanvas({
         }
       }
     },
-    [onEdit, active, device, viewMode, enabledSections, totalHeight, SECTION_HEIGHT, bleedTop, bleedBottom]
+    [onEdit, device, viewMode, enabledSections, totalHeight, SECTION_HEIGHT]
   );
 
   const node = selectedStudioNode(document, active, selection);
@@ -440,28 +432,16 @@ export function ResponsiveStudioCanvas({
 
               {/* ── Scene Renderer ──────────────────────────────────── */}
               {viewMode === 'active' ? (
-                /*
-                  'Section Aktif' mode:
-                  - Ghost of prev section at top: -SECTION_HEIGHT (its overflow bleeds into current)
-                  - Active section at top: 0
-                  - Ghost of next section at top: +SECTION_HEIGHT
-                  All ghosts are pointer-events:none and semi-transparent (visual context only).
-                  The wrapper has overflow:visible so ghosts bleed out.
-                */
                 <div style={{ position: 'relative', width: '100%', height: SECTION_HEIGHT, overflow: 'visible' }}>
                   {/*
-                    RENDER ORDER: active section FIRST (z=2), ghosts AFTER (z=3).
-                    Ghost sections' overflow into active area must paint ON TOP so it's visible.
-                    Previously ghost at z=1 was COVERED by active section's white background → fix: z=3.
-                    Ghost opacity=0.55 means 55% ghost + 45% active section shows through = nice blend.
+                    Active section rendered with transparent={true} so frame background is shared.
+                    zIndex: 10 ensures active section's assets bleed OVER ghost sections at top & bottom!
                   */}
-
-                  {/* Active section — rendered first so ghost overflow appears on top */}
-                  <div style={{ position: 'relative', zIndex: 2 }}>
-                    <StudioSceneRenderer document={display} device={device} activeSection={active} editor />
+                  <div style={{ position: 'relative', zIndex: 10 }}>
+                    <StudioSceneRenderer document={display} device={device} activeSection={active} editor transparent />
                   </div>
 
-                  {/* Ghost: prev section — overflow bleeds DOWN into active section (visible at z=3) */}
+                  {/* Ghost: prev section — context for top bleed, zIndex: 2 */}
                   {prevEnabledSection && (
                     <div
                       aria-hidden="true"
@@ -473,15 +453,15 @@ export function ResponsiveStudioCanvas({
                         height: SECTION_HEIGHT,
                         overflow: 'visible',
                         pointerEvents: 'none',
-                        opacity: 0.6,
-                        zIndex: 3,  // ABOVE active section (z=2) so overflow is visible
+                        opacity: 0.55,
+                        zIndex: 2,
                       }}
                     >
                       <StudioSceneRenderer document={display} device={device} activeSection={prevEnabledSection.id} editor transparent />
                     </div>
                   )}
 
-                  {/* Ghost: next section — overflow bleeds UP into active section (visible at z=3) */}
+                  {/* Ghost: next section — context for bottom bleed, zIndex: 2 */}
                   {nextEnabledSection && (
                     <div
                       aria-hidden="true"
@@ -493,20 +473,20 @@ export function ResponsiveStudioCanvas({
                         height: SECTION_HEIGHT,
                         overflow: 'visible',
                         pointerEvents: 'none',
-                        opacity: 0.6,
-                        zIndex: 3,  // ABOVE active section (z=2) so overflow is visible
+                        opacity: 0.55,
+                        zIndex: 2,
                       }}
                     >
                       <StudioSceneRenderer document={display} device={device} activeSection={nextEnabledSection.id} editor transparent />
                     </div>
                   )}
 
-                  {/* Section boundary indicators — always on top */}
+                  {/* Section boundary indicators — on top of scenes */}
                   {prevEnabledSection && (
                     <div
                       aria-hidden="true"
                       className="pointer-events-none absolute left-0 right-0 flex items-center gap-2"
-                      style={{ top: 0, zIndex: 40 }}
+                      style={{ top: 0, zIndex: 20 }}
                     >
                       <div className="flex-1 border-t-2 border-dashed border-[#C5A880]/60" />
                       <span className="rounded bg-[#C5A880]/90 px-2 py-0.5 text-[9px] font-bold text-white whitespace-nowrap shadow">
@@ -519,7 +499,7 @@ export function ResponsiveStudioCanvas({
                     <div
                       aria-hidden="true"
                       className="pointer-events-none absolute left-0 right-0 flex items-center gap-2"
-                      style={{ top: SECTION_HEIGHT, zIndex: 40 }}
+                      style={{ top: SECTION_HEIGHT, zIndex: 20 }}
                     >
                       <div className="flex-1 border-t-2 border-dashed border-[#C5A880]/60" />
                       <span className="rounded bg-[#C5A880]/90 px-2 py-0.5 text-[9px] font-bold text-white whitespace-nowrap shadow">
@@ -537,113 +517,130 @@ export function ResponsiveStudioCanvas({
 
               {/* ── Interactive Node Overlays ─────────────────────── */}
               {(() => {
-                // In 'all' mode: offset overlays to the correct section's Y band
-                const sectionYOffset = viewMode === 'all'
-                  ? activeSectionIndex * SECTION_HEIGHT
-                  : 0;
+                // In 'all' mode: enable clicking nodes across all enabled sections
+                // In 'active' mode: interact with active section nodes
+                const targetSections = viewMode === 'all'
+                  ? enabledSections
+                  : [section];
 
-                return activeNodes.map((n) => {
-                  const t = resolveTransform(n, device);
-                  const isSelected = selection === n.id;
+                return targetSections.flatMap((sec) => {
+                  const secIdx = enabledSections.findIndex((s) => s.id === sec.id);
+                  const secYOffset = viewMode === 'all' ? secIdx * SECTION_HEIGHT : 0;
 
-                  // Initial overlay position (DOM will update live during drag)
-                  // In 'active' mode: frame includes bleedTop+section+bleedBottom.
-                  // We must express overlay top as % of frame height, not section height.
-                  let effectiveTop: number;
-                  let effectiveH: number;
-                  if (viewMode === 'all') {
-                    effectiveTop = ((sectionYOffset + (t.y / 100) * SECTION_HEIGHT) / totalHeight) * 100;
-                    effectiveH = (t.height / 100) * SECTION_HEIGHT / totalHeight * 100;
-                  } else {
-                    const frameHeightPx = bleedTop + SECTION_HEIGHT + bleedBottom;
-                    const topPx = bleedTop + (t.y / 100) * SECTION_HEIGHT;
-                    effectiveTop = (topPx / frameHeightPx) * 100;
-                    effectiveH = (t.height / 100) * SECTION_HEIGHT / frameHeightPx * 100;
-                  }
+                  return sec.nodes.filter((n) => n.visible).map((n) => {
+                    const t = resolveTransform(n, device);
+                    const isSelected = selection === n.id;
 
-                  return (
-                    <div
-                      key={n.id}
-                      ref={(el) => {
-                        if (el) nodeOverlayRefs.current.set(n.id, el);
-                        else nodeOverlayRefs.current.delete(n.id);
-                      }}
-                      className="absolute"
-                      style={{
-                        left: `${t.x}%`,
-                        top: `${effectiveTop}%`,
-                        width: `${t.width}%`,
-                        height: `${effectiveH}%`,
-                        transform: `rotate(${t.rotation}deg)`,
-                        zIndex: 10,
-                        cursor: n.locked ? 'not-allowed' : 'move',
-                        boxSizing: 'border-box',
-                      }}
-                      onClick={(e) => { e.stopPropagation(); onSelect(n.id); }}
-                      onPointerDown={(e) => startGesture(e as unknown as React.PointerEvent<HTMLElement>, n.id, 'drag')}
-                    >
-                      {/* Selection outline */}
-                      {isSelected && (
-                        <div
-                          className="absolute inset-0 border-2 border-[#C5A880] rounded-sm pointer-events-none"
-                          style={{ margin: -2, zIndex: 11 }}
-                        />
-                      )}
+                    let effectiveTop: number;
+                    let effectiveH: number;
+                    if (viewMode === 'all') {
+                      effectiveTop = ((secYOffset + (t.y / 100) * SECTION_HEIGHT) / totalHeight) * 100;
+                      effectiveH = (t.height / 100) * SECTION_HEIGHT / totalHeight * 100;
+                    } else {
+                      effectiveTop = t.y;
+                      effectiveH = t.height;
+                    }
 
-                      {/* Node label */}
-                      {isSelected && (
-                        <div
-                          className="absolute pointer-events-none select-none whitespace-nowrap rounded-md bg-[#4A2E35] px-2 py-0.5 text-[10px] font-bold text-white shadow"
-                          style={{ top: -24, left: '50%', transform: 'translateX(-50%)', zIndex: 50 }}
-                        >
-                          <span className="flex items-center gap-1">
-                            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
-                            {n.accessibility.label || n.id}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Resize + rotate handles */}
-                      {isSelected && !n.locked && (
-                        <>
-                          {RESIZE_HANDLES.map((handle) => (
-                            <div
-                              key={handle.id}
-                              onPointerDown={(e) => startGesture(e as unknown as React.PointerEvent<HTMLElement>, n.id, handle.mode)}
-                              className="absolute z-50 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#C5A880] shadow-md transition-transform hover:scale-125"
-                              style={{ ...handle.style, cursor: handle.cursor, touchAction: 'none' }}
-                            />
-                          ))}
-
-                          {/* Rotate Handle — top center */}
+                    return (
+                      <div
+                        key={n.id}
+                        ref={(el) => {
+                          if (el) nodeOverlayRefs.current.set(n.id, el);
+                          else nodeOverlayRefs.current.delete(n.id);
+                        }}
+                        className={`absolute group select-none transition-shadow ${
+                          !isSelected && !n.locked ? 'hover:ring-2 hover:ring-[#C5A880]/70 hover:bg-[#C5A880]/5' : ''
+                        }`}
+                        style={{
+                          left: `${t.x}%`,
+                          top: `${effectiveTop}%`,
+                          width: `${t.width}%`,
+                          height: `${effectiveH}%`,
+                          transform: `rotate(${t.rotation}deg)`,
+                          zIndex: isSelected ? 35 : 25,
+                          cursor: n.locked ? 'not-allowed' : (isSelected ? 'move' : 'pointer'),
+                          boxSizing: 'border-box',
+                          minWidth: 24,
+                          minHeight: 24,
+                        }}
+                        title={n.accessibility.label || n.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (sec.id !== active) {
+                            onActiveSectionChange?.(sec.id);
+                          }
+                          onSelect(n.id);
+                        }}
+                        onPointerDown={(e) => {
+                          if (sec.id !== active) {
+                            onActiveSectionChange?.(sec.id);
+                          }
+                          startGesture(e as unknown as React.PointerEvent<HTMLElement>, n.id, 'drag', sec.id);
+                        }}
+                      >
+                        {/* Selection outline */}
+                        {isSelected && (
                           <div
-                            onPointerDown={(e) => startGesture(e as unknown as React.PointerEvent<HTMLElement>, n.id, 'rotate')}
-                            className="absolute z-50 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#4A2E35] shadow-md cursor-grab active:cursor-grabbing hover:bg-[#6B5E62] transition-colors"
-                            style={{ top: -24, left: '50%', transform: 'translateX(-50%)', touchAction: 'none' }}
-                            title="Tarik untuk memutar"
-                          >
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M21.5 2v6h-6" />
-                              <path d="M21.34 15.57a10 10 0 1 1-.57-8.38" />
-                            </svg>
-                          </div>
-
-                          {/* Connector line */}
-                          <div
-                            className="absolute pointer-events-none bg-[#C5A880]/60"
-                            style={{ width: 1, height: 16, top: -16, left: '50%', transform: 'translateX(-50%)', zIndex: 49 }}
+                            className="absolute inset-0 border-2 border-[#C5A880] rounded-sm pointer-events-none"
+                            style={{ margin: -2, zIndex: 11 }}
                           />
-                        </>
-                      )}
+                        )}
 
-                      {/* Lock badge */}
-                      {n.locked && isSelected && (
-                        <div className="absolute top-1 right-1 rounded bg-black/60 p-0.5 pointer-events-none z-50">
-                          <Lock className="h-3 w-3 text-white" />
-                        </div>
-                      )}
-                    </div>
-                  );
+                        {/* Node label */}
+                        {isSelected && (
+                          <div
+                            className="absolute pointer-events-none select-none whitespace-nowrap rounded-md bg-[#4A2E35] px-2 py-0.5 text-[10px] font-bold text-white shadow"
+                            style={{ top: -24, left: '50%', transform: 'translateX(-50%)', zIndex: 50 }}
+                          >
+                            <span className="flex items-center gap-1">
+                              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                              {n.accessibility.label || n.id}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Resize + rotate handles */}
+                        {isSelected && !n.locked && (
+                          <>
+                            {RESIZE_HANDLES.map((handle) => (
+                              <div
+                                key={handle.id}
+                                onPointerDown={(e) => startGesture(e as unknown as React.PointerEvent<HTMLElement>, n.id, handle.mode, sec.id)}
+                                className="absolute z-50 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#C5A880] shadow-md transition-transform hover:scale-125"
+                                style={{ ...handle.style, cursor: handle.cursor, touchAction: 'none' }}
+                              />
+                            ))}
+
+                            {/* Rotate Handle — top center */}
+                            <div
+                              onPointerDown={(e) => startGesture(e as unknown as React.PointerEvent<HTMLElement>, n.id, 'rotate', sec.id)}
+                              className="absolute z-50 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-[#4A2E35] shadow-md cursor-grab active:cursor-grabbing hover:bg-[#6B5E62] transition-colors"
+                              style={{ top: -24, left: '50%', transform: 'translateX(-50%)', touchAction: 'none' }}
+                              title="Tarik untuk memutar"
+                            >
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21.5 2v6h-6" />
+                                <path d="M21.34 15.57a10 10 0 1 1-.57-8.38" />
+                              </svg>
+                            </div>
+
+                            {/* Connector line */}
+                            <div
+                              className="absolute pointer-events-none bg-[#C5A880]/60"
+                              style={{ width: 1, height: 16, top: -16, left: '50%', transform: 'translateX(-50%)', zIndex: 49 }}
+                            />
+                          </>
+                        )}
+
+                        {/* Lock badge */}
+                        {n.locked && isSelected && (
+                          <div className="absolute top-1 right-1 rounded bg-black/60 p-0.5 pointer-events-none z-50">
+                            <Lock className="h-3 w-3 text-white" />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  });
                 });
               })()}
             </div>{/* end frame */}
