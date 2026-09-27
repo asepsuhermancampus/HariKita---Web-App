@@ -20,3 +20,16 @@ test('autosave debounce, retry and stale responses preserve newest local edit', 
   assert.equal(calls, 2); assert.equal(coordinator.status, 'saved'); assert.equal(coordinator.document.metadata.name, 'Three');
   coordinator.fail(new Error('temporary')); assert.equal(coordinator.status, 'error'); assert.equal(coordinator.retry(), true); coordinator.dispose();
 });
+
+test('autosave reports saving and saved status through its lifecycle callback', async () => {
+  const statuses: string[] = [];
+  const coordinator = new StudioAutosaveCoordinator<any, any>({
+    debounceMs: 1,
+    onStatus: status => statuses.push(status),
+    save: async () => ({ success: true, data: { acknowledged: 'ok' } }),
+  });
+  coordinator.edit(createBlankStudioDocument(), { version: 1 });
+  await new Promise(r => setTimeout(r, 10));
+  assert.deepEqual(statuses, ['saving', 'saved']);
+  coordinator.dispose();
+});

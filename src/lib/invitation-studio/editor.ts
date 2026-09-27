@@ -20,12 +20,22 @@ export const resolveTransform = (node: StudioNode, device: StudioDevice) => devi
 export const selectedStudioNode = (d: InvitationStudioDocument, section: StudioSectionId, id: string | null) => d.sections.find(s => s.id === section)?.nodes.find(n => n.id === id);
 export function clampTransform(t: StudioTransform): StudioTransform {
   const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
-  return { ...t, x: clamp(t.x, 0, 100), y: clamp(t.y, 0, 100), width: clamp(t.width, 0.1, 100), height: clamp(t.height, 0.1, 100), rotation: clamp(t.rotation, -360, 360) };
+  // x/y are NOT clamped — assets may overflow canvas in all directions by design
+  return { ...t, x: t.x, y: t.y, width: clamp(t.width, 0.1, 200), height: clamp(t.height, 0.1, 200), rotation: clamp(t.rotation, -360, 360) };
 }
 export function createStudioNode(kind: 'text' | 'component' | StudioAsset, id: string, section: StudioSectionId = 'cover'): StudioNode {
-  const base: StudioNodeBase = { id, name: typeof kind === 'string' ? kind : kind.id, layer: kind === 'component' ? 'component' : 'content', visible: true, locked: false,
-    transform: { x: 10, y: 10, width: 80, height: kind === 'component' ? 75 : 25, rotation: 0, flipX: false, flipY: false },
-    appearance: { opacity: 100, overflow: 'contained' }, animation: { preset: 'none', durationMs: 600, delayMs: 0 }, accessibility: { label: typeof kind === 'string' ? kind : kind.id } };
+  const base: StudioNodeBase = {
+    id,
+    name: typeof kind === 'string' ? kind : kind.id,
+    layer: kind === 'component' ? 'component' : 'front-decoration',
+    visible: true,
+    locked: false,
+    // Default: small 20×20% drop in top-left area — user resizes from corner handles
+    transform: { x: 5, y: 5, width: kind === 'component' ? 100 : kind === 'text' ? 60 : 20, height: kind === 'component' ? 75 : kind === 'text' ? 12 : 20, rotation: 0, flipX: false, flipY: false },
+    appearance: { opacity: 100, overflow: 'visible' },
+    animation: { preset: 'none', durationMs: 600, delayMs: 0 },
+    accessibility: { label: typeof kind === 'string' ? kind : kind.id },
+  };
   if (kind === 'text') return { ...base, kind, config: { text: 'Hari Bahagia', color: '#4A2E35', fontSize: 28, align: 'center' } };
   if (kind === 'component') return { ...base, kind, config: { component: section, variant: 'default', title: '' } };
   return { ...base, kind: kind.kind, config: { src: kind.path, fit: 'contain' } };
