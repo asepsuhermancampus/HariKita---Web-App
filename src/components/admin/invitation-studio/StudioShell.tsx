@@ -17,6 +17,9 @@ import { LayerTree } from './LayerTree';
 import { PropertiesInspector } from './PropertiesInspector';
 import { ResponsiveStudioCanvas } from './ResponsiveStudioCanvas';
 import { StudioPreview } from './StudioPreview';
+import { StudioHistory } from '@/lib/invitation-studio/history';
+import { UndoRedoControls } from './UndoRedoControls';
+import { SaveStatus } from './SaveStatus';
 
 export function StudioShell({ draft, version }: { draft: { id: string; name: string; status: string }; version: { versionNumber: number; documentJson: string } }) {
   const [document, setDocument] = useState<InvitationStudioDocument>(() => JSON.parse(version.documentJson));
@@ -28,10 +31,13 @@ export function StudioShell({ draft, version }: { draft: { id: string; name: str
   const [selection, setSelection] = useState<string | null>(null);
   const [device, setDevice] = useState<StudioDevice>('mobile');
   const [preview, setPreview] = useState(false);
+  const history = useRef(new StudioHistory(document));
+  const [historyState, setHistoryState] = useState({ canUndo: false, canRedo: false });
+  const setHistoryDocument = (next: InvitationStudioDocument) => { setDocument(next); setHistoryState({ canUndo: history.current.canUndo, canRedo: history.current.canRedo }); };
   const section = document.sections.find(s => s.id === active)!;
   const edit = (operation: StudioEdit) => {
     if (busy.current || !editable) return;
-    try { const result = editStudio(document, operation); setDocument(result.document); if ('id' in operation || operation.type === 'add') setSelection(result.selection); setSaveState('Belum disimpan'); }
+    try { const result = editStudio(document, operation); history.current.push(result.document); setHistoryDocument(result.document); if ('id' in operation || operation.type === 'add') setSelection(result.selection); setSaveState('Belum disimpan'); }
     catch (error) { setSaveState(`Error: ${error instanceof Error ? error.message : 'Edit tidak valid'}`); }
   };
   const run = (action: () => Promise<ActionResult<StudioState>>) => {
@@ -64,11 +70,11 @@ export function StudioShell({ draft, version }: { draft: { id: string; name: str
             <div className="min-w-0"><input aria-label="Nama draft" maxLength={100} disabled={isPending || !editable} value={document.metadata.name} onChange={(e) => updateName(e.target.value)} className="min-h-11 w-full max-w-sm bg-transparent font-editorial text-2xl font-bold outline-none" /><p aria-live="polite" className="break-words text-xs text-hk-taupe">Status: {state.status} · v{state.versionNumber} · {saveState}</p></div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <DashButton variant="ghost" size="sm" disabled><Undo2 className="h-4 w-4" /> Undo</DashButton>
-            <DashButton variant="ghost" size="sm" disabled><Redo2 className="h-4 w-4" /> Redo</DashButton>
+            <UndoRedoControls canUndo={historyState.canUndo} canRedo={historyState.canRedo} onUndo={() => { const next = history.current.undo(); if (next) { setHistoryDocument(next); setSaveState('Belum disimpan'); } }} onRedo={() => { const next = history.current.redo(); if (next) { setHistoryDocument(next); setSaveState('Belum disimpan'); } }} />
             <DashButton variant="secondary" size="sm" onClick={() => setPreview(true)}><Eye className="h-4 w-4" /> Preview</DashButton>
             <DashButton className="min-h-11" disabled={isPending || !editable} onClick={() => run(() => saveStudioDocument({ ...studioToken(state), document }))}>Simpan / Coba lagi</DashButton>
             <DashButton className="min-h-11" disabled={isPending || !workflow} onClick={workflow}><Save className="h-4 w-4" /> {state.status === "DRAFT" ? "Simpan & Ajukan Review" : state.status === "IN_REVIEW" ? "Setujui" : "Publish"}</DashButton>
+            <SaveStatus status={saveState.startsWith('Error') ? 'error' : saveState === 'Saving…' ? 'saving' : 'saved'} onRetry={() => run(() => saveStudioDocument({ ...studioToken(state), document }))} />
             {state.status !== 'DRAFT' && <DashButton className="min-h-11" disabled={isPending || dirty} onClick={() => run(() => returnStudioDraft(studioToken(state)))}>Kembali ke Draft</DashButton>}
             {state.status === 'PUBLISHED' && <DashButton className="min-h-11" disabled={isPending || dirty} onClick={() => run(() => unpublishStudioDraft(studioToken(state)))}>Unpublish</DashButton>}
           </div>
