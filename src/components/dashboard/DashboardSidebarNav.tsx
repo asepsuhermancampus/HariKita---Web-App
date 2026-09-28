@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -72,20 +72,20 @@ export function DashboardSidebarNav({
   const handleToggle = () => {
     if (!sidebarNarrow) {
       // ── COLLAPSE ──────────────────────────────────────────────────────────
-      // Fase 1: label teks fade (icons diam)
+      // Fase 1: label FADE + BLUR selama 0.5 detik (icons diam)
       setLabelOpacityHidden(true);
-      // Fase 2: space label hilang, icons naik (setelah label tak terlihat)
-      setTimeout(() => setLabelHeightCollapsed(true), 280);
-      // Fase 3: sidebar width mengecil
-      setTimeout(() => setSidebarNarrow(true), 560);
+      // Fase 2: space label hilang, icons naik (tunggu fade selesai ~520ms)
+      setTimeout(() => setLabelHeightCollapsed(true), 540);
+      // Fase 3: sidebar width mengecil (setelah icons compact ~280ms)
+      setTimeout(() => setSidebarNarrow(true), 840);
     } else {
       // ── EXPAND ────────────────────────────────────────────────────────────
       // Fase 1: sidebar width melebar
       setSidebarNarrow(false);
       // Fase 2: space label restore, icons turun
-      setTimeout(() => setLabelHeightCollapsed(false), 250);
-      // Fase 3: label teks muncul kembali
-      setTimeout(() => setLabelOpacityHidden(false), 500);
+      setTimeout(() => setLabelHeightCollapsed(false), 300);
+      // Fase 3: label UNBLUR + FADE IN (0.5 detik)
+      setTimeout(() => setLabelOpacityHidden(false), 580);
     }
   };
 
@@ -125,8 +125,9 @@ export function DashboardSidebarNav({
           <div
             className="overflow-hidden px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-white/40"
             style={{
-              transition: "opacity 0.25s ease-in-out, max-height 0.28s ease-in-out, padding 0.28s ease-in-out",
+              transition: "opacity 0.5s ease-in-out, filter 0.5s ease-in-out, max-height 0.28s ease-in-out, padding 0.28s ease-in-out",
               opacity: (forMobile || !labelOpacityHidden) ? 1 : 0,
+              filter: (!forMobile && labelOpacityHidden) ? "blur(6px)" : "blur(0px)",
               maxHeight: (!forMobile && labelHeightCollapsed) ? "0px" : "40px",
               paddingTop: (!forMobile && labelHeightCollapsed) ? "0px" : "16px",
               paddingBottom: (!forMobile && labelHeightCollapsed) ? "0px" : "6px",
