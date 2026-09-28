@@ -11,15 +11,49 @@ import {
 import { Search, Type, LayoutTemplate, Palette, X, ChevronDown } from 'lucide-react';
 
 const CATEGORY_LABELS: Record<string, string> = {
-  floral: 'Floral',
-  decorative: 'Dekorasi',
-  frames: 'Bingkai',
-  icons: 'Ikon',
-  backgrounds: 'Background',
-  brand: 'Brand',
+  // Sumber A — harikita-assets/
+  floral:       'Floral',
+  decorative:   'Dekorasi',
+  frames:       'Bingkai',
+  icons:        'Ikon',
+  backgrounds:  'Background',
+  brand:        'Brand',
   'event-icon': 'Event',
-  image: 'Gambar',
+  image:        'Gambar',
+  frame:        'Bingkai',
+  // Sumber B — assets/harikita/
+  abstract:     'Abstrak',
+  avatars:      'Avatar',
+  cards:        'Kartu',
+  compositions: 'Komposisi',
+  corners:      'Sudut',
+  flowers:      'Bunga',
+  leaves:       'Daun',
+  lines:        'Garis',
+  ornaments:    'Ornamen',
+  patterns:     'Pola',
+  textures:     'Tekstur',
 };
+
+/** SubCategory label yang lebih ramah */
+const SUBCATEGORY_LABELS: Record<string, string> = {
+  // flowers sub
+  blooms:        'Mekar Penuh',
+  accents:       'Aksen Bunga',
+  'single-stem': 'Tangkai Tunggal',
+  // leaves sub
+  branches:      'Ranting',
+  sprigs:        'Sprigs',
+  stems:         'Tangkai',
+  // decorative sub
+  'stars-sparkles': 'Bintang & Kilau',
+  // floral sub (Sumber A)
+  'bouquets':    'Buket',
+  'wreaths':     'Karangan',
+  'single':      'Tunggal',
+};
+
+
 
 export function AssetCatalog({
   onAdd,
@@ -151,7 +185,7 @@ export function AssetCatalog({
             <option value="">Semua sub-kategori</option>
             {subCategories.map((sc) => (
               <option key={sc} value={sc}>
-                {sc.replace(/-/g, ' ')}
+                {SUBCATEGORY_LABELS[sc] ?? sc.replace(/-/g, ' ')}
               </option>
             ))}
           </select>
@@ -168,7 +202,7 @@ export function AssetCatalog({
                 type="button"
                 disabled={disabled}
                 onClick={() => onAdd(asset)}
-                title={`Klik untuk menambahkan ${asset.id}`}
+                title={`Klik untuk menambahkan ${asset.label ?? asset.id}`}
                 className="group flex flex-col items-center gap-1.5 rounded-xl border border-hk-soft-beige bg-white p-2 text-center transition hover:border-[#C5A880] hover:bg-[#FAF8F5] hover:shadow-2xs disabled:opacity-40"
               >
                 <div className="flex h-14 w-full items-center justify-center rounded-lg bg-[#FAF8F5] p-1.5 transition group-hover:scale-105">
@@ -183,11 +217,11 @@ export function AssetCatalog({
                   />
                 </div>
                 <span className="block w-full truncate text-[10px] font-medium text-hk-charcoal leading-tight">
-                  {asset.id.replace(/-/g, ' ')}
+                  {asset.label ?? asset.id.replace(/^[ab]-/, '').replace(/-/g, ' ')}
                 </span>
                 {asset.subCategory && (
                   <span className="block text-[9px] text-hk-taupe/70 truncate w-full">
-                    {asset.subCategory.replace(/-/g, ' ')}
+                    {SUBCATEGORY_LABELS[asset.subCategory] ?? asset.subCategory.replace(/-/g, ' ')}
                   </span>
                 )}
               </button>
