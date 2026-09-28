@@ -24,7 +24,7 @@ export function DashboardShell({
         homeHref={homeHref}
         userName={userName}
       />
-      <div className="min-w-0 flex-1">
+      <div className="flex-1 min-w-0 transition-all duration-300">
         <main className="px-4 py-6 pt-20 sm:px-6 lg:px-8 lg:pt-6">{children}</main>
       </div>
     </div>
