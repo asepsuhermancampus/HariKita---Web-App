@@ -5,11 +5,37 @@ export type StudioLayer = 'background' | 'behind-content' | 'content' | 'front-d
 export type StudioOverflowPolicy = 'contained' | 'visible';
 export type StudioAnimationPreset = 'none' | 'entrance' | 'float' | 'sway' | 'pulse' | 'drift' | 'reveal' | 'exit';
 
+export interface StudioStageAnimation {
+  enabled: boolean;
+  durationMs: number;
+  delayMs?: number;
+  direction?: 'left' | 'right' | 'up' | 'down';
+  intensity?: number;
+}
+
+export interface StudioLoopAnimation {
+  preset: 'none' | 'float' | 'sway' | 'pulse' | 'drift';
+  durationMs: number;
+  intensity?: number;
+  repeat?: number;
+}
+
 export interface StudioTransform { x: number; y: number; width: number; height: number; rotation: number; flipX: boolean; flipY: boolean; }
-export interface StudioAnimation { preset: StudioAnimationPreset; delayMs: number; durationMs: number; intensity?: number; direction?: 'left' | 'right' | 'up' | 'down'; repeat?: number; trigger?: 'mount' | 'visible'; }
+export interface StudioAnimation {
+  preset: StudioAnimationPreset;
+  delayMs: number;
+  durationMs: number;
+  intensity?: number;
+  direction?: 'left' | 'right' | 'up' | 'down';
+  repeat?: number;
+  trigger?: 'mount' | 'visible';
+  entrance?: StudioStageAnimation;
+  loop?: StudioLoopAnimation;
+  exit?: StudioStageAnimation;
+}
 export interface StudioAppearance { opacity: number; overflow: StudioOverflowPolicy; }
 export interface StudioAccessibility { label: string; description?: string; }
-export interface StudioNodeBase { id: string; name?: string; layer: StudioLayer; visible: boolean; locked: boolean; transform: StudioTransform; desktopTransform?: StudioTransform; appearance: StudioAppearance; animation: StudioAnimation; accessibility: StudioAccessibility; }
+export interface StudioNodeBase { id: string; name?: string; groupId?: string; groupName?: string; layer: StudioLayer; visible: boolean; locked: boolean; transform: StudioTransform; desktopTransform?: StudioTransform; appearance: StudioAppearance; animation: StudioAnimation; accessibility: StudioAccessibility; }
 /** Official blocks consume neutral fixtures only. No URLs, HTML or live record IDs. */
 export interface StudioComponentConfig { component: StudioSectionId; variant: 'default'; title: string; }
 export type StudioNode = StudioNodeBase & (

@@ -43,9 +43,8 @@ export function StudioSceneRenderer({
     >
       {sectionIds.map((id) => {
         const section = document.sections.find((s) => s.id === id)!;
-        // Editor mode: overflow visible so assets can cross section boundaries.
-        // Preview mode: respect overflowPolicy per section.
-        const overflow = editor || section.overflowPolicy === 'visible' ? 'visible' : 'hidden';
+        // Always allow decorative assets to cross section boundaries seamlessly in both editor and preview
+        const overflow = 'visible';
         return (
           <section
             key={id}
@@ -55,8 +54,8 @@ export function StudioSceneRenderer({
               isolation: editor ? undefined : 'isolate',
               height: 640,
               overflow,
-              // Subtle dashed divider in editor so section boundaries are visible
-              borderBottom: editor ? '1px dashed #C5A88044' : '1px solid #F3EDE6',
+              // Subtle dashed divider in editor so section boundaries are visible; clean in preview
+              borderBottom: editor ? '1px dashed #C5A88044' : undefined,
               // Ghost sections: transparent section background
               background: transparent ? 'transparent' : undefined,
             }}

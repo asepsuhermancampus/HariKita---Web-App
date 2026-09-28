@@ -31,6 +31,7 @@ type GestureState = {
   centerY?: number;
   lastAngle?: number;
   accumulatedRotation?: number;
+  groupSiblings?: { id: string; start: StudioTransform }[];
 };
 
 // Corner resize handle positions
@@ -171,6 +172,17 @@ export function ResponsiveStudioCanvas({
         }
       }
 
+      let groupSiblings: { id: string; start: StudioTransform }[] | undefined;
+      if (mode === 'drag' && target.groupId) {
+        const siblings = targetSec.nodes.filter((n) => n.groupId === target.groupId && !n.locked);
+        if (siblings.length > 1) {
+          groupSiblings = siblings.map((n) => ({
+            id: n.id,
+            start: resolveTransform(n, device),
+          }));
+        }
+      }
+
       const gestureHeight = Math.max(1, SECTION_HEIGHT * effectiveZoom);
       gesture.current = {
         id,
@@ -188,6 +200,7 @@ export function ResponsiveStudioCanvas({
         centerY,
         lastAngle,
         accumulatedRotation,
+        groupSiblings,
       };
     },
     [disabled, section, document.sections, onSelect, onActiveSectionChange, active, device, effectiveZoom, baseWidth, SECTION_HEIGHT]
@@ -259,6 +272,41 @@ export function ResponsiveStudioCanvas({
       nodeEl.style.height = t.height + '%';
       nodeEl.style.transform = 'rotate(' + t.rotation + 'deg) scale(' + (g.start.flipX ? -1 : 1) + ',' + (g.start.flipY ? -1 : 1) + ')';
     }
+
+    // 3. If dragging a grouped node, move all group siblings in sync
+    if (g.mode === 'drag' && g.groupSiblings && g.groupSiblings.length > 1) {
+      const dxPercent = t.x - g.start.x;
+      const dyPercent = t.y - g.start.y;
+      g.groupSiblings.forEach((sibling) => {
+        if (sibling.id === g.id) return;
+        const sibT = clampTransform({
+          ...sibling.start,
+          x: sibling.start.x + dxPercent,
+          y: sibling.start.y + dyPercent,
+        });
+        let sibOverlayTop: string;
+        let sibOverlayH: string;
+        if (viewMode === 'all') {
+          sibOverlayTop = ((sectionIdx * SECTION_HEIGHT + (sibT.y / 100) * SECTION_HEIGHT) / totalHeight) * 100 + '%';
+          sibOverlayH = ((sibT.height / 100) * SECTION_HEIGHT / totalHeight) * 100 + '%';
+        } else {
+          sibOverlayTop = sibT.y + '%';
+          sibOverlayH = sibT.height + '%';
+        }
+        const sibOverlay = nodeOverlayRefs.current.get(sibling.id);
+        if (sibOverlay) {
+          sibOverlay.style.left = sibT.x + '%';
+          sibOverlay.style.top = sibOverlayTop;
+          sibOverlay.style.width = sibT.width + '%';
+          sibOverlay.style.height = sibOverlayH;
+        }
+        const sibNode = frame.current?.querySelector<HTMLElement>('[data-studio-node="' + sibling.id + '"]');
+        if (sibNode) {
+          sibNode.style.left = sibT.x + '%';
+          sibNode.style.top = sibT.y + '%';
+        }
+      });
+    }
   }, [enabledSections, viewMode, totalHeight, SECTION_HEIGHT]);
 
   const finishGesture = useCallback(
@@ -266,38 +314,57 @@ export function ResponsiveStudioCanvas({
       const g = gesture.current;
       gesture.current = null;
       if (g && !cancel && JSON.stringify(g.start) !== JSON.stringify(g.last)) {
-        // Commit once on drop — single React re-render syncs everything
-        onEdit({ type: 'transform', section: g.sectionId, id: g.id, device, patch: g.last });
+        if (g.mode === 'drag' && g.groupSiblings && g.groupSiblings.length > 1) {
+          const dxPercent = g.last.x - g.start.x;
+          const dyPercent = g.last.y - g.start.y;
+          const patches: Record<string, Partial<StudioTransform>> = {};
+          g.groupSiblings.forEach((s) => {
+            patches[s.id] = {
+              x: clampTransform({ ...s.start, x: s.start.x + dxPercent, y: s.start.y + dyPercent }).x,
+              y: clampTransform({ ...s.start, x: s.start.x + dxPercent, y: s.start.y + dyPercent }).y,
+            };
+          });
+          onEdit({ type: 'transform-many', section: g.sectionId, device, patches });
+        } else {
+          // Commit once on drop — single React re-render syncs everything
+          onEdit({ type: 'transform', section: g.sectionId, id: g.id, device, patch: g.last });
+        }
       } else if (g && cancel) {
         // Restore overlay box to original position via DOM
-        const overlayEl = nodeOverlayRefs.current.get(g.id);
         const sectionIdx = enabledSections.findIndex((s) => s.id === g.sectionId);
-        if (overlayEl) {
-          const t = g.start;
-          let overlayTop: string;
-          let overlayH: string;
-          if (viewMode === 'all') {
-            overlayTop = ((sectionIdx * SECTION_HEIGHT + (t.y / 100) * SECTION_HEIGHT) / totalHeight) * 100 + '%';
-            overlayH = ((t.height / 100) * SECTION_HEIGHT / totalHeight) * 100 + '%';
-          } else {
-            overlayTop = t.y + '%';
-            overlayH = t.height + '%';
+        const restoreNode = (nodeId: string, origT: StudioTransform) => {
+          const overlayEl = nodeOverlayRefs.current.get(nodeId);
+          if (overlayEl) {
+            let overlayTop: string;
+            let overlayH: string;
+            if (viewMode === 'all') {
+              overlayTop = ((sectionIdx * SECTION_HEIGHT + (origT.y / 100) * SECTION_HEIGHT) / totalHeight) * 100 + '%';
+              overlayH = ((origT.height / 100) * SECTION_HEIGHT / totalHeight) * 100 + '%';
+            } else {
+              overlayTop = origT.y + '%';
+              overlayH = origT.height + '%';
+            }
+            overlayEl.style.left = origT.x + '%';
+            overlayEl.style.top = overlayTop;
+            overlayEl.style.width = origT.width + '%';
+            overlayEl.style.height = overlayH;
+            overlayEl.style.transform = 'rotate(' + origT.rotation + 'deg)';
           }
-          overlayEl.style.left = t.x + '%';
-          overlayEl.style.top = overlayTop;
-          overlayEl.style.width = t.width + '%';
-          overlayEl.style.height = overlayH;
-          overlayEl.style.transform = 'rotate(' + t.rotation + 'deg)';
-        }
-        // Restore rendered asset image
-        const nodeEl = frame.current?.querySelector<HTMLElement>('[data-studio-node="' + g.id + '"]');
-        if (nodeEl) {
-          const t = g.start;
-          nodeEl.style.left = t.x + '%';
-          nodeEl.style.top = t.y + '%';
-          nodeEl.style.width = t.width + '%';
-          nodeEl.style.height = t.height + '%';
-          nodeEl.style.transform = 'rotate(' + t.rotation + 'deg) scale(' + (t.flipX ? -1 : 1) + ',' + (t.flipY ? -1 : 1) + ')';
+          const nodeEl = frame.current?.querySelector<HTMLElement>('[data-studio-node="' + nodeId + '"]');
+          if (nodeEl) {
+            nodeEl.style.left = origT.x + '%';
+            nodeEl.style.top = origT.y + '%';
+            nodeEl.style.width = origT.width + '%';
+            nodeEl.style.height = origT.height + '%';
+            nodeEl.style.transform = 'rotate(' + origT.rotation + 'deg) scale(' + (origT.flipX ? -1 : 1) + ',' + (origT.flipY ? -1 : 1) + ')';
+          }
+        };
+
+        restoreNode(g.id, g.start);
+        if (g.groupSiblings) {
+          g.groupSiblings.forEach((s) => {
+            if (s.id !== g.id) restoreNode(s.id, s.start);
+          });
         }
       }
     },
@@ -624,8 +691,18 @@ export function ResponsiveStudioCanvas({
                         {/* Selection outline */}
                         {isSelected && (
                           <div
-                            className="absolute inset-0 border-2 border-[#C5A880] rounded-sm pointer-events-none"
+                            className={`absolute inset-0 border-2 rounded-sm pointer-events-none ${
+                              n.groupId ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50' : 'border-[#C5A880]'
+                            }`}
                             style={{ margin: -2, zIndex: 11 }}
+                          />
+                        )}
+
+                        {/* Dashed outline for other sibling nodes belonging to the same group */}
+                        {node?.groupId && n.groupId === node.groupId && !isSelected && (
+                          <div
+                            className="absolute inset-0 border border-dashed border-[#C5A880] rounded-sm pointer-events-none"
+                            style={{ margin: -1, zIndex: 10 }}
                           />
                         )}
 
@@ -636,14 +713,30 @@ export function ResponsiveStudioCanvas({
                             style={{ top: -24, left: '50%', transform: 'translateX(-50%)', zIndex: 50 }}
                           >
                             <span className="flex items-center gap-1">
-                              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
-                              {n.accessibility.label || n.id}
+                              {n.groupId ? (
+                                <span className="text-[#C5A880] font-extrabold flex items-center gap-0.5">
+                                  📁 {n.groupName || 'Grup'} ·
+                                </span>
+                              ) : (
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                              )}
+                              {n.accessibility.label || n.name || n.id}
                             </span>
                           </div>
                         )}
 
-                        {/* Resize + rotate handles */}
-                        {isSelected && !n.locked && (
+                        {/* Group moving indicator badge */}
+                        {isSelected && n.groupId && (
+                          <div
+                            className="absolute flex items-center gap-1 rounded-full bg-[#4A2E35]/90 px-2 py-0.5 text-[9px] font-bold text-[#C5A880] shadow-md pointer-events-none select-none whitespace-nowrap"
+                            style={{ bottom: -24, left: '50%', transform: 'translateX(-50%)', zIndex: 55 }}
+                          >
+                            <span>📁 Seluruh grup bergerak bersamaan</span>
+                          </div>
+                        )}
+
+                        {/* Resize + rotate handles (Hanya jika asset bukan bagian dari grup) */}
+                        {isSelected && !n.locked && !n.groupId && (
                           <>
                             {RESIZE_HANDLES.map((handle) => (
                               <div

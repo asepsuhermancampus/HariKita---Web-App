@@ -21,6 +21,6 @@ export function normalizeSectionOrder(order: readonly string[]): StudioSectionId
 }
 
 export function createBlankStudioDocument(): InvitationStudioDocument {
-  const sections: StudioSection[] = STUDIO_SECTIONS.map(({ id, mandatory }) => ({ id, sectionType: id, enabled: mandatory, layout: { mobile: 'base' }, overflowPolicy: 'contained', nodes: [] }));
+  const sections: StudioSection[] = STUDIO_SECTIONS.map(({ id, mandatory }) => ({ id, sectionType: id, enabled: mandatory, layout: { mobile: 'base' }, overflowPolicy: 'visible', nodes: [] }));
   return { schemaVersion: 1, metadata: { name: 'Untitled invitation' }, sectionOrder: STUDIO_SECTIONS.map(({ id }) => id), sections, fixtureProfile: 'neutral' };
 }

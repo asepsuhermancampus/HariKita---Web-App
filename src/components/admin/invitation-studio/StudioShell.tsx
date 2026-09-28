@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { ArrowLeft, Eye, Layers, Palette, Redo2, RotateCcw, Save, Sliders, Undo2, Send, CheckCircle, Globe, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Eye, Layers, Palette, Redo2, RotateCcw, Save, Sliders, Undo2, Send, CheckCircle, Globe, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { DashButton } from "@/components/dashboard";
 import { saveStudioDocument, submitStudioReview, approveStudioDraft, publishStudioVersion, returnStudioDraft, unpublishStudioDraft } from "@/server/actions/invitation-studio";
 import type { InvitationStudioDocument } from "@/lib/invitation-studio/types";
@@ -17,6 +17,7 @@ import { LayerTree } from './LayerTree';
 import { PropertiesInspector } from './PropertiesInspector';
 import { ResponsiveStudioCanvas } from './ResponsiveStudioCanvas';
 import { StudioPreview } from './StudioPreview';
+import { SectionTemplatePanel } from './SectionTemplatePanel';
 import { StudioHistory } from '@/lib/invitation-studio/history';
 import { UndoRedoControls } from './UndoRedoControls';
 import { SaveStatus } from './SaveStatus';
@@ -48,7 +49,7 @@ export function StudioShell({
   
   // UX Panel Tabs & Collapsible Sidebar
   const [leftCollapsed, setLeftCollapsed] = useState(false);
-  const [leftTab, setLeftTab] = useState<'sections' | 'assets'>('sections');
+  const [leftTab, setLeftTab] = useState<'sections' | 'assets' | 'templates'>('sections');
   const [rightTab, setRightTab] = useState<'layers' | 'inspector'>('layers');
 
   const documentRef = useRef(document);
@@ -321,30 +322,42 @@ export function StudioShell({
             <aside className="flex min-w-0 h-full min-h-0 flex-col rounded-2xl border border-hk-soft-beige bg-white p-3 shadow-sm overflow-hidden">
               {/* Panel Tabs with Minimize Button */}
               <div className="shrink-0 mb-2 flex items-center gap-1.5">
-                <div className="flex-1 grid grid-cols-2 gap-1 rounded-xl bg-[#FAF8F5] p-1 border border-hk-soft-beige">
+                <div className="flex-1 grid grid-cols-3 gap-1 rounded-xl bg-[#FAF8F5] p-1 border border-hk-soft-beige">
                   <button
                     type="button"
                     onClick={() => setLeftTab('sections')}
-                    className={`flex h-7.5 items-center justify-center gap-1.5 rounded-lg text-xs font-bold transition ${
+                    className={`flex h-7.5 items-center justify-center gap-1 rounded-lg text-[10px] font-bold transition ${
                       leftTab === 'sections'
                         ? 'bg-white text-[#4A2E35] shadow-2xs border border-hk-soft-beige/80'
                         : 'text-hk-taupe hover:text-hk-charcoal'
                     }`}
                   >
-                    <Layers className="h-3.5 w-3.5 text-[#C5A880]" />
-                    <span>Sections</span>
+                    <Layers className="h-3 w-3 text-[#C5A880]" />
+                    <span>Section</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLeftTab('templates')}
+                    className={`flex h-7.5 items-center justify-center gap-1 rounded-lg text-[10px] font-bold transition ${
+                      leftTab === 'templates'
+                        ? 'bg-white text-[#4A2E35] shadow-2xs border border-hk-soft-beige/80'
+                        : 'text-hk-taupe hover:text-hk-charcoal'
+                    }`}
+                  >
+                    <Sparkles className="h-3 w-3 text-[#C5A880]" />
+                    <span>Template</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setLeftTab('assets')}
-                    className={`flex h-7.5 items-center justify-center gap-1.5 rounded-lg text-xs font-bold transition ${
+                    className={`flex h-7.5 items-center justify-center gap-1 rounded-lg text-[10px] font-bold transition ${
                       leftTab === 'assets'
                         ? 'bg-white text-[#4A2E35] shadow-2xs border border-hk-soft-beige/80'
                         : 'text-hk-taupe hover:text-hk-charcoal'
                     }`}
                   >
-                    <Palette className="h-3.5 w-3.5 text-[#C5A880]" />
-                    <span>Katalog Aset</span>
+                    <Palette className="h-3 w-3 text-[#C5A880]" />
+                    <span>Aset</span>
                   </button>
                 </div>
 
@@ -368,6 +381,22 @@ export function StudioShell({
                     onEdit={edit} 
                     disabled={isPending || !editable} 
                   />
+                ) : leftTab === 'templates' ? (
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2 px-0.5">
+                      <Sparkles className="h-4 w-4 text-[#C5A880]" />
+                      <h2 className="text-sm font-bold text-hk-charcoal">Template Konten</h2>
+                    </div>
+                    <p className="text-[11px] text-hk-taupe px-0.5">
+                      Pilih template siap pakai untuk section <strong>{active}</strong>. Semua elemen bisa diedit setelah diterapkan.
+                    </p>
+                    <SectionTemplatePanel
+                      sectionId={active}
+                      sectionLabel={active}
+                      onApply={(edits) => edits.forEach(e => edit(e))}
+                      disabled={isPending || !editable}
+                    />
+                  </div>
                 ) : (
                   <AssetCatalog 
                     disabled={isPending || !editable} 
@@ -440,7 +469,7 @@ export function StudioShell({
                 <LayerTree 
                   section={section} 
                   selection={selection} 
-                  onSelect={id => { setSelection(id); setRightTab('inspector'); }} 
+                  onSelect={id => { setSelection(id); }} 
                   onEdit={edit} 
                   disabled={isPending || !editable} 
                 />

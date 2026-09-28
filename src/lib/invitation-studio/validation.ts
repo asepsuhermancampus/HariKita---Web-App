@@ -62,16 +62,35 @@ export function validateStudioDocument(input: unknown): ValidationResult<Invitat
     if (count > STUDIO_LIMITS.nodes) { reject('too many nodes'); break; }
     for (const node of section.nodes) {
       if (!record(node)) { reject('invalid node'); continue; }
-      if (!keys(node, ['id', 'name', 'kind', 'layer', 'visible', 'locked', 'transform', 'desktopTransform', 'appearance', 'animation', 'accessibility', 'config'])) reject('unknown node field');
+      if (!keys(node, ['id', 'name', 'groupId', 'groupName', 'kind', 'layer', 'visible', 'locked', 'transform', 'desktopTransform', 'appearance', 'animation', 'accessibility', 'config'])) reject('unknown node field');
       if (typeof node.id !== 'string' || !/^[\w-]{1,100}$/.test(node.id)) reject('invalid node id');
       else if (seenNodes.has(node.id)) reject(`duplicate node id: ${node.id}`); else seenNodes.add(node.id);
       if (node.name !== undefined && !text(node.name, 100, true)) reject('invalid node name');
+      if (node.groupId !== undefined && (typeof node.groupId !== 'string' || !/^[\w-]{1,100}$/.test(node.groupId))) reject('invalid node groupId');
+      if (node.groupName !== undefined && !text(node.groupName, 100, true)) reject('invalid node groupName');
       if (!oneOf(node.layer, layers) || typeof node.visible !== 'boolean' || typeof node.locked !== 'boolean') reject('invalid node flags/layer');
       if (!transform(node.transform) || (node.desktopTransform !== undefined && !transform(node.desktopTransform))) reject('invalid transform');
-      const a = node.animation;
-      if (!record(a) || !keys(a, ['preset', 'delayMs', 'durationMs', 'intensity', 'direction', 'repeat', 'trigger']) || !oneOf(a.preset, presets) || !number(a.delayMs, 0, STUDIO_LIMITS.delayMs) || !number(a.durationMs, 0, STUDIO_LIMITS.durationMs) ||
+      const a = node.animation as any;
+      if (!record(a) || !keys(a, ['preset', 'delayMs', 'durationMs', 'intensity', 'direction', 'repeat', 'trigger', 'entrance', 'loop', 'exit']) || !oneOf(a.preset, presets) || !number(a.delayMs, 0, STUDIO_LIMITS.delayMs) || !number(a.durationMs, 0, STUDIO_LIMITS.durationMs) ||
         (a.intensity !== undefined && !number(a.intensity, 0, 20)) || (a.direction !== undefined && !oneOf(a.direction, ['left', 'right', 'up', 'down'])) ||
         (a.repeat !== undefined && (!number(a.repeat, 0, 20) || !Number.isInteger(a.repeat))) || (a.trigger !== undefined && !oneOf(a.trigger, ['mount', 'visible']))) reject('invalid animation');
+      if (a.entrance !== undefined) {
+        if (!record(a.entrance) || !keys(a.entrance, ['enabled', 'durationMs', 'delayMs', 'direction', 'intensity']) || typeof a.entrance.enabled !== 'boolean' || !number(a.entrance.durationMs, 0, STUDIO_LIMITS.durationMs) ||
+          (a.entrance.delayMs !== undefined && !number(a.entrance.delayMs, 0, STUDIO_LIMITS.delayMs)) ||
+          (a.entrance.intensity !== undefined && !number(a.entrance.intensity, 0, 20)) ||
+          (a.entrance.direction !== undefined && !oneOf(a.entrance.direction, ['left', 'right', 'up', 'down']))) reject('invalid entrance animation');
+      }
+      if (a.loop !== undefined) {
+        if (!record(a.loop) || !keys(a.loop, ['preset', 'durationMs', 'intensity', 'repeat']) || !oneOf(a.loop.preset, ['none', 'float', 'sway', 'pulse', 'drift']) || !number(a.loop.durationMs, 0, STUDIO_LIMITS.durationMs) ||
+          (a.loop.intensity !== undefined && !number(a.loop.intensity, 0, 20)) ||
+          (a.loop.repeat !== undefined && (!number(a.loop.repeat, 0, 20) || !Number.isInteger(a.loop.repeat)))) reject('invalid loop animation');
+      }
+      if (a.exit !== undefined) {
+        if (!record(a.exit) || !keys(a.exit, ['enabled', 'durationMs', 'delayMs', 'direction', 'intensity']) || typeof a.exit.enabled !== 'boolean' || !number(a.exit.durationMs, 0, STUDIO_LIMITS.durationMs) ||
+          (a.exit.delayMs !== undefined && !number(a.exit.delayMs, 0, STUDIO_LIMITS.delayMs)) ||
+          (a.exit.intensity !== undefined && !number(a.exit.intensity, 0, 20)) ||
+          (a.exit.direction !== undefined && !oneOf(a.exit.direction, ['left', 'right', 'up', 'down']))) reject('invalid exit animation');
+      }
       const p = node.appearance;
       if (!record(p) || !keys(p, ['opacity', 'overflow']) || !number(p.opacity, 0, 100) || !overflow(p.overflow)) reject('invalid appearance');
       const access = node.accessibility;
