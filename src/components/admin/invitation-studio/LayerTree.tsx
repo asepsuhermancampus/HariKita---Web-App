@@ -244,7 +244,8 @@ export function LayerTree({
   const renderSingleNodeCard = (node: StudioNode, index: number, isNested = false) => {
     const isSelected = selection === node.id;
     const isChecked = selectedIds.has(node.id);
-    const nodeName = node.name ?? node.kind;
+    // Strip a-/b- source prefix from legacy names for friendly display
+    const nodeName = (node.name ?? node.kind).replace(/^[ab]-/, '').replace(/-/g, ' ');
 
     return (
       <div 
@@ -279,9 +280,13 @@ export function LayerTree({
             aria-pressed={isSelected} 
             onClick={() => onSelect(node.id)}
           >
-            <div className="flex h-7.5 w-7.5 shrink-0 items-center justify-center rounded-lg bg-[#FAF8F5] border border-hk-soft-beige p-1">
+            <div className="flex shrink-0 items-center justify-center rounded-lg bg-[#FAF8F5] border border-hk-soft-beige p-1" style={{ width: 30, height: 30, minWidth: 30, overflow: 'hidden' }}>
               {'src' in node.config ? (
-                <img src={node.config.src} alt="" className="max-h-full max-w-full object-contain" />
+                <img
+                  src={node.config.src}
+                  alt=""
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+                />
               ) : node.kind === 'text' ? (
                 <Type className="h-3.5 w-3.5 text-[#C5A880]" />
               ) : (

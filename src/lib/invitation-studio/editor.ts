@@ -41,9 +41,13 @@ export function clampTransform(t: StudioTransform): StudioTransform {
   };
 }
 export function createStudioNode(kind: 'text' | 'component' | StudioAsset, id: string, section: StudioSectionId = 'cover'): StudioNode {
+  // Friendly name: prefer asset.label, else strip a-/b- source prefix from id
+  const assetName = typeof kind === 'string'
+    ? kind
+    : (kind.label ?? kind.id.replace(/^[ab]-/, '').replace(/-/g, ' '));
   const base: StudioNodeBase = {
     id,
-    name: typeof kind === 'string' ? kind : kind.id,
+    name: assetName,
     layer: kind === 'component' ? 'component' : 'front-decoration',
     visible: true,
     locked: false,
@@ -58,7 +62,7 @@ export function createStudioNode(kind: 'text' | 'component' | StudioAsset, id: s
     },
     appearance: { opacity: 100, overflow: 'visible' },
     animation: { preset: 'none', durationMs: 600, delayMs: 0 },
-    accessibility: { label: typeof kind === 'string' ? kind : kind.id },
+    accessibility: { label: assetName },
   };
   if (kind === 'text') return { ...base, kind, config: { text: 'Hari Bahagia', color: '#4A2E35', fontSize: 28, align: 'center' } };
   if (kind === 'component') return { ...base, kind, config: { component: section, variant: 'default', title: '' } };
