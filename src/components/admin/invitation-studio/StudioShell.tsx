@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { ArrowLeft, Eye, Layers, Palette, Redo2, RotateCcw, Save, Sliders, Undo2, Send, CheckCircle, Globe, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowLeft, Eye, Layers, Palette, Redo2, RotateCcw, Save, Sliders, Undo2, Send, CheckCircle, Globe, ChevronLeft, Sparkles } from "lucide-react";
 import { DashButton } from "@/components/dashboard";
 import { saveStudioDocument, submitStudioReview, approveStudioDraft, publishStudioVersion, returnStudioDraft, unpublishStudioDraft } from "@/server/actions/invitation-studio";
 import type { InvitationStudioDocument } from "@/lib/invitation-studio/types";
@@ -48,9 +48,15 @@ export function StudioShell({
   const [preview, setPreview] = useState(false);
   
   // UX Panel Tabs & Collapsible Sidebar
-  const [leftCollapsed, setLeftCollapsed] = useState(false);
-  const [leftTab, setLeftTab] = useState<'sections' | 'assets' | 'templates'>('sections');
+  const [leftTab, setLeftTab] = useState<'sections' | 'assets' | 'templates' | null>(null);
   const [rightTab, setRightTab] = useState<'layers' | 'inspector'>('layers');
+
+  // Close flyout on Escape
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setLeftTab(null); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   const documentRef = useRef(document);
   const stateRef = useRef(state);
@@ -286,137 +292,150 @@ export function StudioShell({
           </div>
         </header>
 
-        {/* 3-Column Studio Workspace (Fixed-Height & Viewport-Locked) */}
-        <section className={`grid flex-1 min-h-0 gap-3 grid-rows-[minmax(0,1fr)] transition-all duration-200 ${
-          leftCollapsed
-            ? 'xl:grid-cols-[48px_minmax(0,1fr)_330px]'
-            : 'xl:grid-cols-[310px_minmax(0,1fr)_330px]'
-        }`}>
-          {/* Left Panel with Tab Switcher & Minimize Toggle */}
-          {leftCollapsed ? (
-            <aside className="flex w-12 shrink-0 h-full min-h-0 flex-col items-center justify-between rounded-2xl border border-hk-soft-beige bg-white py-3 shadow-sm">
-              <div className="flex flex-col items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setLeftCollapsed(false)}
-                  title="Buka Panel (Sections & Aset)"
-                  className="flex h-8 w-8 items-center justify-center rounded-xl border border-hk-soft-beige bg-[#FAF8F5] text-hk-charcoal transition hover:border-[#C5A880] hover:bg-[#F3EDE6]"
-                >
-                  <ChevronRight className="h-4 w-4 text-[#C5A880]" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setLeftCollapsed(false); setLeftTab('sections'); }}
-                  title="Buka Sections"
-                  className="flex h-8 w-8 items-center justify-center rounded-xl text-hk-taupe hover:text-hk-charcoal hover:bg-[#FAF8F5] transition"
-                >
-                  <Layers className="h-4 w-4 text-[#C5A880]" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setLeftCollapsed(false); setLeftTab('assets'); }}
-                  title="Buka Katalog Aset"
-                  className="flex h-8 w-8 items-center justify-center rounded-xl text-hk-taupe hover:text-hk-charcoal hover:bg-[#FAF8F5] transition"
-                >
-                  <Palette className="h-4 w-4 text-[#C5A880]" />
-                </button>
-              </div>
-              <div className="text-[10px] font-bold text-hk-taupe/60 [writing-mode:vertical-lr] rotate-180 select-none tracking-widest uppercase py-2">
-                Sections & Aset
-              </div>
-            </aside>
-          ) : (
-            <aside className="flex min-w-0 h-full min-h-0 flex-col rounded-2xl border border-hk-soft-beige bg-white p-3 shadow-sm overflow-hidden">
-              {/* Panel Tabs with Minimize Button */}
-              <div className="shrink-0 mb-2 flex items-center gap-1.5">
-                <div className="flex-1 grid grid-cols-3 gap-1 rounded-xl bg-[#FAF8F5] p-1 border border-hk-soft-beige">
-                  <button
-                    type="button"
-                    onClick={() => setLeftTab('sections')}
-                    className={`flex h-7.5 items-center justify-center gap-1 rounded-lg text-[10px] font-bold transition ${
-                      leftTab === 'sections'
-                        ? 'bg-white text-[#4A2E35] shadow-2xs border border-hk-soft-beige/80'
-                        : 'text-hk-taupe hover:text-hk-charcoal'
-                    }`}
-                  >
-                    <Layers className="h-3 w-3 text-[#C5A880]" />
-                    <span>Section</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setLeftTab('templates')}
-                    className={`flex h-7.5 items-center justify-center gap-1 rounded-lg text-[10px] font-bold transition ${
-                      leftTab === 'templates'
-                        ? 'bg-white text-[#4A2E35] shadow-2xs border border-hk-soft-beige/80'
-                        : 'text-hk-taupe hover:text-hk-charcoal'
-                    }`}
-                  >
-                    <Sparkles className="h-3 w-3 text-[#C5A880]" />
-                    <span>Template</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setLeftTab('assets')}
-                    className={`flex h-7.5 items-center justify-center gap-1 rounded-lg text-[10px] font-bold transition ${
-                      leftTab === 'assets'
-                        ? 'bg-white text-[#4A2E35] shadow-2xs border border-hk-soft-beige/80'
-                        : 'text-hk-taupe hover:text-hk-charcoal'
-                    }`}
-                  >
-                    <Palette className="h-3 w-3 text-[#C5A880]" />
-                    <span>Aset</span>
-                  </button>
-                </div>
+        {/* ── 3-Column Workspace (icon-rail | canvas | right panel) ──── */}
+        <section className="xl:grid-cols-[48px_minmax(0,1fr)_330px] grid flex-1 min-h-0 gap-3 grid-rows-[minmax(0,1fr)]">
 
-                <button
-                  type="button"
-                  onClick={() => setLeftCollapsed(true)}
-                  title="Sembunyikan Sidebar agar canvas lebih lega"
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-hk-soft-beige bg-[#FAF8F5] text-hk-taupe transition hover:border-[#C5A880] hover:text-[#4A2E35] hover:bg-[#F3EDE6]"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-              </div>
+          {/* ── Icon Rail (always 48px) ──────────────────────────────── */}
+          <aside className="relative flex w-12 shrink-0 h-full min-h-0 flex-col items-center gap-1.5 rounded-2xl border border-hk-soft-beige bg-white py-3 shadow-sm">
+            {/* Section icon */}
+            <div className="group/tip relative">
+              <button
+                type="button"
+                id="rail-sections"
+                onClick={() => setLeftTab(t => t === 'sections' ? null : 'sections')}
+                title="Sections"
+                className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
+                  leftTab === 'sections'
+                    ? 'bg-[#4A2E35] text-white shadow-sm'
+                    : 'text-hk-taupe hover:bg-[#FAF8F5] hover:text-[#4A2E35]'
+                }`}
+              >
+                <Layers className="h-4 w-4" />
+              </button>
+              <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2.5 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#4A2E35] px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover/tip:opacity-100">
+                Sections
+                <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#4A2E35]" />
+              </span>
+            </div>
 
-              {/* Tab Contents (Scrollable Internally) */}
-              <div className="flex-1 min-h-0 overflow-y-auto">
-                {leftTab === 'sections' ? (
-                  <SectionNavigator 
-                    document={document} 
-                    active={active} 
-                    onSelect={id => { setActive(id); setSelection(null); }} 
-                    onEdit={edit} 
-                    disabled={isPending || !editable} 
-                  />
-                ) : leftTab === 'templates' ? (
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-2 px-0.5">
-                      <Sparkles className="h-4 w-4 text-[#C5A880]" />
-                      <h2 className="text-sm font-bold text-hk-charcoal">Template Konten</h2>
+            {/* Template icon */}
+            <div className="group/tip relative">
+              <button
+                type="button"
+                id="rail-templates"
+                onClick={() => setLeftTab(t => t === 'templates' ? null : 'templates')}
+                title="Template"
+                className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
+                  leftTab === 'templates'
+                    ? 'bg-[#4A2E35] text-white shadow-sm'
+                    : 'text-hk-taupe hover:bg-[#FAF8F5] hover:text-[#4A2E35]'
+                }`}
+              >
+                <Sparkles className="h-4 w-4" />
+              </button>
+              <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2.5 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#4A2E35] px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover/tip:opacity-100">
+                Template
+                <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#4A2E35]" />
+              </span>
+            </div>
+
+            {/* Assets icon */}
+            <div className="group/tip relative">
+              <button
+                type="button"
+                id="rail-assets"
+                onClick={() => setLeftTab(t => t === 'assets' ? null : 'assets')}
+                title="Aset"
+                className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
+                  leftTab === 'assets'
+                    ? 'bg-[#4A2E35] text-white shadow-sm'
+                    : 'text-hk-taupe hover:bg-[#FAF8F5] hover:text-[#4A2E35]'
+                }`}
+              >
+                <Palette className="h-4 w-4" />
+              </button>
+              <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2.5 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#4A2E35] px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover/tip:opacity-100">
+                Katalog Aset
+                <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#4A2E35]" />
+              </span>
+            </div>
+
+            {/* Active tab indicator dot */}
+            {leftTab && (
+              <div className="mt-auto mb-1">
+                <div className="h-1.5 w-1.5 rounded-full bg-[#C5A880]" />
+              </div>
+            )}
+
+            {/* Flyout Panel (overlay, slides out from rail) */}
+            {leftTab && (
+              <>
+                {/* Backdrop */}
+                <div
+                  className="fixed inset-0 z-30"
+                  onClick={() => setLeftTab(null)}
+                  aria-hidden="true"
+                />
+                {/* Flyout */}
+                <aside
+                  className="absolute left-[52px] top-0 z-40 flex h-full w-[288px] flex-col rounded-2xl border border-hk-soft-beige bg-white shadow-2xl overflow-hidden"
+                  style={{ animation: 'flyoutIn 0.18s ease-out' }}
+                >
+                  {/* Flyout header */}
+                  <div className="shrink-0 flex items-center justify-between border-b border-hk-soft-beige px-3 py-2.5">
+                    <div className="flex items-center gap-2">
+                      {leftTab === 'sections' && <><Layers className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Sections</span></>}
+                      {leftTab === 'templates' && <><Sparkles className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Template</span></>}
+                      {leftTab === 'assets' && <><Palette className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Katalog Aset</span></>}
                     </div>
-                    <p className="text-[11px] text-hk-taupe px-0.5">
-                      Pilih template siap pakai untuk section <strong>{active}</strong>. Semua elemen bisa diedit setelah diterapkan.
-                    </p>
-                    <SectionTemplatePanel
-                      sectionId={active}
-                      sectionLabel={active}
-                      onApply={(edits) => edits.forEach(e => edit(e))}
-                      disabled={isPending || !editable}
-                    />
+                    <button
+                      type="button"
+                      onClick={() => setLeftTab(null)}
+                      className="flex h-7 w-7 items-center justify-center rounded-lg text-hk-taupe hover:bg-[#FAF8F5] hover:text-hk-charcoal transition"
+                      title="Tutup (Esc)"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
                   </div>
-                ) : (
-                  <AssetCatalog 
-                    disabled={isPending || !editable} 
-                    onAdd={asset => edit({ 
-                      type: 'add', 
-                      section: active, 
-                      node: createStudioNode(asset, crypto.randomUUID(), active) 
-                    })} 
-                  />
-                )}
-              </div>
-            </aside>
-          )}
+
+                  {/* Flyout content */}
+                  <div className="flex-1 min-h-0 overflow-y-auto p-3">
+                    {leftTab === 'sections' && (
+                      <SectionNavigator
+                        document={document}
+                        active={active}
+                        onSelect={id => { setActive(id); setSelection(null); setLeftTab(null); }}
+                        onEdit={edit}
+                        disabled={isPending || !editable}
+                      />
+                    )}
+                    {leftTab === 'templates' && (
+                      <div className="flex flex-col gap-3">
+                        <p className="text-[11px] text-hk-taupe">
+                          Template untuk section <strong className="text-hk-charcoal">{active}</strong>. Semua elemen dapat diedit setelah diterapkan.
+                        </p>
+                        <SectionTemplatePanel
+                          sectionId={active}
+                          sectionLabel={active}
+                          onApply={(edits) => { edits.forEach(e => edit(e)); setLeftTab(null); }}
+                          disabled={isPending || !editable}
+                        />
+                      </div>
+                    )}
+                    {leftTab === 'assets' && (
+                      <AssetCatalog
+                        disabled={isPending || !editable}
+                        onAdd={asset => {
+                          edit({ type: 'add', section: active, node: createStudioNode(asset, crypto.randomUUID(), active) });
+                          setLeftTab(null);
+                        }}
+                      />
+                    )}
+                  </div>
+                </aside>
+              </>
+            )}
+          </aside>
 
           {/* Center Canvas */}
           <ResponsiveStudioCanvas 
