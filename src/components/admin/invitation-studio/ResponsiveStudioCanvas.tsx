@@ -2,14 +2,13 @@
 
 import React, { useRef, useState, useCallback } from 'react';
 import type { InvitationStudioDocument, StudioSectionId, StudioTransform } from '@/lib/invitation-studio/types';
-import { resolveTransform, selectedStudioNode, type StudioDevice, type StudioEdit } from '@/lib/invitation-studio/editor';
+import { clampTransform, resolveTransform, selectedStudioNode, type StudioDevice, type StudioEdit } from '@/lib/invitation-studio/editor';
 import { gestureTransform, type StudioGesture } from '@/lib/invitation-studio/geometry';
 import { STUDIO_SECTIONS } from '@/lib/invitation-studio/sections';
 import { StudioSceneRenderer } from './StudioSceneRenderer';
 import {
   Smartphone,
   Monitor,
-  Info,
   Lock,
   Compass,
   Layers,
@@ -28,6 +27,10 @@ type GestureState = {
   mode: StudioGesture;
   last: StudioTransform;
   zoom: number;
+  centerX?: number;
+  centerY?: number;
+  lastAngle?: number;
+  accumulatedRotation?: number;
 };
 
 // Corner resize handle positions
@@ -152,6 +155,22 @@ export function ResponsiveStudioCanvas({
       const t = resolveTransform(target, device);
       event.currentTarget.setPointerCapture(event.pointerId);
 
+      let centerX: number | undefined;
+      let centerY: number | undefined;
+      let lastAngle: number | undefined;
+      let accumulatedRotation: number | undefined;
+
+      if (mode === 'rotate') {
+        const overlayEl = nodeOverlayRefs.current.get(id);
+        if (overlayEl) {
+          const rect = overlayEl.getBoundingClientRect();
+          centerX = rect.left + rect.width / 2;
+          centerY = rect.top + rect.height / 2;
+          lastAngle = Math.atan2(event.clientY - centerY, event.clientX - centerX) * (180 / Math.PI);
+          accumulatedRotation = t.rotation;
+        }
+      }
+
       const gestureHeight = Math.max(1, SECTION_HEIGHT * effectiveZoom);
       gesture.current = {
         id,
@@ -165,6 +184,10 @@ export function ResponsiveStudioCanvas({
         mode,
         last: t,
         zoom: effectiveZoom,
+        centerX,
+        centerY,
+        lastAngle,
+        accumulatedRotation,
       };
     },
     [disabled, section, document.sections, onSelect, onActiveSectionChange, active, device, effectiveZoom, baseWidth, SECTION_HEIGHT]
@@ -173,7 +196,35 @@ export function ResponsiveStudioCanvas({
   const onPointerMove = useCallback((event: React.PointerEvent) => {
     const g = gesture.current;
     if (!g || g.pointer !== event.pointerId) return;
-    const t = gestureTransform(g.start, g.mode, event.clientX - g.x, event.clientY - g.y, g.width, g.height);
+
+    let t: StudioTransform;
+    if (
+      g.mode === 'rotate' &&
+      g.centerX !== undefined &&
+      g.centerY !== undefined &&
+      g.lastAngle !== undefined &&
+      g.accumulatedRotation !== undefined
+    ) {
+      const currentAngle = Math.atan2(event.clientY - g.centerY, event.clientX - g.centerX) * (180 / Math.PI);
+      let delta = currentAngle - g.lastAngle;
+      if (delta > 180) delta -= 360;
+      else if (delta < -180) delta += 360;
+
+      g.accumulatedRotation += delta;
+      g.lastAngle = currentAngle;
+
+      let rot = Math.round(g.accumulatedRotation);
+      if (event.shiftKey) {
+        // Holding Shift snaps rotation to 15-degree increments
+        rot = Math.round(rot / 15) * 15;
+      }
+      while (rot > 180) rot -= 360;
+      while (rot <= -180) rot += 360;
+
+      t = clampTransform({ ...g.start, rotation: rot });
+    } else {
+      t = gestureTransform(g.start, g.mode, event.clientX - g.x, event.clientY - g.y, g.width, g.height);
+    }
     g.last = t;
 
     // In 'all' mode: overlay top/height is % of totalHeight canvas.
@@ -353,14 +404,6 @@ export function ResponsiveStudioCanvas({
           <span className="max-w-[120px] truncate">{sectionLabel}</span>
           {!section.enabled && <span className="text-[10px] text-hk-taupe">· Off</span>}
         </span>
-      </div>
-
-      {/* ── Help Notice ─────────────────────────────────────────────── */}
-      <div className="shrink-0 mx-3 mt-2 flex items-center gap-2 rounded-lg bg-white/70 px-2.5 py-1 text-[10px] text-hk-taupe border border-hk-soft-beige/60">
-        <Info className="h-3 w-3 shrink-0 text-[#C5A880]" />
-        <p className="truncate">
-          Seret untuk pindah · Tarik pojok untuk resize · Tarik ikon rotasi untuk putar · Asset bisa keluar batas canvas
-        </p>
       </div>
 
       {/* ── Canvas Workspace ─────────────────────────────────────────── */}
@@ -629,6 +672,80 @@ export function ResponsiveStudioCanvas({
                               className="absolute pointer-events-none bg-[#C5A880]/60"
                               style={{ width: 1, height: 16, top: -16, left: '50%', transform: 'translateX(-50%)', zIndex: 49 }}
                             />
+
+                            {/* Quick Flip & Reset Toolbar — bottom center */}
+                            <div
+                              className="absolute flex items-center gap-1 rounded-full bg-[#4A2E35] px-2 py-0.5 text-white shadow-md pointer-events-auto select-none"
+                              style={{
+                                bottom: -28,
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                zIndex: 55,
+                              }}
+                              onPointerDown={(e) => e.stopPropagation()}
+                            >
+                              <button
+                                type="button"
+                                title={t.flipX ? "Matikan Flip Horizontal" : "Balik Horizontal (Flip X)"}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onEdit({
+                                    type: 'transform',
+                                    section: sec.id,
+                                    id: n.id,
+                                    device,
+                                    patch: { flipX: !t.flipX },
+                                  });
+                                }}
+                                className={`flex h-5 items-center gap-0.5 rounded px-1 text-[9px] font-bold transition hover:bg-white/20 ${
+                                  t.flipX ? 'bg-[#C5A880] text-[#4A2E35]' : 'text-white'
+                                }`}
+                              >
+                                <span>⇄</span>
+                                <span>Flip X</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                title={t.flipY ? "Matikan Flip Vertikal" : "Balik Vertikal (Flip Y)"}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onEdit({
+                                    type: 'transform',
+                                    section: sec.id,
+                                    id: n.id,
+                                    device,
+                                    patch: { flipY: !t.flipY },
+                                  });
+                                }}
+                                className={`flex h-5 items-center gap-0.5 rounded px-1 text-[9px] font-bold transition hover:bg-white/20 ${
+                                  t.flipY ? 'bg-[#C5A880] text-[#4A2E35]' : 'text-white'
+                                }`}
+                              >
+                                <span>⇅</span>
+                                <span>Flip Y</span>
+                              </button>
+
+                              {Math.round(t.rotation) !== 0 && (
+                                <button
+                                  type="button"
+                                  title="Reset rotasi ke 0°"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onEdit({
+                                      type: 'transform',
+                                      section: sec.id,
+                                      id: n.id,
+                                      device,
+                                      patch: { rotation: 0 },
+                                    });
+                                  }}
+                                  className="flex h-5 items-center rounded px-1 text-[9px] font-bold text-[#C5A880] hover:bg-white/20 transition"
+                                >
+                                  <span>0°</span>
+                                </button>
+                              )}
+                            </div>
                           </>
                         )}
 

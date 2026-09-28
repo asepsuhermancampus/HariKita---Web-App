@@ -60,7 +60,7 @@ export function gestureTransform(
       });
 
     case 'rotate':
-      return clampTransform({ ...start, rotation: start.rotation + (dx / width) * 360 });
+      return clampTransform({ ...start, rotation: Math.round(start.rotation + (dx / width) * 360) });
 
     default:
       return start;

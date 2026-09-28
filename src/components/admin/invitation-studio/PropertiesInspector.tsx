@@ -9,13 +9,6 @@ import {
   Eye, 
   Sparkles, 
   Type, 
-  Smartphone, 
-  Monitor, 
-  RotateCw, 
-  Layers, 
-  AlignLeft, 
-  AlignCenter, 
-  AlignRight, 
   Accessibility 
 } from 'lucide-react';
 
@@ -68,121 +61,196 @@ export function PropertiesInspector({
         )}
       </div>
 
-      {/* Global Section & Viewport Controls */}
-      <div className="rounded-xl border border-hk-soft-beige bg-white p-3 space-y-3">
-        <div>
-          <label className={labelClass}>Layout</label>
-          <div className="grid grid-cols-2 gap-1.5">
-            <button
-              type="button"
-              onClick={() => onDevice('mobile')}
-              className={`flex h-8 items-center justify-center gap-1.5 rounded-lg border text-xs font-semibold transition ${
-                device === 'mobile'
-                  ? 'border-[#C5A880] bg-[#F3EDE6] text-[#4A2E35]'
-                  : 'border-hk-soft-beige bg-white text-hk-taupe hover:bg-[#FAF8F5]'
-              }`}
-            >
-              <Smartphone className="h-3.5 w-3.5" />
-              <span>Mobile base</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => onDevice('desktop')}
-              className={`flex h-8 items-center justify-center gap-1.5 rounded-lg border text-xs font-semibold transition ${
-                device === 'desktop'
-                  ? 'border-[#C5A880] bg-[#F3EDE6] text-[#4A2E35]'
-                  : 'border-hk-soft-beige bg-white text-hk-taupe hover:bg-[#FAF8F5]'
-              }`}
-            >
-              <Monitor className="h-3.5 w-3.5" />
-              <span>Desktop override</span>
-            </button>
-          </div>
-          {/* Keep hidden select for native fallback/compatibility if needed */}
-          <select 
-            className="sr-only" 
-            value={device} 
-            onChange={e => onDevice(e.target.value as StudioDevice)}
-          >
-            <option value="mobile">Mobile base</option>
-            <option value="desktop">Desktop override</option>
-          </select>
-        </div>
-
-        <div>
-          <label className={labelClass}>Overflow section</label>
-          <select 
-            className={fieldClass} 
-            disabled={disabled} 
-            value={section.overflowPolicy} 
-            onChange={e => onEdit({ type: 'section-overflow', section: section.id, overflow: e.target.value as 'visible' | 'contained' })}
-          >
-            <option value="contained">Contained</option>
-            <option value="visible">Lintas section</option>
-          </select>
-        </div>
-      </div>
-
       {/* Node Details or Empty Notice */}
       {!node || !t ? (
         <div className="flex-1 flex flex-col justify-center rounded-xl border border-dashed border-hk-soft-beige bg-white p-6 text-center">
-          <p className="text-xs text-hk-taupe">Pilih layer untuk mengedit.</p>
-          <p className="mt-1 text-[11px] text-hk-taupe/70">Klik salah satu elemen di canvas atau dari daftar Layers di samping.</p>
+          <p className="text-xs font-semibold text-hk-charcoal">Pilih elemen untuk mengedit</p>
+          <p className="mt-1 text-[11px] text-hk-taupe/70">Klik salah satu asset di canvas atau dari daftar Layers di samping.</p>
         </div>
       ) : (
         <fieldset disabled={disabled} className="min-w-0 flex-1 min-h-0 space-y-3 overflow-y-auto pr-1">
-          {/* Transform & Geometry Card */}
+          {/* Card 1: Animasi & Gerakan Interaktif (Ditekankan di Posisi Utama) */}
+          <div className="rounded-xl border-2 border-[#C5A880]/50 bg-gradient-to-b from-[#FAF8F5] to-white p-3.5 space-y-3 shadow-2xs">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-xs font-bold text-[#4A2E35]">
+                <Sparkles className="h-4 w-4 text-[#C5A880] animate-pulse" />
+                <span>Efek Gerak & Animasi Estetis</span>
+              </span>
+              <span className="rounded bg-[#F3EDE6] px-1.5 py-0.5 text-[9px] font-bold text-[#88735B]">
+                {node.animation.preset === 'none' ? 'Static' : 'Active Motion'}
+              </span>
+            </div>
+
+            <div>
+              <label className={labelClass}>Pilihan Gerakan</label>
+              <select 
+                className={fieldClass} 
+                value={node.animation.preset} 
+                onChange={e => patch({ animation: { ...node.animation, preset: e.target.value as StudioAnimationPreset } })}
+              >
+                <option value="none">⚪ Tanpa Animasi (Diam)</option>
+                <option value="float">🌸 Mengapung Lembut (Float) — Naik-turun halus</option>
+                <option value="sway">🍃 Ayunan Anggun (Sway) — Bergoyang kiri-kanan</option>
+                <option value="pulse">💓 Denyut Elegan (Pulse) — Mengembang lembut</option>
+                <option value="drift">🌊 Melayang (Drift) — Geser perlahan mengikuti arah</option>
+                <option value="reveal">✨ Sapuan Indah (Reveal) — Muncul menyapu lembut</option>
+                <option value="entrance">🚀 Masuk Meluncur (Entrance) — Muncul dari luar</option>
+                <option value="exit">🚪 Transisi Keluar (Exit)</option>
+              </select>
+            </div>
+
+            {node.animation.preset !== 'none' && (
+              <div className="space-y-2.5 pt-1 border-t border-hk-soft-beige/60">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider block mb-1">
+                      Durasi / Kecepatan
+                    </label>
+                    <select
+                      className={fieldClass}
+                      value={node.animation.durationMs}
+                      onChange={e => patch({ animation: { ...node.animation, durationMs: Number(e.target.value) } })}
+                    >
+                      <option value={800}>Sangat Cepat (0.8s)</option>
+                      <option value={1500}>Cepat (1.5s)</option>
+                      <option value={2500}>Sedang & Anggun (2.5s)</option>
+                      <option value={4000}>Lambat & Lembut (4.0s)</option>
+                      <option value={6000}>Sangat Lambat (6.0s)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider block mb-1">
+                      Pengulangan (Loop)
+                    </label>
+                    <select
+                      className={fieldClass}
+                      value={node.animation.repeat ?? 0}
+                      onChange={e => patch({ animation: { ...node.animation, repeat: Number(e.target.value) } })}
+                    >
+                      <option value={20}>♾️ Berulang Terus (Maksimal)</option>
+                      <option value={5}>Ulangi 5 Kali</option>
+                      <option value={3}>Ulangi 3 Kali</option>
+                      <option value={0}>Sekali Saja (No Loop)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider block mb-1">
+                      Pemicu Gerak
+                    </label>
+                    <select 
+                      className={fieldClass} 
+                      value={node.animation.trigger ?? 'visible'} 
+                      onChange={e => patch({ animation: { ...node.animation, trigger: e.target.value as 'mount' | 'visible' } })}
+                    >
+                      <option value="visible">👁️ Saat Terlihat di Layar</option>
+                      <option value="mount">⚡ Langsung Saat Halaman Dibuka</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider block mb-1">
+                      Arah Gerak
+                    </label>
+                    <select 
+                      className={fieldClass} 
+                      value={node.animation.direction ?? 'up'} 
+                      onChange={e => patch({ animation: { ...node.animation, direction: e.target.value as 'up' | 'down' | 'left' | 'right' } })}
+                    >
+                      <option value="up">Ke Atas</option>
+                      <option value="down">Ke Bawah</option>
+                      <option value="left">Ke Kiri</option>
+                      <option value="right">Ke Kanan</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between text-[11px] font-medium text-hk-taupe mb-1">
+                    <span>Intensitas / Jangkauan Gerak</span>
+                    <span className="font-bold text-hk-charcoal">{node.animation.intensity ?? 8}</span>
+                  </div>
+                  <input 
+                    type="range" 
+                    min={1} 
+                    max={20} 
+                    step={1} 
+                    value={node.animation.intensity ?? 8} 
+                    onChange={e => patch({ animation: { ...node.animation, intensity: Number(e.target.value) } })} 
+                    className="w-full accent-[#C5A880]"
+                  />
+                  <div className="flex justify-between text-[9px] text-hk-taupe/60 px-0.5">
+                    <span>Halus</span>
+                    <span>Sedang</span>
+                    <span>Kuat</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Card 2: Ukuran Asset (Width & Height) */}
           <div className="rounded-xl border border-hk-soft-beige bg-white p-3 space-y-3">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1.5 text-xs font-bold text-hk-charcoal">
                 <Move className="h-3.5 w-3.5 text-[#C5A880]" />
-                <span>Posisi & Transformasi</span>
+                <span>Ukuran Asset (Lebar & Tinggi)</span>
               </span>
               <p className="text-[10px] text-hk-taupe">
-                {device === 'desktop' && !node.desktopTransform ? 'Mengikuti mobile' : 'Layout tersimpan'}
-                {node.locked && ' · Transform terkunci'}
+                {device === 'desktop' && !node.desktopTransform ? 'Mengikuti mobile' : 'Layout aktif'}
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              {(['x', 'y', 'width', 'height', 'rotation'] as const).map(key => (
-                <div key={key} className={key === 'rotation' ? 'col-span-2' : ''}>
-                  <label className="flex items-center justify-between text-[11px] font-medium text-hk-taupe mb-1">
-                    <span className="uppercase">{key}</span>
-                    <span className="text-[10px] text-hk-taupe/70">{key === 'rotation' ? '°' : '%'}</span>
-                  </label>
-                  <input 
-                    className={fieldClass} 
-                    type="number" 
-                    step="0.1" 
-                    min={key === 'rotation' ? -360 : key === 'width' || key === 'height' ? 0.1 : 0} 
-                    max={key === 'rotation' ? 360 : 100} 
-                    disabled={node.locked} 
-                    value={t[key]} 
-                    onChange={e => { 
-                      if (Number.isFinite(e.target.valueAsNumber)) {
-                        onEdit({ type: 'transform', section: section.id, id: node.id, device, patch: { [key]: e.target.valueAsNumber } }); 
-                      }
-                    }} 
-                  />
-                </div>
-              ))}
+              <div>
+                <label className="flex items-center justify-between text-[11px] font-medium text-hk-taupe mb-1">
+                  <span>Lebar (Width)</span>
+                  <span className="text-[10px] text-hk-taupe/70">%</span>
+                </label>
+                <input 
+                  className={fieldClass} 
+                  type="number" 
+                  step="0.5" 
+                  min={0.1} 
+                  max={100} 
+                  disabled={node.locked} 
+                  value={t.width} 
+                  onChange={e => { 
+                    if (Number.isFinite(e.target.valueAsNumber)) {
+                      onEdit({ type: 'transform', section: section.id, id: node.id, device, patch: { width: e.target.valueAsNumber } }); 
+                    }
+                  }} 
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center justify-between text-[11px] font-medium text-hk-taupe mb-1">
+                  <span>Tinggi (Height)</span>
+                  <span className="text-[10px] text-hk-taupe/70">%</span>
+                </label>
+                <input 
+                  className={fieldClass} 
+                  type="number" 
+                  step="0.5" 
+                  min={0.1} 
+                  max={100} 
+                  disabled={node.locked} 
+                  value={t.height} 
+                  onChange={e => { 
+                    if (Number.isFinite(e.target.valueAsNumber)) {
+                      onEdit({ type: 'transform', section: section.id, id: node.id, device, patch: { height: e.target.valueAsNumber } }); 
+                    }
+                  }} 
+                />
+              </div>
             </div>
 
-            <div className="flex items-center gap-3 pt-1 border-t border-hk-soft-beige/70">
-              {(['flipX', 'flipY'] as const).map(key => (
-                <label key={key} className="flex cursor-pointer items-center gap-2 text-xs font-medium text-hk-charcoal">
-                  <input 
-                    type="checkbox" 
-                    disabled={node.locked} 
-                    checked={t[key]} 
-                    onChange={e => onEdit({ type: 'transform', section: section.id, id: node.id, device, patch: { [key]: e.target.checked } })}
-                    className="rounded border-hk-soft-beige text-[#C5A880] focus:ring-[#C5A880]" 
-                  />
-                  <span>{key === 'flipX' ? 'Flip Horizontal (X)' : 'Flip Vertikal (Y)'}</span>
-                </label>
-              ))}
-            </div>
+            <p className="text-[10px] text-hk-taupe/70">
+              💡 Posisi (geser), rotasi (putar), dan pembalik (Flip X/Y) kini dapat dilakukan langsung pada asset di canvas.
+            </p>
 
             {device === 'desktop' && (
               <button 
@@ -196,16 +264,16 @@ export function PropertiesInspector({
             )}
           </div>
 
-          {/* Appearance & Layer Z-Order Card */}
+          {/* Card 3: Tampilan & Lapisan (Layer & Opacity) */}
           <div className="rounded-xl border border-hk-soft-beige bg-white p-3 space-y-3">
             <span className="flex items-center gap-1.5 text-xs font-bold text-hk-charcoal">
               <Eye className="h-3.5 w-3.5 text-[#C5A880]" />
-              <span>Tampilan & Lapisan</span>
+              <span>Tampilan & Tumpukan Lapisan</span>
             </span>
 
             <div className="space-y-1">
               <div className="flex items-center justify-between text-[11px] font-medium text-hk-taupe">
-                <span>Opacity</span>
+                <span>Transparansi (Opacity)</span>
                 <span className="font-bold">{node.appearance.opacity}%</span>
               </div>
               <div className="flex items-center gap-2">
@@ -235,40 +303,31 @@ export function PropertiesInspector({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className={labelClass}>Layer</label>
-                <select 
-                  className={fieldClass} 
-                  value={node.layer} 
-                  onChange={e => patch({ layer: e.target.value as StudioLayer })}
-                >
-                  {['background', 'behind-content', 'content', 'front-decoration', 'component'].map(v => (
-                    <option key={v} value={v}>{v}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className={labelClass}>Overflow node</label>
-                <select 
-                  className={fieldClass} 
-                  value={node.appearance.overflow} 
-                  onChange={e => patch({ appearance: { ...node.appearance, overflow: e.target.value as 'contained' | 'visible' } })}
-                >
-                  <option value="contained">Contained</option>
-                  <option value="visible">Visible</option>
-                </select>
-              </div>
+            <div>
+              <label className={labelClass}>Urutan Tumpukan (Layer)</label>
+              <select 
+                className={fieldClass} 
+                value={node.layer} 
+                onChange={e => patch({ layer: e.target.value as StudioLayer })}
+              >
+                <option value="background">Latar Belakang Paling Bawah</option>
+                <option value="behind-content">Di Belakang Teks / Konten</option>
+                <option value="content">Sejajar Konten Utama</option>
+                <option value="front-decoration">Di Depan / Hiasan Atas (Default)</option>
+                <option value="component">Komponen Interaktif</option>
+              </select>
+              <p className="mt-1 text-[10px] text-hk-taupe/70">
+                Mengatur apakah elemen hiasan berada di depan atau di belakang teks undangan.
+              </p>
             </div>
           </div>
 
-          {/* Typography & Content Card (If text / component / image) */}
+          {/* Card 4: Typography & Content Card (If text / component / image) */}
           {(node.kind === 'text' || node.kind === 'component' || 'src' in node.config) && (
             <div className="rounded-xl border border-hk-soft-beige bg-white p-3 space-y-3">
               <span className="flex items-center gap-1.5 text-xs font-bold text-hk-charcoal">
                 <Type className="h-3.5 w-3.5 text-[#C5A880]" />
-                <span>Konten & Tipografi</span>
+                <span>Konten & Format</span>
               </span>
 
               {node.kind === 'text' && (
@@ -352,110 +411,22 @@ export function PropertiesInspector({
 
               {'src' in node.config && (
                 <div>
-                  <label className={labelClass}>Fit</label>
+                  <label className={labelClass}>Penyesuaian Gambar (Fit)</label>
                   <select 
                     className={fieldClass} 
                     value={node.config.fit ?? 'contain'} 
                     onChange={e => config({ ...node.config, fit: e.target.value as 'contain' | 'cover' })}
                   >
-                    <option value="contain">contain</option>
-                    <option value="cover">cover</option>
+                    <option value="contain">Proporsional Utuh (Contain)</option>
+                    <option value="cover">Penuhi Area / Crop (Cover)</option>
                   </select>
+                  <p className="mt-1 text-[10px] text-hk-taupe/70">
+                    Contain mempertahankan rasio gambar utuh. Cover mengisi penuh tanpa celah.
+                  </p>
                 </div>
               )}
             </div>
           )}
-
-          {/* Animation Card */}
-          <div className="rounded-xl border border-hk-soft-beige bg-white p-3 space-y-3">
-            <span className="flex items-center gap-1.5 text-xs font-bold text-hk-charcoal">
-              <Sparkles className="h-3.5 w-3.5 text-[#C5A880]" />
-              <span>Animasi & Interaksi</span>
-            </span>
-
-            <div>
-              <label className={labelClass}>Animation</label>
-              <select 
-                className={fieldClass} 
-                value={node.animation.preset} 
-                onChange={e => patch({ animation: { ...node.animation, preset: e.target.value as StudioAnimationPreset } })}
-              >
-                {['none', 'entrance', 'float', 'sway', 'pulse', 'drift', 'reveal', 'exit'].map(v => (
-                  <option key={v} value={v}>{v}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              {(['durationMs', 'delayMs'] as const).map(key => (
-                <div key={key}>
-                  <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider block mb-1">
-                    {key === 'durationMs' ? 'Durasi (ms)' : 'Delay (ms)'}
-                  </label>
-                  <input 
-                    className={fieldClass} 
-                    type="number" 
-                    min={0} 
-                    max={60000} 
-                    value={node.animation[key]} 
-                    onChange={e => { 
-                      if (Number.isFinite(e.target.valueAsNumber)) {
-                        patch({ animation: { ...node.animation, [key]: Math.min(60000, Math.max(0, e.target.valueAsNumber)) } }); 
-                      }
-                    }} 
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              {(['intensity', 'repeat'] as const).map(key => (
-                <div key={key}>
-                  <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider block mb-1">
-                    {key === 'intensity' ? 'Intensitas (1-20)' : 'Pengulangan'}
-                  </label>
-                  <input 
-                    className={fieldClass} 
-                    type="number" 
-                    min={0} 
-                    max={20} 
-                    step={1} 
-                    value={node.animation[key] ?? (key === 'intensity' ? 8 : 0)} 
-                    onChange={e => { 
-                      if (Number.isFinite(e.target.valueAsNumber)) {
-                        patch({ animation: { ...node.animation, [key]: Math.floor(Math.min(20, Math.max(0, e.target.valueAsNumber))) } }); 
-                      }
-                    }} 
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className={labelClass}>Arah</label>
-                <select 
-                  className={fieldClass} 
-                  value={node.animation.direction ?? 'up'} 
-                  onChange={e => patch({ animation: { ...node.animation, direction: e.target.value as 'up' | 'down' | 'left' | 'right' } })}
-                >
-                  {['up', 'down', 'left', 'right'].map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className={labelClass}>Pemicu</label>
-                <select 
-                  className={fieldClass} 
-                  value={node.animation.trigger ?? 'mount'} 
-                  onChange={e => patch({ animation: { ...node.animation, trigger: e.target.value as 'mount' | 'visible' } })}
-                >
-                  <option value="mount">Saat dimuat</option>
-                  <option value="visible">Saat terlihat</option>
-                </select>
-              </div>
-            </div>
-          </div>
 
           {/* Accessibility Card */}
           <div className="rounded-xl border border-hk-soft-beige bg-white p-3 space-y-2">
