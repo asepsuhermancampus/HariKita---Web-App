@@ -54,6 +54,30 @@ const ICONS: Record<NavIconName, LucideIcon> = {
   layout: Layout,
 };
 
+/**
+ * Teks label yang fade-in/out secara smooth menggunakan CSS transition.
+ * Tetap di-render di DOM (tidak di-unmount) agar transisi keduanya mulus.
+ */
+function CollapseText({
+  children,
+  isCollapsed,
+  className = "",
+}: {
+  children: React.ReactNode;
+  isCollapsed: boolean;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`block overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${
+        isCollapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"
+      } ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
+
 export function DashboardSidebarNav({
   nav,
   roleLabel,
@@ -71,16 +95,22 @@ export function DashboardSidebarNav({
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // ── Brand ─────────────────────────────────────────────────────────────────
-  const BrandBlock = ({ forMobile = false }: { forMobile?: boolean }) => (
-    <div className={`flex items-center gap-2.5 px-2 pb-4 pt-1.5 ${!forMobile && collapsed ? "justify-center" : ""}`}>
-      <div className="relative shrink-0">
-        <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-hk-champagne to-hk-taupe text-[15px] font-extrabold text-white shadow">
-          H
+  const BrandBlock = ({ forMobile = false }: { forMobile?: boolean }) => {
+    const isCollapsed = !forMobile && collapsed;
+    return (
+      <div className="flex items-center gap-2.5 overflow-hidden px-2 pb-4 pt-1.5">
+        <div className="relative shrink-0">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-hk-champagne to-hk-taupe text-[15px] font-extrabold text-white shadow">
+            H
+          </div>
+          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-hk-charcoal bg-emerald-400" />
         </div>
-        <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-hk-charcoal bg-emerald-400" />
-      </div>
-      {(forMobile || !collapsed) && (
-        <div className="min-w-0 flex-1 overflow-hidden">
+        {/* Brand text — always rendered, smooth fade */}
+        <div
+          className={`min-w-0 flex-1 overflow-hidden transition-all duration-300 ease-in-out ${
+            isCollapsed ? "max-w-0 opacity-0" : "max-w-[180px] opacity-100"
+          }`}
+        >
           <div className="truncate text-[13px] font-bold leading-tight text-white">
             {userName || "HariKita"}
           </div>
@@ -88,21 +118,33 @@ export function DashboardSidebarNav({
             {roleLabel}
           </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  };
 
   // ── Nav body ──────────────────────────────────────────────────────────────
   const NavBody = ({ forMobile = false }: { forMobile?: boolean }) => (
     <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto overflow-x-hidden">
       {nav.map((g) => (
         <div key={g.group}>
-          {!forMobile && collapsed ? (
-            <div className="mx-3 my-2 h-px bg-white/10" />
-          ) : (
-            <div className="px-3 pb-1.5 pt-4 text-[10px] font-bold uppercase tracking-[0.12em] text-white/40">
-              {g.group}
-            </div>
+          {/* Group label: smooth height+opacity collapse */}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              !forMobile && collapsed
+                ? "max-h-0 opacity-0 py-0"
+                : "max-h-10 opacity-100 pb-1.5 pt-4"
+            } px-3 text-[10px] font-bold uppercase tracking-[0.12em] text-white/40`}
+          >
+            {g.group}
+          </div>
+
+          {/* Collapsed divider — smooth fade in when collapsed */}
+          {!forMobile && (
+            <div
+              className={`mx-3 h-px bg-white/10 transition-all duration-300 ease-in-out ${
+                collapsed ? "my-2 opacity-100" : "my-0 max-h-0 opacity-0"
+              }`}
+            />
           )}
 
           {g.items.map((it) => {
@@ -115,17 +157,17 @@ export function DashboardSidebarNav({
                 <Link
                   href={it.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] transition-all duration-150 ${
-                    isCollapsed ? "justify-center" : ""
-                  } ${active
-                    ? "bg-hk-champagne/20 font-bold text-hk-champagne"
-                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                  className={`flex items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-[13px] transition-all duration-150 ${
+                    active
+                      ? "bg-hk-champagne/20 font-bold text-hk-champagne"
+                      : "text-white/70 hover:bg-white/10 hover:text-white"
                   }`}
                 >
                   <Icon className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
-                  {!isCollapsed && <span className="truncate">{it.label}</span>}
+                  <CollapseText isCollapsed={isCollapsed}>{it.label}</CollapseText>
                 </Link>
 
+                {/* Tooltip saat collapsed */}
                 {isCollapsed && (
                   <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#1a1a2e] px-3 py-1.5 text-[12px] font-semibold text-white opacity-0 shadow-xl ring-1 ring-white/10 transition-opacity group-hover/item:opacity-100">
                     {it.label}
@@ -141,25 +183,18 @@ export function DashboardSidebarNav({
   );
 
   // ── Bottom area ───────────────────────────────────────────────────────────
-  // Layout:
-  //   [Toggle sidebar button]   <-- di atas garis, bagian dari nav scroll
-  //   ─── garis border ───
-  //   [Keluar]
   const BottomActions = ({ forMobile = false }: { forMobile?: boolean }) => {
     const isCollapsed = !forMobile && collapsed;
     return (
       <div className="flex flex-col gap-0.5">
-
-        {/* ── Toggle collapse — di ATAS garis, tidak berdekatan dengan Keluar ── */}
+        {/* Toggle collapse — di ATAS garis */}
         {!forMobile && (
           <div className="group/tog relative pb-1">
             <button
               type="button"
               onClick={() => setCollapsed((v) => !v)}
               title={collapsed ? "Perluas sidebar" : "Perkecil sidebar"}
-              className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-semibold text-white/40 transition-colors hover:bg-white/8 hover:text-white/80 ${
-                isCollapsed ? "justify-center" : ""
-              }`}
+              className="flex w-full items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-[13px] font-semibold text-white/40 transition-colors hover:bg-white/8 hover:text-white/80"
             >
               <svg
                 className={`h-[18px] w-[18px] shrink-0 transition-transform duration-300 ${isCollapsed ? "rotate-180" : ""}`}
@@ -171,7 +206,9 @@ export function DashboardSidebarNav({
                 <path d="M9 3v18" />
                 <path d="M14 9l-3 3 3 3" />
               </svg>
-              {!isCollapsed && <span>{collapsed ? "Perluas" : "Perkecil"} Sidebar</span>}
+              <CollapseText isCollapsed={isCollapsed}>
+                {isCollapsed ? "Perluas" : "Perkecil"} Sidebar
+              </CollapseText>
             </button>
             {isCollapsed && (
               <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#1a1a2e] px-3 py-1.5 text-[12px] font-semibold text-white opacity-0 shadow-xl ring-1 ring-white/10 transition-opacity group-hover/tog:opacity-100">
@@ -182,21 +219,21 @@ export function DashboardSidebarNav({
           </div>
         )}
 
-        {/* ── Garis pemisah — di antara toggle dan Keluar ── */}
+        {/* Garis pemisah */}
         <div className="border-t border-white/10" />
 
-        {/* ── Keluar (dengan konfirmasi popup) ── */}
+        {/* Keluar */}
         <div className="group/out relative pt-1">
           <button
             type="button"
             onClick={() => setShowLogoutConfirm(true)}
             title="Keluar"
-            className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-semibold text-white/70 transition-colors hover:bg-red-500/15 hover:text-red-300 ${
-              isCollapsed ? "justify-center" : ""
-            }`}
+            className="flex w-full items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-[13px] font-semibold text-white/70 transition-colors hover:bg-red-500/15 hover:text-red-300"
           >
             <LogOut className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
-            {!isCollapsed && <span>Keluar</span>}
+            <CollapseText isCollapsed={isCollapsed} className="text-current">
+              Keluar
+            </CollapseText>
           </button>
           {isCollapsed && (
             <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#1a1a2e] px-3 py-1.5 text-[12px] font-semibold text-red-300 opacity-0 shadow-xl ring-1 ring-white/10 transition-opacity group-hover/out:opacity-100">
@@ -211,7 +248,7 @@ export function DashboardSidebarNav({
 
   return (
     <>
-      {/* ── Mobile hamburger ─────────────────────────────────────────────────── */}
+      {/* Mobile hamburger */}
       <button
         type="button"
         onClick={() => setMobileOpen(true)}
@@ -221,7 +258,7 @@ export function DashboardSidebarNav({
         <Menu className="h-5 w-5" aria-hidden="true" />
       </button>
 
-      {/* ── Desktop sidebar ──────────────────────────────────────────────────── */}
+      {/* Desktop sidebar */}
       <aside
         className={`sticky top-0 hidden h-screen shrink-0 flex-col bg-hk-charcoal p-3 transition-all duration-300 ease-in-out lg:flex ${
           collapsed ? "w-[72px]" : "w-[264px]"
@@ -232,7 +269,7 @@ export function DashboardSidebarNav({
         <BottomActions />
       </aside>
 
-      {/* ── Mobile drawer ────────────────────────────────────────────────────── */}
+      {/* Mobile drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
@@ -254,7 +291,7 @@ export function DashboardSidebarNav({
         </div>
       )}
 
-      {/* ── Logout Confirmation Modal ─────────────────────────────────────────── */}
+      {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4"
@@ -262,34 +299,23 @@ export function DashboardSidebarNav({
           aria-modal="true"
           aria-labelledby="logout-dialog-title"
         >
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowLogoutConfirm(false)}
           />
-
-          {/* Dialog card */}
           <div className="relative w-full max-w-sm overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
-            {/* Top accent bar */}
             <div className="h-1 w-full bg-gradient-to-r from-red-400 via-red-500 to-rose-500" />
-
             <div className="p-6">
-              {/* Icon */}
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 ring-1 ring-red-100">
                 <AlertTriangle className="h-7 w-7 text-red-500" />
               </div>
-
-              {/* Text */}
               <h2 id="logout-dialog-title" className="mb-1 text-[17px] font-bold text-gray-900">
                 Konfirmasi Keluar
               </h2>
               <p className="text-[13px] leading-relaxed text-gray-500">
                 Apakah Anda yakin ingin keluar dari akun ini? Anda perlu masuk kembali untuk mengakses dashboard.
               </p>
-
-              {/* Actions */}
               <div className="mt-6 flex gap-3">
-                {/* Cancel */}
                 <button
                   type="button"
                   onClick={() => setShowLogoutConfirm(false)}
@@ -297,8 +323,6 @@ export function DashboardSidebarNav({
                 >
                   Batal
                 </button>
-
-                {/* Confirm logout */}
                 <form action={logoutAction} className="flex-1">
                   <button
                     type="submit"
