@@ -88,10 +88,17 @@ export function StudioShell({
       history.current.push(result.document); 
       setHistoryDocument(result.document); 
       autosave.current?.edit(result.document, stateRef.current); 
-      if ('id' in operation || operation.type === 'add') {
+      const switchToInspector =
+        operation.type === 'add' ||
+        operation.type === 'duplicate' ||
+        operation.type === 'duplicate-many' ||
+        operation.type === 'duplicate-group' ||
+        operation.type === 'copy-to-section';
+      if (switchToInspector) {
         setSelection(result.selection);
         setRightTab('inspector');
       }
+
       setSaveState('Belum disimpan'); 
     }
     catch (error) { 

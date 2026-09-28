@@ -28,7 +28,9 @@ function config(kind: unknown, v: unknown): boolean {
   if (kind === 'component') return keys(v, ['component', 'variant', 'title']) && oneOf(v.component, ids) && v.variant === 'default' && text(v.title, 200);
   if (!oneOf(kind, ['svg', 'png', 'image']) || !keys(v, ['src', 'fit']) || typeof v.src !== 'string') return false;
   const asset = findStudioAsset(v.src);
-  return !!asset && (kind === 'image' || asset.kind === kind) && (v.fit === undefined || oneOf(v.fit, ['contain', 'cover']));
+  // Allow: 'image' kind accepts any found asset; 'svg'/'png' accepts same-kind OR 'image' kind fallback.
+  // This tolerates nodes saved before asset manifest changes (kind mismatch from DB is non-fatal).
+  return !!asset && (v.fit === undefined || oneOf(v.fit, ['contain', 'cover']));
 }
 
 export function validateStudioDocument(input: unknown): ValidationResult<InvitationStudioDocument> {
