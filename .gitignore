@@ -61,4 +61,4 @@ references/kadio-assets/harvested/
 
 # Upload dokumen vendor (jangan commit file user)
 public/uploads/
-prisma/dev.db.bak
+prisma/dev.db.bak*
