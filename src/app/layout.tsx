@@ -7,6 +7,7 @@ import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { Analytics } from "@/components/analytics/Analytics";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getSession } from "@/lib/session";
+import { loadAdminActor } from "@/server/auth/admin-guard";
 import {
   SITE_URL,
   SITE_NAME,
@@ -91,6 +92,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getSession();
+  // Super Admin = pemilik platform: tidak perlu ajakan pasang PWA.
+  const isSuperAdmin =
+    session?.role === "ADMIN" && (await loadAdminActor(session.userId))?.subRole === "SUPER_ADMIN";
 
   return (
     <html lang="id" data-theme="harikita">
@@ -111,7 +115,7 @@ export default async function RootLayout({
         <Navbar isLoggedIn={Boolean(session)} userRole={session?.role ?? null} />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
-        <InstallPrompt />
+        {!isSuperAdmin && <InstallPrompt />}
         <Analytics />
       </body>
     </html>
