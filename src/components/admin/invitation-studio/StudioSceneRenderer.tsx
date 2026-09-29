@@ -36,6 +36,7 @@ export function StudioSceneRenderer({
         overflowX: 'clip',
         overflowY: 'visible',
         width: '100%',
+        borderRadius: device === 'mobile' ? '28px' : '16px',
         // Ghost renders without background so only its assets show at 60% opacity
         background: transparent ? 'transparent' : '#FAF8F5',
         color: '#4A2E35',
@@ -54,8 +55,8 @@ export function StudioSceneRenderer({
               isolation: editor ? undefined : 'isolate',
               height: 640,
               overflow,
-              // Subtle dashed divider in editor so section boundaries are visible; clean in preview
-              borderBottom: editor ? '1px dashed #C5A88044' : undefined,
+              // Subtle dashed divider in editor so section boundaries are visible; clean in preview and omitted on the last section to protect bottom rounded corner
+              borderBottom: (editor && id !== sectionIds[sectionIds.length - 1]) ? '1px dashed #C5A88044' : undefined,
               // Ghost sections: transparent section background
               background: transparent ? 'transparent' : undefined,
             }}

@@ -197,11 +197,14 @@ export function ResponsiveStudioCanvas({
   // In active mode, provide breathing room so cross-section bleed can be seen & edited comfortably
   const bleedTop = viewMode === 'active' ? (prevEnabledSection ? BLEED_PX : 120) : 0;
   const bleedBottom = viewMode === 'active' ? (nextEnabledSection ? BLEED_PX : 120) : 0;
+  const ALL_MODE_MARGIN = 36;
+  const allMarginTop = viewMode === 'all' ? ALL_MODE_MARGIN : 0;
+  const allMarginBottom = viewMode === 'all' ? ALL_MODE_MARGIN : 0;
   // Wrapper height includes bleed so ghost sections are in scroll area
   const wrapperHeight = Math.round((SECTION_HEIGHT + bleedTop + bleedBottom) * effectiveZoom);
   const wrapperWidth = Math.round(baseWidth * effectiveZoom);
-  // In 'all' mode wrapper matches total height
-  const scaledWrapperHeight = viewMode === 'all' ? Math.round(totalHeight * effectiveZoom) : wrapperHeight;
+  // In 'all' mode wrapper matches total height plus top & bottom breathing margin
+  const scaledWrapperHeight = viewMode === 'all' ? Math.round((totalHeight + allMarginTop + allMarginBottom) * effectiveZoom) : wrapperHeight;
   const scaledWrapperWidth = wrapperWidth;
 
   // Pass document directly — overlay position updated via DOM refs during drag (zero re-render)
@@ -839,7 +842,7 @@ export function ResponsiveStudioCanvas({
               width: baseWidth,
               height: baseHeight,
               position: 'absolute',
-              top: viewMode === 'active' ? Math.round(bleedTop * effectiveZoom) : 0,
+              top: viewMode === 'active' ? Math.round(bleedTop * effectiveZoom) : Math.round(allMarginTop * effectiveZoom),
               left: 0,
               overflow: 'visible',
             }}
@@ -860,12 +863,51 @@ export function ResponsiveStudioCanvas({
               onPointerCancel={() => finishGesture(true)}
               onLostPointerCapture={() => { if (gesture.current) finishGesture(true); }}
             >
-              {/* Safe Area Dotted Boundary */}
-              <div
-                className="pointer-events-none absolute inset-0 z-20 border border-dashed border-[#C5A880]/40 m-2"
-                aria-hidden="true"
-                style={{ borderRadius: device === 'mobile' ? '22px' : '12px' }}
-              />
+              {/* Safe Area Dotted Boundary — seragam rounded persis antar mode */}
+              {viewMode === 'active' ? (
+                <div
+                  className="pointer-events-none absolute inset-0 z-20 border border-dashed border-[#C5A880]/40 m-2"
+                  aria-hidden="true"
+                  style={{ borderRadius: device === 'mobile' ? '22px' : '12px' }}
+                />
+              ) : (
+                /* 'Semua Section' mode: render Safe Area Dotted Boundary rounded yang seragam per section */
+                enabledSections.map((sec, idx) => (
+                  <div
+                    key={`safe-area-${sec.id}`}
+                    className="pointer-events-none absolute border border-dashed border-[#C5A880]/40"
+                    aria-hidden="true"
+                    style={{
+                      top: idx * SECTION_HEIGHT + 8,
+                      left: 8,
+                      right: 8,
+                      height: SECTION_HEIGHT - 16,
+                      borderRadius: device === 'mobile' ? '22px' : '12px',
+                      zIndex: 20,
+                    }}
+                  >
+                    {/* Section Label Header in 'all' mode */}
+                    <div className="absolute top-2 left-3 pointer-events-auto">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onActiveSectionChange?.(sec.id);
+                        }}
+                        title={`Pilih ${STUDIO_SECTIONS.find((s) => s.id === sec.id)?.label ?? sec.id}`}
+                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold transition shadow-2xs ${
+                          sec.id === active
+                            ? 'bg-[#C5A880] text-white shadow-sm'
+                            : 'bg-white/90 text-[#4A2E35] border border-[#E8DED1] hover:bg-white'
+                        }`}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                        <span>{STUDIO_SECTIONS.find((s) => s.id === sec.id)?.label ?? sec.id}</span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
 
               {/* ── Scene Renderer ──────────────────────────────────── */}
               {viewMode === 'active' ? (
@@ -918,38 +960,38 @@ export function ResponsiveStudioCanvas({
                     </div>
                   )}
 
-                  {/* Section boundary indicators — on top of scenes */}
+                  {/* Section boundary indicators — floating in bleed area to preserve pristine rounded corners */}
                   {prevEnabledSection && (
                     <div
                       aria-hidden="true"
-                      className="pointer-events-none absolute left-0 right-0 flex items-center gap-2"
-                      style={{ top: 0, zIndex: 20 }}
+                      className="pointer-events-none absolute left-6 right-6 flex items-center justify-center gap-2"
+                      style={{ top: -16, zIndex: 20 }}
                     >
-                      <div className="flex-1 border-t-2 border-dashed border-[#C5A880]/60" />
-                      <span className="rounded bg-[#C5A880]/90 px-2 py-0.5 text-[9px] font-bold text-white whitespace-nowrap shadow">
+                      <div className="flex-1 border-t border-dashed border-[#C5A880]/40" />
+                      <span className="rounded-full bg-[#C5A880]/90 px-2.5 py-0.5 text-[9px] font-bold text-white whitespace-nowrap shadow-sm">
                         ↑ {STUDIO_SECTIONS.find((s) => s.id === prevEnabledSection.id)?.label ?? prevEnabledSection.id}
                       </span>
-                      <div className="flex-1 border-t-2 border-dashed border-[#C5A880]/60" />
+                      <div className="flex-1 border-t border-dashed border-[#C5A880]/40" />
                     </div>
                   )}
                   {nextEnabledSection && (
                     <div
                       aria-hidden="true"
-                      className="pointer-events-none absolute left-0 right-0 flex items-center gap-2"
-                      style={{ top: SECTION_HEIGHT, zIndex: 20 }}
+                      className="pointer-events-none absolute left-6 right-6 flex items-center justify-center gap-2"
+                      style={{ top: SECTION_HEIGHT + 6, zIndex: 20 }}
                     >
-                      <div className="flex-1 border-t-2 border-dashed border-[#C5A880]/60" />
-                      <span className="rounded bg-[#C5A880]/90 px-2 py-0.5 text-[9px] font-bold text-white whitespace-nowrap shadow">
+                      <div className="flex-1 border-t border-dashed border-[#C5A880]/40" />
+                      <span className="rounded-full bg-[#C5A880]/90 px-2.5 py-0.5 text-[9px] font-bold text-white whitespace-nowrap shadow-sm">
                         ↓ {STUDIO_SECTIONS.find((s) => s.id === nextEnabledSection.id)?.label ?? nextEnabledSection.id}
                       </span>
-                      <div className="flex-1 border-t-2 border-dashed border-[#C5A880]/60" />
+                      <div className="flex-1 border-t border-dashed border-[#C5A880]/40" />
                     </div>
                   )}
                 </div>
 
               ) : (
-                /* 'Semua Section' mode — all enabled sections stacked */
-                <StudioSceneRenderer document={display} device={device} editor />
+                /* 'Semua Section' mode — all enabled sections stacked with transparent scene background */
+                <StudioSceneRenderer document={display} device={device} editor transparent />
               )}
 
               {/* ── Interactive Node Overlays ─────────────────────── */}
