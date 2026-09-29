@@ -126,23 +126,24 @@ export function ResponsiveStudioCanvas({
 
   // Multi-select toggler
   const toggleMultiSelect = useCallback((id: string) => {
-    setMultiSelection(prev => {
-      const next = new Set(prev);
-      // If previous multi-selection was empty, but single selection existed, include it!
-      if (next.size === 0 && selection && selection !== id) {
-        next.add(selection);
-      }
-      if (next.has(id)) {
-        next.delete(id);
-        if (next.size === 0) onSelect(null);
-        else onSelect(Array.from(next)[0]);
-      } else {
-        next.add(id);
-        onSelect(id);
-      }
-      return next;
-    });
-  }, [selection, onSelect]);
+    const next = new Set(multiSelection);
+    // If previous multi-selection was empty, but single selection existed, include it!
+    if (next.size === 0 && selection && selection !== id) {
+      next.add(selection);
+    }
+
+    let targetSelection: string | null;
+    if (next.has(id)) {
+      next.delete(id);
+      targetSelection = next.size > 0 ? Array.from(next)[0] : null;
+    } else {
+      next.add(id);
+      targetSelection = id;
+    }
+
+    setMultiSelection(next);
+    onSelect(targetSelection);
+  }, [selection, multiSelection, onSelect]);
 
   const clearMultiSelect = useCallback(() => {
     setMultiSelection(new Set());
@@ -565,13 +566,11 @@ export function ResponsiveStudioCanvas({
                 : "Aktifkan Mode Multi-Pilih (atau tahan Shift/Ctrl saat klik asset)"
             }
             onClick={() => {
-              setIsMultiSelectMode(prev => {
-                const next = !prev;
-                if (next && selection && multiSelection.size === 0) {
-                  setMultiSelection(new Set([selection]));
-                }
-                return next;
-              });
+              const nextMode = !isMultiSelectMode;
+              setIsMultiSelectMode(nextMode);
+              if (nextMode && selection && multiSelection.size === 0) {
+                setMultiSelection(new Set([selection]));
+              }
             }}
             className={`flex h-6 items-center gap-1 rounded-lg px-2 text-[10px] font-bold transition ${
               isMultiSelectMode
