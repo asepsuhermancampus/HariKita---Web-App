@@ -82,6 +82,19 @@ export function ResponsiveStudioCanvas({
   // View mode: 'active' = only active section, 'all' = all sections stacked
   const [viewMode, setViewMode] = useState<'active' | 'all'>('active');
 
+  // Multi-select state — Shift+Click to add/remove nodes
+  const [multiSelection, setMultiSelection] = useState<Set<string>>(new Set());
+
+  const toggleMultiSelect = (id: string) => {
+    setMultiSelection(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const clearMultiSelect = () => setMultiSelection(new Set());
+
   const section = document.sections.find((s) => s.id === active)!;
   const sectionLabel = STUDIO_SECTIONS.find((s) => s.id === active)?.label ?? active;
 
@@ -381,6 +394,11 @@ export function ResponsiveStudioCanvas({
 
   const node = selectedStudioNode(document, active, selection);
   const activeNodes = section.nodes.filter((n) => n.visible);
+  // Multi-select: collect full node objects for selected IDs
+  const multiNodes = section.nodes.filter(n => multiSelection.has(n.id));
+  const hasMultiSelect = multiSelection.size >= 2;
+  // Effective: if multi-select active, use first as representative; else use single selection
+  const anySelected = !!node || hasMultiSelect;
 
   // ── Render ──────────────────────────────────────────────────────────────
   return (
@@ -472,79 +490,120 @@ export function ResponsiveStudioCanvas({
           </span>
         </div>
 
-        {/* Row 2: Layer Action Bar — only visible when a node is selected */}
-        {node && (
-          <div className="flex items-center gap-1 border-t border-hk-soft-beige px-3 py-1.5 bg-[#FAF8F5]/60">
-            {/* Node name */}
-            <span className="mr-1 max-w-[100px] truncate text-[11px] font-semibold text-[#4A2E35]">
-              {(node.accessibility.label || node.name || node.id).replace(/^[ab]-/, '').replace(/-/g, ' ')}
+        {/* Row 2: Layer Action Bar — always visible */}
+        <div className="flex items-center gap-1 border-t border-hk-soft-beige px-3 py-1.5 bg-[#FAF8F5]/50">
+
+          {/* Multi-select badge OR no-selection hint */}
+          {hasMultiSelect ? (
+            <span className="flex items-center gap-1 rounded-md bg-[#4A2E35]/10 px-2 py-0.5 text-[10px] font-bold text-[#4A2E35]">
+              <MousePointer2 className="h-3 w-3" />
+              {multiSelection.size} dipilih
             </span>
-            <div className="h-4 w-px bg-hk-soft-beige" />
+          ) : !node ? (
+            <span className="text-[10px] text-hk-taupe/60 italic select-none">Pilih asset…</span>
+          ) : null}
 
-            {/* Duplicate */}
-            <button type="button" disabled={disabled} title="Duplikat (Ctrl+D)"
-              onClick={() => onEdit({ type: 'duplicate', section: active, id: node.id, newId: `${node.id}-copy-${Date.now()}` })}
-              className="flex h-6 w-6 items-center justify-center rounded-lg text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
-              <Copy className="h-3.5 w-3.5" />
-            </button>
+          {/* Divider — only when something is selected */}
+          {anySelected && <div className="h-4 w-px bg-hk-soft-beige" />}
 
-            {/* Toggle Visible */}
-            <button type="button" disabled={disabled} title={node.visible ? 'Sembunyikan layer' : 'Tampilkan layer'}
-              onClick={() => onEdit({ type: 'node', section: active, id: node.id, patch: { visible: !node.visible } })}
-              className="flex h-6 w-6 items-center justify-center rounded-lg text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
-              {node.visible ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5 text-hk-taupe/50" />}
-            </button>
+          {/* Duplicate — single node only */}
+          <button type="button"
+            disabled={disabled || !node || hasMultiSelect}
+            title="Duplikat"
+            onClick={() => node && onEdit({ type: 'duplicate', section: active, id: node.id, newId: `${node.id}-cp-${Date.now()}` })}
+            className="flex h-6 w-6 items-center justify-center rounded-lg text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
+            <Copy className="h-3.5 w-3.5" />
+          </button>
 
-            {/* Toggle Lock */}
-            <button type="button" disabled={disabled} title={node.locked ? 'Buka kunci layer' : 'Kunci layer'}
-              onClick={() => onEdit({ type: 'node', section: active, id: node.id, patch: { locked: !node.locked } })}
-              className={`flex h-6 w-6 items-center justify-center rounded-lg transition disabled:opacity-30 ${
-                node.locked ? 'bg-amber-100 text-amber-600 hover:bg-amber-50' : 'text-hk-taupe hover:bg-white hover:text-hk-charcoal'
-              }`}>
-              {node.locked ? <Lock className="h-3.5 w-3.5" /> : <LockOpen className="h-3.5 w-3.5" />}
-            </button>
+          {/* Toggle Visible — single node only */}
+          <button type="button"
+            disabled={disabled || !node || hasMultiSelect}
+            title={node?.visible ? 'Sembunyikan layer' : 'Tampilkan layer'}
+            onClick={() => node && onEdit({ type: 'node', section: active, id: node.id, patch: { visible: !node.visible } })}
+            className="flex h-6 w-6 items-center justify-center rounded-lg text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
+            {node?.visible === false ? <EyeOff className="h-3.5 w-3.5 text-hk-taupe/50" /> : <Eye className="h-3.5 w-3.5" />}
+          </button>
 
-            <div className="h-4 w-px bg-hk-soft-beige" />
+          {/* Toggle Lock — single node only */}
+          <button type="button"
+            disabled={disabled || !node || hasMultiSelect}
+            title={node?.locked ? 'Buka kunci' : 'Kunci layer'}
+            onClick={() => node && onEdit({ type: 'node', section: active, id: node.id, patch: { locked: !node.locked } })}
+            className={`flex h-6 w-6 items-center justify-center rounded-lg transition disabled:opacity-30 ${
+              node?.locked ? 'bg-amber-100 text-amber-600 hover:bg-amber-50' : 'text-hk-taupe hover:bg-white hover:text-hk-charcoal'
+            }`}>
+            {node?.locked ? <Lock className="h-3.5 w-3.5" /> : <LockOpen className="h-3.5 w-3.5" />}
+          </button>
 
-            {/* Group */}
-            <button type="button" disabled={disabled || !!node.groupId} title="Jadikan group"
-              onClick={() => onEdit({ type: 'group-nodes', section: active, ids: [node.id], groupId: `grp-${Date.now()}`, groupName: 'Grup Baru' })}
-              className="flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
-              <Group className="h-3.5 w-3.5" />
-              <span>Group</span>
-            </button>
+          <div className="h-4 w-px bg-hk-soft-beige" />
 
-            {/* Ungroup */}
-            {node.groupId && (
-              <button type="button" disabled={disabled} title="Pisahkan dari group"
-                onClick={() => onEdit({ type: 'ungroup-nodes', section: active, groupId: node.groupId! })}
-                className="flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
-                <Ungroup className="h-3.5 w-3.5" />
-                <span>Ungroup</span>
-              </button>
-            )}
+          {/* Group — enabled when Shift+Click selects ≥2 nodes */}
+          <button type="button"
+            disabled={disabled || !hasMultiSelect}
+            title={hasMultiSelect ? `Gabungkan ${multiSelection.size} asset menjadi grup` : 'Shift+Klik beberapa asset lalu tekan Group'}
+            onClick={() => {
+              if (!hasMultiSelect) return;
+              const ids = Array.from(multiSelection);
+              onEdit({ type: 'group-nodes', section: active, ids, groupId: `grp-${Date.now()}`, groupName: 'Grup Baru' });
+              clearMultiSelect();
+              onSelect(null);
+            }}
+            className={`flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold transition disabled:opacity-30 ${
+              hasMultiSelect
+                ? 'bg-[#4A2E35] text-white hover:bg-[#382328]'
+                : 'text-hk-taupe hover:bg-white hover:text-hk-charcoal'
+            }`}>
+            <Group className="h-3.5 w-3.5" />
+            <span>Group{hasMultiSelect ? ` (${multiSelection.size})` : ''}</span>
+          </button>
 
-            {/* Select all in group */}
-            {node.groupId && (
-              <button type="button" title="Pilih semua dalam grup"
-                onClick={() => { /* handled via canvas click on same groupId */ }}
-                className="flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold text-hk-taupe hover:bg-white hover:text-hk-charcoal transition">
-                <MousePointer2 className="h-3.5 w-3.5" />
-                <span>Pilih Grup</span>
-              </button>
-            )}
+          {/* Ungroup — single node that belongs to a group */}
+          <button type="button"
+            disabled={disabled || !node?.groupId || hasMultiSelect}
+            title="Pisahkan dari grup"
+            onClick={() => node?.groupId && onEdit({ type: 'ungroup-nodes', section: active, groupId: node.groupId })}
+            className="flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
+            <Ungroup className="h-3.5 w-3.5" />
+            <span>Ungroup</span>
+          </button>
 
-            {/* Spacer */}
-            <div className="flex-1" />
+          {/* Pilih semua dalam grup */}
+          <button type="button"
+            disabled={!node?.groupId}
+            title="Pilih semua dalam grup ini (Shift+Klik lainnya)"
+            onClick={() => {
+              if (!node?.groupId) return;
+              const sibling = section.nodes.filter(n => n.groupId === node.groupId);
+              const ids = new Set(sibling.map(n => n.id));
+              setMultiSelection(ids);
+              onSelect(sibling[0]?.id ?? null);
+            }}
+            className="flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
+            <MousePointer2 className="h-3.5 w-3.5" />
+            <span>Pilih Grup</span>
+          </button>
 
-            {/* Delete — danger, rightmost */}
-            <button type="button" disabled={disabled} title="Hapus layer (Del)"
-              onClick={() => onEdit({ type: 'delete', section: active, id: node.id })}
-              className="flex h-6 w-6 items-center justify-center rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 transition disabled:opacity-30">
-              <Trash2 className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        )}
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Delete — danger, rightmost */}
+          <button type="button"
+            disabled={disabled || (!node && !hasMultiSelect)}
+            title={hasMultiSelect ? `Hapus ${multiSelection.size} asset` : 'Hapus layer'}
+            onClick={() => {
+              if (hasMultiSelect) {
+                const ids = Array.from(multiSelection);
+                onEdit({ type: 'delete-many', section: active, ids });
+                clearMultiSelect();
+                onSelect(null);
+              } else if (node) {
+                onEdit({ type: 'delete', section: active, id: node.id });
+              }
+            }}
+            className="flex h-6 w-6 items-center justify-center rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 transition disabled:opacity-30">
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* ── Canvas Workspace ─────────────────────────────────────────── */}
@@ -557,7 +616,7 @@ export function ResponsiveStudioCanvas({
       <div
         ref={containerRef}
         className="flex-1 min-h-0 flex justify-center items-start overflow-auto p-4"
-        onClick={(e) => { if (e.target === e.currentTarget) onSelect(null); }}
+        onClick={(e) => { if (e.target === e.currentTarget) { onSelect(null); clearMultiSelect(); } }}
       >
         {/*
           Scaled wrapper: sized to zoomed dimensions so the scroll container knows the area.
@@ -714,6 +773,7 @@ export function ResponsiveStudioCanvas({
                   return sec.nodes.filter((n) => n.visible).map((n) => {
                     const t = resolveTransform(n, device);
                     const isSelected = selection === n.id;
+                    const isMultiSelected = multiSelection.has(n.id);
 
                     let effectiveTop: number;
                     let effectiveH: number;
@@ -733,7 +793,7 @@ export function ResponsiveStudioCanvas({
                           else nodeOverlayRefs.current.delete(n.id);
                         }}
                         className={`absolute group select-none transition-shadow ${
-                          !isSelected && !n.locked ? 'hover:ring-2 hover:ring-[#C5A880]/70 hover:bg-[#C5A880]/5' : ''
+                          (!isSelected && !isMultiSelected && !n.locked ? 'hover:ring-2 hover:ring-[#C5A880]/70 hover:bg-[#C5A880]/5' : '')
                         }`}
                         style={{
                           left: `${t.x}%`,
@@ -741,7 +801,7 @@ export function ResponsiveStudioCanvas({
                           width: `${t.width}%`,
                           height: `${effectiveH}%`,
                           transform: `rotate(${t.rotation}deg)`,
-                          zIndex: isSelected ? 35 : 25,
+                          zIndex: isSelected || isMultiSelected ? 35 : 25,
                           cursor: n.locked ? 'not-allowed' : (isSelected ? 'move' : 'pointer'),
                           boxSizing: 'border-box',
                           minWidth: 24,
@@ -753,21 +813,38 @@ export function ResponsiveStudioCanvas({
                           if (sec.id !== active) {
                             onActiveSectionChange?.(sec.id);
                           }
-                          onSelect(n.id);
+                          if (e.shiftKey) {
+                            // Shift+Click: toggle in multi-selection
+                            toggleMultiSelect(n.id);
+                            onSelect(n.id);
+                          } else {
+                            // Normal click: clear multi-select, single select
+                            clearMultiSelect();
+                            onSelect(n.id);
+                          }
                         }}
                         onPointerDown={(e) => {
                           if (sec.id !== active) {
                             onActiveSectionChange?.(sec.id);
                           }
-                          startGesture(e as unknown as React.PointerEvent<HTMLElement>, n.id, 'drag', sec.id);
+                          // Only drag on normal (non-shift) pointer down
+                          if (!e.shiftKey) {
+                            startGesture(e as unknown as React.PointerEvent<HTMLElement>, n.id, 'drag', sec.id);
+                          }
                         }}
                       >
-                        {/* Selection outline */}
+                        {/* Selection outline — primary (gold) for single select, dashed blue for multi-select */}
                         {isSelected && (
                           <div
                             className={`absolute inset-0 border-2 rounded-sm pointer-events-none ${
                               n.groupId ? 'border-[#C5A880] ring-1 ring-[#C5A880]/50' : 'border-[#C5A880]'
                             }`}
+                            style={{ margin: -2, zIndex: 11 }}
+                          />
+                        )}
+                        {isMultiSelected && !isSelected && (
+                          <div
+                            className="absolute inset-0 border-2 border-dashed border-[#4A2E35] rounded-sm pointer-events-none bg-[#4A2E35]/5"
                             style={{ margin: -2, zIndex: 11 }}
                           />
                         )}
