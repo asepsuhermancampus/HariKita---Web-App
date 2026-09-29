@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { ArrowLeft, Eye, Layers, Palette, Redo2, RotateCcw, Save, Sliders, Undo2, Send, CheckCircle, Globe, ChevronLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Eye, Layers, Palette, Redo2, RotateCcw, Save, Sliders, Undo2, Send, CheckCircle, Globe, ChevronLeft, Sparkles, Type, Brush, Clock, Keyboard, Settings2, FileText } from "lucide-react";
 import { DashButton } from "@/components/dashboard";
 import { saveStudioDocument, submitStudioReview, approveStudioDraft, publishStudioVersion, returnStudioDraft, unpublishStudioDraft } from "@/server/actions/invitation-studio";
 import type { InvitationStudioDocument } from "@/lib/invitation-studio/types";
@@ -48,7 +48,8 @@ export function StudioShell({
   const [preview, setPreview] = useState(false);
   
   // UX Panel Tabs & Collapsible Sidebar
-  const [leftTab, setLeftTab] = useState<'sections' | 'assets' | 'templates' | null>(null);
+  type LeftTab = 'sections' | 'assets' | 'templates' | 'teks' | 'warna' | 'riwayat' | 'pintasan' | 'pengaturan';
+  const [leftTab, setLeftTab] = useState<LeftTab | null>(null);
   const [rightTab, setRightTab] = useState<'layers' | 'inspector'>('layers');
 
   // Close flyout on Escape
@@ -360,9 +361,102 @@ export function StudioShell({
               </span>
             </div>
 
+            {/* Divider */}
+            <div className="mx-auto w-5 border-t border-hk-soft-beige my-0.5" />
+
+            {/* Teks icon */}
+            <div className="group/tip relative">
+              <button
+                type="button"
+                id="rail-teks"
+                onClick={() => setLeftTab(t => t === 'teks' ? null : 'teks')}
+                className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
+                  leftTab === 'teks' ? 'bg-[#4A2E35] text-white shadow-sm' : 'text-hk-taupe hover:bg-[#FAF8F5] hover:text-[#4A2E35]'
+                }`}
+              >
+                <Type className="h-4 w-4" />
+              </button>
+              <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2.5 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#4A2E35] px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover/tip:opacity-100">
+                Tambah Teks &amp; Blok
+                <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#4A2E35]" />
+              </span>
+            </div>
+
+            {/* Warna/Tema icon */}
+            <div className="group/tip relative">
+              <button
+                type="button"
+                id="rail-warna"
+                onClick={() => setLeftTab(t => t === 'warna' ? null : 'warna')}
+                className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
+                  leftTab === 'warna' ? 'bg-[#4A2E35] text-white shadow-sm' : 'text-hk-taupe hover:bg-[#FAF8F5] hover:text-[#4A2E35]'
+                }`}
+              >
+                <Brush className="h-4 w-4" />
+              </button>
+              <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2.5 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#4A2E35] px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover/tip:opacity-100">
+                Warna &amp; Transparansi
+                <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#4A2E35]" />
+              </span>
+            </div>
+
+            {/* Riwayat icon */}
+            <div className="group/tip relative">
+              <button
+                type="button"
+                id="rail-riwayat"
+                onClick={() => setLeftTab(t => t === 'riwayat' ? null : 'riwayat')}
+                className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
+                  leftTab === 'riwayat' ? 'bg-[#4A2E35] text-white shadow-sm' : 'text-hk-taupe hover:bg-[#FAF8F5] hover:text-[#4A2E35]'
+                }`}
+              >
+                <Clock className="h-4 w-4" />
+              </button>
+              <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2.5 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#4A2E35] px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover/tip:opacity-100">
+                Riwayat Perubahan
+                <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#4A2E35]" />
+              </span>
+            </div>
+
+            {/* Pintasan Keyboard icon */}
+            <div className="group/tip relative">
+              <button
+                type="button"
+                id="rail-pintasan"
+                onClick={() => setLeftTab(t => t === 'pintasan' ? null : 'pintasan')}
+                className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
+                  leftTab === 'pintasan' ? 'bg-[#4A2E35] text-white shadow-sm' : 'text-hk-taupe hover:bg-[#FAF8F5] hover:text-[#4A2E35]'
+                }`}
+              >
+                <Keyboard className="h-4 w-4" />
+              </button>
+              <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2.5 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#4A2E35] px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover/tip:opacity-100">
+                Pintasan Keyboard
+                <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#4A2E35]" />
+              </span>
+            </div>
+
+            {/* Pengaturan Dokumen icon (pinned to bottom) */}
+            <div className="group/tip relative mt-auto">
+              <button
+                type="button"
+                id="rail-pengaturan"
+                onClick={() => setLeftTab(t => t === 'pengaturan' ? null : 'pengaturan')}
+                className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${
+                  leftTab === 'pengaturan' ? 'bg-[#4A2E35] text-white shadow-sm' : 'text-hk-taupe hover:bg-[#FAF8F5] hover:text-[#4A2E35]'
+                }`}
+              >
+                <Settings2 className="h-4 w-4" />
+              </button>
+              <span className="pointer-events-none absolute left-full top-1/2 z-50 ml-2.5 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#4A2E35] px-2.5 py-1 text-[11px] font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover/tip:opacity-100">
+                Pengaturan Dokumen
+                <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-[#4A2E35]" />
+              </span>
+            </div>
+
             {/* Active tab indicator dot */}
-            {leftTab && (
-              <div className="mt-auto mb-1">
+            {leftTab && leftTab !== 'pengaturan' && (
+              <div className="mb-1">
                 <div className="h-1.5 w-1.5 rounded-full bg-[#C5A880]" />
               </div>
             )}
@@ -371,11 +465,7 @@ export function StudioShell({
             {leftTab && (
               <>
                 {/* Backdrop */}
-                <div
-                  className="fixed inset-0 z-30"
-                  onClick={() => setLeftTab(null)}
-                  aria-hidden="true"
-                />
+                <div className="fixed inset-0 z-30" onClick={() => setLeftTab(null)} aria-hidden="true" />
                 {/* Flyout */}
                 <aside
                   className="absolute left-[52px] top-0 z-40 flex h-full w-[288px] flex-col rounded-2xl border border-hk-soft-beige bg-white shadow-2xl overflow-hidden"
@@ -384,53 +474,209 @@ export function StudioShell({
                   {/* Flyout header */}
                   <div className="shrink-0 flex items-center justify-between border-b border-hk-soft-beige px-3 py-2.5">
                     <div className="flex items-center gap-2">
-                      {leftTab === 'sections' && <><Layers className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Sections</span></>}
-                      {leftTab === 'templates' && <><Sparkles className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Template</span></>}
-                      {leftTab === 'assets' && <><Palette className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Katalog Aset</span></>}
+                      {leftTab === 'sections'    && <><Layers    className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Sections</span></>}
+                      {leftTab === 'templates'   && <><Sparkles  className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Template</span></>}
+                      {leftTab === 'assets'      && <><Palette   className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Katalog Aset</span></>}
+                      {leftTab === 'teks'        && <><Type      className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Tambah Teks &amp; Blok</span></>}
+                      {leftTab === 'warna'       && <><Brush     className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Warna &amp; Transparansi</span></>}
+                      {leftTab === 'riwayat'     && <><Clock     className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Riwayat Perubahan</span></>}
+                      {leftTab === 'pintasan'    && <><Keyboard  className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Pintasan Keyboard</span></>}
+                      {leftTab === 'pengaturan'  && <><Settings2 className="h-4 w-4 text-[#C5A880]" /><span className="text-sm font-bold text-hk-charcoal">Pengaturan Dokumen</span></>}
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setLeftTab(null)}
-                      className="flex h-7 w-7 items-center justify-center rounded-lg text-hk-taupe hover:bg-[#FAF8F5] hover:text-hk-charcoal transition"
-                      title="Tutup (Esc)"
-                    >
+                    <button type="button" onClick={() => setLeftTab(null)} className="flex h-7 w-7 items-center justify-center rounded-lg text-hk-taupe hover:bg-[#FAF8F5] hover:text-hk-charcoal transition" title="Tutup (Esc)">
                       <ChevronLeft className="h-4 w-4" />
                     </button>
                   </div>
 
                   {/* Flyout content */}
                   <div className="flex-1 min-h-0 overflow-y-auto p-3">
+
+                    {/* SECTIONS */}
                     {leftTab === 'sections' && (
-                      <SectionNavigator
-                        document={document}
-                        active={active}
-                        onSelect={id => { setActive(id); setSelection(null); setLeftTab(null); }}
-                        onEdit={edit}
-                        disabled={isPending || !editable}
-                      />
+                      <SectionNavigator document={document} active={active} onSelect={id => { setActive(id); setSelection(null); setLeftTab(null); }} onEdit={edit} disabled={isPending || !editable} />
                     )}
+
+                    {/* TEMPLATES */}
                     {leftTab === 'templates' && (
                       <div className="flex flex-col gap-3">
-                        <p className="text-[11px] text-hk-taupe">
-                          Template untuk section <strong className="text-hk-charcoal">{active}</strong>. Semua elemen dapat diedit setelah diterapkan.
-                        </p>
-                        <SectionTemplatePanel
-                          sectionId={active}
-                          sectionLabel={active}
-                          onApply={(edits) => { edits.forEach(e => edit(e)); setLeftTab(null); }}
-                          disabled={isPending || !editable}
-                        />
+                        <p className="text-[11px] text-hk-taupe">Template untuk section <strong className="text-hk-charcoal">{active}</strong>. Semua elemen dapat diedit setelah diterapkan.</p>
+                        <SectionTemplatePanel sectionId={active} sectionLabel={active} onApply={(edits) => { edits.forEach(e => edit(e)); setLeftTab(null); }} disabled={isPending || !editable} />
                       </div>
                     )}
+
+                    {/* ASSETS */}
                     {leftTab === 'assets' && (
-                      <AssetCatalog
-                        disabled={isPending || !editable}
-                        onAdd={asset => {
-                          edit({ type: 'add', section: active, node: createStudioNode(asset, crypto.randomUUID(), active) });
-                          setLeftTab(null);
-                        }}
-                      />
+                      <AssetCatalog disabled={isPending || !editable} onAdd={asset => { edit({ type: 'add', section: active, node: createStudioNode(asset, crypto.randomUUID(), active) }); setLeftTab(null); }} />
                     )}
+
+                    {/* TEKS & BLOK */}
+                    {leftTab === 'teks' && (
+                      <div className="flex flex-col gap-3">
+                        <p className="text-[11px] text-hk-taupe">Tambahkan elemen teks atau blok konten ke section <strong className="text-hk-charcoal">{active}</strong>.</p>
+                        <div className="grid grid-cols-1 gap-2">
+                          <button type="button" disabled={isPending || !editable} onClick={() => { edit({ type: 'add', section: active, node: createStudioNode('text', crypto.randomUUID(), active) }); setLeftTab(null); }} className="flex items-center gap-3 rounded-xl border border-hk-soft-beige bg-white p-3 text-left transition hover:border-[#C5A880] hover:bg-[#FAF8F5] disabled:opacity-40">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FAF8F5] border border-hk-soft-beige"><Type className="h-5 w-5 text-[#C5A880]" /></div>
+                            <div><p className="text-xs font-bold text-hk-charcoal">Tambah Teks</p><p className="text-[10px] text-hk-taupe">Layer teks bebas yang bisa diposisikan di mana saja</p></div>
+                          </button>
+                          <button type="button" disabled={isPending || !editable} onClick={() => { edit({ type: 'add', section: active, node: createStudioNode('component', crypto.randomUUID(), active) }); setLeftTab(null); }} className="flex items-center gap-3 rounded-xl border border-hk-soft-beige bg-white p-3 text-left transition hover:border-[#C5A880] hover:bg-[#FAF8F5] disabled:opacity-40">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FAF8F5] border border-hk-soft-beige"><FileText className="h-5 w-5 text-[#C5A880]" /></div>
+                            <div><p className="text-xs font-bold text-hk-charcoal">Tambah Blok Konten</p><p className="text-[10px] text-hk-taupe">Blok section dinamis (foto, RSVP, peta, dll)</p></div>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* WARNA & TRANSPARANSI */}
+                    {leftTab === 'warna' && (
+                      <div className="flex flex-col gap-4">
+                        <p className="text-[11px] text-hk-taupe">Preset transparansi untuk layer yang dipilih. Pilih node di canvas terlebih dahulu.</p>
+                        <div>
+                          <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-hk-taupe">Preset Opacity</p>
+                          <div className="grid grid-cols-4 gap-1.5">
+                            {[100,80,60,40,20,10].map(op => (
+                              <button key={op} type="button"
+                                disabled={isPending || !editable || !selection}
+                                onClick={() => { if (selection) edit({ type: 'node', section: active, id: selection, patch: { appearance: { opacity: op, overflow: 'visible' } } }); }}
+                                className="flex flex-col items-center gap-1 rounded-lg border border-hk-soft-beige bg-[#FAF8F5] p-2 text-center hover:border-[#C5A880] hover:bg-white transition disabled:opacity-30">
+                                <div className="h-5 w-5 rounded-md bg-[#4A2E35]" style={{ opacity: op / 100 }} />
+                                <span className="text-[10px] font-bold text-hk-charcoal">{op}%</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-hk-taupe">Palet Warna HariKita</p>
+                          <div className="grid grid-cols-5 gap-1.5">
+                            {[
+                              { label: 'Ivory', hex: '#FAF8F5' },
+                              { label: 'Gold', hex: '#C5A880' },
+                              { label: 'Plum', hex: '#4A2E35' },
+                              { label: 'Taupe', hex: '#6B5E62' },
+                              { label: 'Champagne', hex: '#F3EDE6' },
+                              { label: 'Sage', hex: '#8A9E8B' },
+                              { label: 'Blush', hex: '#E8C4B8' },
+                              { label: 'Dusty', hex: '#B8A9A0' },
+                              { label: 'Cream', hex: '#FFF8F0' },
+                              { label: 'Charcoal', hex: '#2D2020' },
+                            ].map(({ label, hex }) => (
+                              <button key={hex} type="button" title={`${label} ${hex}`}
+                                className="group flex flex-col items-center gap-1 rounded-lg border border-hk-soft-beige p-1 hover:border-[#C5A880] transition">
+                                <div className="h-6 w-6 rounded-md border border-black/10" style={{ backgroundColor: hex }} />
+                                <span className="text-[9px] text-hk-taupe">{label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* RIWAYAT PERUBAHAN */}
+                    {leftTab === 'riwayat' && (
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[11px] text-hk-taupe">Riwayat edit sesi ini. Klik Undo/Redo di toolbar untuk navigasi.</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <button type="button" disabled={!historyState.canUndo} onClick={() => { const next = history.current.undo(); if (next) { setHistoryDocument(next); setSaveState('Belum disimpan'); } }} className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-xl border border-hk-soft-beige bg-white text-xs font-semibold text-hk-charcoal hover:border-[#C5A880] hover:bg-[#FAF8F5] transition disabled:opacity-30">
+                            <Undo2 className="h-3.5 w-3.5" /> Undo
+                          </button>
+                          <button type="button" disabled={!historyState.canRedo} onClick={() => { const next = history.current.redo(); if (next) { setHistoryDocument(next); setSaveState('Belum disimpan'); } }} className="flex-1 flex items-center justify-center gap-1.5 h-8 rounded-xl border border-hk-soft-beige bg-white text-xs font-semibold text-hk-charcoal hover:border-[#C5A880] hover:bg-[#FAF8F5] transition disabled:opacity-30">
+                            <Redo2 className="h-3.5 w-3.5" /> Redo
+                          </button>
+                        </div>
+                        <div className="rounded-xl border border-hk-soft-beige bg-[#FAF8F5] px-3 py-4 text-center">
+                          <Clock className="h-6 w-6 text-[#C5A880] mx-auto mb-2" />
+                          <p className="text-[11px] font-semibold text-hk-charcoal">Sesi aktif</p>
+                          <p className="text-[10px] text-hk-taupe mt-0.5">Semua perubahan tersimpan otomatis setiap 30 detik</p>
+                          <div className="mt-3 flex items-center justify-center gap-1.5">
+                            <div className="h-2 w-2 rounded-full bg-emerald-400" />
+                            <span className="text-[10px] text-hk-taupe">Autosave aktif</span>
+                          </div>
+                        </div>
+                        <button type="button" disabled={isPending || !editable} onClick={() => run(() => saveStudioDocument({ ...studioToken(state), document }))} className="flex items-center justify-center gap-1.5 h-9 rounded-xl border border-hk-soft-beige bg-white text-xs font-bold text-hk-charcoal hover:border-[#C5A880] hover:bg-[#FAF8F5] transition disabled:opacity-40">
+                          <Save className="h-3.5 w-3.5 text-hk-taupe" /> Simpan Sekarang
+                        </button>
+                      </div>
+                    )}
+
+                    {/* PINTASAN KEYBOARD */}
+                    {leftTab === 'pintasan' && (
+                      <div className="flex flex-col gap-2">
+                        <p className="text-[11px] text-hk-taupe mb-1">Pintasan keyboard untuk mempercepat desain undangan.</p>
+                        {([
+                          { group: 'Navigasi', items: [
+                            { key: 'Esc', label: 'Tutup panel / batal seleksi' },
+                            { key: '↑ ↓', label: 'Navigasi section' },
+                            { key: 'Click', label: 'Pilih layer di canvas' },
+                          ]},
+                          { group: 'Edit', items: [
+                            { key: 'Ctrl+Z', label: 'Undo' },
+                            { key: 'Ctrl+Y', label: 'Redo' },
+                            { key: 'Ctrl+S', label: 'Simpan draft' },
+                            { key: 'Ctrl+D', label: 'Duplikat layer' },
+                            { key: 'Del', label: 'Hapus layer terpilih' },
+                          ]},
+                          { group: 'Canvas', items: [
+                            { key: 'Drag', label: 'Pindah posisi layer' },
+                            { key: '⌅ Resize', label: 'Ubah ukuran dari sudut' },
+                            { key: 'Rotate ↻', label: 'Putar dari handle' },
+                          ]},
+                        ] as const).map(({ group, items }) => (
+                          <div key={group} className="rounded-xl border border-hk-soft-beige bg-white overflow-hidden">
+                            <div className="px-3 py-1.5 bg-[#FAF8F5] border-b border-hk-soft-beige">
+                              <p className="text-[10px] font-bold uppercase tracking-wider text-hk-taupe">{group}</p>
+                            </div>
+                            {items.map(({ key, label }) => (
+                              <div key={key} className="flex items-center justify-between px-3 py-2 border-b border-hk-soft-beige/60 last:border-0">
+                                <span className="text-[11px] text-hk-charcoal">{label}</span>
+                                <kbd className="rounded-md border border-hk-soft-beige bg-[#FAF8F5] px-2 py-0.5 text-[10px] font-mono font-bold text-hk-taupe">{key}</kbd>
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* PENGATURAN DOKUMEN */}
+                    {leftTab === 'pengaturan' && (
+                      <div className="flex flex-col gap-4">
+                        <div>
+                          <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-hk-taupe">Nama Dokumen</p>
+                          <input
+                            maxLength={100}
+                            disabled={isPending || !editable}
+                            value={document.metadata.name}
+                            onChange={e => updateName(e.target.value)}
+                            className="h-9 w-full rounded-xl border border-hk-soft-beige bg-[#FAF8F5] px-3 text-xs font-semibold text-hk-charcoal focus:border-[#C5A880] focus:bg-white focus:outline-none transition"
+                          />
+                        </div>
+                        <div>
+                          <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-hk-taupe">Overflow Section Aktif</p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {(['contained','visible'] as const).map(val => (
+                              <button key={val} type="button" disabled={isPending || !editable}
+                                onClick={() => edit({ type: 'section-overflow', section: active, overflow: val })}
+                                className={`h-9 rounded-xl border text-xs font-bold transition ${
+                                  section.overflowPolicy === val
+                                    ? 'border-[#C5A880] bg-[#F3EDE6] text-[#4A2E35]'
+                                    : 'border-hk-soft-beige bg-white text-hk-taupe hover:border-[#C5A880]'
+                                }`}>{val === 'contained' ? '📦 Contained' : '🔓 Visible'}</button>
+                            ))}
+                          </div>
+                          <p className="mt-1.5 text-[10px] text-hk-taupe">Contained: aset dipotong sesuai batas section. Visible: aset boleh keluar dari batas.</p>
+                        </div>
+                        <div className="rounded-xl border border-hk-soft-beige bg-[#FAF8F5] p-3">
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-hk-taupe mb-2">Info Dokumen</p>
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between"><span className="text-[11px] text-hk-taupe">Status</span><span className="text-[11px] font-bold text-hk-charcoal">{state.status}</span></div>
+                            <div className="flex justify-between"><span className="text-[11px] text-hk-taupe">Versi</span><span className="text-[11px] font-bold text-hk-charcoal">v{state.versionNumber}</span></div>
+                            <div className="flex justify-between"><span className="text-[11px] text-hk-taupe">Section aktif</span><span className="text-[11px] font-bold text-hk-charcoal">{active}</span></div>
+                            <div className="flex justify-between"><span className="text-[11px] text-hk-taupe">Total layer</span><span className="text-[11px] font-bold text-hk-charcoal">{section.nodes.length} layer</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                   </div>
                 </aside>
               </>
