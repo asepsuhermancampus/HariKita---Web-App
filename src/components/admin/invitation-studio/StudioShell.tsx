@@ -169,125 +169,111 @@ export function StudioShell({
       }}
     >
       <div className="flex flex-col h-full min-h-0 gap-3">
-        {/* Top Studio Header (Pinned / Sticky) */}
-        <header className="shrink-0 flex flex-wrap items-center justify-between gap-2.5 rounded-2xl border border-hk-soft-beige bg-white p-2.5 shadow-sm sm:px-4">
-          {/* Left: Back & Editable Title */}
-          <div className="flex min-w-0 items-center gap-2.5">
-            <Link 
-              href="/admin/undangan-studio" 
-              aria-label="Kembali" 
+        {/* ── Studio Header ─────────────────────────────────────────── */}
+        <header className="shrink-0 flex items-center justify-between gap-2 rounded-2xl border border-hk-soft-beige bg-white px-3 py-2 shadow-sm">
+          {/* Left: Back + Title + Status */}
+          <div className="flex min-w-0 items-center gap-2">
+            <Link
+              href="/admin/undangan-studio"
+              aria-label="Kembali"
               title="Kembali ke Daftar Studio"
-              className="flex h-8.5 w-8.5 items-center justify-center rounded-xl border border-hk-soft-beige bg-[#FAF8F5] text-hk-charcoal transition hover:border-[#C5A880] hover:bg-[#F3EDE6]"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-hk-soft-beige bg-[#FAF8F5] text-hk-charcoal transition hover:border-[#C5A880] hover:bg-[#F3EDE6]"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
 
-            <div className="min-w-0">
-              <input 
-                aria-label="Nama draft" 
-                maxLength={100} 
-                disabled={isPending || !editable} 
-                value={document.metadata.name} 
-                onChange={(e) => updateName(e.target.value)} 
-                className="h-7 w-full max-w-sm rounded-lg bg-transparent font-editorial text-xl sm:text-2xl font-bold text-hk-charcoal transition hover:bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C5A880]" 
+            <div className="min-w-0 flex flex-col justify-center">
+              <input
+                aria-label="Nama draft"
+                maxLength={100}
+                disabled={isPending || !editable}
+                value={document.metadata.name}
+                onChange={(e) => updateName(e.target.value)}
+                className="h-6 w-full max-w-[260px] rounded-lg bg-transparent text-[15px] font-bold text-hk-charcoal leading-tight transition hover:bg-[#FAF8F5] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C5A880]"
               />
-              <div className="flex items-center gap-1.5">
-                <span className="rounded-md bg-[#F3EDE6] px-1.5 py-0.5 text-[10px] font-bold text-hk-taupe">
-                  Status: {state.status}
-                </span>
-                <span className="text-[11px] text-hk-taupe/80">
-                  v{state.versionNumber}
-                </span>
-                <span className="text-hk-soft-beige">·</span>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="rounded bg-[#F3EDE6] px-1.5 py-px text-[9px] font-bold uppercase tracking-wide text-hk-taupe">{state.status}</span>
+                <span className="text-[10px] text-hk-taupe/60">v{state.versionNumber}</span>
+                <span className="text-hk-soft-beige text-[10px]">·</span>
                 <SaveStatus status={autosaveStatus} onRetry={() => autosave.current?.retry()} />
-                {saveState !== 'Saved' && saveState !== 'Saving…' && (
-                  <span className="text-[11px] text-hk-taupe truncate max-w-xs">{saveState}</span>
-                )}
               </div>
             </div>
           </div>
 
-          {/* Right Toolbar & Action Buttons */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <UndoRedoControls 
-              canUndo={historyState.canUndo} 
-              canRedo={historyState.canRedo} 
-              onUndo={() => { 
-                const next = history.current.undo(); 
-                if (next) { setHistoryDocument(next); setSaveState('Belum disimpan'); } 
-              }} 
-              onRedo={() => { 
-                const next = history.current.redo(); 
-                if (next) { setHistoryDocument(next); setSaveState('Belum disimpan'); } 
-              }} 
-            />
+          {/* Right: Toolbar actions */}
+          <div className="flex shrink-0 items-center gap-1">
+            {/* Undo / Redo — icon only */}
+            <div className="flex items-center rounded-xl border border-hk-soft-beige bg-[#FAF8F5] overflow-hidden">
+              <UndoRedoControls
+                canUndo={historyState.canUndo}
+                canRedo={historyState.canRedo}
+                onUndo={() => { const next = history.current.undo(); if (next) { setHistoryDocument(next); setSaveState('Belum disimpan'); } }}
+                onRedo={() => { const next = history.current.redo(); if (next) { setHistoryDocument(next); setSaveState('Belum disimpan'); } }}
+              />
+            </div>
 
+            {/* Divider */}
+            <div className="h-6 w-px bg-hk-soft-beige mx-0.5" />
+
+            {/* Preview */}
             <button
               type="button"
               onClick={() => setPreview(true)}
-              className="flex h-8 items-center gap-1.5 rounded-xl border border-hk-soft-beige bg-white px-2.5 text-xs font-semibold text-hk-charcoal shadow-2xs transition hover:border-[#C5A880] hover:bg-[#FAF8F5]"
+              className="flex h-8 items-center gap-1.5 rounded-xl border border-hk-soft-beige bg-white px-2.5 text-xs font-semibold text-hk-charcoal transition hover:border-[#C5A880] hover:bg-[#FAF8F5]"
             >
               <Eye className="h-3.5 w-3.5 text-[#C5A880]" />
               <span>Preview</span>
             </button>
 
-            {/* Simpan draft / coba lagi button (preserves text for test) */}
+            {/* Simpan */}
             <button
               type="button"
-              disabled={isPending || !editable} 
+              disabled={isPending || !editable}
               onClick={() => run(() => saveStudioDocument({ ...studioToken(state), document }))}
-              className="flex h-8 items-center gap-1.5 rounded-xl border border-hk-soft-beige bg-white px-3 text-xs font-bold text-hk-charcoal shadow-2xs transition hover:border-[#C5A880] hover:bg-[#FAF8F5] disabled:opacity-40"
+              className="flex h-8 items-center gap-1.5 rounded-xl border border-hk-soft-beige bg-white px-3 text-xs font-bold text-hk-charcoal transition hover:border-[#C5A880] hover:bg-[#FAF8F5] disabled:opacity-40"
             >
               <Save className="h-3.5 w-3.5 text-hk-taupe" />
-              <span>Simpan / Coba lagi</span>
+              <span>Simpan</span>
             </button>
 
-            {/* Workflow Action Button */}
+            {/* Workflow CTA */}
             <button
               type="button"
-              disabled={isPending || !workflow} 
+              disabled={isPending || !workflow}
               onClick={workflow}
               className="flex h-8 items-center gap-1.5 rounded-xl bg-[#4A2E35] px-3 text-xs font-bold text-[#FAF8F5] shadow-sm transition hover:bg-[#382328] disabled:opacity-40"
             >
               {state.status === "DRAFT" ? (
-                <>
-                  <Send className="h-3.5 w-3.5 text-[#C5A880]" />
-                  <span>Simpan & Ajukan Review</span>
-                </>
+                <><Send className="h-3.5 w-3.5 text-[#C5A880]" /><span>Ajukan Review</span></>
               ) : state.status === "IN_REVIEW" ? (
-                <>
-                  <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />
-                  <span>Setujui</span>
-                </>
+                <><CheckCircle className="h-3.5 w-3.5 text-emerald-400" /><span>Setujui</span></>
               ) : (
-                <>
-                  <Globe className="h-3.5 w-3.5 text-[#C5A880]" />
-                  <span>Publish</span>
-                </>
+                <><Globe className="h-3.5 w-3.5 text-[#C5A880]" /><span>Publish</span></>
               )}
             </button>
 
-            {/* Return / Unpublish Secondary Buttons */}
+            {/* Secondary status actions */}
             {state.status !== 'DRAFT' && (
-              <button 
+              <button
                 type="button"
-                className="flex h-8 items-center gap-1 rounded-xl border border-hk-soft-beige bg-white px-2 text-xs font-semibold text-hk-charcoal transition hover:bg-[#FAF8F5] disabled:opacity-40" 
-                disabled={isPending || dirty} 
+                className="flex h-8 items-center gap-1 rounded-xl border border-hk-soft-beige bg-white px-2 text-xs font-semibold text-hk-charcoal transition hover:bg-[#FAF8F5] disabled:opacity-40"
+                disabled={isPending || dirty}
                 onClick={() => run(() => returnStudioDraft(studioToken(state)))}
+                title="Kembalikan ke Draft"
               >
                 <RotateCcw className="h-3 w-3 text-hk-taupe" />
-                <span>Kembali ke Draft</span>
               </button>
             )}
 
             {state.status === 'PUBLISHED' && (
-              <button 
+              <button
                 type="button"
-                className="flex h-8 items-center gap-1 rounded-xl border border-amber-200 bg-amber-50 px-2 text-xs font-semibold text-amber-800 transition hover:bg-amber-100 disabled:opacity-40" 
-                disabled={isPending || dirty} 
+                className="flex h-8 items-center gap-1 rounded-xl border border-amber-200 bg-amber-50 px-2 text-xs font-semibold text-amber-800 transition hover:bg-amber-100 disabled:opacity-40"
+                disabled={isPending || dirty}
                 onClick={() => run(() => unpublishStudioDraft(studioToken(state)))}
+                title="Unpublish"
               >
-                <span>Unpublish</span>
+                <Globe className="h-3 w-3" />
               </button>
             )}
           </div>

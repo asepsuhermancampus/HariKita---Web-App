@@ -10,9 +10,17 @@ import {
   Smartphone,
   Monitor,
   Lock,
+  LockOpen,
   Compass,
   Layers,
   LayoutGrid,
+  Copy,
+  Trash2,
+  EyeOff,
+  Eye,
+  Group,
+  Ungroup,
+  MousePointer2,
 } from 'lucide-react';
 
 type GestureState = {
@@ -380,97 +388,163 @@ export function ResponsiveStudioCanvas({
       aria-label="Canvas editor"
       className="flex min-w-0 flex-1 min-h-0 flex-col rounded-2xl border border-hk-soft-beige bg-[#F3EDE6]/70 shadow-inner h-full overflow-hidden"
     >
-      {/* ── Canvas Top Toolbar ──────────────────────────────────────── */}
-      <div className="shrink-0 flex flex-wrap items-center justify-between gap-2 rounded-t-2xl bg-white px-3 py-2 border-b border-hk-soft-beige shadow-2xs">
-        {/* Device Toggle */}
-        <div className="flex items-center gap-1">
-          {(['mobile', 'desktop'] as const).map((d) => (
-            <button
-              key={d}
-              type="button"
-              className={`flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold transition ${
-                device === d
-                  ? 'bg-[#4A2E35] text-white shadow-2xs'
-                  : 'bg-transparent text-hk-taupe hover:bg-[#FAF8F5] hover:text-hk-charcoal'
-              }`}
-              aria-pressed={device === d}
-              onClick={() => { finishGesture(true); onDevice(d); }}
-            >
-              {d === 'mobile' ? (
-                <><Smartphone className="h-3.5 w-3.5 text-[#C5A880]" /><span>Mobile</span></>
-              ) : (
-                <><Monitor className="h-3.5 w-3.5 text-[#C5A880]" /><span>Desktop</span></>
-              )}
+      {/* ── Canvas Top Toolbar ───────────────────────────────────────── */}
+      <div className="shrink-0 flex flex-col rounded-t-2xl bg-white border-b border-hk-soft-beige shadow-2xs">
+
+        {/* Row 1: Controls */}
+        <div className="flex items-center justify-between gap-2 px-3 py-1.5">
+          <div className="flex items-center gap-1.5">
+
+            {/* Device Toggle — icon only */}
+            <div className="flex items-center rounded-lg border border-hk-soft-beige bg-[#FAF8F5] p-0.5 gap-0.5">
+              {(['mobile', 'desktop'] as const).map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  title={d === 'mobile' ? 'Mobile (375px)' : 'Desktop (1024px)'}
+                  className={`flex h-6 w-6 items-center justify-center rounded-md transition ${
+                    device === d ? 'bg-white text-[#4A2E35] shadow-2xs' : 'text-hk-taupe hover:text-hk-charcoal'
+                  }`}
+                  aria-pressed={device === d}
+                  onClick={() => { finishGesture(true); onDevice(d); }}
+                >
+                  {d === 'mobile' ? <Smartphone className="h-3.5 w-3.5" /> : <Monitor className="h-3.5 w-3.5" />}
+                </button>
+              ))}
+            </div>
+
+            {/* View Mode — icon only */}
+            <div className="flex items-center rounded-lg border border-hk-soft-beige bg-[#FAF8F5] p-0.5 gap-0.5">
+              <button
+                type="button"
+                title="Section Aktif saja"
+                onClick={() => setViewMode('active')}
+                className={`flex h-6 w-6 items-center justify-center rounded-md transition ${
+                  viewMode === 'active' ? 'bg-white text-[#4A2E35] shadow-2xs' : 'text-hk-taupe hover:text-hk-charcoal'
+                }`}
+              >
+                <Compass className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                title="Semua Section"
+                onClick={() => setViewMode('all')}
+                className={`flex h-6 w-6 items-center justify-center rounded-md transition ${
+                  viewMode === 'all' ? 'bg-white text-[#4A2E35] shadow-2xs' : 'text-hk-taupe hover:text-hk-charcoal'
+                }`}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Zoom compact */}
+            <div className="flex items-center rounded-lg border border-hk-soft-beige bg-[#FAF8F5] p-0.5 gap-0.5">
+              <button
+                type="button"
+                title={`Fit — ${Math.round(fitScale * 100)}%`}
+                onClick={() => setZoomMode('fit')}
+                className={`h-6 px-2 rounded-md text-[10px] font-bold transition ${
+                  zoomMode === 'fit' ? 'bg-white text-[#4A2E35] shadow-2xs' : 'text-hk-taupe hover:text-hk-charcoal'
+                }`}
+              >
+                Fit
+              </button>
+              {([0.5, 0.75, 1.0] as const).map((z) => (
+                <button
+                  key={z}
+                  type="button"
+                  onClick={() => setZoomMode(z)}
+                  className={`h-6 px-1.5 rounded-md text-[10px] font-bold transition ${
+                    zoomMode === z ? 'bg-white text-[#4A2E35] shadow-2xs' : 'text-hk-taupe hover:text-hk-charcoal'
+                  }`}
+                >
+                  {`${Math.round(z * 100)}%`}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Section badge */}
+          <span className="inline-flex items-center gap-1 rounded-lg bg-[#FAF8F5] border border-hk-soft-beige px-2 py-1 text-[11px] font-semibold text-[#4A2E35]">
+            <Layers className="h-3 w-3 text-[#C5A880]" />
+            <span className="max-w-[100px] truncate">{sectionLabel}</span>
+            {!section.enabled && <span className="text-[10px] text-hk-taupe">· Off</span>}
+          </span>
+        </div>
+
+        {/* Row 2: Layer Action Bar — only visible when a node is selected */}
+        {node && (
+          <div className="flex items-center gap-1 border-t border-hk-soft-beige px-3 py-1.5 bg-[#FAF8F5]/60">
+            {/* Node name */}
+            <span className="mr-1 max-w-[100px] truncate text-[11px] font-semibold text-[#4A2E35]">
+              {(node.accessibility.label || node.name || node.id).replace(/^[ab]-/, '').replace(/-/g, ' ')}
+            </span>
+            <div className="h-4 w-px bg-hk-soft-beige" />
+
+            {/* Duplicate */}
+            <button type="button" disabled={disabled} title="Duplikat (Ctrl+D)"
+              onClick={() => onEdit({ type: 'duplicate', section: active, id: node.id, newId: `${node.id}-copy-${Date.now()}` })}
+              className="flex h-6 w-6 items-center justify-center rounded-lg text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
+              <Copy className="h-3.5 w-3.5" />
             </button>
-          ))}
-        </div>
 
-        {/* View Mode Toggle */}
-        <div className="flex items-center gap-1 bg-[#FAF8F5] border border-hk-soft-beige rounded-lg p-0.5">
-          <button
-            type="button"
-            onClick={() => setViewMode('active')}
-            className={`flex h-6 items-center gap-1 rounded-md px-2 text-[10px] font-bold transition ${
-              viewMode === 'active'
-                ? 'bg-white text-[#4A2E35] shadow-2xs border border-hk-soft-beige/80'
-                : 'text-hk-taupe hover:text-hk-charcoal'
-            }`}
-            title="Tampilkan section aktif saja"
-          >
-            <Compass className="h-3 w-3 text-[#C5A880]" />
-            <span>Section Aktif</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('all')}
-            className={`flex h-6 items-center gap-1 rounded-md px-2 text-[10px] font-bold transition ${
-              viewMode === 'all'
-                ? 'bg-white text-[#4A2E35] shadow-2xs border border-hk-soft-beige/80'
-                : 'text-hk-taupe hover:text-hk-charcoal'
-            }`}
-            title="Tampilkan semua section digabung"
-          >
-            <LayoutGrid className="h-3 w-3 text-[#C5A880]" />
-            <span>Semua Section</span>
-          </button>
-        </div>
-
-        {/* Zoom Controls */}
-        <div className="flex items-center gap-1 bg-[#FAF8F5] border border-hk-soft-beige rounded-lg px-1.5 py-0.5">
-          <span className="text-[10px] font-bold text-hk-taupe mr-0.5">Zoom:</span>
-          <button
-            type="button"
-            onClick={() => setZoomMode('fit')}
-            className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition ${
-              zoomMode === 'fit'
-                ? 'bg-[#C5A880] text-white shadow-2xs'
-                : 'text-hk-taupe hover:text-hk-charcoal'
-            }`}
-          >
-            Fit ({Math.round(fitScale * 100)}%)
-          </button>
-          {([0.5, 0.65, 0.8, 1.0] as const).map((z) => (
-            <button
-              key={z}
-              type="button"
-              onClick={() => setZoomMode(z)}
-              className={`px-1.5 py-0.5 rounded text-[10px] font-bold transition ${
-                zoomMode === z
-                  ? 'bg-[#C5A880] text-white shadow-2xs'
-                  : 'text-hk-taupe hover:text-hk-charcoal'
-              }`}
-            >
-              {`${Math.round(z * 100)}%`}
+            {/* Toggle Visible */}
+            <button type="button" disabled={disabled} title={node.visible ? 'Sembunyikan layer' : 'Tampilkan layer'}
+              onClick={() => onEdit({ type: 'node', section: active, id: node.id, patch: { visible: !node.visible } })}
+              className="flex h-6 w-6 items-center justify-center rounded-lg text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
+              {node.visible ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5 text-hk-taupe/50" />}
             </button>
-          ))}
-        </div>
 
-        {/* Current Section Badge */}
-        <span className="inline-flex items-center gap-1 rounded-md bg-[#FAF8F5] border border-hk-soft-beige px-2 py-0.5 text-xs font-semibold text-[#4A2E35]">
-          <Layers className="h-3 w-3 text-[#C5A880]" />
-          <span className="max-w-[120px] truncate">{sectionLabel}</span>
-          {!section.enabled && <span className="text-[10px] text-hk-taupe">· Off</span>}
-        </span>
+            {/* Toggle Lock */}
+            <button type="button" disabled={disabled} title={node.locked ? 'Buka kunci layer' : 'Kunci layer'}
+              onClick={() => onEdit({ type: 'node', section: active, id: node.id, patch: { locked: !node.locked } })}
+              className={`flex h-6 w-6 items-center justify-center rounded-lg transition disabled:opacity-30 ${
+                node.locked ? 'bg-amber-100 text-amber-600 hover:bg-amber-50' : 'text-hk-taupe hover:bg-white hover:text-hk-charcoal'
+              }`}>
+              {node.locked ? <Lock className="h-3.5 w-3.5" /> : <LockOpen className="h-3.5 w-3.5" />}
+            </button>
+
+            <div className="h-4 w-px bg-hk-soft-beige" />
+
+            {/* Group */}
+            <button type="button" disabled={disabled || !!node.groupId} title="Jadikan group"
+              onClick={() => onEdit({ type: 'group-nodes', section: active, ids: [node.id], groupId: `grp-${Date.now()}`, groupName: 'Grup Baru' })}
+              className="flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
+              <Group className="h-3.5 w-3.5" />
+              <span>Group</span>
+            </button>
+
+            {/* Ungroup */}
+            {node.groupId && (
+              <button type="button" disabled={disabled} title="Pisahkan dari group"
+                onClick={() => onEdit({ type: 'ungroup-nodes', section: active, groupId: node.groupId! })}
+                className="flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold text-hk-taupe hover:bg-white hover:text-hk-charcoal transition disabled:opacity-30">
+                <Ungroup className="h-3.5 w-3.5" />
+                <span>Ungroup</span>
+              </button>
+            )}
+
+            {/* Select all in group */}
+            {node.groupId && (
+              <button type="button" title="Pilih semua dalam grup"
+                onClick={() => { /* handled via canvas click on same groupId */ }}
+                className="flex h-6 items-center gap-1 rounded-lg px-1.5 text-[10px] font-bold text-hk-taupe hover:bg-white hover:text-hk-charcoal transition">
+                <MousePointer2 className="h-3.5 w-3.5" />
+                <span>Pilih Grup</span>
+              </button>
+            )}
+
+            {/* Spacer */}
+            <div className="flex-1" />
+
+            {/* Delete — danger, rightmost */}
+            <button type="button" disabled={disabled} title="Hapus layer (Del)"
+              onClick={() => onEdit({ type: 'delete', section: active, id: node.id })}
+              className="flex h-6 w-6 items-center justify-center rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 transition disabled:opacity-30">
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Canvas Workspace ─────────────────────────────────────────── */}
