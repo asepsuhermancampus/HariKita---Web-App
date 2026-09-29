@@ -22,15 +22,21 @@ function transform(v: unknown): boolean {
 
 function config(kind: unknown, v: unknown): boolean {
   if (!record(v)) return false;
-  if (kind === 'text') return keys(v, ['text', 'color', 'fontSize', 'align']) && text(v.text, STUDIO_LIMITS.text) &&
-    (v.color === undefined || (typeof v.color === 'string' && /^#[\da-f]{6}$/i.test(v.color))) &&
-    (v.fontSize === undefined || number(v.fontSize, 8, 160)) && (v.align === undefined || oneOf(v.align, ['left', 'center', 'right']));
+  if (kind === 'text') return keys(v, ['text', 'color', 'fontSize', 'align', 'fontFamily', 'fontWeight', 'fontStyle', 'letterSpacing', 'lineHeight']) && text(v.text, STUDIO_LIMITS.text) &&
+    (v.color === undefined || (typeof v.color === 'string' && (/^#[\da-f]{3,8}$/i.test(v.color) || /^rgba?\(.+\)$/i.test(v.color)))) &&
+    (v.fontSize === undefined || number(v.fontSize, 8, 160)) &&
+    (v.align === undefined || oneOf(v.align, ['left', 'center', 'right'])) &&
+    (v.fontFamily === undefined || text(v.fontFamily, 100)) &&
+    (v.fontWeight === undefined || typeof v.fontWeight === 'string' || typeof v.fontWeight === 'number') &&
+    (v.fontStyle === undefined || oneOf(v.fontStyle, ['normal', 'italic'])) &&
+    (v.letterSpacing === undefined || number(v.letterSpacing, -10, 50)) &&
+    (v.lineHeight === undefined || number(v.lineHeight, 0.5, 4));
   if (kind === 'component') return keys(v, ['component', 'variant', 'title']) && oneOf(v.component, ids) && v.variant === 'default' && text(v.title, 200);
   if (!oneOf(kind, ['svg', 'png', 'image']) || !keys(v, ['src', 'fit']) || typeof v.src !== 'string') return false;
   const asset = findStudioAsset(v.src);
-  // Allow: 'image' kind accepts any found asset; 'svg'/'png' accepts same-kind OR 'image' kind fallback.
-  // This tolerates nodes saved before asset manifest changes (kind mismatch from DB is non-fatal).
-  return !!asset && (v.fit === undefined || oneOf(v.fit, ['contain', 'cover']));
+  if (!asset) return false;
+  if (kind !== 'image' && asset.kind !== kind) return false;
+  return v.fit === undefined || oneOf(v.fit, ['contain', 'cover']);
 }
 
 export function validateStudioDocument(input: unknown): ValidationResult<InvitationStudioDocument> {

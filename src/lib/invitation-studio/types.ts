@@ -40,7 +40,20 @@ export interface StudioNodeBase { id: string; name?: string; groupId?: string; g
 export interface StudioComponentConfig { component: StudioSectionId; variant: 'default'; title: string; }
 export type StudioNode = StudioNodeBase & (
   | { kind: 'svg' | 'png' | 'image'; config: { src: string; fit?: 'contain' | 'cover' } }
-  | { kind: 'text'; config: { text: string; color?: string; fontSize?: number; align?: 'left' | 'center' | 'right' } }
+  | { 
+      kind: 'text'; 
+      config: { 
+        text: string; 
+        color?: string; 
+        fontSize?: number; 
+        align?: 'left' | 'center' | 'right';
+        fontFamily?: string;
+        fontWeight?: string | number;
+        fontStyle?: 'normal' | 'italic';
+        letterSpacing?: number;
+        lineHeight?: number;
+      } 
+    }
   | { kind: 'component'; config: StudioComponentConfig }
 );
 export interface StudioSection { id: StudioSectionId; sectionType: StudioSectionId; enabled: boolean; layout: { mobile: 'base'; desktop?: 'override' }; overflowPolicy: StudioOverflowPolicy; nodes: StudioNode[]; }

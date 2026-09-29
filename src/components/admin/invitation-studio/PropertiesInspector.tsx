@@ -14,17 +14,30 @@ import {
   Clock,
   ChevronDown,
   ChevronRight,
-  Check
+  Check,
+  Search,
+  Palette,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Italic,
+  X,
+  RotateCcw
 } from 'lucide-react';
+import { 
+  STUDIO_FONTS, 
+  STUDIO_FONT_CATEGORIES, 
+  loadGoogleFont, 
+  getFontFamilyCss, 
+  type StudioFontCategory 
+} from '@/lib/invitation-studio/fonts';
+import { 
+  HARIKITA_WEDDING_PALETTES, 
+  QUICK_ACCENT_COLORS, 
+  isValidColorString 
+} from '@/lib/invitation-studio/colors';
 
-const HARIKITA_SWATCHES = [
-  { name: 'Deep Plum', hex: '#4A2E35' },
-  { name: 'Gilded Gold', hex: '#C5A880' },
-  { name: 'Cashmere Canvas', hex: '#FAF8F5' },
-  { name: 'Warm Taupe', hex: '#88735B' },
-  { name: 'Champagne', hex: '#C9A88A' },
-  { name: 'Pure White', hex: '#FFFFFF' },
-];
+const HARIKITA_SWATCHES = QUICK_ACCENT_COLORS.map((hex) => ({ hex, name: hex }));
 
 export function PropertiesInspector({ 
   node, 
@@ -55,6 +68,33 @@ export function PropertiesInspector({
   const [openEntrance, setOpenEntrance] = React.useState(true);
   const [openLoop, setOpenLoop] = React.useState(true);
   const [openExit, setOpenExit] = React.useState(false);
+
+  // Font Picker & Complete Palette States
+  const [fontSearch, setFontSearch] = React.useState('');
+  const [fontCategory, setFontCategory] = React.useState<StudioFontCategory | 'all'>('all');
+  const [isFontPickerOpen, setIsFontPickerOpen] = React.useState(false);
+  const [activePaletteTab, setActivePaletteTab] = React.useState<string>('signature');
+  const [customHexInput, setCustomHexInput] = React.useState('');
+
+  const nodeColor = node?.kind === 'text' ? (node.config.color ?? '#4A2E35') : '';
+  const nodeFontFamily = node?.kind === 'text' ? (node.config.fontFamily ?? '') : '';
+
+  React.useEffect(() => {
+    if (nodeColor) setCustomHexInput(nodeColor);
+  }, [nodeColor]);
+
+  React.useEffect(() => {
+    if (nodeFontFamily) loadGoogleFont(nodeFontFamily);
+  }, [nodeFontFamily]);
+
+  const filteredFonts = React.useMemo(() => {
+    const q = fontSearch.trim().toLowerCase();
+    return STUDIO_FONTS.filter((f) => {
+      const matchCat = fontCategory === 'all' || f.category === fontCategory;
+      const matchSearch = !q || f.name.toLowerCase().includes(q) || f.categoryLabel.toLowerCase().includes(q);
+      return matchCat && matchSearch;
+    });
+  }, [fontCategory, fontSearch]);
 
   // Modular Multi-Stage Animation States
   const anim: StudioAnimation = node?.animation ?? { preset: 'none', delayMs: 0, durationMs: 1500 };
@@ -790,66 +830,384 @@ export function PropertiesInspector({
 
               {node.kind === 'text' && (
                 <>
+                  {/* Teks Input */}
                   <div>
-                    <label className={labelClass}>Teks</label>
+                    <label className={labelClass}>Isi Teks</label>
                     <textarea 
-                      className="w-full min-h-[72px] rounded-lg border border-hk-soft-beige bg-[#FAF8F5] p-2 text-xs text-hk-charcoal transition focus:border-[#C5A880] focus:bg-white focus:outline-none" 
+                      className="w-full min-h-[68px] rounded-lg border border-hk-soft-beige bg-[#FAF8F5] p-2 text-xs text-hk-charcoal transition focus:border-[#C5A880] focus:bg-white focus:outline-none" 
                       maxLength={4000} 
                       value={node.config.text} 
                       onChange={e => config({ ...node.config, text: e.target.value })} 
+                      placeholder="Ketik teks undangan..."
                     />
                   </div>
 
+                  {/* ── FONT FAMILY PICKER (135 FONTS) ─────────────────── */}
                   <div>
-                    <label className={labelClass}>Warna</label>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        {HARIKITA_SWATCHES.map(swatch => (
-                          <button
-                            key={swatch.hex}
-                            type="button"
-                            title={swatch.name}
-                            onClick={() => config({ ...node.config, color: swatch.hex })}
-                            className="h-6 w-6 rounded-full border border-hk-soft-beige shadow-2xs transition hover:scale-110"
-                            style={{ backgroundColor: swatch.hex }}
-                          />
-                        ))}
+                    <div className="flex items-center justify-between mb-1">
+                      <label className={labelClass}>Jenis Font</label>
+                      {node.config.fontFamily && (
+                        <button
+                          type="button"
+                          onClick={() => config({ ...node.config, fontFamily: undefined })}
+                          className="flex items-center gap-1 text-[10px] text-hk-taupe hover:text-red-500 transition"
+                          title="Reset ke font default"
+                        >
+                          <RotateCcw className="h-2.5 w-2.5" />
+                          <span>Reset</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Font Trigger Button */}
+                    <button
+                      type="button"
+                      onClick={() => setIsFontPickerOpen(!isFontPickerOpen)}
+                      className="w-full flex items-center justify-between gap-2 rounded-lg border border-hk-soft-beige bg-[#FAF8F5] px-2.5 py-2 text-left transition hover:border-[#C5A880] hover:bg-white"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span 
+                            className="truncate text-xs font-semibold text-hk-charcoal"
+                            style={{ fontFamily: getFontFamilyCss(node.config.fontFamily) }}
+                          >
+                            {node.config.fontFamily || 'Default Sans'}
+                          </span>
+                          {node.config.fontFamily && (
+                            <span className="shrink-0 rounded bg-[#C5A880]/15 px-1.5 py-0.2 text-[9px] font-medium text-[#88735B]">
+                              {STUDIO_FONTS.find(f => f.name.toLowerCase() === node.config.fontFamily?.toLowerCase())?.categoryLabel ?? 'Custom'}
+                            </span>
+                          )}
+                        </div>
+                        <p 
+                          className="truncate text-[11px] text-hk-taupe/80 mt-0.5"
+                          style={{ fontFamily: getFontFamilyCss(node.config.fontFamily) }}
+                        >
+                          Ananda & Bintang · The Wedding
+                        </p>
                       </div>
-                      <input 
-                        type="color" 
-                        value={node.config.color ?? '#4A2E35'} 
-                        onChange={e => config({ ...node.config, color: e.target.value })} 
-                        className="h-8 w-8 cursor-pointer rounded-lg border border-hk-soft-beige bg-transparent p-0.5"
+                      <ChevronDown className={`h-4 w-4 shrink-0 text-hk-taupe transition-transform ${isFontPickerOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {/* Expandable Font Picker Panel */}
+                    {isFontPickerOpen && (
+                      <div className="mt-2 rounded-xl border border-hk-soft-beige bg-white p-2.5 shadow-lg space-y-2.5 animate-in fade-in zoom-in-95 duration-150">
+                        {/* Search Bar */}
+                        <div className="relative">
+                          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-hk-taupe" />
+                          <input
+                            type="text"
+                            value={fontSearch}
+                            onChange={(e) => setFontSearch(e.target.value)}
+                            placeholder="Cari dari 135 font..."
+                            className="h-8 w-full rounded-lg border border-hk-soft-beige bg-[#FAF8F5] pl-8 pr-7 text-xs text-hk-charcoal placeholder:text-hk-taupe/60 transition focus:border-[#C5A880] focus:bg-white focus:outline-none"
+                          />
+                          {fontSearch && (
+                            <button
+                              type="button"
+                              onClick={() => setFontSearch('')}
+                              className="absolute right-2 top-2 h-4 w-4 rounded-full flex items-center justify-center text-hk-taupe hover:text-hk-charcoal"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Category Filter Pills */}
+                        <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-thin">
+                          {STUDIO_FONT_CATEGORIES.map((cat) => (
+                            <button
+                              key={cat.id}
+                              type="button"
+                              onClick={() => setFontCategory(cat.id)}
+                              className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium transition ${
+                                fontCategory === cat.id
+                                  ? 'bg-[#C5A880] text-white shadow-2xs'
+                                  : 'bg-[#FAF8F5] text-hk-taupe hover:bg-hk-soft-beige/60 hover:text-hk-charcoal'
+                              }`}
+                            >
+                              {cat.label}
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Font List View */}
+                        <div className="max-h-60 overflow-y-auto space-y-1 pr-1 divide-y divide-hk-soft-beige/40">
+                          {filteredFonts.length === 0 ? (
+                            <div className="py-6 text-center text-xs text-hk-taupe">
+                              Tidak ada font yang cocok dengan &quot;{fontSearch}&quot;
+                            </div>
+                          ) : (
+                            filteredFonts.map((f) => {
+                              const isSelected = node.config.fontFamily?.toLowerCase() === f.name.toLowerCase();
+                              return (
+                                <button
+                                  key={f.name}
+                                  type="button"
+                                  onMouseEnter={() => loadGoogleFont(f.name)}
+                                  onClick={() => {
+                                    loadGoogleFont(f.name);
+                                    config({ ...node.config, fontFamily: f.name });
+                                    setIsFontPickerOpen(false);
+                                  }}
+                                  className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left transition ${
+                                    isSelected
+                                      ? 'bg-[#C5A880]/15 text-[#4A2E35]'
+                                      : 'hover:bg-[#FAF8F5] text-hk-charcoal'
+                                  }`}
+                                >
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-xs font-semibold">{f.name}</span>
+                                      <span className="text-[9px] text-hk-taupe/80">({f.categoryLabel})</span>
+                                    </div>
+                                    <p 
+                                      className="text-xs text-hk-charcoal/90 truncate mt-0.5"
+                                      style={{ fontFamily: `"${f.name}", ${f.fallback}` }}
+                                    >
+                                      {f.sample || 'Ananda & Bintang · 14 Februari'}
+                                    </p>
+                                  </div>
+                                  {isSelected && <Check className="h-4 w-4 text-[#C5A880] shrink-0" />}
+                                </button>
+                              );
+                            })
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* ── FONT STYLING (UKURAN, TEBAL, MIRING, KERNING) ── */}
+                  <div className="space-y-2 rounded-lg border border-hk-soft-beige/80 bg-[#FAF8F5]/60 p-2.5">
+                    {/* Ukuran Font Slider & Input */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider">Ukuran Font</label>
+                        <span className="text-[11px] font-bold text-hk-charcoal">{node.config.fontSize ?? 28}px</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="range"
+                          min={8}
+                          max={120}
+                          value={node.config.fontSize ?? 28}
+                          onChange={e => config({ ...node.config, fontSize: Number(e.target.value) })}
+                          className="flex-1 accent-[#C5A880] h-1.5 bg-hk-soft-beige rounded-lg cursor-pointer"
+                        />
+                        <input 
+                          type="number" 
+                          min={8} 
+                          max={160} 
+                          value={node.config.fontSize ?? 28} 
+                          onChange={e => { 
+                            if (Number.isFinite(e.target.valueAsNumber)) {
+                              config({ ...node.config, fontSize: Math.min(160, Math.max(8, e.target.valueAsNumber)) }); 
+                            }
+                          }} 
+                          className="h-7 w-14 rounded-md border border-hk-soft-beige bg-white text-center text-xs font-bold text-hk-charcoal focus:border-[#C5A880] focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Ketebalan, Miring, & Perataan */}
+                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-hk-soft-beige/50">
+                      {/* Ketebalan (Weight) */}
+                      <div>
+                        <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider block mb-1">Ketebalan</label>
+                        <select
+                          className="h-7.5 w-full rounded-md border border-hk-soft-beige bg-white px-2 text-[11px] font-medium text-hk-charcoal focus:border-[#C5A880] focus:outline-none"
+                          value={node.config.fontWeight ?? 'normal'}
+                          onChange={e => config({ ...node.config, fontWeight: e.target.value })}
+                        >
+                          <option value="normal">Normal (400)</option>
+                          <option value="500">Medium (500)</option>
+                          <option value="600">Semi-Bold (600)</option>
+                          <option value="bold">Bold (700)</option>
+                        </select>
+                      </div>
+
+                      {/* Gaya Miring (Italic) & Perataan */}
+                      <div>
+                        <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider block mb-1">Format & Posisi</label>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            title="Miring (Italic)"
+                            onClick={() => config({ ...node.config, fontStyle: node.config.fontStyle === 'italic' ? 'normal' : 'italic' })}
+                            className={`flex h-7.5 flex-1 items-center justify-center rounded-md border text-xs transition ${
+                              node.config.fontStyle === 'italic'
+                                ? 'bg-[#C5A880] text-white border-[#C5A880]'
+                                : 'bg-white text-hk-charcoal border-hk-soft-beige hover:bg-hk-soft-beige/30'
+                            }`}
+                          >
+                            <Italic className="h-3.5 w-3.5" />
+                          </button>
+
+                          {(['left', 'center', 'right'] as const).map(align => (
+                            <button
+                              key={align}
+                              type="button"
+                              title={`Rata ${align}`}
+                              onClick={() => config({ ...node.config, align })}
+                              className={`flex h-7.5 flex-1 items-center justify-center rounded-md border text-xs transition ${
+                                (node.config.align ?? 'center') === align
+                                  ? 'bg-[#C5A880] text-white border-[#C5A880]'
+                                  : 'bg-white text-hk-charcoal border-hk-soft-beige hover:bg-hk-soft-beige/30'
+                              }`}
+                            >
+                              {align === 'left' && <AlignLeft className="h-3.5 w-3.5" />}
+                              {align === 'center' && <AlignCenter className="h-3.5 w-3.5" />}
+                              {align === 'right' && <AlignRight className="h-3.5 w-3.5" />}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Spasi Huruf (Letter Spacing) */}
+                    <div className="pt-1 border-t border-hk-soft-beige/50">
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="text-[10px] font-bold text-hk-taupe uppercase tracking-wider">Spasi Huruf (Kerning)</label>
+                        <span className="text-[11px] font-bold text-hk-charcoal">{node.config.letterSpacing ?? 0}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={-2}
+                        max={16}
+                        step={1}
+                        value={node.config.letterSpacing ?? 0}
+                        onChange={e => config({ ...node.config, letterSpacing: Number(e.target.value) })}
+                        className="w-full accent-[#C5A880] h-1.5 bg-hk-soft-beige rounded-lg cursor-pointer"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className={labelClass}>Ukuran font</label>
-                      <input 
-                        className={fieldClass} 
-                        type="number" 
-                        min={8} 
-                        max={160} 
-                        value={node.config.fontSize ?? 28} 
-                        onChange={e => { 
-                          if (Number.isFinite(e.target.valueAsNumber)) {
-                            config({ ...node.config, fontSize: Math.min(160, Math.max(8, e.target.valueAsNumber)) }); 
-                          }
-                        }} 
-                      />
+                  {/* ── COMPLETE COLOR PALETTE & CUSTOM COLOR ────────── */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className={labelClass}>Warna Font Fleksibel</label>
+                      <span className="text-[11px] font-mono text-hk-charcoal uppercase">{node.config.color ?? '#4A2E35'}</span>
                     </div>
 
-                    <div>
-                      <label className={labelClass}>Perataan</label>
-                      <select 
-                        className={fieldClass} 
-                        value={node.config.align ?? 'center'} 
-                        onChange={e => config({ ...node.config, align: e.target.value as 'left' | 'center' | 'right' })}
+                    {/* Quick Accent Swatches */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {QUICK_ACCENT_COLORS.map(hex => (
+                        <button
+                          key={hex}
+                          type="button"
+                          title={hex}
+                          onClick={() => {
+                            config({ ...node.config, color: hex });
+                            setCustomHexInput(hex);
+                          }}
+                          className={`h-6 w-6 rounded-full border transition hover:scale-110 ${
+                            node.config.color?.toLowerCase() === hex.toLowerCase()
+                              ? 'ring-2 ring-[#C5A880] ring-offset-1 border-transparent'
+                              : 'border-hk-soft-beige'
+                          }`}
+                          style={{ backgroundColor: hex }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Palet Terkurasi Tabs */}
+                    <div className="rounded-lg border border-hk-soft-beige bg-[#FAF8F5] p-2 space-y-2">
+                      <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-thin">
+                        {HARIKITA_WEDDING_PALETTES.map(p => (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => setActivePaletteTab(p.id)}
+                            className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-medium transition ${
+                              activePaletteTab === p.id
+                                ? 'bg-white text-[#4A2E35] shadow-2xs font-bold'
+                                : 'text-hk-taupe hover:text-hk-charcoal'
+                            }`}
+                          >
+                            {p.name.split(' ')[0]}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Swatches Grid dari Tab Terpilih */}
+                      {(() => {
+                        const pal = HARIKITA_WEDDING_PALETTES.find(p => p.id === activePaletteTab) ?? HARIKITA_WEDDING_PALETTES[0];
+                        return (
+                          <div>
+                            <p className="text-[10px] text-hk-taupe mb-1.5 truncate">{pal.description}</p>
+                            <div className="grid grid-cols-4 gap-1.5">
+                              {pal.colors.map(c => {
+                                const isCurrent = node.config.color?.toLowerCase() === c.hex.toLowerCase();
+                                return (
+                                  <button
+                                    key={c.hex}
+                                    type="button"
+                                    onClick={() => {
+                                      config({ ...node.config, color: c.hex });
+                                      setCustomHexInput(c.hex);
+                                    }}
+                                    title={`${c.name} (${c.hex}) - ${c.desc}`}
+                                    className={`flex items-center gap-1.5 rounded-md p-1 border transition text-left ${
+                                      isCurrent
+                                        ? 'bg-white border-[#C5A880] shadow-2xs'
+                                        : 'border-transparent hover:bg-white/80'
+                                    }`}
+                                  >
+                                    <span 
+                                      className="h-4 w-4 rounded-full border border-black/10 shrink-0" 
+                                      style={{ backgroundColor: c.hex }} 
+                                    />
+                                    <span className="text-[10px] text-hk-charcoal truncate">{c.name.split(' ')[0]}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Manual Hex Input & Native Color Picker */}
+                    <div className="flex items-center gap-2">
+                      <div className="relative flex-1">
+                        <span className="absolute left-2.5 top-2 text-xs font-mono text-hk-taupe">#</span>
+                        <input
+                          type="text"
+                          maxLength={9}
+                          value={customHexInput.replace(/^#/, '')}
+                          onChange={e => {
+                            const val = '#' + e.target.value.trim().replace(/[^0-9a-fA-F]/g, '');
+                            setCustomHexInput(val);
+                            if (isValidColorString(val)) {
+                              config({ ...node.config, color: val });
+                            }
+                          }}
+                          placeholder="4A2E35"
+                          className="h-8 w-full rounded-lg border border-hk-soft-beige bg-[#FAF8F5] pl-6 pr-2 text-xs font-mono text-hk-charcoal focus:border-[#C5A880] focus:bg-white focus:outline-none uppercase"
+                        />
+                      </div>
+
+                      {/* Native HTML5 Color Picker */}
+                      <label 
+                        className="flex h-8 items-center gap-1.5 rounded-lg border border-hk-soft-beige bg-[#FAF8F5] px-2 text-xs font-medium text-hk-charcoal cursor-pointer hover:bg-white transition"
+                        title="Buka pemilih warna kustom RGB"
                       >
-                        {['left', 'center', 'right'].map(v => <option key={v} value={v}>{v}</option>)}
-                      </select>
+                        <span 
+                          className="h-4 w-4 rounded-full border border-black/15 shrink-0"
+                          style={{ backgroundColor: node.config.color ?? '#4A2E35' }}
+                        />
+                        <span className="text-[11px]">Spektrum</span>
+                        <input 
+                          type="color" 
+                          value={node.config.color && /^#[\da-f]{6}$/i.test(node.config.color) ? node.config.color : '#4A2E35'} 
+                          onChange={e => {
+                            config({ ...node.config, color: e.target.value });
+                            setCustomHexInput(e.target.value);
+                          }} 
+                          className="sr-only"
+                        />
+                      </label>
                     </div>
                   </div>
                 </>
