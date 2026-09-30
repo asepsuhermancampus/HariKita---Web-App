@@ -541,9 +541,13 @@ model DigitalInvitation {
   giftAddress   String?
   qrisImageUrl  String?
   galleryPhotos String?    // JSON string array
+  studioDraftId     String?   // logical link to InvitationStudioDraft.id (nullable, no relation)
+  studioVersionId   String?   // pinned published InvitationStudioVersion.id at link time
   rsvps         RsvpWish[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+
+  @@index([studioDraftId])
 }
 
 model InvitationStudioDraft {
