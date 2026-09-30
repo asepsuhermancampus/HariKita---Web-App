@@ -8,6 +8,7 @@ import { resolvePublicInvitation } from '../src/server/queries/public-invitation
 import { StudioInvitationPage } from '../src/components/invitation/studio-public/StudioInvitationPage';
 import { createBlankStudioDocument } from '../src/lib/invitation-studio/sections';
 import { linkStudioDraftToInvitation } from '../src/server/actions/invitation-studio-core';
+import { DomainError } from '../src/server/services/errors';
 
 let ctx: TestDb;
 let prisma: PrismaClient;
@@ -197,6 +198,11 @@ test('linkStudioDraftToInvitation rejects when the slug does not exist', async (
   try {
     await assert.rejects(
       linkStudioDraftToInvitation({ slug: `does-not-exist-${Date.now()}`, draftId: 'x' }, { db: ctx8.prisma }),
+      (error: unknown) => {
+        assert.ok(error instanceof DomainError, 'expected a DomainError');
+        assert.equal((error as DomainError).code, 'STUDIO_NOT_FOUND');
+        return true;
+      },
     );
   } finally {
     await ctx8.cleanup();

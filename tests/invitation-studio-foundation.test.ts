@@ -51,7 +51,7 @@ test('all core mutations deny OPS before database access', async () => {
   const actions = studioActionDependencies({ actor: async () => ({ userId: 'ops', name: 'Ops', subRole: 'OPS' }),
     db: new Proxy({} as any, { get() { throw new Error('unauthorized DB access'); } }), audit: async () => {} });
   for (const action of Object.values(actions)) {
-    const result: any = await action({ draftId: 'other', name: 'Test', expectedVersion: 1, expectedStatus: 'DRAFT', confirmation: 'Test', document: createBlankStudioDocument() });
+    const result: any = await action({ slug: 'other', draftId: 'other', name: 'Test', expectedVersion: 1, expectedStatus: 'DRAFT', confirmation: 'Test', document: createBlankStudioDocument() });
     assert.equal(result.success, false);
     assert.equal(result.errorCode, 'UNAUTHORIZED_ADMIN_CAPABILITY');
   }

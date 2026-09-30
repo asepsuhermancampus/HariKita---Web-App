@@ -11,6 +11,16 @@ export type PublicInvitation = {
 };
 
 /**
+ * Page-level branch predicate: the studio renderer is used ONLY when a
+ * resolution exists AND carries a studio snapshot. Any other case (unknown
+ * slug, unlinked row, un-published/invalid snapshot) renders the theme path.
+ * Exposed as a pure helper so the branch is unit-testable without a page render.
+ */
+export function shouldRenderStudio(resolved: PublicInvitation | null): boolean {
+  return Boolean(resolved?.studioSnapshot);
+}
+
+/**
  * Resolve a public invitation by slug. When the row is linked to a studio draft
  * and that draft has an active published snapshot, the validated snapshot is
  * returned; otherwise `studioSnapshot` is null and callers fall back to the

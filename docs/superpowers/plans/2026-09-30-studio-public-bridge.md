@@ -468,7 +468,7 @@ export async function linkStudioDraftToInvitation(
     where: { slug: input.slug },
     data: { studioDraftId: input.draftId },
   });
-  if (updated.count === 0) throw new DomainError('STUDIO_LINK_NOT_FOUND', `Invitation slug tidak ditemukan: ${input.slug}`);
+  if (updated.count === 0) throw new DomainError('STUDIO_NOT_FOUND', `Invitation slug tidak ditemukan: ${input.slug}`);
 }
 ```
 

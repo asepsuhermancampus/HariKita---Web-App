@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getThemeById, ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
 import { TemplateEngineResolver } from "@/components/templates/TemplateEngineResolver";
 import { LiveThemeSwitcherToolbar } from "@/components/invitation/LiveThemeSwitcherToolbar";
-import { resolvePublicInvitation } from "@/server/queries/public-invitation";
+import { resolvePublicInvitation, shouldRenderStudio } from "@/server/queries/public-invitation";
 import { StudioInvitationPage } from "@/components/invitation/studio-public/StudioInvitationPage";
 
 export const dynamic = "force-dynamic";
@@ -20,9 +20,9 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
 
   // Prefer a published studio snapshot when one exists; fall back silently to the theme path.
   const resolved = await resolvePublicInvitation(slug).catch(() => null);
-  if (resolved?.studioSnapshot) {
+  if (shouldRenderStudio(resolved)) {
     return (
-      <StudioInvitationPage document={resolved.studioSnapshot} guestName={guestName} />
+      <StudioInvitationPage document={resolved!.studioSnapshot!} guestName={guestName} />
     );
   }
 
