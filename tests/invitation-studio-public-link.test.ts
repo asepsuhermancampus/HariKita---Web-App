@@ -1,8 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { createTestDb, type TestDb } from './helpers/test-db';
 import type { PrismaClient } from '@prisma/client';
 import { resolvePublicInvitation } from '../src/server/queries/public-invitation';
+import { StudioInvitationPage } from '../src/components/invitation/studio-public/StudioInvitationPage';
+import { createBlankStudioDocument } from '../src/lib/invitation-studio/sections';
 
 let ctx: TestDb;
 let prisma: PrismaClient;
@@ -56,4 +60,15 @@ test('resolvePublicInvitation returns studioSnapshot null when no active publish
   } finally {
     await ctx3.cleanup();
   }
+});
+
+test('StudioInvitationPage renders the canvas background from the document', () => {
+  const doc = createBlankStudioDocument();
+  doc.sections[0].enabled = true;
+  doc.background = { kind: 'gradient', from: '#FFFFFF', to: '#F3EDE6', angle: 135 };
+  const html = renderToStaticMarkup(
+    React.createElement(StudioInvitationPage, { document: doc, guestName: 'Tamu Uji' }),
+  );
+  assert.match(html, /linear-gradient\(135deg/);
+  assert.match(html, /Tamu Uji/);
 });
