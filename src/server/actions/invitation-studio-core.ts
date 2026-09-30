@@ -40,7 +40,7 @@ function canonical(value: unknown): string {
 /** Attach a studio draft to an existing public invitation slug (logical reference). */
 export async function linkStudioDraftToInvitation(
   input: { slug: string; draftId: string },
-  deps: { db: PrismaClient },
+  deps: { db: Prisma.TransactionClient | PrismaClient },
 ): Promise<void> {
   const updated = await deps.db.digitalInvitation.updateMany({
     where: { slug: input.slug },
@@ -172,6 +172,11 @@ export function studioActionDependencies(deps: StudioActionDependencies) {
       const updated = await tx.invitationStudioDraft.update({ where: { id: draft.id }, data: { status: 'ARCHIVED', archivedAt: now(), updatedAt: now() } });
       await audit(actor, tx, 'UNPUBLISH', draft.id);
       return state(updated, version);
+    }),
+    linkStudioDraftToSlug: (input: { slug: string; draftId: string }) => execute(async (actor, tx) => {
+      await linkStudioDraftToInvitation(input, { db: tx });
+      await audit(actor, tx, 'LINK_TO_SLUG', input.draftId);
+      return { slug: input.slug, draftId: input.draftId };
     }),
   };
 }
