@@ -1,7 +1,7 @@
 # Studio Invitation → Public Page Bridge (B1) — Design
 
 **Date:** 2026-09-30
-**Status:** Draft (awaiting user review)
+**Status:** Shipped
 **Depends on:** Canvas Background feature (shipped: `StudioBackground`, `backgroundToCss`)
 
 ## Problem
