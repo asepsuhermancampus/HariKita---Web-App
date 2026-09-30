@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createTestDb, type TestDb } from './helpers/test-db';
 import type { PrismaClient } from '@prisma/client';
+import { resolvePublicInvitation } from '../src/server/queries/public-invitation';
 
 let ctx: TestDb;
 let prisma: PrismaClient;
@@ -27,5 +28,32 @@ test('DigitalInvitation accepts nullable studio link columns', async () => {
     assert.equal(inv.studioVersionId, null);
   } finally {
     await ctx.cleanup();
+  }
+});
+
+test('resolvePublicInvitation returns null for unknown slug', async () => {
+  const ctx2 = await createTestDb();
+  try {
+    const res = await resolvePublicInvitation('does-not-exist', { db: ctx2.prisma });
+    assert.equal(res, null);
+  } finally {
+    await ctx2.cleanup();
+  }
+});
+
+test('resolvePublicInvitation returns studioSnapshot null when no active publish', async () => {
+  const ctx3 = await createTestDb();
+  try {
+    const slug = `plain-${Date.now()}`;
+    await ctx3.prisma.digitalInvitation.create({
+      data: { slug, themeId: 'autumnelle', title: 'T', brideName: 'A', groomName: 'B',
+        eventDate: new Date('2026-11-20T09:00:00Z'), venueName: 'V', venueAddress: 'X',
+        studioDraftId: 'draft-x' },
+    });
+    const res = await resolvePublicInvitation(slug, { db: ctx3.prisma });
+    assert.ok(res);
+    assert.equal(res!.studioSnapshot, null);
+  } finally {
+    await ctx3.cleanup();
   }
 });
