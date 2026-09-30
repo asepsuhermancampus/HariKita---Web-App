@@ -3,8 +3,8 @@
 import { prisma } from '@/lib/prisma';
 import { requireAdminCapability } from '@/server/auth/admin-guard';
 import { recordAdminAudit } from '@/server/services/admin-audit-service';
-import { revalidate } from './_shared';
-import { studioActionDependencies } from './invitation-studio-core';
+import { revalidate, runAction } from './_shared';
+import { studioActionDependencies, linkStudioDraftToInvitation } from './invitation-studio-core';
 import type { StudioMutationToken } from '@/lib/invitation-studio/contracts';
 import type { ActionResult } from './_shared';
 
@@ -28,3 +28,10 @@ export async function approveStudioDraft(input: StudioMutationToken) { return fi
 export async function publishStudioVersion(input: StudioMutationToken) { return finish(actions().publishStudioVersion(input), input?.draftId); }
 export async function unpublishStudioDraft(input: StudioMutationToken) { return finish(actions().unpublishStudioDraft(input), input?.draftId); }
 export async function returnStudioDraft(input: StudioMutationToken) { return finish(actions().returnStudioDraft(input), input?.draftId); }
+export async function linkStudioDraftToSlug(input: { slug: string; draftId: string }): Promise<ActionResult<{ slug: string; draftId: string }>> {
+  return finish(runAction(async () => {
+    await requireAdminCapability('MANAGE_ADMIN');
+    await linkStudioDraftToInvitation(input, { db: prisma });
+    return input;
+  }), input?.draftId);
+}

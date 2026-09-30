@@ -7,6 +7,7 @@ import type { PrismaClient } from '@prisma/client';
 import { resolvePublicInvitation } from '../src/server/queries/public-invitation';
 import { StudioInvitationPage } from '../src/components/invitation/studio-public/StudioInvitationPage';
 import { createBlankStudioDocument } from '../src/lib/invitation-studio/sections';
+import { linkStudioDraftToInvitation } from '../src/server/actions/invitation-studio-core';
 
 let ctx: TestDb;
 let prisma: PrismaClient;
@@ -71,4 +72,21 @@ test('StudioInvitationPage renders the canvas background from the document', () 
   );
   assert.match(html, /linear-gradient\(135deg/);
   assert.match(html, /Tamu Uji/);
+});
+
+test('linkStudioDraftToInvitation sets studioDraftId on the matching slug', async () => {
+  const ctx4 = await createTestDb();
+  try {
+    const slug = `linkable-${Date.now()}`;
+    await ctx4.prisma.digitalInvitation.create({
+      data: { slug, themeId: 'autumnelle', title: 'T', brideName: 'A', groomName: 'B',
+        eventDate: new Date('2026-11-20T09:00:00Z'), venueName: 'V', venueAddress: 'X' },
+    });
+    // Pure helper takes a db; no session/audit needed for the domain rule.
+    await linkStudioDraftToInvitation({ slug, draftId: 'draft-abc' }, { db: ctx4.prisma });
+    const after = await ctx4.prisma.digitalInvitation.findUnique({ where: { slug } });
+    assert.equal(after?.studioDraftId, 'draft-abc');
+  } finally {
+    await ctx4.cleanup();
+  }
 });

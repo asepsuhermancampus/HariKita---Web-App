@@ -37,6 +37,18 @@ function canonical(value: unknown): string {
   return JSON.stringify(value);
 }
 
+/** Attach a studio draft to an existing public invitation slug (logical reference). */
+export async function linkStudioDraftToInvitation(
+  input: { slug: string; draftId: string },
+  deps: { db: PrismaClient },
+): Promise<void> {
+  const updated = await deps.db.digitalInvitation.updateMany({
+    where: { slug: input.slug },
+    data: { studioDraftId: input.draftId },
+  });
+  if (updated.count === 0) throw new DomainError('STUDIO_NOT_FOUND', `Invitation slug tidak ditemukan: ${input.slug}`);
+}
+
 export function studioActionDependencies(deps: StudioActionDependencies) {
   const id = deps.id ?? (() => crypto.randomUUID());
   const now = deps.now ?? (() => new Date());
