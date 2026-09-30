@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { getThemeById, ALL_INVITATION_TEMPLATES } from "@/lib/templates/registry";
 import { TemplateEngineResolver } from "@/components/templates/TemplateEngineResolver";
 import { LiveThemeSwitcherToolbar } from "@/components/invitation/LiveThemeSwitcherToolbar";
+import { resolvePublicInvitation } from "@/server/queries/public-invitation";
+import { StudioInvitationPage } from "@/components/invitation/studio-public/StudioInvitationPage";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +17,14 @@ interface PageProps {
 export default async function UndanganDetailPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
   const { to: guestName = "Bapak/Ibu/Saudara/i", sesi = "s1", theme: themeOverride } = await searchParams;
+
+  // Prefer a published studio snapshot when one exists; fall back silently to the theme path.
+  const resolved = await resolvePublicInvitation(slug).catch(() => null);
+  if (resolved?.studioSnapshot) {
+    return (
+      <StudioInvitationPage document={resolved.studioSnapshot} guestName={guestName} />
+    );
+  }
 
   // Fetch invitation from database
   let invitation = null;

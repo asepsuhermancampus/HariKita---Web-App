@@ -13,3 +13,10 @@ test('invitation studio routes and shell are SuperAdmin guarded and expose edito
   for (const control of ['Simpan', 'Undo', 'Redo', 'Preview']) assert.match(shell, new RegExp(control));
   assert.match(shell, /overflow-x-hidden/);
 });
+
+test('public invitation page branches to the studio renderer when a snapshot exists', () => {
+  const page = readFileSync('src/app/undangan/[slug]/page.tsx', 'utf8');
+  assert.match(page, /resolvePublicInvitation/);
+  assert.match(page, /StudioInvitationPage/);
+  assert.match(page, /studioSnapshot/);
+});
