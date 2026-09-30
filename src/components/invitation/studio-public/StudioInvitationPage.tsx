@@ -28,7 +28,7 @@ export function StudioInvitationPage({
         </div>
       ) : null}
       <div className="mx-auto w-full max-w-[480px]" style={backgroundToCss(document.background)}>
-        <StudioSceneRenderer document={document} device="mobile" editor={false} transparent={false} />
+        <StudioSceneRenderer document={document} device="mobile" editor={false} transparent />
       </div>
       <div className="sr-only" data-studio-sections={document.sectionOrder.length}>
         {STUDIO_SECTIONS.find((s) => s.id === lastId)?.label ?? ""}

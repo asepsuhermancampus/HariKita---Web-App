@@ -208,3 +208,73 @@ test('linkStudioDraftToInvitation rejects when the slug does not exist', async (
     await ctx8.cleanup();
   }
 });
+
+test('resolvePublicInvitation reuses a caller-supplied invitation instead of re-reading by slug', async () => {
+  const ctx9 = await createTestDb();
+  try {
+    const now = Date.now();
+    const owner = await ctx9.prisma.user.create({
+      data: { name: 'Admin', phone: `0874${String(now).slice(-8)}`, role: 'ADMIN', adminRole: 'SUPER_ADMIN' },
+    });
+    const draft = await ctx9.prisma.invitationStudioDraft.create({
+      data: { ownerId: owner.id, name: `Shared ${now}`, status: 'PUBLISHED' },
+    });
+    const doc = createBlankStudioDocument();
+    doc.background = { kind: 'solid', color: '#4A2E35' };
+    const version = await ctx9.prisma.invitationStudioVersion.create({
+      data: { draftId: draft.id, authorId: owner.id, versionNumber: 1, schemaVersion: 1, documentJson: JSON.stringify(doc) },
+    });
+    await ctx9.prisma.invitationStudioPublish.create({
+      data: { draftId: draft.id, sourceVersionId: version.id, publisherId: owner.id, schemaVersion: 1, snapshotJson: JSON.stringify(doc) },
+    });
+    const slug = `shared-${now}`;
+    await ctx9.prisma.digitalInvitation.create({
+      data: { slug, themeId: 'autumnelle', title: 'T', brideName: 'A', groomName: 'B',
+        eventDate: new Date('2026-11-20T09:00:00Z'), venueName: 'V', venueAddress: 'X', studioDraftId: draft.id },
+    });
+
+    // Pass a slug that does NOT exist in the DB plus the real pre-fetched row.
+    // If the resolver honoured the supplied invitation (no second read), it resolves;
+    // if it re-read by slug, the lookup would miss and return null.
+    const row = await ctx9.prisma.digitalInvitation.findUnique({ where: { slug } });
+    const res = await resolvePublicInvitation(`nope-${now}`, { db: ctx9.prisma, invitation: row });
+    assert.ok(res, 'resolver should use the supplied invitation');
+    assert.ok(res!.studioSnapshot);
+  } finally {
+    await ctx9.cleanup();
+  }
+});
+
+test('resolvePublicInvitation falls back to null for an oversized snapshot payload', async () => {
+  const ctx10 = await createTestDb();
+  try {
+    const now = Date.now();
+    const owner = await ctx10.prisma.user.create({
+      data: { name: 'Admin', phone: `0873${String(now).slice(-8)}`, role: 'ADMIN', adminRole: 'SUPER_ADMIN' },
+    });
+    const draft = await ctx10.prisma.invitationStudioDraft.create({
+      data: { ownerId: owner.id, name: `Huge ${now}`, status: 'PUBLISHED' },
+    });
+    const doc = createBlankStudioDocument();
+    const version = await ctx10.prisma.invitationStudioVersion.create({
+      data: { draftId: draft.id, authorId: owner.id, versionNumber: 1, schemaVersion: 1, documentJson: JSON.stringify(doc) },
+    });
+    // > STUDIO_LIMITS.bytes (512_000) — must be rejected BEFORE JSON.parse.
+    await ctx10.prisma.invitationStudioPublish.create({
+      data: { draftId: draft.id, sourceVersionId: version.id, publisherId: owner.id, schemaVersion: 1,
+        snapshotJson: 'x'.repeat(512_001) },
+    });
+    const slug = `huge-${now}`;
+    await ctx10.prisma.digitalInvitation.create({
+      data: { slug, themeId: 'autumnelle', title: 'T', brideName: 'A', groomName: 'B',
+        eventDate: new Date('2026-11-20T09:00:00Z'), venueName: 'V', venueAddress: 'X' },
+    });
+    await linkStudioDraftToInvitation({ slug, draftId: draft.id }, { db: ctx10.prisma });
+
+    const res = await resolvePublicInvitation(slug, { db: ctx10.prisma });
+    assert.ok(res);
+    assert.equal(res!.studioSnapshot, null);
+  } finally {
+    await ctx10.cleanup();
+  }
+});

@@ -18,15 +18,8 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
   const { slug } = await params;
   const { to: guestName = "Bapak/Ibu/Saudara/i", sesi = "s1", theme: themeOverride } = await searchParams;
 
-  // Prefer a published studio snapshot when one exists; fall back silently to the theme path.
-  const resolved = await resolvePublicInvitation(slug).catch(() => null);
-  if (shouldRenderStudio(resolved)) {
-    return (
-      <StudioInvitationPage document={resolved!.studioSnapshot!} guestName={guestName} />
-    );
-  }
-
-  // Fetch invitation from database
+  // Fetch the invitation once (with RSVPs for the theme path below). This single
+  // row is shared with the studio resolver so the theme path does not re-read it.
   let invitation = null;
   try {
     invitation = await prisma.digitalInvitation.findUnique({
@@ -39,6 +32,14 @@ export default async function UndanganDetailPage({ params, searchParams }: PageP
     });
   } catch (error) {
     console.error("Database fetch error, using fallback demo data:", error);
+  }
+
+  // Prefer a published studio snapshot when one exists; fall back silently to the theme path.
+  const resolved = await resolvePublicInvitation(slug, { invitation }).catch(() => null);
+  if (shouldRenderStudio(resolved)) {
+    return (
+      <StudioInvitationPage document={resolved!.studioSnapshot!} guestName={guestName} />
+    );
   }
 
   // Fallback demo data if slug is a known template ID, "demo", or database record is not yet seeded
