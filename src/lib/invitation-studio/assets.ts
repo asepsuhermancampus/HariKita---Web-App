@@ -16,7 +16,7 @@ export type StudioAssetCategory =
   | 'frames' | 'icons' | 'backgrounds' | 'image'
   // Sumber B (harikita-assets.json)
   | 'abstract' | 'avatars' | 'cards' | 'compositions' | 'corners'
-  | 'flowers' | 'leaves' | 'lines' | 'ornaments' | 'patterns' | 'textures';
+  | 'flowers' | 'leaves' | 'lines' | 'ornaments' | 'patterns' | 'textures' | 'placeholders';
 
 export interface StudioAsset {
   id: string;

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="360" viewBox="0 0 300 360">
+  <rect x="1" y="1" width="298" height="358" rx="4" fill="#FFFFFF" stroke="#E8DED1" stroke-width="2"/>
+  <rect x="20" y="20" width="260" height="260" fill="#F3EDE6" stroke="#C5A880" stroke-width="1.5" stroke-dasharray="8 4"/>
+  <circle cx="150" cy="125" r="40" fill="#D4C4B5"/>
+  <ellipse cx="150" cy="240" rx="62" ry="38" fill="#D4C4B5"/>
+  <text x="150" y="320" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#88735B">Klik untuk ganti foto</text>
+</svg>

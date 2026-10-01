@@ -18,6 +18,7 @@ import { PropertiesInspector } from './PropertiesInspector';
 import { ResponsiveStudioCanvas } from './ResponsiveStudioCanvas';
 import { StudioPreview } from './StudioPreview';
 import { SectionTemplatePanel } from './SectionTemplatePanel';
+import { CanvasBackgroundPanel } from './CanvasBackgroundPanel';
 import { StudioHistory } from '@/lib/invitation-studio/history';
 import { UndoRedoControls } from './UndoRedoControls';
 import { SaveStatus } from './SaveStatus';
@@ -515,6 +516,15 @@ export function StudioShell({
                     {/* WARNA & TRANSPARANSI */}
                     {leftTab === 'warna' && (
                       <div className="flex flex-col gap-4">
+                        {/* ── Latar Kanvas (Global Background) ─────────────── */}
+                        <CanvasBackgroundPanel
+                          background={document.background}
+                          disabled={isPending || !editable}
+                          onChange={(background) => edit({ type: 'background', background })}
+                        />
+
+                        <div className="h-px bg-hk-soft-beige" />
+
                         <p className="text-[11px] text-hk-taupe">Preset transparansi untuk layer yang dipilih. Pilih node di canvas terlebih dahulu.</p>
                         <div>
                           <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-hk-taupe">Preset Opacity</p>
@@ -526,29 +536,6 @@ export function StudioShell({
                                 className="flex flex-col items-center gap-1 rounded-lg border border-hk-soft-beige bg-[#FAF8F5] p-2 text-center hover:border-[#C5A880] hover:bg-white transition disabled:opacity-30">
                                 <div className="h-5 w-5 rounded-md bg-[#4A2E35]" style={{ opacity: op / 100 }} />
                                 <span className="text-[10px] font-bold text-hk-charcoal">{op}%</span>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-hk-taupe">Palet Warna HariKita</p>
-                          <div className="grid grid-cols-5 gap-1.5">
-                            {[
-                              { label: 'Ivory', hex: '#FAF8F5' },
-                              { label: 'Gold', hex: '#C5A880' },
-                              { label: 'Plum', hex: '#4A2E35' },
-                              { label: 'Taupe', hex: '#6B5E62' },
-                              { label: 'Champagne', hex: '#F3EDE6' },
-                              { label: 'Sage', hex: '#8A9E8B' },
-                              { label: 'Blush', hex: '#E8C4B8' },
-                              { label: 'Dusty', hex: '#B8A9A0' },
-                              { label: 'Cream', hex: '#FFF8F0' },
-                              { label: 'Charcoal', hex: '#2D2020' },
-                            ].map(({ label, hex }) => (
-                              <button key={hex} type="button" title={`${label} ${hex}`}
-                                className="group flex flex-col items-center gap-1 rounded-lg border border-hk-soft-beige p-1 hover:border-[#C5A880] transition">
-                                <div className="h-6 w-6 rounded-md border border-black/10" style={{ backgroundColor: hex }} />
-                                <span className="text-[9px] text-hk-taupe">{label}</span>
                               </button>
                             ))}
                           </div>

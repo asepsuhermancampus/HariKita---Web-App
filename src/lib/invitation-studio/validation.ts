@@ -13,6 +13,17 @@ const text = (v: unknown, max: number, nonempty = false) => typeof v === 'string
 const oneOf = (v: unknown, values: readonly string[]) => typeof v === 'string' && values.includes(v);
 const keys = (v: Record<string, unknown>, allowed: string[]) => Object.keys(v).every(k => allowed.includes(k));
 const overflow = (v: unknown) => oneOf(v, ['contained', 'visible']);
+const backgroundTextures = ['noise', 'grain', 'linen', 'marble', 'dots', 'rays'];
+const hexColor = (v: unknown) => typeof v === 'string' && (/^#[\da-f]{3,8}$/i.test(v) || /^rgba?\(.+\)$/i.test(v));
+
+function background(v: unknown): boolean {
+  if (!record(v)) return false;
+  if (v.kind === 'solid') return keys(v, ['kind', 'color']) && hexColor(v.color);
+  if (v.kind === 'gradient') return keys(v, ['kind', 'from', 'to', 'angle']) && hexColor(v.from) && hexColor(v.to) && number(v.angle, 0, 360);
+  if (v.kind === 'texture') return keys(v, ['kind', 'texture', 'baseColor', 'accentColor', 'intensity']) &&
+    oneOf(v.texture, backgroundTextures) && hexColor(v.baseColor) && hexColor(v.accentColor) && number(v.intensity, 0, 100);
+  return false;
+}
 
 function transform(v: unknown): boolean {
   return record(v) && keys(v, ['x', 'y', 'width', 'height', 'rotation', 'flipX', 'flipY']) &&
@@ -46,10 +57,11 @@ export function validateStudioDocument(input: unknown): ValidationResult<Invitat
   try {
     if (new TextEncoder().encode(JSON.stringify(input)).length > STUDIO_LIMITS.bytes) return { success: false, errors: ['document too large'] };
   } catch { return { success: false, errors: ['document must be serializable JSON'] }; }
-  if (!keys(input, ['schemaVersion', 'metadata', 'sectionOrder', 'sections', 'fixtureProfile'])) reject('unknown document field');
+  if (!keys(input, ['schemaVersion', 'metadata', 'sectionOrder', 'sections', 'fixtureProfile', 'background'])) reject('unknown document field');
   if (input.schemaVersion !== 1) reject('schemaVersion must be 1');
   if (!record(input.metadata) || !keys(input.metadata, ['name']) || !text(input.metadata.name, 100, true)) reject('metadata.name required, maximum 100 characters');
   if (input.fixtureProfile !== 'neutral') reject('fixtureProfile must be neutral');
+  if (input.background !== undefined && !background(input.background)) reject('invalid background');
   const order = input.sectionOrder;
   if (!Array.isArray(order) || order.length !== 16 || new Set(order).size !== 16 || !order.every(id => ids.includes(id)) || order[0] !== 'cover' || order[15] !== 'closing') reject('sectionOrder must contain all unique sections with fixed cover/closing');
   if (!Array.isArray(input.sections) || input.sections.length !== 16) reject('all sixteen sections required');

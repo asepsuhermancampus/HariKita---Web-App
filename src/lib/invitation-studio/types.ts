@@ -57,4 +57,17 @@ export type StudioNode = StudioNodeBase & (
   | { kind: 'component'; config: StudioComponentConfig }
 );
 export interface StudioSection { id: StudioSectionId; sectionType: StudioSectionId; enabled: boolean; layout: { mobile: 'base'; desktop?: 'override' }; overflowPolicy: StudioOverflowPolicy; nodes: StudioNode[]; }
-export interface InvitationStudioDocument { schemaVersion: 1; metadata: { name: string }; sectionOrder: StudioSectionId[]; sections: StudioSection[]; fixtureProfile: 'neutral'; }
+
+/** Texture presets rendered with pure CSS (no image files) so they stay light on mobile. */
+export type StudioBackgroundTexture = 'noise' | 'grain' | 'linen' | 'marble' | 'dots' | 'rays';
+
+/**
+ * Global canvas background. Optional for backward compatibility: an older document
+ * without a `background` field simply falls back to the original Cream Canvas (#FAF8F5).
+ */
+export type StudioBackground =
+  | { kind: 'solid'; color: string }
+  | { kind: 'gradient'; from: string; to: string; angle: number }
+  | { kind: 'texture'; texture: StudioBackgroundTexture; baseColor: string; accentColor: string; intensity: number };
+
+export interface InvitationStudioDocument { schemaVersion: 1; metadata: { name: string }; sectionOrder: StudioSectionId[]; sections: StudioSection[]; fixtureProfile: 'neutral'; background?: StudioBackground; }

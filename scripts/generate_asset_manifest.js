@@ -22,7 +22,8 @@ const CATEGORY_LABELS = {
   'icons': 'Custom Concept Icons',
   'decorative': 'UI Decorative Assets',
   'cards': 'Invitation & Card Design Elements',
-  'avatars': 'Social Media Avatars'
+  'avatars': 'Social Media Avatars',
+  'placeholders': 'Photo Placeholders'
 };
 
 function walkDir(dir, baseDir = '') {

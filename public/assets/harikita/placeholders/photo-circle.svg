@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <circle cx="150" cy="150" r="148" fill="#F3EDE6" stroke="#C5A880" stroke-width="2" stroke-dasharray="8 4"/>
+  <circle cx="150" cy="120" r="40" fill="#D4C4B5"/>
+  <ellipse cx="150" cy="220" rx="62" ry="38" fill="#D4C4B5"/>
+  <text x="150" y="270" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#88735B">Klik untuk ganti foto</text>
+</svg>

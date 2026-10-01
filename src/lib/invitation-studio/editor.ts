@@ -1,4 +1,4 @@
-import type { InvitationStudioDocument, StudioNode, StudioNodeBase, StudioSectionId, StudioTransform } from './types';
+import type { InvitationStudioDocument, StudioBackground, StudioNode, StudioNodeBase, StudioSectionId, StudioTransform } from './types';
 import { canReorderSection } from './sections';
 import { validateStudioDocument } from './validation';
 import type { StudioAsset } from './assets';
@@ -24,7 +24,8 @@ export type StudioEdit =
   | { type: 'node'; section: StudioSectionId; id: string; patch: Partial<Pick<StudioNodeBase, 'name' | 'groupId' | 'groupName' | 'locked' | 'visible' | 'layer' | 'appearance' | 'animation' | 'accessibility'>> }
   | { type: 'config'; section: StudioSectionId; id: string; config: StudioNode['config'] }
   | { type: 'transform'; section: StudioSectionId; id: string; device: StudioDevice; patch: Partial<StudioTransform> }
-  | { type: 'transform-many'; section: StudioSectionId; device: StudioDevice; patches: Record<string, Partial<StudioTransform>> };
+  | { type: 'transform-many'; section: StudioSectionId; device: StudioDevice; patches: Record<string, Partial<StudioTransform>> }
+  | { type: 'background'; background: StudioBackground | null };
 
 export const resolveTransform = (node: StudioNode, device: StudioDevice) => device === 'desktop' ? node.desktopTransform ?? node.transform : node.transform;
 export const selectedStudioNode = (d: InvitationStudioDocument, section: StudioSectionId, id: string | null) => d.sections.find(s => s.id === section)?.nodes.find(n => n.id === id);
@@ -70,8 +71,12 @@ export function createStudioNode(kind: 'text' | 'component' | StudioAsset, id: s
 }
 export function editStudio(document: InvitationStudioDocument, edit: StudioEdit): { document: InvitationStudioDocument; selection: string | null } {
   const d = structuredClone(document);
-  const section = d.sections.find(s => s.id === (edit.type === 'copy-to-section' ? edit.fromSection : edit.section))!;
+  const section = d.sections.find(s => s.id === (edit.type === 'copy-to-section' ? edit.fromSection : 'section' in edit ? edit.section : undefined))!;
   let selection: string | null = 'id' in edit ? edit.id : null;
+  if (edit.type === 'background') {
+    if (edit.background === null) delete d.background;
+    else d.background = edit.background;
+  }
   if (edit.type === 'section-enabled' && canReorderSection(section.id)) section.enabled = edit.enabled;
   if (edit.type === 'section-overflow') section.overflowPolicy = edit.overflow;
   if (edit.type === 'section-move') {

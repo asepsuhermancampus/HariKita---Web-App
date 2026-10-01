@@ -294,3 +294,60 @@ export async function createChargeAction(input: {
     };
   });
 }
+
+/**
+ * Provider gateway yang aktif (dari env HARIKITA_PAYMENT_PROVIDER).
+ * Dipakai halaman pembayaran untuk memilih alur UI (QRIS-QR vs Snap vs simulasi).
+ * Tidak sensitif — hanya nama provider.
+ */
+export async function getActiveProviderAction(): Promise<GatewayProvider> {
+  return getDefaultProvider();
+}
+
+export interface PaymentStatusDTO {
+  /** Status order saat ini (mis. WAITING_DP, IN_PROGRESS, FULLY_PAID). */
+  orderStatus: string;
+  /** Status tagihan teraktif: PENDING | PAID | CANCELLED. */
+  installmentStatus: string | null;
+  installmentType: string | null;
+  /** true bila seluruh kewajiban pembayaran saat ini sudah lunas. */
+  paid: boolean;
+}
+
+/**
+ * Status pembayaran publik (minimal) untuk polling halaman pembayaran.
+ *
+ * Keamanan: hanya mengembalikan status ringkas (tanpa PII). Menerima orderId ATAU
+ * orderNumber agar kompatibel dengan tautan pembayaran lazy-registration. Tidak
+ * memerlukan login — pemegang tautan booking sudah memiliki akses ke halaman ini.
+ */
+export async function getPaymentStatusAction(
+  bookingId: string
+): Promise<ActionResult<PaymentStatusDTO>> {
+  return runAction(async () => {
+    const order = await prisma.order.findFirst({
+      where: { OR: [{ id: bookingId }, { orderNumber: bookingId }] },
+      include: { installments: true },
+    });
+    if (!order) {
+      throw new DomainError("ORDER_NOT_FOUND", `Order "${bookingId}" tidak ditemukan.`);
+    }
+
+    // Tagihan teraktif: prioritas DP_30 → SETTLEMENT_70 → FULL_100.
+    const active =
+      order.installments.find((i) => i.type === "DP_30") ??
+      order.installments.find((i) => i.type === "SETTLEMENT_70") ??
+      order.installments.find((i) => i.type === "FULL_100") ??
+      null;
+
+    const paidStatuses = new Set(["DP_PAID", "IN_PROGRESS", "WAITING_SETTLEMENT", "FULLY_PAID", "COMPLETED"]);
+    const paid = paidStatuses.has(order.status) || active?.status === "PAID";
+
+    return {
+      orderStatus: order.status,
+      installmentStatus: active?.status ?? null,
+      installmentType: active?.type ?? null,
+      paid,
+    };
+  });
+}

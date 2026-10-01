@@ -1,5 +1,8 @@
 "use client";
 
+import type { CSSProperties } from 'react';
+import type { StudioBackground, StudioBackgroundTexture } from './types';
+
 export interface ColorSwatch {
   name: string;
   hex: string;
@@ -120,4 +123,81 @@ export function isValidColorString(color: string): boolean {
   // hsl(...) / hsla(...)
   if (/^hsla?\([^)]+\)$/i.test(trimmed)) return true;
   return false;
+}
+
+/** Cream Canvas (#FAF8F5) — the original hardcoded canvas colour, used as fallback. */
+export const DEFAULT_CANVAS_BACKGROUND = '#FAF8F5';
+
+/** Texture presets selectable in the studio, with a human label + description. */
+export const STUDIO_BACKGROUND_TEXTURES: ReadonlyArray<{ id: StudioBackgroundTexture; label: string; desc: string }> = [
+  { id: 'noise', label: 'Noise Halus', desc: 'Bintik lembut seperti kertas beri' },
+  { id: 'grain', label: 'Grain Foto', desc: 'Butiran tipis ala film analog' },
+  { id: 'linen', label: 'Linen', desc: 'Garis tenun kain linen' },
+  { id: 'marble', label: 'Marble', desc: 'Alur marmer ringan' },
+  { id: 'dots', label: 'Polkadot', desc: 'Titik rapi berulang' },
+  { id: 'rays', label: 'Rays', desc: 'Garis diagonal diagonal' },
+];
+
+/**
+ * Peta tekstur -> CSS `background-image` (murni gradien CSS, tanpa berkas gambar).
+ * `base` adalah warna dasar di bawah tekstur, `accent` warna motif, `intensity` 0-100
+ * mengatur kepekatan motif.
+ */
+function textureLayers(texture: StudioBackgroundTexture, base: string, accent: string, intensity: number): string {
+  const t = Math.min(100, Math.max(0, intensity)) / 100;
+  switch (texture) {
+    case 'noise':
+      return `radial-gradient(${accent} 0.5px, transparent 0.5px), radial-gradient(${accent} 0.5px, ${base} 0.5px)`;
+    case 'grain':
+      return `repeating-linear-gradient(0deg, ${accent} 0px, ${accent} 1px, transparent 1px, transparent 3px), repeating-linear-gradient(90deg, ${accent} 0px, ${accent} 1px, transparent 1px, transparent 4px)`;
+    case 'linen':
+      return `repeating-linear-gradient(0deg, ${accent} 0px, ${accent} 1px, transparent 1px, transparent 4px), repeating-linear-gradient(90deg, ${accent} 0px, ${accent} 1px, transparent 1px, transparent 4px)`;
+    case 'marble':
+      return `repeating-linear-gradient(115deg, transparent 0px, ${accent} 2px, transparent 6px, transparent 22px), repeating-linear-gradient(65deg, transparent 0px, ${accent} 1px, transparent 5px, transparent 28px)`;
+    case 'dots':
+      return `radial-gradient(${accent} 1.5px, transparent 1.5px)`;
+    case 'rays':
+      return `repeating-linear-gradient(45deg, ${accent} 0px, ${accent} 2px, transparent 2px, transparent 12px)`;
+    default:
+      return `none`;
+  }
+}
+
+/** Ukuran tile default per tekstur (px). */
+function textureSize(texture: StudioBackgroundTexture): string {
+  switch (texture) {
+    case 'noise': return '3px 3px, 6px 6px';
+    case 'grain': case 'linen': return 'auto';
+    case 'marble': return 'auto';
+    case 'dots': return '16px 16px';
+    case 'rays': return 'auto';
+    default: return 'auto';
+  }
+}
+
+/**
+ * Mengubah StudioBackground menjadi CSS `style` inline yang siap dipasang pada
+ * elemen latar kanvas. Menghasilkan `backgroundColor` + `backgroundImage`.
+ *
+ * Tanpa `background` (dokumen lama) → Cream Canvas solid.
+ */
+export function backgroundToCss(bg?: StudioBackground | null): CSSProperties {
+  if (!bg) return { backgroundColor: DEFAULT_CANVAS_BACKGROUND };
+  if (bg.kind === 'solid') {
+    return { backgroundColor: isValidColorString(bg.color) ? bg.color : DEFAULT_CANVAS_BACKGROUND };
+  }
+  if (bg.kind === 'gradient') {
+    const from = isValidColorString(bg.from) ? bg.from : DEFAULT_CANVAS_BACKGROUND;
+    const to = isValidColorString(bg.to) ? bg.to : DEFAULT_CANVAS_BACKGROUND;
+    const angle = Number.isFinite(bg.angle) ? bg.angle : 135;
+    return { backgroundImage: `linear-gradient(${angle}deg, ${from} 0%, ${to} 100%)` };
+  }
+  // texture
+  const base = isValidColorString(bg.baseColor) ? bg.baseColor : DEFAULT_CANVAS_BACKGROUND;
+  const accent = isValidColorString(bg.accentColor) ? bg.accentColor : '#C5A88033';
+  return {
+    backgroundColor: base,
+    backgroundImage: textureLayers(bg.texture, base, accent, bg.intensity),
+    backgroundSize: textureSize(bg.texture),
+  };
 }

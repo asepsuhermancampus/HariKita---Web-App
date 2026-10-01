@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { STUDIO_SECTIONS, canReorderSection } from '@/lib/invitation-studio/sections';
+import { getTemplateCountBySection } from '@/lib/invitation-studio/section-templates';
 import type { InvitationStudioDocument, StudioSectionId } from '@/lib/invitation-studio/types';
 import type { StudioEdit } from '@/lib/invitation-studio/editor';
-import { Lock, Eye, EyeOff, ChevronUp, ChevronDown, Layers } from 'lucide-react';
+import { Lock, Eye, EyeOff, ChevronUp, ChevronDown, Layers, LayoutTemplate } from 'lucide-react';
 
 export function SectionNavigator({ 
   document, 
@@ -20,6 +21,7 @@ export function SectionNavigator({
   disabled: boolean; 
 }) {
   const enabledCount = document.sections.filter(s => s.enabled).length;
+  const templateCounts = getTemplateCountBySection();
 
   return (
     <nav aria-label="Section undangan" className="flex flex-col h-full min-h-0 space-y-2.5">
@@ -77,6 +79,15 @@ export function SectionNavigator({
                   <p className="text-[10px] text-hk-taupe">
                     {section.nodes.length} elemen {section.enabled ? '' : '· Nonaktif'}
                   </p>
+                  {(templateCounts[id] ?? 0) > 0 && (
+                    <span
+                      className="mt-0.5 inline-flex items-center gap-0.5 rounded bg-[#C5A880]/12 px-1 py-0.5 text-[9px] font-medium text-[#88735B]"
+                      title={`${templateCounts[id]} template tersedia`}
+                    >
+                      <LayoutTemplate className="h-2.5 w-2.5" />
+                      {templateCounts[id]} template
+                    </span>
+                  )}
                 </div>
               </button>
 

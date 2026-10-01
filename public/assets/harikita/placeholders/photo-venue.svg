@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280" viewBox="0 0 400 280">
+  <rect width="400" height="280" fill="#F3EDE6"/>
+  <rect x="1" y="1" width="398" height="278" rx="8" fill="none" stroke="#C5A880" stroke-width="2" stroke-dasharray="8 4"/>
+  <polygon points="200,50 90,100 310,100" fill="#C8B5A0"/>
+  <rect x="100" y="100" width="200" height="120" rx="4" fill="#D4C4B5"/>
+  <rect x="175" y="150" width="50" height="70" rx="2" fill="#BDA98F"/>
+  <rect x="120" y="125" width="36" height="36" rx="2" fill="#BDA98F"/>
+  <rect x="244" y="125" width="36" height="36" rx="2" fill="#BDA98F"/>
+  <text x="200" y="255" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#88735B">Klik untuk ganti foto venue</text>
+</svg>

@@ -3690,6 +3690,96 @@
     "suggestedUsage": "Decorative element for Background Patterns"
   },
   {
+    "id": "photo-arch",
+    "name": "Photo Arch",
+    "category": "placeholders",
+    "categoryLabel": "Photo Placeholders",
+    "filePath": "assets/harikita/placeholders/photo-arch.svg",
+    "format": "svg",
+    "viewBox": "0 0 300 400",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "placeholders",
+      "photo-arch"
+    ],
+    "suggestedUsage": "Decorative element for Photo Placeholders"
+  },
+  {
+    "id": "photo-circle",
+    "name": "Photo Circle",
+    "category": "placeholders",
+    "categoryLabel": "Photo Placeholders",
+    "filePath": "assets/harikita/placeholders/photo-circle.svg",
+    "format": "svg",
+    "viewBox": "0 0 300 300",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "placeholders",
+      "photo-circle"
+    ],
+    "suggestedUsage": "Decorative element for Photo Placeholders"
+  },
+  {
+    "id": "photo-landscape",
+    "name": "Photo Landscape",
+    "category": "placeholders",
+    "categoryLabel": "Photo Placeholders",
+    "filePath": "assets/harikita/placeholders/photo-landscape.svg",
+    "format": "svg",
+    "viewBox": "0 0 400 250",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "placeholders",
+      "photo-landscape"
+    ],
+    "suggestedUsage": "Decorative element for Photo Placeholders"
+  },
+  {
+    "id": "photo-polaroid",
+    "name": "Photo Polaroid",
+    "category": "placeholders",
+    "categoryLabel": "Photo Placeholders",
+    "filePath": "assets/harikita/placeholders/photo-polaroid.svg",
+    "format": "svg",
+    "viewBox": "0 0 300 360",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "placeholders",
+      "photo-polaroid"
+    ],
+    "suggestedUsage": "Decorative element for Photo Placeholders"
+  },
+  {
+    "id": "photo-portrait",
+    "name": "Photo Portrait",
+    "category": "placeholders",
+    "categoryLabel": "Photo Placeholders",
+    "filePath": "assets/harikita/placeholders/photo-portrait.svg",
+    "format": "svg",
+    "viewBox": "0 0 300 400",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "placeholders",
+      "photo-portrait"
+    ],
+    "suggestedUsage": "Decorative element for Photo Placeholders"
+  },
+  {
+    "id": "photo-venue",
+    "name": "Photo Venue",
+    "category": "placeholders",
+    "categoryLabel": "Photo Placeholders",
+    "filePath": "assets/harikita/placeholders/photo-venue.svg",
+    "format": "svg",
+    "viewBox": "0 0 400 280",
+    "aspectRatio": "square/proportional",
+    "tags": [
+      "placeholders",
+      "photo-venue"
+    ],
+    "suggestedUsage": "Decorative element for Photo Placeholders"
+  },
+  {
     "id": "texture-canvas-woven",
     "name": "Texture Canvas Woven",
     "category": "textures",

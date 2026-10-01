@@ -5,6 +5,7 @@ import type { InvitationStudioDocument, StudioSectionId, StudioTransform } from 
 import { clampTransform, resolveTransform, selectedStudioNode, type StudioDevice, type StudioEdit } from '@/lib/invitation-studio/editor';
 import { gestureTransform, type StudioGesture } from '@/lib/invitation-studio/geometry';
 import { STUDIO_SECTIONS } from '@/lib/invitation-studio/sections';
+import { backgroundToCss } from '@/lib/invitation-studio/colors';
 import { StudioSceneRenderer } from './StudioSceneRenderer';
 import {
   Smartphone,
@@ -850,13 +851,14 @@ export function ResponsiveStudioCanvas({
             {/* Canvas frame — getBoundingClientRect() on this is used for gesture calculations */}
             <div
               ref={frame}
-              className="relative mx-auto bg-[#FAF8F5] shadow-2xl transition-all"
+              className="relative mx-auto shadow-2xl transition-all"
               style={{
                 width: baseWidth,
                 height: baseHeight,
                 overflow: 'visible', // allow decorations to bleed out
                 borderRadius: device === 'mobile' ? '28px' : '16px',
                 border: '2px solid #E8DED1',
+                ...backgroundToCss(document.background),
               }}
               onPointerMove={onPointerMove}
               onPointerUp={() => finishGesture()}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+  <rect width="400" height="250" fill="#F3EDE6"/>
+  <rect x="1" y="1" width="398" height="248" rx="8" fill="none" stroke="#C5A880" stroke-width="2" stroke-dasharray="8 4"/>
+  <rect x="30" y="30" width="340" height="170" rx="6" fill="#E8DED1"/>
+  <circle cx="160" cy="110" r="36" fill="#D4C4B5"/>
+  <circle cx="240" cy="110" r="36" fill="#D4C4B5"/>
+  <text x="200" y="225" text-anchor="middle" font-family="Georgia,serif" font-size="12" fill="#88735B">Klik untuk ganti foto · Landscape</text>
+</svg>

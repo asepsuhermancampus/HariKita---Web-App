@@ -22,7 +22,8 @@ import {
   AlignRight,
   Italic,
   X,
-  RotateCcw
+  RotateCcw,
+  Image
 } from 'lucide-react';
 import { 
   STUDIO_FONTS, 
@@ -1226,20 +1227,62 @@ export function PropertiesInspector({
               )}
 
               {'src' in node.config && (
-                <div>
-                  <label className={labelClass}>Penyesuaian Gambar (Fit)</label>
-                  <select 
-                    className={fieldClass} 
-                    value={node.config.fit ?? 'contain'} 
-                    onChange={e => config({ ...node.config, fit: e.target.value as 'contain' | 'cover' })}
-                  >
-                    <option value="contain">Proporsional Utuh (Contain)</option>
-                    <option value="cover">Penuhi Area / Crop (Cover)</option>
-                  </select>
-                  <p className="mt-1 text-[10px] text-hk-taupe/70">
-                    Contain mempertahankan rasio gambar utuh. Cover mengisi penuh tanpa celah.
-                  </p>
-                </div>
+                <>
+                  <div>
+                    <label className={labelClass}>Sumber Gambar</label>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        className="flex-1 min-w-0 h-9 rounded-lg border border-hk-soft-beige bg-[#FAF8F5] px-2.5 text-xs text-hk-charcoal font-mono truncate"
+                        value={'src' in node.config ? node.config.src : ''} 
+                        readOnly
+                        title={'src' in node.config ? node.config.src : ''}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!('src' in node.config)) return;
+                          const placeholders = [
+                            '/assets/harikita/placeholders/photo-portrait.svg',
+                            '/assets/harikita/placeholders/photo-landscape.svg',
+                            '/assets/harikita/placeholders/photo-circle.svg',
+                            '/assets/harikita/placeholders/photo-polaroid.svg',
+                            '/assets/harikita/placeholders/photo-arch.svg',
+                            '/assets/harikita/placeholders/photo-venue.svg',
+                          ];
+                          const current = placeholders.indexOf(node.config.src);
+                          const next = placeholders[(current + 1) % placeholders.length];
+                          config({ ...node.config, src: next });
+                        }}
+                        className="shrink-0 flex items-center gap-1.5 rounded-lg border border-hk-soft-beige bg-[#4A2E35] px-3 py-2 text-xs font-bold text-white hover:bg-[#382328] transition"
+                        title="Ganti gambar dari katalog placeholder"
+                      >
+                        <Image className="h-3.5 w-3.5" />
+                        <span>Ganti</span>
+                      </button>
+                    </div>
+                    <p className="mt-1 text-[10px] text-hk-taupe/70">
+                      Klik Ganti untuk rotasi placeholder. Upload gambar custom segera hadir.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className={labelClass}>Penyesuaian Gambar (Fit)</label>
+                    <select 
+                      className={fieldClass} 
+                      value={'src' in node.config ? (node.config.fit ?? 'contain') : 'contain'} 
+                      onChange={e => {
+                        if (!('src' in node.config)) return;
+                        config({ ...node.config, fit: e.target.value as 'contain' | 'cover' });
+                      }}
+                    >
+                      <option value="contain">Proporsional Utuh (Contain)</option>
+                      <option value="cover">Penuhi Area / Crop (Cover)</option>
+                    </select>
+                    <p className="mt-1 text-[10px] text-hk-taupe/70">
+                      Contain mempertahankan rasio gambar utuh. Cover mengisi penuh tanpa celah.
+                    </p>
+                  </div>
+                </>
               )}
             </div>
           )}

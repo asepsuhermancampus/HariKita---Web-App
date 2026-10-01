@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, useCallback, use, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -14,13 +14,19 @@ import {
   ArrowRight,
   ChevronLeft,
   Lock,
-  Download,
-  Share2,
+  RefreshCw,
 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { orderStore } from "@/lib/order-store";
 import { notificationStore } from "@/lib/notification-store";
-import { simulatePaymentSuccessAction, createChargeAction } from "@/server/actions/payment";
+import {
+  simulatePaymentSuccessAction,
+  createChargeAction,
+  getActiveProviderAction,
+  getPaymentStatusAction,
+} from "@/server/actions/payment";
+import type { GatewayProvider } from "@/server/payments/types";
+import { qrStringToDataUrl } from "@/lib/qr";
 
 declare global {
   interface Window {
@@ -88,11 +94,35 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"qris" | "transfer">("qris");
 
+  // Provider aktif (xendit | midtrans | simulated_qris) — ditentukan server.
+  const [provider, setProvider] = useState<GatewayProvider | null>(null);
+  // QR dinamis (Xendit): data URL gambar (dari qrString).
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [isQrLoading, setIsQrLoading] = useState(false);
+  const [isPolling, setIsPolling] = useState(false);
+  const [paidBanner, setPaidBanner] = useState(false);
+  const chargeRequestedRef = useRef(false);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Muat provider aktif sekali.
+  useEffect(() => {
+    let alive = true;
+    getActiveProviderAction()
+      .then((p) => {
+        if (alive) setProvider(p);
+      })
+      .catch(() => {
+        if (alive) setProvider("simulated_qris");
+      });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const formatTime = (seconds: number) => {
@@ -107,16 +137,86 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
+  /** Setelah pembayaran lunas → arahkan ke invoice. */
+  const goToInvoice = useCallback(() => {
+    clearCart();
+    router.push(`/pesanan/${bookingId}/invoice`);
+  }, [clearCart, router, bookingId]);
+
+  /**
+   * Membuat QRIS dinamis via Xendit:
+   *  1. createChargeAction → qrString + attempt.
+   *  2. Render qrString → gambar QR.
+   *  3. Polling status hingga lunas (webhook Xendit menandai installment PAID).
+   */
+  const startXenditQris = useCallback(async () => {
+    if (chargeRequestedRef.current) return;
+    chargeRequestedRef.current = true;
+    setIsQrLoading(true);
+    setPaymentError(null);
+
+    const charge = await createChargeAction({ orderId: bookingId, provider: "xendit" });
+    if (!charge.success) {
+      setPaymentError(charge.message || "Gagal membuat QRIS dinamis Xendit.");
+      setIsQrLoading(false);
+      chargeRequestedRef.current = false;
+      return;
+    }
+
+    const qr = charge.data.qrString;
+    if (!qr) {
+      // Xendit dapat mengembalikan paymentUrl (checkout) alih-alih qrString.
+      if (charge.data.paymentUrl && !charge.data.paymentUrl.startsWith("/")) {
+        window.location.href = charge.data.paymentUrl;
+        return;
+      }
+      setPaymentError("Gateway tidak mengembalikan QR. Silakan coba lagi.");
+      setIsQrLoading(false);
+      chargeRequestedRef.current = false;
+      return;
+    }
+
+    try {
+      const dataUrl = await qrStringToDataUrl(qr);
+      setQrDataUrl(dataUrl);
+      setIsQrLoading(false);
+      setIsPolling(true);
+    } catch {
+      setPaymentError("Gagal merender QR. Silakan muat ulang halaman.");
+      setIsQrLoading(false);
+      chargeRequestedRef.current = false;
+    }
+  }, [bookingId]);
+
+  // Auto-mulai QRIS Xendit begitu provider diketahui & tab QRIS aktif.
+  useEffect(() => {
+    if (provider === "xendit" && paymentMethod === "qris" && !qrDataUrl && !isQrLoading) {
+      void startXenditQris();
+    }
+  }, [provider, paymentMethod, qrDataUrl, isQrLoading, startXenditQris]);
+
+  // Polling status pembayaran saat QR dinamis aktif.
+  useEffect(() => {
+    if (!isPolling) return;
+    const id = setInterval(async () => {
+      const res = await getPaymentStatusAction(bookingId);
+      if (res.success && res.data.paid) {
+        setIsPolling(false);
+        setPaidBanner(true);
+        setTimeout(goToInvoice, 1500);
+      }
+    }, 5000);
+    return () => clearInterval(id);
+  }, [isPolling, bookingId, goToInvoice]);
+
   /**
    * Memulai pembayaran via Midtrans Snap (QRIS semua e-wallet/bank + transfer bank).
-   * 1. Server Action membuat attempt + transaksi Snap (token/redirect_url).
-   * 2. Bila snap.js tersedia → popup; jika tidak → redirect ke redirect_url.
    */
   const handleMidtransSnap = async () => {
     setIsSnapLoading(true);
     setPaymentError(null);
 
-    const charge = await createChargeAction({ orderId: bookingId });
+    const charge = await createChargeAction({ orderId: bookingId, provider: "midtrans" });
     if (!charge.success) {
       setPaymentError(charge.message || "Gagal memulai transaksi Midtrans.");
       setIsSnapLoading(false);
@@ -163,13 +263,9 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
     setIsSimulatingSuccess(true);
     setPaymentError(null);
 
-    // 1. Persist pembayaran ke database via Server Action (PaymentService + ledger).
-    //    `bookingId` kini adalah orderId asli dari database (dibuat di /checkout).
     const remote = await simulatePaymentSuccessAction({ orderId: bookingId });
 
     if (!remote.success) {
-      // Bila order tidak ditemukan (mis. URL lama), tetap izinkan penyimpanan lokal
-      // sebagai fallback demo, tetapi tandai agar tidak diklaim sebagai pembayaran resmi.
       console.warn("[pembayaran] server action gagal:", remote.message);
       setPaymentError(
         remote.message ||
@@ -177,7 +273,6 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
       );
     }
 
-    // 2. Simpan pesanan ke Order Store lokal (cache UI untuk halaman invoice).
     const newOrder = orderStore.createOrder({
       bookingId,
       customerName: customerName || "Calon Pengantin HariKita",
@@ -247,7 +342,6 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
       subtotal: subtotal > 0 ? subtotal : 15850000,
     });
 
-    // 3. Dispatch notifikasi ganda ke masing-masing vendor yang terlibat.
     notificationStore.dispatchFromOrder(newOrder);
 
     setTimeout(() => {
@@ -255,6 +349,9 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
       router.push(`/pesanan/${bookingId}/invoice`);
     }, 1200);
   };
+
+  const providerLabel =
+    provider === "xendit" ? "Xendit" : provider === "midtrans" ? "Midtrans" : "Mode Uji Coba";
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#4A2E35] py-8 px-4 sm:px-6 lg:px-8">
@@ -269,7 +366,7 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
           </Link>
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E5D7C7]/50 text-[#4A2E35] text-xs font-semibold">
             <Lock className="w-3.5 h-3.5 text-[#C5A880]" />
-            Escrow Escrow Protected
+            Escrow Protected
           </div>
         </div>
 
@@ -282,7 +379,7 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
             Menunggu Pembayaran Escrow
           </h1>
           <p className="text-xs sm:text-sm text-[#6B5E62] max-w-lg mx-auto leading-relaxed">
-            Dana Anda aman di rekening penampung resmi HariKita. Mitra vendor di Kebumen baru menerima 
+            Dana Anda aman di rekening penampung resmi HariKita. Mitra vendor di Kebumen baru menerima
             pencairan operasional pada H-3 setelah jadwal disetujui.
           </p>
 
@@ -305,6 +402,14 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
           </div>
         </div>
 
+        {/* Paid banner (setelah polling mendeteksi lunas) */}
+        {paidBanner && (
+          <div className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <span>Pembayaran terkonfirmasi. Mengalihkan ke halaman invoice…</span>
+          </div>
+        )}
+
         {/* Payment Method Switcher */}
         <div className="bg-white rounded-2xl p-6 border border-[#C5A880]/30 shadow-sm space-y-6">
           <div className="flex gap-2 p-1 bg-[#FAF8F5] rounded-xl border border-[#C5A880]/20">
@@ -316,13 +421,13 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
                   : "text-[#6B5E62] hover:text-[#4A2E35]"
               }`}
             >
-              <QrCode className="w-4 h-4" /> QRIS Instan (BCA, Mandiri, GoPay, OVO)
+              <QrCode className="w-4 h-4" /> QRIS Instan (ShopeePay, GoPay, OVO, DANA)
             </button>
             <button
               onClick={() => setPaymentMethod("transfer")}
               className={`flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
                 paymentMethod === "transfer"
-                  ? "bg-[#4A2E35] text-white shadow"
+                  ? "bg-[#4A2E35] text-white"
                   : "text-[#6B5E62] hover:text-[#4A2E35]"
               }`}
             >
@@ -333,33 +438,83 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
           {paymentMethod === "qris" ? (
             /* QRIS Container */
             <div className="text-center space-y-4 py-2">
-              <div className="inline-block p-4 bg-white rounded-2xl border-2 border-dashed border-[#C5A880] shadow-md">
-                {/* Simulated SVG QR Code */}
-                <div className="w-56 h-56 mx-auto bg-[#FAF8F5] rounded-xl flex flex-col items-center justify-center p-3 relative overflow-hidden border border-[#E5D7C7]">
-                  <div className="absolute top-2 left-2 w-10 h-10 border-4 border-[#4A2E35] rounded-lg"></div>
-                  <div className="absolute top-2 right-2 w-10 h-10 border-4 border-[#4A2E35] rounded-lg"></div>
-                  <div className="absolute bottom-2 left-2 w-10 h-10 border-4 border-[#4A2E35] rounded-lg"></div>
-                  <div className="grid grid-cols-6 gap-1.5 p-6 opacity-70">
-                    {Array.from({ length: 36 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-3.5 h-3.5 rounded-sm ${
-                          (i * 7) % 3 === 0 ? "bg-[#4A2E35]" : "bg-transparent"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="px-3 py-1 bg-[#C5A880] text-[#4A2E35] font-bold text-xs rounded-md shadow">
-                      QRIS HARI KITA
+              {/* QR dinamis Xendit */}
+              {provider === "xendit" && (
+                <>
+                  <div className="inline-block p-4 bg-white rounded-2xl border-2 border-dashed border-[#C5A880] shadow-md">
+                    <div className="w-56 h-56 mx-auto bg-white rounded-xl flex items-center justify-center p-2 border border-[#E5D7C7] overflow-hidden">
+                      {qrDataUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={qrDataUrl}
+                          alt="QRIS dinamis Xendit"
+                          width={224}
+                          height={224}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 text-[#6B5E62]">
+                          <RefreshCw className={`w-6 h-6 ${isQrLoading ? "animate-spin" : ""}`} />
+                          <span className="text-xs">{isQrLoading ? "Menyiapkan QRIS…" : "QR belum siap"}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="text-xs text-[#6B5E62] space-y-1">
-                <p className="font-medium text-[#4A2E35]">NMID: ID1020261198293 — PT HARI KITA BERSAMA KEBUMEN</p>
-                <p>Scan menggunakan BCA Mobile, Livin Mandiri, BRImo, BNI, GoPay, OVO, ShopeePay, atau DANA.</p>
-              </div>
+                  <div className="text-xs text-[#6B5E62] space-y-1">
+                    <p className="font-medium text-[#4A2E35]">
+                      QRIS Dinamis • {providerLabel}
+                    </p>
+                    <p>
+                      Scan dengan aplikasi apa pun berlogo QRIS — termasuk <strong>ShopeePay</strong>,
+                      GoPay, OVO, DANA, dan semua m-banking.
+                    </p>
+                    {isPolling && (
+                      <p className="inline-flex items-center gap-1.5 text-emerald-700 font-medium">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        Menunggu pembayaran terverifikasi otomatis…
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* Fallback: belum ada provider / simulated / Midtrans bisa bayar via tombol di bawah */}
+              {provider !== "xendit" && (
+                <>
+                  <div className="inline-block p-4 bg-white rounded-2xl border-2 border-dashed border-[#C5A880] shadow-md">
+                    <div className="w-56 h-56 mx-auto bg-[#FAF8F5] rounded-xl flex flex-col items-center justify-center p-3 relative overflow-hidden border border-[#E5D7C7]">
+                      <div className="absolute top-2 left-2 w-10 h-10 border-4 border-[#4A2E35] rounded-lg"></div>
+                      <div className="absolute top-2 right-2 w-10 h-10 border-4 border-[#4A2E35] rounded-lg"></div>
+                      <div className="absolute bottom-2 left-2 w-10 h-10 border-4 border-[#4A2E35] rounded-lg"></div>
+                      <div className="grid grid-cols-6 gap-1.5 p-6 opacity-70">
+                        {Array.from({ length: 36 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className={`w-3.5 h-3.5 rounded-sm ${
+                              (i * 7) % 3 === 0 ? "bg-[#4A2E35]" : "bg-transparent"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="px-3 py-1 bg-[#C5A880] text-[#4A2E35] font-bold text-xs rounded-md shadow">
+                          {provider === "midtrans" ? "Klik Bayar di Bawah" : "QRIS HARI KITA"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-xs text-[#6B5E62] space-y-1">
+                    {provider === "midtrans" ? (
+                      <p>Klik tombol <strong>Bayar via Midtrans</strong> di bawah untuk menampilkan QRIS &amp; Virtual Account.</p>
+                    ) : (
+                      <>
+                        <p className="font-medium text-[#4A2E35]">NMID: ID1020261198293 — PT HARI KITA BERSAMA KEBUMEN</p>
+                        <p>Scan menggunakan BCA Mobile, Livin Mandiri, BRImo, BNI, GoPay, OVO, ShopeePay, atau DANA.</p>
+                      </>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             /* Transfer Virtual Account */
@@ -420,29 +575,44 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
               </div>
             )}
 
-            {/* Tombol utama: Midtrans (QRIS semua e-wallet/bank + transfer bank) */}
-            <button
-              onClick={handleMidtransSnap}
-              disabled={isSnapLoading || isSimulatingSuccess}
-              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#4A2E35] to-[#6B5E62] text-white font-medium text-sm hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
-            >
-              {isSnapLoading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Menyiapkan pembayaran aman…
-                </>
-              ) : (
-                <>
-                  <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
-                  Bayar via Midtrans (QRIS &amp; Transfer Bank)
-                </>
-              )}
-            </button>
-            <div className="text-center text-[11px] text-[#6B5E62]">
-              Didukung QRIS (GoPay, OVO, DANA, ShopeePay, semua m-banking) &amp; Virtual Account/Transfer bank.
-            </div>
+            {/* Xendit: QR ditampilkan otomatis; sediakan tombol muat ulang QR. */}
+            {provider === "xendit" && paymentMethod === "qris" && (
+              <button
+                onClick={() => {
+                  chargeRequestedRef.current = false;
+                  setQrDataUrl(null);
+                  void startXenditQris();
+                }}
+                disabled={isQrLoading}
+                className="w-full py-3 px-4 rounded-xl bg-white border border-[#C5A880]/60 text-[#4A2E35] font-medium text-sm hover:bg-[#FAF8F5] transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${isQrLoading ? "animate-spin" : ""}`} />
+                {isQrLoading ? "Menyiapkan QRIS…" : "Muat Ulang QRIS Dinamis"}
+              </button>
+            )}
 
-            {/* Fallback demo/sandbox (provider simulated) */}
+            {/* Midtrans: tombol Snap (QRIS semua e-wallet + VA). */}
+            {provider === "midtrans" && (
+              <button
+                onClick={handleMidtransSnap}
+                disabled={isSnapLoading || isSimulatingSuccess}
+                className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#4A2E35] to-[#6B5E62] text-white font-medium text-sm hover:opacity-95 transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
+              >
+                {isSnapLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Menyiapkan pembayaran aman…
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck className="w-4 h-4 text-[#C5A880]" />
+                    Bayar via Midtrans (QRIS &amp; Transfer Bank)
+                  </>
+                )}
+              </button>
+            )}
+
+            {/* Simulasi sandbox: selalu tersedia sebagai fallback pilot. */}
             <button
               onClick={handleSimulatePayment}
               disabled={isSimulatingSuccess || isSnapLoading}
@@ -462,6 +632,7 @@ export default function PembayaranEscrowPage({ params }: PageProps) {
             </button>
             <div className="text-center text-[11px] text-[#6B5E62]">
               Sistem akan otomatis menerbitkan Lembar Invoice Resmi ber-watermark setelah pembayaran tervalidasi.
+              {provider === "xendit" && " Status diverifikasi otomatis via webhook Xendit."}
             </div>
           </div>
         </div>

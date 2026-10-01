@@ -3,6 +3,7 @@ import React from 'react';
 import type { InvitationStudioDocument, StudioNode, StudioSectionId } from '@/lib/invitation-studio/types';
 import type { StudioDevice } from '@/lib/invitation-studio/editor';
 import { StudioNodeRenderer } from './StudioNodeRenderer';
+import { backgroundToCss } from '@/lib/invitation-studio/colors';
 
 export function StudioSceneRenderer({
   document,
@@ -38,7 +39,7 @@ export function StudioSceneRenderer({
         width: '100%',
         borderRadius: device === 'mobile' ? '28px' : '16px',
         // Ghost renders without background so only its assets show at 60% opacity
-        background: transparent ? 'transparent' : '#FAF8F5',
+        ...(transparent ? { background: 'transparent' } : backgroundToCss(document.background)),
         color: '#4A2E35',
       }}
     >
